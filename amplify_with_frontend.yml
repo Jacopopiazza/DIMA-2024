@@ -1,0 +1,38 @@
+version: 1
+applications:
+  - backend:
+      phases:
+        build:
+          commands:
+            - npm ci --cache .npm --prefer-offline
+            - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+            - npx ampx generate outputs --app-id $AWS_APP_ID --branch $AWS_BRANCH --format dart --out-dir ../../apps/dima_application/lib
+      appRoot: "packages/backend"
+
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - mkdir -p deps
+            - cd deps
+            - if [ ! -d "flutter" ]; then echo "Cloning Flutter SDK" && git clone https://github.com/flutter/flutter.git -b stable --depth 1; else echo "Flutter SDK already cloned. Skipping clone."; fi
+            - cd ../apps/dima_application
+            - export PATH="$PATH:$(pwd)/../deps/flutter/bin"
+            - flutter config --no-analytics
+            - flutter doctor -v
+            - echo "Installing dependencies"
+            - flutter pub get
+        build:
+          commands:
+            - echo "Building Flutter web application with WASM support"
+            - flutter build web --wasm --release
+      artifacts:
+        baseDirectory: build/web
+        files:
+          - '*/'
+      cache:
+        paths:
+          - deps/flutter
+          - flutter/.pub-cache
+          - .dart_tool/
+      appRoot: "apps/dima_application"
