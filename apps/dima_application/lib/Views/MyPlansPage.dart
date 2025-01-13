@@ -1,0 +1,63 @@
+import 'package:amplify_authenticator/amplify_authenticator.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+Future<void> _logout(BuildContext context) async {
+  try {
+    await Amplify.Auth.signOut();
+    safePrint('Signed out');
+  } on AuthException catch (e) {
+    safePrint('Error signing out: $e');
+  }
+}
+
+Future<String?> fetchCurrentUser() async {
+  try {
+    final user = await Amplify.Auth.getCurrentUser();
+    return user.username; // Return the username
+  } catch (e) {
+    debugPrint('Error fetching current user: $e');
+    return null;
+  }
+}
+
+class MyPlansPage extends StatelessWidget {
+  const MyPlansPage({super.key});
+
+   
+
+  @override
+  Widget build(BuildContext context) {
+
+    final Future<String?> user = fetchCurrentUser();
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('My Plans Page'),
+          ElevatedButton(
+            onPressed: () => _logout(context),
+            child: Text(AppLocalizations.of(context)!.signOut),
+          ),
+          FutureBuilder(future: user, builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasData) {
+              final userData = snapshot.data!;
+              return Text(userData);
+            } else {
+              return const Text("No data available");
+            }
+          }
+          ),
+        ]
+      ),
+      
+      
+      
+    );
+  }
+}
