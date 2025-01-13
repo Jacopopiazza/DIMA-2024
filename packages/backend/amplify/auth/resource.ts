@@ -1,5 +1,5 @@
 import { defineAuth, secret } from '@aws-amplify/backend';
-
+import { preTokenGenerationLambda } from './preTokenGeneration/resource';
 /**
  * Define and configure your auth resource
  * @see https://docs.amplify.aws/gen2/build-a-backend/auth
@@ -11,10 +11,12 @@ export const auth = defineAuth({
       google: {
         clientId: secret('GOOGLE_CLIENT_ID'),
         clientSecret: secret('GOOGLE_CLIENT_SECRET'),
-        scopes: ['email'],
+        scopes: ['profile email'],
                 
         attributeMapping: {
-          email: 'email'
+          email: 'email',
+          givenName: 'given_name',
+          familyName: 'family_name',
         }
       },
       /*signInWithApple: {
@@ -33,9 +35,8 @@ export const auth = defineAuth({
       },*/
       callbackUrls: [
         'http://localhost:3000/profile',
-        'https://mywebsite.com/profile'
       ],
-      logoutUrls: ['http://localhost:3000/', 'https://mywebsite.com'],
+      logoutUrls: ['http://localhost:3000/'],
     }
   },
 
@@ -47,9 +48,42 @@ export const auth = defineAuth({
   groups: ["USERS","NUTRITIONISTS","ADMIN"],
 
   userAttributes: {
+    givenName: {
+      required: true,
+      mutable: false,
+    },
+    familyName: {
+      required: true,
+      mutable: false,
+    },
+    email: {
+      required: true,
+      mutable: false,
+    },
+    birthdate: {
+      required: false,
+      mutable: false
+    },
+    gender: {
+      required: false,
+      mutable: false
+    },
+    profilePicture: {
+      required: false,
+      mutable: true
+    },
     "custom:subscriptionStatus" : {
       dataType: "String",
-      mutable: false,
+      mutable: true,
     }
-  }
+  },
+
+  triggers: {
+    preTokenGeneration: preTokenGenerationLambda
+  },
+  access: (allow) => [
+    allow.resource(preTokenGenerationLambda).to(["addUserToGroup", "manageUsers"]),
+    allow.resource(preTokenGenerationLambda).to(["updateUserAttributes"]),
+    allow.resource(preTokenGenerationLambda).to(["listGroupsForUser"])
+    ],
 });
