@@ -1,5 +1,5 @@
 import { defineAuth, secret } from '@aws-amplify/backend';
-import { preTokenGenerationLambda } from './preTokenGeneration/resource';
+import { preSignUpLambda } from './pre-sign-up/resource';
 /**
  * Define and configure your auth resource
  * @see https://docs.amplify.aws/gen2/build-a-backend/auth
@@ -17,6 +17,8 @@ export const auth = defineAuth({
           email: 'email',
           givenName: 'given_name',
           familyName: 'family_name',
+          profilePicture: 'picture',
+          emailVerified: 'email_verified'
         }
       },
       /*signInWithApple: {
@@ -50,15 +52,15 @@ export const auth = defineAuth({
   userAttributes: {
     givenName: {
       required: true,
-      mutable: false,
+      mutable: true,
     },
     familyName: {
       required: true,
-      mutable: false,
+      mutable: true,
     },
     email: {
       required: true,
-      mutable: false,
+      mutable: true,
     },
     birthdate: {
       required: false,
@@ -75,15 +77,17 @@ export const auth = defineAuth({
     "custom:subscriptionStatus" : {
       dataType: "String",
       mutable: true,
-    }
+    },
+
   },
 
   triggers: {
-    preTokenGeneration: preTokenGenerationLambda
+    //preTokenGeneration: preTokenGenerationLambda,
+    preSignUp: preSignUpLambda,
   },
   access: (allow) => [
-    allow.resource(preTokenGenerationLambda).to(["addUserToGroup", "manageUsers"]),
+    /*allow.resource(preTokenGenerationLambda).to(["addUserToGroup", "manageUsers"]),
     allow.resource(preTokenGenerationLambda).to(["updateUserAttributes"]),
-    allow.resource(preTokenGenerationLambda).to(["listGroupsForUser"])
+    allow.resource(preTokenGenerationLambda).to(["listGroupsForUser"]),*/
     ],
 });
