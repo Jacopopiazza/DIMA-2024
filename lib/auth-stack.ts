@@ -1,0 +1,209 @@
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as cognito from 'aws-cdk-lib/aws-cognito';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as cognito_identity from 'aws-cdk-lib/aws-cognito';
+
+export class AuthStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    // Retrieve the secret from Secrets Manager
+    const googleSecret = secretsmanager.Secret.fromSecretNameV2(
+        this,
+        'SIGN_IN_WITH_GOOGLE',
+        'SIGN_IN_WITH_GOOGLE' // Name of the secret in Secrets Manager
+      );
+
+    // Define the Pre-Signup Lambda Function
+    const preSignUpLambda = new NodejsFunction(this, 'PreSignUpLambda', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      entry: 'src/lambda/pre-sign-up/index.ts',
+      //handler: 'index.handler',
+      //code: lambda.Code.fromAsset('/Users/japo/DIMA-2024/src/lambda/pre-sign-up'),
+      bundling: {
+        format: OutputFormat.ESM,
+        bundleAwsSDK: false,
+        loader: {
+          '.node': 'file',
+        },
+        minify: false, // Minify the code
+        sourceMap: true, // Generate source maps
+      },
+
+    });
+
+    // Grant the Lambda function permissions to interact with Cognito
+    preSignUpLambda.addToRolePolicy(new iam.PolicyStatement({
+      actions: [
+        'cognito-idp:AdminLinkProviderForUser',
+        'cognito-idp:ListUsers',
+        'cognito-idp:AdminCreateUser',
+        'cognito-idp:AdminSetUserPassword',
+      ],
+      resources: ['*'], // Adjust this to restrict to specific resources if needed
+    }));
+
+    // Define the Cognito User Pool
+    const userPool = new cognito.UserPool(this, 'UserPool', {
+      userPoolName: 'MyUserPool',
+      selfSignUpEnabled: true,
+      signInAliases: {
+        email: true,
+      },
+      autoVerify: {
+        email: false,
+      },
+      standardAttributes: {
+        email: {
+          required: true,
+          mutable: true,
+        },
+        givenName: {
+          required: true,
+          mutable: true,
+        },
+        familyName: {
+          required: true,
+          mutable: true,
+        },
+        gender: {
+          required: false,
+          mutable: true,
+        },
+        birthdate: {
+          required: false,
+          mutable: true,
+        },
+
+      },
+      customAttributes: {
+        profilePicture: new cognito.StringAttribute({ mutable: true }),
+        subscriptionStatus: new cognito.StringAttribute({ mutable: true }),
+      },
+      passwordPolicy: {
+        minLength: 8,
+        requireLowercase: true,
+        requireUppercase: true,
+        requireDigits: true,
+        requireSymbols: true,
+      },
+      lambdaTriggers: {
+        preSignUp: preSignUpLambda,
+      },
+      mfa: cognito.Mfa.OPTIONAL,
+      mfaSecondFactor: {
+        sms: false,
+        otp: true,
+      },
+    });
+
+    // Define User Pool Groups
+    const userGroup = new cognito.CfnUserPoolGroup(this, 'UserGroup', {
+      userPoolId: userPool.userPoolId,
+      groupName: 'USERS',
+      precedence: 0,
+    });
+
+    const nutritionistGroup = new cognito.CfnUserPoolGroup(this, 'NutritionistGroup', {
+      userPoolId: userPool.userPoolId,
+      groupName: 'NUTRITIONISTS',
+      precedence: 1,
+    });
+
+    const adminGroup = new cognito.CfnUserPoolGroup(this, 'AdminGroup', {
+      userPoolId: userPool.userPoolId,
+      groupName: 'ADMIN',
+      precedence: 2,
+    });
+
+    // Define the Google Identity Provider
+    const googleProvider = new cognito.UserPoolIdentityProviderGoogle(this, 'GoogleProvider', {
+      clientId: googleSecret.secretValueFromJson("GOOGLE_CLIENT_ID").unsafeUnwrap(), // Use Secrets Manager or SSM Parameter Store for production
+      clientSecretValue: googleSecret.secretValueFromJson('GOOGLE_CLIENT_SECRET'), // Use Secrets Manager or SSM Parameter Store for production
+      userPool,
+      scopes: ['profile', 'email', 'openid'],
+      attributeMapping: {
+        email: cognito.ProviderAttribute.GOOGLE_EMAIL,
+        givenName: cognito.ProviderAttribute.GOOGLE_GIVEN_NAME,
+        familyName: cognito.ProviderAttribute.GOOGLE_FAMILY_NAME,
+        profilePicture: cognito.ProviderAttribute.GOOGLE_PICTURE,
+        emailVerified: cognito.ProviderAttribute.GOOGLE_EMAIL_VERIFIED,
+      },
+    });
+
+    // Add a domain to the User Pool
+    const userPoolDomain = userPool.addDomain('MyUserPoolDomain', {
+      cognitoDomain: {
+        domainPrefix: 'e2c748be1d135a2c6733', // Replace with your unique domain prefix
+      },
+    });
+
+    // Define the User Pool Client
+    const userPoolClient = new cognito.UserPoolClient(this, 'UserPoolClient', {
+      userPool,
+      authFlows: {
+        userPassword: true,
+        userSrp: true,
+      },
+      supportedIdentityProviders: [
+        cognito.UserPoolClientIdentityProvider.COGNITO,
+        cognito.UserPoolClientIdentityProvider.GOOGLE,
+      ],
+      oAuth: {
+        callbackUrls: ['http://localhost:3000/profile'],
+        logoutUrls: ['http://localhost:3000/'],
+      },
+    });
+
+    // Create a Cognito Identity Pool (with unauthenticated access disabled)
+    const identityPool = new cognito_identity.CfnIdentityPool(this, 'MyIdentityPool', {
+        identityPoolName: 'MyIdentityPool',
+        allowUnauthenticatedIdentities: false, // Disable unauthenticated access
+        cognitoIdentityProviders: [
+          {
+            clientId: userPoolClient.userPoolClientId,
+            providerName: userPool.userPoolProviderName,
+          },
+        ],
+      });
+  
+      // Create IAM Role for Authenticated Users
+      const authenticatedRole = new iam.Role(this, 'AuthenticatedRole', {
+        assumedBy: new iam.FederatedPrincipal(
+          'cognito-identity.amazonaws.com',
+          {
+            StringEquals: {
+              'cognito-identity.amazonaws.com:aud': identityPool.ref,
+            },
+            'ForAnyValue:StringLike': {
+              'cognito-identity.amazonaws.com:amr': 'authenticated',
+            },
+          },
+          'sts:AssumeRoleWithWebIdentity'
+        ),
+      });
+
+    
+  
+
+    // Output the User Pool ID and Client ID
+    new cdk.CfnOutput(this, 'UserPoolId', {
+      value: userPool.userPoolId,
+    });
+
+    new cdk.CfnOutput(this, 'UserPoolClientId', {
+      value: userPoolClient.userPoolClientId,
+    });
+
+    new cdk.CfnOutput(this, 'IdentityPoolId', { value: identityPool.ref });
+
+    new cdk.CfnOutput(this, 'CognitoOAuthRedirectUri', {
+        value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com/oauth2/idpresponse`,
+        description: 'The OAuth redirect URI for the Cognito User Pool',
+      });
+  }
+}

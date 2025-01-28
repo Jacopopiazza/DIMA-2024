@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
 import { Dima2024Stack } from '../lib/dima-2024-stack';
+import { AuthStack } from '../lib/auth-stack';
 
 const app = new cdk.App();
 new Dima2024Stack(app, 'Dima2024Stack', {
@@ -14,7 +15,11 @@ new Dima2024Stack(app, 'Dima2024Stack', {
 
   /* Uncomment the next line if you know exactly what Account and Region you
    * want to deploy the stack to. */
-  // env: { account: '123456789012', region: 'us-east-1' },
+   env: { account: '537124974525', region: 'us-west-2' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+});
+
+new AuthStack(app, 'AuthStack', {
+  env: { account: '537124974525', region: 'us-west-2' },
 });
