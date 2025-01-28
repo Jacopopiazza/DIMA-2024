@@ -13,9 +13,19 @@ Future<void> _logout(BuildContext context) async {
   }
 }
 
+Future<void> _delete_account(BuildContext context) async {
+  try {
+    await Amplify.Auth.deleteUser();
+    safePrint('Delete user succeeded');
+  } on AuthException catch (e) {
+    safePrint('Error deleting user : $e');
+  }
+}
+
 Future<String?> fetchCurrentUser() async {
   try {
     final user = await Amplify.Auth.getCurrentUser();
+
     return user.username; // Return the username
   } catch (e) {
     debugPrint('Error fetching current user: $e');
@@ -41,6 +51,10 @@ class MyPlansPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () => _logout(context),
             child: Text(AppLocalizations.of(context)!.signOut),
+          ),
+          ElevatedButton(
+            onPressed: () => _delete_account(context),
+            child: Text("Delete Account"),
           ),
           FutureBuilder(future: user, builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
