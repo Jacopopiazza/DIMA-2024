@@ -7,6 +7,7 @@ import {
   UserType,
   AdminUpdateUserAttributesCommand
 } from '@aws-sdk/client-cognito-identity-provider';
+import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION
@@ -50,13 +51,20 @@ export const createUser = async ({
   userPoolId,
   email,
   givenName,
-  familyName
+  familyName,
+  subscriptionStatus
 }: {
   userPoolId: string;
   email: string;
   givenName: string;
   familyName: string;
+  subscriptionStatus?: SubscriptionStatus;
 }) => {
+
+  if (!subscriptionStatus) {
+    subscriptionStatus = SubscriptionStatus.FREE;
+  }
+
   const adminCreateUserCommand = new AdminCreateUserCommand({
     UserPoolId: userPoolId,
     MessageAction: 'SUPPRESS', // don't send email to the user
@@ -77,6 +85,10 @@ export const createUser = async ({
       {
         Name: 'email_verified',
         Value: 'true'
+      },
+      {
+        Name: 'custom:subscriptionStatus',
+        Value: subscriptionStatus.toString()
       }
     ]
   });

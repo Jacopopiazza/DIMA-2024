@@ -32,16 +32,19 @@ export class AuthStack extends cdk.Stack {
 
     });
 
-    // Grant the Lambda function permissions to interact with Cognito
-    preSignUpLambda.addToRolePolicy(new iam.PolicyStatement({
-      actions: [
-        'cognito-idp:AdminLinkProviderForUser',
-        'cognito-idp:ListUsers',
-        'cognito-idp:AdminCreateUser',
-        'cognito-idp:AdminSetUserPassword',
-      ],
-      resources: ['*'], // Adjust this to restrict to specific resources if needed
-    }));
+    // Define the Pre-Signup Lambda Function
+    const postConfirmation = new NodejsFunction(this, 'PostConfirmationLambda', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      entry: 'src/lambda/post-confirmation/index.ts',
+      handler: 'handler',
+      bundling: {
+        format: OutputFormat.ESM,
+        bundleAwsSDK: false,
+        minify: false, // Minify the code
+        sourceMap: true, // Generate source maps
+      },
+
+    });
 
     // Define the Cognito User Pool
     const userPool = new cognito.UserPool(this, 'UserPool', {
@@ -89,6 +92,7 @@ export class AuthStack extends cdk.Stack {
       },
       lambdaTriggers: {
         preSignUp: preSignUpLambda,
+        postConfirmation: postConfirmation,
       },
       mfa: cognito.Mfa.OPTIONAL,
       mfaSecondFactor: {
@@ -96,6 +100,24 @@ export class AuthStack extends cdk.Stack {
         otp: true,
       },
     });
+
+    // Grant the Lambda function permissions to interact with Cognito
+    preSignUpLambda.addToRolePolicy(new iam.PolicyStatement({
+      actions: [
+        'cognito-idp:AdminLinkProviderForUser',
+        'cognito-idp:ListUsers',
+        'cognito-idp:AdminCreateUser',
+        'cognito-idp:AdminSetUserPassword',
+      ],
+      resources: ['*'], // needed to avoid circular dependency
+    }));
+
+    postConfirmation.addToRolePolicy(new iam.PolicyStatement({
+      actions: [
+        'cognito-idp:AdminUpdateUserAttributes',
+      ],
+      resources: ['*'],
+    }));
 
     // Define User Pool Groups
     const userGroup = new cognito.CfnUserPoolGroup(this, 'UserGroup', {
@@ -153,6 +175,9 @@ export class AuthStack extends cdk.Stack {
         callbackUrls: ['http://localhost:3000/profile'],
         logoutUrls: ['http://localhost:3000/'],
       },
+      accessTokenValidity: cdk.Duration.hours(1),
+      idTokenValidity: cdk.Duration.days(1),
+      refreshTokenValidity: cdk.Duration.days(30),
     });
 
     // Create a Cognito Identity Pool (with unauthenticated access disabled)
