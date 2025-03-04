@@ -1,9 +1,7 @@
 import 'package:dima_application/Views/MyPlansPage.dart';
-import 'package:dima_application/Views/NewPlanPage.dart';
+import 'package:dima_application/Views/NewPlansPage.dart';
 import 'package:dima_application/Views/SettingsPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define the pages for each tab
   final List<Widget> _pages = [
-    NewPlanPage(),
+    NewPlansPage(),
     MyPlansPage(),
     SettingsPage(),
   ];

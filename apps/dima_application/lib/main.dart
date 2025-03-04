@@ -3,7 +3,6 @@ import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Views/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'amplify_outputs.dart';
@@ -39,14 +38,11 @@ const stringResolver = AuthStringResolver(
 );
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
     _configureAmplify();
   }
-
-  
 
   Future<void> _configureAmplify() async {
     try {
