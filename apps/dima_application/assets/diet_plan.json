@@ -1,0 +1,30 @@
+{
+  "Monday": [
+    {
+      "meal": "Breakfast",
+      "description": "Oatmeal with fruits"
+    },
+    {
+      "meal": "Lunch",
+      "description": "Grilled chicken with vegetables"
+    },
+    {
+      "meal": "Dinner",
+      "description": "Salmon with quinoa"
+    }
+  ],
+  "Tuesday": [
+    {
+      "meal": "Breakfast",
+      "description": "Smoothie with spinach and banana"
+    },
+    {
+      "meal": "Lunch",
+      "description": "Turkey sandwich with whole grain bread"
+    },
+    {
+      "meal": "Dinner",
+      "description": "Beef stir-fry with broccoli"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-import 'package:dima_application/Views/MyPlansPage.dart';
-import 'package:dima_application/Views/NewPlansPage.dart';
-import 'package:dima_application/Views/SettingsPage.dart';
+import 'package:dima_application/Views/my_plans_page.dart';
+import 'package:dima_application/Views/new_plans_page.dart';
+import 'package:dima_application/Views/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
