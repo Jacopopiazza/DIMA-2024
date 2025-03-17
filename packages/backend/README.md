@@ -64,14 +64,14 @@ This project provides several NPM scripts to streamline development tasks:
   ```bash
   npm run watch
   ```
-- **`npm run diff`**  
+- **`diff`**  
   Compares the deployed stack with the current state.
 
   ```bash
   npm run diff
   ```
 
-- **`npm run synth`**  
+- **`synth`**  
   Emits the synthesized CloudFormation template.
   ```bash
   npm run synth
