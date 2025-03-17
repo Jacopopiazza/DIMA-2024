@@ -5,12 +5,12 @@ import {
   AdminCreateUserCommand,
   AdminSetUserPasswordCommand,
   UserType,
-  AdminUpdateUserAttributesCommand
+  AdminUpdateUserAttributesCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
-  region: process.env.AWS_REGION
+  region: process.env.AWS_REGION,
 });
 
 const generatePassword = (length: number = 16): string => {
@@ -23,8 +23,8 @@ const generatePassword = (length: number = 16): string => {
 
   let password = '';
   for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * allChars.length);
-      password += allChars[randomIndex];
+    const randomIndex = Math.floor(Math.random() * allChars.length);
+    password += allChars[randomIndex];
   }
 
   return password;
@@ -32,7 +32,7 @@ const generatePassword = (length: number = 16): string => {
 
 export const setUserPassword = async ({
   userPoolId,
-  email
+  email,
 }: {
   userPoolId: string;
   email: string;
@@ -41,7 +41,7 @@ export const setUserPassword = async ({
     UserPoolId: userPoolId,
     Username: email, // the email is the username
     Password: generatePassword(), // generate a random password
-    Permanent: true // this is needed to set the password as permanent
+    Permanent: true, // this is needed to set the password as permanent
   });
 
   await cognitoIdentityProviderClient.send(adminChangePasswordCommand);
@@ -52,7 +52,7 @@ export const createUser = async ({
   email,
   givenName,
   familyName,
-  subscriptionStatus
+  subscriptionStatus,
 }: {
   userPoolId: string;
   email: string;
@@ -60,7 +60,6 @@ export const createUser = async ({
   familyName: string;
   subscriptionStatus?: SubscriptionStatus;
 }) => {
-
   if (!subscriptionStatus) {
     subscriptionStatus = SubscriptionStatus.FREE;
   }
@@ -72,29 +71,29 @@ export const createUser = async ({
     UserAttributes: [
       {
         Name: 'given_name',
-        Value: givenName
+        Value: givenName,
       },
       {
         Name: 'family_name',
-        Value: familyName
+        Value: familyName,
       },
       {
         Name: 'email',
-        Value: email
+        Value: email,
       },
       {
         Name: 'email_verified',
-        Value: 'true'
+        Value: 'true',
       },
       {
         Name: 'custom:subscriptionStatus',
-        Value: subscriptionStatus.toString()
-      }
-    ]
+        Value: subscriptionStatus.toString(),
+      },
+    ],
   });
 
   const { User } = await cognitoIdentityProviderClient.send(
-    adminCreateUserCommand
+    adminCreateUserCommand,
   );
   return User;
 };
@@ -103,7 +102,7 @@ export const linkSocialAccount = async ({
   userPoolId,
   cognitoUsername,
   providerName,
-  providerUserId
+  providerUserId,
 }: {
   userPoolId: string;
   cognitoUsername?: string;
@@ -114,13 +113,13 @@ export const linkSocialAccount = async ({
     UserPoolId: userPoolId,
     DestinationUser: {
       ProviderName: 'Cognito', // Cognito is the default provider
-      ProviderAttributeValue: cognitoUsername // this is the username of the user
+      ProviderAttributeValue: cognitoUsername, // this is the username of the user
     },
     SourceUser: {
       ProviderName: providerName, // Google or Facebook (first letter capitalized)
       ProviderAttributeName: 'Cognito_Subject', // Cognito_Subject is the default attribute name
-      ProviderAttributeValue: providerUserId // this is the value of the provider
-    }
+      ProviderAttributeValue: providerUserId, // this is the value of the provider
+    },
   });
 
   await cognitoIdentityProviderClient.send(linkProviderForUserCommand);
@@ -128,12 +127,12 @@ export const linkSocialAccount = async ({
 
 export const findUserByEmail = async (
   email: string,
-  userPoolId: string
+  userPoolId: string,
 ): Promise<UserType | undefined> => {
   const listUsersCommand = new ListUsersCommand({
     UserPoolId: userPoolId,
     Filter: `email = "${email}"`,
-    Limit: 1
+    Limit: 1,
   });
 
   const { Users } = await cognitoIdentityProviderClient.send(listUsersCommand);
@@ -144,12 +143,12 @@ export const findUserByEmail = async (
 export const updateUserAttributes = async (
   userPoolId: string,
   userName: string,
-  attr: any = {}
+  attr: any = {},
 ) => {
   const userAttributes = Object.keys(attr).map((key) => {
     return {
       Name: key,
-      Value: attr[key]
+      Value: attr[key],
     };
   });
 
@@ -157,8 +156,8 @@ export const updateUserAttributes = async (
     {
       UserPoolId: userPoolId,
       Username: userName,
-      UserAttributes: userAttributes
-    }
+      UserAttributes: userAttributes,
+    },
   );
 
   await cognitoIdentityProviderClient.send(adminUpdateUserAttributesCommand);

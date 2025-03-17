@@ -1,13 +1,22 @@
-import { createUser, findUserByEmail, linkSocialAccount, setUserPassword } from "./utils";
+import {
+  createUser,
+  findUserByEmail,
+  linkSocialAccount,
+  setUserPassword,
+} from './utils';
 import { PreSignUpTriggerHandler, PreSignUpTriggerEvent } from 'aws-lambda';
 
-export const handler: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEvent) => {
+export const handler: PreSignUpTriggerHandler = async (
+  event: PreSignUpTriggerEvent,
+) => {
   console.log('preSignup event', JSON.stringify(event, null, 2));
 
   const { triggerSource, userPoolId, userName, request } = event;
 
   if (triggerSource === 'PreSignUp_ExternalProvider') {
-    const { userAttributes: { email, given_name, family_name } } = request;
+    const {
+      userAttributes: { email, given_name, family_name },
+    } = request;
 
     // Normalize email to handle case sensitivity
     const normalizedEmail = email.toLowerCase();
@@ -28,7 +37,9 @@ export const handler: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEv
           providerName,
           providerUserId,
         });
-        console.log(`Linked ${providerName} account to existing user: ${user.Username}`);
+        console.log(
+          `Linked ${providerName} account to existing user: ${user.Username}`,
+        );
       } else {
         // Create a new user in the Cognito user pool
         const newUser = await createUser({
@@ -56,7 +67,9 @@ export const handler: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEv
           providerUserId,
         });
 
-        console.log(`Created and linked ${providerName} account for new user: ${newUser.Username}`);
+        console.log(
+          `Created and linked ${providerName} account for new user: ${newUser.Username}`,
+        );
 
         // Auto-confirm and auto-verify the user
         event.response.autoConfirmUser = true;

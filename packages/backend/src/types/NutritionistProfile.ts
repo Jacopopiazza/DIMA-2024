@@ -1,20 +1,19 @@
 export interface NutritionistProfile {
-    /** Unique identifier for the nutritionist, e.g. 'N456' */
-    nutritionistId: string;
-  
-    /** Nutritionist’s display name */
-    name: string;
+  /** Unique identifier for the nutritionist, e.g. 'N456' */
+  nutritionistId: string;
 
-    /** Profile picture URL */
-    profilePictureUrl?: string;
+  /** Nutritionist’s display name */
+  name: string;
 
-    /** Description - Bio */
-    description?: string;
+  /** Profile picture URL */
+  profilePictureUrl?: string;
 
-    /** Credentials: e.g. "Certified Dietitian, M.S. in Nutrition" */
-    credentials: string;
-  
-    /** Specialties the nutritionist focuses on, e.g. ["Sports Nutrition", "Vegan Diets"]. */
-    specialties: string[];
+  /** Description - Bio */
+  description?: string;
+
+  /** Credentials: e.g. "Certified Dietitian, M.S. in Nutrition" */
+  credentials: string;
+
+  /** Specialties the nutritionist focuses on, e.g. ["Sports Nutrition", "Vegan Diets"]. */
+  specialties: string[];
 }
-  

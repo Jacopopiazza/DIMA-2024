@@ -1,4 +1,4 @@
 export enum SenderEnum {
-    USER,
-    NUTRITIONIST,
+  USER,
+  NUTRITIONIST,
 }
