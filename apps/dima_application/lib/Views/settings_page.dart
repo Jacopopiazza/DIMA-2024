@@ -1,6 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> _logout(BuildContext context) async {
   try {

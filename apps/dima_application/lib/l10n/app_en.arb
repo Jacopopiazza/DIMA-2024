@@ -1296,29 +1296,6 @@
   "@selectEmail": {
     "description": "Label for the radio button to select email as the user's chosen MFA method."
   },
-  "codeSent": "A confirmation code has been sent to {destination}.",
-  "@codeSent": {
-    "description": "The message that is displayed after a new confirmation code is sent via Email/SMS.",
-    "placeholders": {
-      "destination": {
-        "type": "String",
-        "example": "j**@g**.com",
-        "description": "The privacy-enabled delivery destination."
-      }
-    }
-  },
-  "codeSentUnknown": "A confirmation code has been sent.",
-  "@codeSentUnknown": {
-    "description": "The message that is displayed after a new confirmation code is sent via an unknown delivery medium"
-  },
-  "copySucceeded": "Copied to clipboard!",
-  "@copySucceeded": {
-    "description": "The message that is displayed after a value was copied to the clipboard"
-  },
-  "copyFailed": "Copy to clipboard failed.",
-  "@copyFailed": {
-    "description": "The message that is displayed after a value failed to copy to the clipboard"
-  },
   "totpStep1Title": "Step 1: Download an Authenticator app",
   "@totpStep1Title": {
     "description": "The title for the first step of TOTP setup"
@@ -1342,6 +1319,29 @@
   "totpStep3Body": "Enter the 6 digit code from your Authenticator app",
   "@totpStep3Body": {
     "description": "The body text for step three of TOTP setup"
+  },
+  "codeSent": "A confirmation code has been sent to {destination}.",
+  "@codeSent": {
+    "description": "The message that is displayed after a new confirmation code is sent via Email/SMS.",
+    "placeholders": {
+      "destination": {
+        "type": "String",
+        "example": "j**@g**.com",
+        "description": "The privacy-enabled delivery destination."
+      }
+    }
+  },
+  "codeSentUnknown": "A confirmation code has been sent.",
+  "@codeSentUnknown": {
+    "description": "The message that is displayed after a new confirmation code is sent via an unknown delivery medium"
+  },
+  "copySucceeded": "Copied to clipboard!",
+  "@copySucceeded": {
+    "description": "The message that is displayed after a value was copied to the clipboard"
+  },
+  "copyFailed": "Copy to clipboard failed.",
+  "@copyFailed": {
+    "description": "The message that is displayed after a value failed to copy to the clipboard"
   },
   "confirmSignUp": "Enter your confirmation code",
   "@confirmSignUp": {
