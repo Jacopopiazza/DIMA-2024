@@ -1,4 +1,4 @@
-import { SenderEnum } from './SenderEnum';
+import { UserTypeEnum } from './UserTypeEnum';
 
 export interface ChatMessage {
   /**
@@ -12,7 +12,7 @@ export interface ChatMessage {
   // could also be a Date, number (epoch), or ISO string
 
   /** Who sent the message; can be the user or nutritionist. */
-  sender: SenderEnum;
+  sender: UserTypeEnum;
 
   /** The textual content of the message. */
   content: string;
