@@ -83,6 +83,7 @@ export class AuthStack extends cdk.Stack {
       customAttributes: {
         profilePicture: new cognito.StringAttribute({ mutable: true }),
         subscriptionStatus: new cognito.StringAttribute({ mutable: true }),
+        role: new cognito.StringAttribute({ mutable: true }),
       },
       passwordPolicy: {
         minLength: 8,

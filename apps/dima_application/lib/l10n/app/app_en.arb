@@ -6,5 +6,21 @@
     "signedIn": "Logged in!",
     "@signedIn" : {
         "description": "Logged in message"
+    },
+    "userRole" : "User",
+    "@userRole" : {
+        "description": "UserTypeEnum DisplayValue for User"
+    },
+    "nutritionistRole" : "Nutritionist",
+    "@nutritionistRole" : {
+        "description": "UserTypeEnum DisplayValue for Nutritionist"
+    },
+    "signUpDropdownText": "Register as",
+    "@signUpDropdownText": {
+        "description": "Sign Up Dropdown Description for user role selection"
+    },
+    "socialSignUpNotice": "Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.",
+    "@socialSignUpNotice": {
+        "description": "Notice for users signing up with social accounts"
     }
 }

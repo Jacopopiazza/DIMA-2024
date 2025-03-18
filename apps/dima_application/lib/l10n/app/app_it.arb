@@ -1,4 +1,8 @@
 {
     "helloWorld": "Ciao Mondo!",
-    "signedIn": "Loggato!"
+    "signedIn": "Loggato!",
+    "userRole" : "Utente",
+    "nutritionistRole" : "Nutrizionista",
+    "signUpDropdownText": "Registrati come",
+    "socialSignUpNotice": "La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente."
 }

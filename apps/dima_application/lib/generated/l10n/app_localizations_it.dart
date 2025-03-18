@@ -1,5 +1,5 @@
-// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -15,71 +15,83 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signedIn => 'Loggato!';
 
   @override
-  String get signIn => 'Log In - Localizzato!';
+  String get userRole => 'Utente';
 
   @override
-  String get signUp => 'Create Account';
+  String get nutritionistRole => 'Nutrizionista';
 
   @override
-  String get confirm => 'Confirm';
+  String get signUpDropdownText => 'Registrati come';
 
   @override
-  String get continueLabel => 'Continue';
+  String get socialSignUpNotice => 'La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l\'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente.';
 
   @override
-  String get submit => 'Submit';
+  String get signIn => 'Accedi';
 
   @override
-  String get changePassword => 'Change Password';
+  String get signUp => 'Crea account';
 
   @override
-  String get sendCode => 'Send Code';
+  String get confirm => 'Conferma';
 
   @override
-  String get lostCode => 'Lost your code?';
+  String get continueLabel => 'Continua';
 
   @override
-  String get noAccount => 'No account?';
+  String get submit => 'Invia';
 
   @override
-  String get haveAccount => 'Have an account?';
+  String get changePassword => 'Cambia password';
 
   @override
-  String get forgotPassword => 'Forgot your password?';
+  String get sendCode => 'Invia codice';
 
   @override
-  String get confirmResetPassword => 'Reset Password';
+  String get lostCode => 'Hai perso il codice?';
 
   @override
-  String get verify => 'Verify';
+  String get noAccount => 'Non hai un account?';
 
   @override
-  String get skip => 'Skip';
+  String get haveAccount => 'Hai già un account?';
 
   @override
-  String get copyKey => 'Copy Key';
+  String get forgotPassword => 'Hai dimenticato la password?';
 
   @override
-  String get signOut => 'Sign Out';
+  String get confirmResetPassword => 'Reimposta password';
+
+  @override
+  String get verify => 'Verifica';
+
+  @override
+  String get skip => 'Salta';
+
+  @override
+  String get copyKey => 'Copia chiave';
+
+  @override
+  String get signOut => 'Esci';
 
   @override
   String backTo(String previousStep) {
     String _temp0 = intl.Intl.selectLogic(
       previousStep,
       {
-        'signUp': 'Sign Up',
-        'signIn': 'Sign In',
-        'confirmSignUp': 'Confirm Sign-up',
-        'confirmSignInMfa': 'Confirm Sign-in',
-        'confirmSignInNewPassword': 'Confirm Sign-in',
-        'sendCode': 'Send Code',
-        'resetPassword': 'Reset Password',
-        'verifyUser': 'Verify User',
-        'confirmVerifyUser': 'Confirm Verify User',
-        'other': 'ERROR',
+        'signUp': 'Registrati',
+        'signIn': 'Accedi',
+        'confirmSignUp': 'Conferma registrazione',
+        'confirmSignInMfa': 'Conferma accesso',
+        'confirmSignInNewPassword': 'Conferma accesso',
+        'sendCode': 'Invia codice',
+        'resetPassword': 'Reimposta password',
+        'verifyUser': 'Verifica utente',
+        'confirmVerifyUser': 'Conferma verifica utente',
+        'other': 'ERRORE',
       },
     );
-    return 'Back to $_temp0';
+    return 'Torna a $_temp0';
   }
 
   @override
@@ -91,10 +103,10 @@ class AppLocalizationsIt extends AppLocalizations {
         'facebook': 'Facebook',
         'amazon': 'Amazon',
         'apple': 'Apple',
-        'other': 'ERROR',
+        'other': 'ERRORE',
       },
     );
-    return 'Sign In with $_temp0';
+    return 'Accedi con $_temp0';
   }
 
   @override
@@ -985,6 +997,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectEmail => 'Email';
 
   @override
+  String codeSent(String destination) {
+    return 'A confirmation code has been sent to $destination.';
+  }
+
+  @override
+  String get codeSentUnknown => 'A confirmation code has been sent.';
+
+  @override
+  String get copySucceeded => 'Copied to clipboard!';
+
+  @override
+  String get copyFailed => 'Copy to clipboard failed.';
+
+  @override
   String get totpStep1Title => 'Step 1: Download an Authenticator app';
 
   @override
@@ -1001,20 +1027,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get totpStep3Body => 'Enter the 6 digit code from your Authenticator app';
-
-  @override
-  String codeSent(String destination) {
-    return 'A confirmation code has been sent to $destination.';
-  }
-
-  @override
-  String get codeSentUnknown => 'A confirmation code has been sent.';
-
-  @override
-  String get copySucceeded => 'Copied to clipboard!';
-
-  @override
-  String get copyFailed => 'Copy to clipboard failed.';
 
   @override
   String get confirmSignUp => 'Enter your confirmation code';

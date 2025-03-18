@@ -1,5 +1,5 @@
-// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -13,6 +13,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signedIn => 'Logged in!';
+
+  @override
+  String get userRole => 'User';
+
+  @override
+  String get nutritionistRole => 'Nutritionist';
+
+  @override
+  String get signUpDropdownText => 'Register as';
+
+  @override
+  String get socialSignUpNotice => 'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.';
 
   @override
   String get signIn => 'Sign In';
@@ -985,6 +997,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectEmail => 'Email';
 
   @override
+  String codeSent(String destination) {
+    return 'A confirmation code has been sent to $destination.';
+  }
+
+  @override
+  String get codeSentUnknown => 'A confirmation code has been sent.';
+
+  @override
+  String get copySucceeded => 'Copied to clipboard!';
+
+  @override
+  String get copyFailed => 'Copy to clipboard failed.';
+
+  @override
   String get totpStep1Title => 'Step 1: Download an Authenticator app';
 
   @override
@@ -1001,20 +1027,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get totpStep3Body => 'Enter the 6 digit code from your Authenticator app';
-
-  @override
-  String codeSent(String destination) {
-    return 'A confirmation code has been sent to $destination.';
-  }
-
-  @override
-  String get codeSentUnknown => 'A confirmation code has been sent.';
-
-  @override
-  String get copySucceeded => 'Copied to clipboard!';
-
-  @override
-  String get copyFailed => 'Copy to clipboard failed.';
 
   @override
   String get confirmSignUp => 'Enter your confirmation code';

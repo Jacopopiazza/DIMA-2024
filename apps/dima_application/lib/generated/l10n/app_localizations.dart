@@ -107,6 +107,30 @@ abstract class AppLocalizations {
   /// **'Logged in!'**
   String get signedIn;
 
+  /// UserTypeEnum DisplayValue for User
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get userRole;
+
+  /// UserTypeEnum DisplayValue for Nutritionist
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritionist'**
+  String get nutritionistRole;
+
+  /// Sign Up Dropdown Description for user role selection
+  ///
+  /// In en, this message translates to:
+  /// **'Register as'**
+  String get signUpDropdownText;
+
+  /// Notice for users signing up with social accounts
+  ///
+  /// In en, this message translates to:
+  /// **'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.'**
+  String get socialSignUpNotice;
+
   /// Label of the button to sign in the user.
   ///
   /// In en, this message translates to:
@@ -1901,6 +1925,30 @@ abstract class AppLocalizations {
   /// **'Email'**
   String get selectEmail;
 
+  /// The message that is displayed after a new confirmation code is sent via Email/SMS.
+  ///
+  /// In en, this message translates to:
+  /// **'A confirmation code has been sent to {destination}.'**
+  String codeSent(String destination);
+
+  /// The message that is displayed after a new confirmation code is sent via an unknown delivery medium
+  ///
+  /// In en, this message translates to:
+  /// **'A confirmation code has been sent.'**
+  String get codeSentUnknown;
+
+  /// The message that is displayed after a value was copied to the clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard!'**
+  String get copySucceeded;
+
+  /// The message that is displayed after a value failed to copy to the clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to clipboard failed.'**
+  String get copyFailed;
+
   /// The title for the first step of TOTP setup
   ///
   /// In en, this message translates to:
@@ -1936,30 +1984,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter the 6 digit code from your Authenticator app'**
   String get totpStep3Body;
-
-  /// The message that is displayed after a new confirmation code is sent via Email/SMS.
-  ///
-  /// In en, this message translates to:
-  /// **'A confirmation code has been sent to {destination}.'**
-  String codeSent(String destination);
-
-  /// The message that is displayed after a new confirmation code is sent via an unknown delivery medium
-  ///
-  /// In en, this message translates to:
-  /// **'A confirmation code has been sent.'**
-  String get codeSentUnknown;
-
-  /// The message that is displayed after a value was copied to the clipboard
-  ///
-  /// In en, this message translates to:
-  /// **'Copied to clipboard!'**
-  String get copySucceeded;
-
-  /// The message that is displayed after a value failed to copy to the clipboard
-  ///
-  /// In en, this message translates to:
-  /// **'Copy to clipboard failed.'**
-  String get copyFailed;
 
   /// Title of the Confirm Sign Up step and form
   ///
