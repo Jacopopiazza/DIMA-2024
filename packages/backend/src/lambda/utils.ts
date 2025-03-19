@@ -31,6 +31,11 @@ const generatePassword = (length: number = 16): string => {
     password += allChars[randomIndex];
   }
 
+  password += numberChars[Math.floor(Math.random() * numberChars.length)]; // enforce password policy
+  password += specialChars[Math.floor(Math.random() * specialChars.length)]; // enforce password policy
+  password += uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)]; // enforce password policy
+  password += lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)]; // enforce password policy
+
   return password;
 };
 
