@@ -6,8 +6,12 @@ import {
   AdminSetUserPasswordCommand,
   UserType,
   AdminUpdateUserAttributesCommand,
+  AdminAddUserToGroupCommand,
+  AdminListGroupsForUserCommand,
+  AdminDeleteUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { SubscriptionStatus } from '../../types/SubscriptionStatus';
+import { SubscriptionStatus } from '../types/SubscriptionStatus';
+import { UserTypeEnum } from '../types/UserTypeEnum';
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
@@ -53,15 +57,20 @@ export const createUser = async ({
   givenName,
   familyName,
   subscriptionStatus,
+  userRole,
 }: {
   userPoolId: string;
   email: string;
   givenName: string;
   familyName: string;
   subscriptionStatus?: SubscriptionStatus;
+  userRole?: UserTypeEnum;
 }) => {
   if (!subscriptionStatus) {
     subscriptionStatus = SubscriptionStatus.FREE;
+  }
+  if (!userRole) {
+    userRole = UserTypeEnum.USER;
   }
 
   const adminCreateUserCommand = new AdminCreateUserCommand({
@@ -89,13 +98,40 @@ export const createUser = async ({
         Name: 'custom:subscriptionStatus',
         Value: subscriptionStatus.toString(),
       },
+      {
+        Name: 'custom:role',
+        Value: userRole.toString(),
+      },
     ],
   });
 
-  const { User } = await cognitoIdentityProviderClient.send(
-    adminCreateUserCommand,
-  );
-  return User;
+  try {
+    const { User } = await cognitoIdentityProviderClient.send(
+      adminCreateUserCommand,
+    );
+
+    await addUserToGroup(userPoolId, User?.Username!, 'USERS');
+
+    return User;
+  } catch (error) {
+    console.error('Error creating user: ', error);
+    return;
+  }
+};
+
+export const deleteUser = async ({
+  userPoolId,
+  userName,
+}: {
+  userPoolId: string;
+  userName: string;
+}) => {
+  const adminDeleteUserCommand = new AdminDeleteUserCommand({
+    UserPoolId: userPoolId,
+    Username: userName,
+  });
+
+  await cognitoIdentityProviderClient.send(adminDeleteUserCommand);
 };
 
 export const linkSocialAccount = async ({
@@ -140,6 +176,21 @@ export const findUserByEmail = async (
   return Users?.[0];
 };
 
+export const addUserToGroup = async (
+  userPoolId: string,
+  userName: string,
+  groupName: string,
+) => {
+  // Add user to the appropriate group using the v3 SDK client
+  const addToGroupCommand = new AdminAddUserToGroupCommand({
+    UserPoolId: userPoolId,
+    Username: userName,
+    GroupName: groupName,
+  });
+
+  await cognitoIdentityProviderClient.send(addToGroupCommand);
+};
+
 export const updateUserAttributes = async (
   userPoolId: string,
   userName: string,
@@ -161,4 +212,24 @@ export const updateUserAttributes = async (
   );
 
   await cognitoIdentityProviderClient.send(adminUpdateUserAttributesCommand);
+};
+
+export const getGroupsForUser = async (
+  userPoolId: string,
+  userName: string,
+): Promise<string[]> => {
+  const command = new AdminListGroupsForUserCommand({
+    UserPoolId: userPoolId,
+    Username: userName,
+  });
+
+  const response = await cognitoIdentityProviderClient.send(command);
+
+  // Extract group names
+  const groups =
+    response.Groups?.map((group) => group.GroupName).filter(
+      (name): name is string => name !== undefined,
+    ) || [];
+
+  return groups;
 };

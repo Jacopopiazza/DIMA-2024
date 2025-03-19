@@ -83,7 +83,7 @@ export class AuthStack extends cdk.Stack {
       customAttributes: {
         profilePicture: new cognito.StringAttribute({ mutable: true }),
         subscriptionStatus: new cognito.StringAttribute({ mutable: true }),
-        role: new cognito.StringAttribute({ mutable: true }),
+        role: new cognito.StringAttribute({ mutable: false }),
       },
       passwordPolicy: {
         minLength: 8,
@@ -111,6 +111,8 @@ export class AuthStack extends cdk.Stack {
           'cognito-idp:ListUsers',
           'cognito-idp:AdminCreateUser',
           'cognito-idp:AdminSetUserPassword',
+          'cognito-idp:AdminAddUserToGroup',
+          'cognito-idp:AdminDeleteUser',
         ],
         resources: ['*'], // needed to avoid circular dependency
       }),
@@ -118,7 +120,10 @@ export class AuthStack extends cdk.Stack {
 
     postConfirmation.addToRolePolicy(
       new iam.PolicyStatement({
-        actions: ['cognito-idp:AdminUpdateUserAttributes'],
+        actions: [
+          'cognito-idp:AdminAddUserToGroup',
+          'cognito-idp:AdminListGroupsForUser',
+        ],
         resources: ['*'],
       }),
     );
@@ -227,6 +232,8 @@ export class AuthStack extends cdk.Stack {
         'sts:AssumeRoleWithWebIdentity',
       ),
     });
+
+    userPoolClient.node.addDependency(googleProvider);
 
     // Output the User Pool ID and Client ID
     new cdk.CfnOutput(this, 'UserPoolId', {

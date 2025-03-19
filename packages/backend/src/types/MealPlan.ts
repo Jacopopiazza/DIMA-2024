@@ -15,7 +15,7 @@ export interface MealPlan {
    * Full meal plan data in JSON format.
    * The structure can vary based on your LLM’s output.
    */
-  planJson: any;
+  planJson: string;
   // or use a more structured type if your LLM output is consistent
   // planJson: { [day: string]: { [mealType: string]: { ... } } };
 

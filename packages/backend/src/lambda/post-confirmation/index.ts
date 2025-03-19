@@ -2,8 +2,9 @@ import {
   PostConfirmationTriggerEvent,
   PostConfirmationTriggerHandler,
 } from 'aws-lambda';
-import { SubscriptionStatus } from '../../types/SubscriptionStatus';
-import { updateUserAttributes } from '../pre-sign-up/utils';
+
+import { UserTypeEnum } from '../../types/UserTypeEnum';
+import { addUserToGroup, getGroupsForUser } from '../utils';
 
 export const handler: PostConfirmationTriggerHandler = async (
   event: PostConfirmationTriggerEvent,
@@ -16,20 +17,45 @@ export const handler: PostConfirmationTriggerHandler = async (
   const { userPoolId, userName, request } = event;
   const userAttributes = request.userAttributes;
 
-  // Set a default subscription status (e.g., "free") if not already set
-  if (!userAttributes['custom:subscriptionStatus']) {
-    try {
-      // Update the user's attributes in Cognito
-      await updateUserAttributes(userPoolId, userName, {
-        'custom:subscriptionStatus': SubscriptionStatus.FREE,
-      });
-      console.log(
-        `Successfully updated subscriptionStatus for user ${userName}`,
-      );
-    } catch (error) {
-      console.error('Error updating subscriptionStatus in Cognito:', error);
-      throw error;
+  // Check user role and add to appropriate group
+  const userRole = userAttributes['custom:role'];
+
+  if (!userRole) {
+    console.error('User role not defined');
+    throw new Error('User role is required');
+  }
+
+  if (!Object.values(UserTypeEnum).includes(userRole as any)) {
+    console.error(`Invalid role: ${userRole}`);
+    throw new Error(
+      `Invalid role: ${userRole}. Allowed roles are: USER, NUTRITIONIST`,
+    );
+  }
+
+  try {
+    const groups = await getGroupsForUser(userPoolId, userName);
+    console.log(`Groups for user ${userName}: ${groups}`);
+
+    if (groups.includes('USERS') || groups.includes('NUTRITIONISTS')) {
+      console.log(`User ${userName} already in group`);
+      return event;
     }
+  } catch (error) {
+    console.error('Error getting groups for user:', error);
+    throw error;
+  }
+
+  try {
+    // Set group name based on role
+    const groupName =
+      userRole === UserTypeEnum.USER.toString() ? 'USERS' : 'NUTRITIONISTS';
+
+    await addUserToGroup(userPoolId, userName, groupName);
+
+    console.log(`Added user ${userName} to group ${groupName}`);
+  } catch (error) {
+    console.error('Error adding user to group:', error);
+    throw error;
   }
 
   // Return the event to continue the signup process

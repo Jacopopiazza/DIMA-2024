@@ -1,9 +1,12 @@
+import { UserTypeEnum } from '../../types/UserTypeEnum';
+import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import {
   createUser,
+  deleteUser,
   findUserByEmail,
   linkSocialAccount,
   setUserPassword,
-} from './utils';
+} from '../utils';
 import { PreSignUpTriggerHandler, PreSignUpTriggerEvent } from 'aws-lambda';
 
 export const handler: PreSignUpTriggerHandler = async (
@@ -13,7 +16,39 @@ export const handler: PreSignUpTriggerHandler = async (
 
   const { triggerSource, userPoolId, userName, request } = event;
 
-  if (triggerSource === 'PreSignUp_ExternalProvider') {
+  if (triggerSource === 'PreSignUp_SignUp') {
+    // A request coming from the app must have the role and subscriptionStatus attributes
+
+    const role: string = request.userAttributes['custom:role'];
+    const subscriptionStatus: string =
+      request.userAttributes['custom:subscriptionStatus'];
+
+    if (!role) {
+      console.error('User role not defined');
+      throw new Error('User role is required');
+    }
+
+    if (!Object.values(UserTypeEnum).includes(role as any)) {
+      console.error(`Invalid role: ${role}`);
+      throw new Error(
+        `Invalid role: ${role}. Allowed roles are: USER, NUTRITIONIST`,
+      );
+    }
+
+    if (!subscriptionStatus) {
+      console.error('Subscription status not defined');
+      throw new Error('Subscription status is required');
+    }
+
+    if (
+      !Object.values(SubscriptionStatus).includes(subscriptionStatus as any)
+    ) {
+      console.error(`Invalid subscription status: ${subscriptionStatus}`);
+      throw new Error(
+        `Invalid subscription status: ${subscriptionStatus}. Allowed subscription statuses are: FREE, PAID`,
+      );
+    }
+  } else if (triggerSource === 'PreSignUp_ExternalProvider') {
     const {
       userAttributes: { email, given_name, family_name },
     } = request;
@@ -41,39 +76,60 @@ export const handler: PreSignUpTriggerHandler = async (
           `Linked ${providerName} account to existing user: ${user.Username}`,
         );
       } else {
-        // Create a new user in the Cognito user pool
-        const newUser = await createUser({
-          userPoolId,
-          email: normalizedEmail,
-          givenName: given_name,
-          familyName: family_name,
-        });
+        try {
+          // Create a new user in the Cognito user pool
+          var newUser = await createUser({
+            userPoolId,
+            email: normalizedEmail,
+            givenName: given_name,
+            familyName: family_name,
+          });
 
-        if (!newUser) {
-          throw new Error('Failed to create user in Cognito');
+          if (!newUser) {
+            throw new Error('Failed to create user in Cognito');
+          }
+        } catch (error) {
+          console.error('Error during account creation:', error);
+          throw error;
         }
 
-        // Set a permanent password for the new user
-        await setUserPassword({
-          userPoolId,
-          email: normalizedEmail,
-        });
+        try {
+          // Set a permanent password for the new user
+          await setUserPassword({
+            userPoolId,
+            email: normalizedEmail,
+          });
 
-        // Link the federated account to the new user
-        await linkSocialAccount({
-          userPoolId,
-          cognitoUsername: newUser.Username,
-          providerName,
-          providerUserId,
-        });
+          // Link the federated account to the new user
+          await linkSocialAccount({
+            userPoolId,
+            cognitoUsername: newUser.Username,
+            providerName,
+            providerUserId,
+          });
 
-        console.log(
-          `Created and linked ${providerName} account for new user: ${newUser.Username}`,
-        );
+          console.log(
+            `Created and linked ${providerName} account for new user: ${newUser.Username}`,
+          );
 
-        // Auto-confirm and auto-verify the user
-        event.response.autoConfirmUser = true;
-        event.response.autoVerifyEmail = true;
+          // Auto-confirm and auto-verify the user
+          event.response.autoConfirmUser = true;
+          event.response.autoVerifyEmail = true;
+        } catch (error) {
+          console.error('Error during account setup:', error);
+
+          // Clean up by deleting the user
+          try {
+            await deleteUser({
+              userPoolId,
+              userName: newUser.Username!,
+            });
+          } catch (error) {
+            console.error('Error during cleanup:', error);
+          }
+
+          throw error;
+        }
       }
     } catch (error) {
       console.error('Error during PreSignUp_ExternalProvider handling:', error);
