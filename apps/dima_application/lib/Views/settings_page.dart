@@ -31,12 +31,39 @@ Future<String?> fetchCurrentUser() async {
   }
 }
 
+Future<void> _printUserInfo() async {
+  try {
+    // Get current auth session
+    final session = await Amplify.Auth.fetchAuthSession();
+    print('User is signed in: ${session.isSignedIn}');
+
+    // Get current user attributes
+    final attributes = await Amplify.Auth.fetchUserAttributes();
+    print('User attributes:');
+    for (final attribute in attributes) {
+      print('${attribute.userAttributeKey}: ${attribute.value}');
+    }
+
+    // Get user details
+    try {
+      final currentUser = await Amplify.Auth.getCurrentUser();
+      print('Username: ${currentUser.username}');
+      print('User ID: ${currentUser.userId}');
+    } catch (e) {
+      print('Error getting current user: $e');
+    }
+  } catch (e) {
+    print('Error fetching user info: $e');
+  }
+}
+
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final Future<String?> user = fetchCurrentUser();
+    _printUserInfo();
 
     return Scaffold(
       appBar: AppBar(
