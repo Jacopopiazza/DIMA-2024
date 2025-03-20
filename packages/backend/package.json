@@ -11,7 +11,8 @@
     "check": "prettier --check .",
     "test": "jest",
     "cdk": "cdk",
-    "deploy": "cdk deploy",
+    "deploy": "cdk deploy --all",
+    "deploy-appsync": "cdk deploy AppSyncApiStack",
     "watch": "cdk watch",
     "diff": "cdk diff",
     "synth": "cdk synth"

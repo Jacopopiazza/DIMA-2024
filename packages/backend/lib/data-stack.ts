@@ -18,7 +18,9 @@ export class DataStack extends cdk.Stack {
       partitionKey: { name: 'PK', type: dynamodb.AttributeType.STRING },
       sortKey: { name: 'SK', type: dynamodb.AttributeType.STRING },
       removalPolicy: cdk.RemovalPolicy.DESTROY, // TODO: Change to RETAIN for prod
-      pointInTimeRecovery: false,
+      pointInTimeRecoverySpecification: {
+        pointInTimeRecoveryEnabled: false,
+      },
       encryption: dynamodb.TableEncryptionV2.awsManagedKey(),
       tableName: 'MealPlanningTable',
     };
@@ -49,7 +51,7 @@ export class DataStack extends cdk.Stack {
     });
 
     // Export the table name for cross-stack references
-    new cdk.CfnOutput(this, 'MealPlanningTable', {
+    new cdk.CfnOutput(this, 'MealPlanningTableId', {
       value: this.mealPlanningTable.tableName,
       exportName: 'MealPlanningTable',
     });

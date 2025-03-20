@@ -61,5 +61,12 @@ const amplifyConfig = r'''{
       ],
       "domain": "e2c748be1d135a2c6733.auth.us-west-2.amazoncognito.com"
     }
+  },
+  "API": {
+    "GraphQL": {
+      "endpoint": "https://f6obtlj6ybf7fjfpu4dndheqju.appsync-api.us-west-2.amazonaws.com/graphql",
+      "region": "us-west-2",
+      "defaultAuthMode": "userPool",
+    }
   }
 }''';

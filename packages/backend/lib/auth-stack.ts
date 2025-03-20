@@ -8,6 +8,8 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cognito_identity from 'aws-cdk-lib/aws-cognito';
 
 export class AuthStack extends cdk.Stack {
+  public readonly userPool: cognito.UserPool;
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -49,7 +51,7 @@ export class AuthStack extends cdk.Stack {
     );
 
     // Define the Cognito User Pool
-    const userPool = new cognito.UserPool(this, 'UserPool', {
+    this.userPool = new cognito.UserPool(this, 'UserPool', {
       userPoolName: 'MyUserPool',
       selfSignUpEnabled: true,
       signInAliases: {
@@ -130,7 +132,7 @@ export class AuthStack extends cdk.Stack {
 
     // Define User Pool Groups
     const userGroup = new cognito.CfnUserPoolGroup(this, 'UserGroup', {
-      userPoolId: userPool.userPoolId,
+      userPoolId: this.userPool.userPoolId,
       groupName: 'USERS',
       precedence: 0,
     });
@@ -139,14 +141,14 @@ export class AuthStack extends cdk.Stack {
       this,
       'NutritionistGroup',
       {
-        userPoolId: userPool.userPoolId,
+        userPoolId: this.userPool.userPoolId,
         groupName: 'NUTRITIONISTS',
         precedence: 1,
       },
     );
 
     const adminGroup = new cognito.CfnUserPoolGroup(this, 'AdminGroup', {
-      userPoolId: userPool.userPoolId,
+      userPoolId: this.userPool.userPoolId,
       groupName: 'ADMIN',
       precedence: 2,
     });
@@ -162,7 +164,7 @@ export class AuthStack extends cdk.Stack {
         clientSecretValue: googleSecret.secretValueFromJson(
           'GOOGLE_CLIENT_SECRET',
         ), // Use Secrets Manager or SSM Parameter Store for production
-        userPool,
+        userPool: this.userPool,
         scopes: ['profile', 'email', 'openid'],
         attributeMapping: {
           email: cognito.ProviderAttribute.GOOGLE_EMAIL,
@@ -175,7 +177,7 @@ export class AuthStack extends cdk.Stack {
     );
 
     // Add a domain to the User Pool
-    const userPoolDomain = userPool.addDomain('MyUserPoolDomain', {
+    const userPoolDomain = this.userPool.addDomain('MyUserPoolDomain', {
       cognitoDomain: {
         domainPrefix: 'e2c748be1d135a2c6733', // Replace with your unique domain prefix
       },
@@ -183,7 +185,7 @@ export class AuthStack extends cdk.Stack {
 
     // Define the User Pool Client
     const userPoolClient = new cognito.UserPoolClient(this, 'UserPoolClient', {
-      userPool,
+      userPool: this.userPool,
       authFlows: {
         userPassword: true,
         userSrp: true,
@@ -211,7 +213,7 @@ export class AuthStack extends cdk.Stack {
         cognitoIdentityProviders: [
           {
             clientId: userPoolClient.userPoolClientId,
-            providerName: userPool.userPoolProviderName,
+            providerName: this.userPool.userPoolProviderName,
           },
         ],
       },
@@ -237,7 +239,7 @@ export class AuthStack extends cdk.Stack {
 
     // Output the User Pool ID and Client ID
     new cdk.CfnOutput(this, 'UserPoolId', {
-      value: userPool.userPoolId,
+      value: this.userPool.userPoolId,
     });
 
     new cdk.CfnOutput(this, 'UserPoolClientId', {
