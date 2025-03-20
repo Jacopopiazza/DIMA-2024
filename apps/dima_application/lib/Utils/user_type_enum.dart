@@ -23,7 +23,11 @@ enum UserTypeEnum {
   static UserTypeEnum fromValue(String value) {
     return UserTypeEnum.values.firstWhere(
       (type) => type.value == value,
-      orElse: () => UserTypeEnum.user,
     );
   }
+
+  static bool contains(String value) {
+    return UserTypeEnum.values.any((type) => type.value == value);
+  }
+
 }

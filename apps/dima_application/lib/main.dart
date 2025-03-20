@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     _configureAmplify();
   }
 
-  Future<void> _configureAmplify() async {
+  void _configureAmplify() async {
     try {
       await Amplify.addPlugin(AmplifyAuthCognito());
       await Amplify.configure(amplifyConfig);

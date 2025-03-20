@@ -1,10 +1,12 @@
-import 'package:dima_application/Views/my_plans_page.dart';
-import 'package:dima_application/Views/new_plans_page.dart';
-import 'package:dima_application/Views/settings_page.dart';
+import 'package:dima_application/Views/UserViews/my_plans_page.dart';
+import 'package:dima_application/Views/UserViews/new_plans_page.dart';
+import 'package:dima_application/Views/UserViews/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool isOffline;
+
+  const HomeScreen({super.key, this.isOffline = false});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
