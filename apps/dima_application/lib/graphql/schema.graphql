@@ -1,0 +1,27 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Mutation {
+  putUserPreferences(input: UserPreferencesInput!): UserPreferences
+}
+
+type Query {
+  getUserPreferences: UserPreferences
+}
+
+#  graphql/schema.graphql
+type UserPreferences {
+  allergens: [String]
+  frequencyExercise: String
+  mealsPerDay: Int
+  weight: Float
+}
+
+input UserPreferencesInput {
+  allergens: [String]
+  frequencyExercise: String
+  mealsPerDay: Int
+  weight: Float
+}

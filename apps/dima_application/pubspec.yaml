@@ -31,7 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  amplify_flutter: ^2.0.0
+  amplify_flutter: ^2.0.0    
+  amplify_api: ^2.0.0
   amplify_auth_cognito: ^2.0.0
   amplify_authenticator: ^2.0.0
 
