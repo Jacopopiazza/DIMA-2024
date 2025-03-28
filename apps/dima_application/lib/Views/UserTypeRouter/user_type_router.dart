@@ -18,6 +18,7 @@ class UserTypeRouter extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
+          Amplify.Auth.signOut();
           return Center(
             child: Text('Error: ${snapshot.error}'),
           );
@@ -74,7 +75,7 @@ class UserTypeRouter extends StatelessWidget {
         return localRole;
       } catch (localError) {
         safePrint('Error retrieving role from local storage: $localError');
-        throw Exception('User role stored locally is invalid. This should never happen.');
+        throw Exception('User role stored locally is invalid. This should never happen. Trying to log you out.');
       }
     }
 
