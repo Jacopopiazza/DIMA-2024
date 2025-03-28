@@ -18,9 +18,24 @@ class UserTypeRouter extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-          Amplify.Auth.signOut();
           return Center(
-            child: Text('Error: ${snapshot.error}'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Error: ${snapshot.error}'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await Amplify.Auth.signOut();
+                    } catch (e) {
+                      safePrint('Error during logout: $e');
+                    }
+                  },
+                  child: Text('Logout'),
+                ),
+              ],
+            ),
           );
         } else {
           final role = snapshot.data as String?;
@@ -69,13 +84,15 @@ class UserTypeRouter extends StatelessWidget {
         final localRole = prefs.getString(roleKey);
 
         if (localRole == null || localRole.isEmpty) {
-          throw Exception('User role stored locally is empty. This should never happen.');
+          throw Exception(
+              'User role stored locally is empty. This should never happen.');
         }
         safePrint('Using locally stored role: $localRole');
         return localRole;
       } catch (localError) {
         safePrint('Error retrieving role from local storage: $localError');
-        throw Exception('User role stored locally is invalid. This should never happen. Trying to log you out.');
+        throw Exception(
+            'User role stored locally is invalid. This should never happen. Trying to log you out.');
       }
     }
 
