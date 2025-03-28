@@ -25,7 +25,7 @@ import 'package:collection/collection.dart';
 
 
 /** This is an auto generated class representing the UserPreferences type in your schema. */
-class UserPreferences {
+class UserPreferences extends amplify_core.Model {
   final List<String>? _allergens;
   final String? _frequencyExercise;
   final int? _mealsPerDay;

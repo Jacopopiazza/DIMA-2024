@@ -1,6 +1,8 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Views/CustomAuthenticator/customized_authenticator.dart';
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 
 import 'amplify_outputs.dart';
@@ -30,7 +32,14 @@ class _MyAppState extends State<MyApp> {
 
   void _configureAmplify() async {
     try {
+      final api = AmplifyAPI(options: 
+        APIPluginOptions(
+          modelProvider: ModelProvider.instance,
+        ),
+      );
+      
       await Amplify.addPlugin(AmplifyAuthCognito());
+      await Amplify.addPlugin(api);
       await Amplify.configure(amplifyConfig);
       safePrint('Successfully configured');
     } on Exception catch (e) {

@@ -33,6 +33,16 @@ class ModelProvider implements amplify_core.ModelProviderInterface {
   List<amplify_core.ModelSchema> customTypeSchemas = [UserPreferences.schema];
   static final ModelProvider _instance = ModelProvider();
 
+  @override
+  amplify_core.ModelType getModelTypeByModelName(String modelName) {
+    switch (modelName) {
+      case "UserPreferences":
+        return const _UserPreferencesModelType();
+      default:
+        throw Exception("Failed to find model in model provider: $modelName");
+    }
+  }
+
   static ModelProvider get instance => _instance;
 }
 
@@ -41,4 +51,18 @@ class ModelFieldValue<T> {
   const ModelFieldValue.value(this.value);
 
   final T value;
+}
+
+class _UserPreferencesModelType extends amplify_core.ModelType<UserPreferences> {
+  const _UserPreferencesModelType();
+
+  @override
+  UserPreferences fromJson(Map<String, dynamic> jsonData) {
+    return UserPreferences.fromJson(jsonData);
+  }
+
+  @override
+  String modelName() {
+    return 'UserPreferences';
+  }
 }
