@@ -22,7 +22,7 @@ class UserTypeRouter extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Error: ${snapshot.error}'),
+                Center(child: Text('Error: ${snapshot.error}')),
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () async {

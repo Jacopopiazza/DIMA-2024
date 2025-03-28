@@ -1,4 +1,6 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +11,47 @@ Future<void> _logout(BuildContext context) async {
   } on AuthException catch (e) {
     safePrint('Error signing out: $e');
   }
+}
+
+Future<void> signOutGlobally() async {
+  final result = await Amplify.Auth.signOut(
+    options: const SignOutOptions(globalSignOut: true),
+  );
+  if (result is CognitoCompleteSignOut) {
+    safePrint('Sign out completed successfully');
+  } else if (result is CognitoPartialSignOut) {
+    final globalSignOutException = result.globalSignOutException!;
+    final accessToken = globalSignOutException.accessToken;
+    // Retry the global sign out using the access token, if desired
+    // ...
+    safePrint('Error signing user out: ${globalSignOutException.message}');
+  } else if (result is CognitoFailedSignOut) {
+    safePrint('Error signing user out: ${result.exception.message}');
+  }
+}
+
+Future<void> _getData() async {
+  final request = GraphQLRequest<UserPreferences>(
+    document: '''
+    query GetUserPreferences {
+      getUserPreferences {
+        allergens
+        mealsPerDay
+        weight
+        frequencyExercise
+      }
+    }
+  ''',
+    decodePath: 'getUserPreferences',
+    modelType:
+        ModelProvider.instance.getModelTypeByModelName('UserPreferences'),
+  );
+
+  final response = await Amplify.API.query(request: request).response;
+
+  final prefs = response.data;
+
+  safePrint("Utente mangia ${prefs?.mealsPerDay} pasti al giorno");
 }
 
 Future<void> _deleteAccount(BuildContext context) async {
@@ -64,6 +107,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Future<String?> user = fetchCurrentUser();
     _printUserInfo();
+    _getData();
 
     return Scaffold(
       appBar: AppBar(
@@ -99,7 +143,7 @@ class SettingsPage extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text(AppLocalizations.of(context)!.signOut),
-              onTap: () => _logout(context),
+              onTap: () => signOutGlobally(),
             ),
             ListTile(
               leading: Icon(Icons.delete),
