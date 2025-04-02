@@ -72,22 +72,24 @@
   },
   "backTo": "Torna a {previousStep, select, signUp{Registrati} signIn{Accedi} confirmSignUp{Conferma registrazione} confirmSignInMfa{Conferma accesso} confirmSignInNewPassword{Conferma accesso} sendCode{Invia codice} resetPassword{Reimposta password} verifyUser{Verifica utente} confirmVerifyUser{Conferma verifica utente} other{ERRORE}}",
   "@backTo": {
-    "description": "Label of button to return to the previous step",
-    "placeholders": {
-      "previousStep": {
-        "example": "signIn",
-        "description": "The title of the previous step."
-      }
-    }
-  },
-  "signInWith": "Accedi con {provider, select, google{Google} facebook{Facebook} amazon{Amazon} apple{Apple} other{ERRORE}}",
-  "@signInWith": {
-    "description": "Label of button to sign in with a social provider",
-    "placeholders": {
-      "provider": {
-        "example": "google",
-        "description": "The social sign-in provider"
-      }
+  "description": "Label of button to return to the previous step",
+  "placeholders": {
+    "previousStep": {
+      "type": "String",
+      "example": "signIn",
+      "description": "The title of the previous step."
     }
   }
+},
+  "signInWith": "Accedi con {provider, select, google{Google} facebook{Facebook} amazon{Amazon} apple{Apple} other{ERRORE}}",
+  "@signInWith": {
+  "description": "Label of button to sign in with a social provider",
+  "placeholders": {
+    "provider": {
+      "type": "String",
+      "example": "google",
+      "description": "The social sign-in provider"
+    }
+  }
+}
 }
