@@ -1,5 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Utils/user_type_enum.dart';
+import 'package:dima_application/Views/UserViews/gemini_screen.dart';
 import 'package:dima_application/Views/UserViews/home_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/nutritionist_home_screen.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class UserTypeRouter extends StatelessWidget {
         } else {
           final role = snapshot.data as String?;
           if (role == 'USER') {
-            return HomeScreen();
+            return UserHomeScreen();
           } else if (role == 'NUTRITIONIST') {
             return NutritionistHomeScreen();
           } else {
