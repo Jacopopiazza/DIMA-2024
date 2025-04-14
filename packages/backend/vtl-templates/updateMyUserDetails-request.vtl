@@ -1,0 +1,70 @@
+## Ensure user is authenticated
+#set($userId = $ctx.identity.sub)
+#if(!$userId || $userId == "")
+  $util.unauthorized()
+#end
+
+## Build key using the authenticated user's ID - cannot be spoofed
+#set($pk = "USER#" + $userId)
+#set($sk = "USER_DETAILS")
+
+## Process input
+#set($input = $ctx.args.input)
+#set($values = {})
+#set($expressionNames = {})
+#set($expressionUpdates = [])
+
+## Field validation examples (add your business rules here)
+#if(!$util.isNull($input.calorieTarget) && ($input.calorieTarget < 500 || $input.calorieTarget > 5000))
+  $util.error("Invalid calorie target. Value must be between 500 and 5000.")
+#end
+
+#if(!$util.isNull($input.dietaryPreferences))
+  ## Validate dietary preferences are from allowed list
+  #set($allowedPreferences = ["VEGETARIAN", "VEGAN", "KETO", "PALEO", "MEDITERRANEAN", "NONE"])
+  #foreach($pref in $input.dietaryPreferences)
+    #if(!$allowedPreferences.contains($pref))
+      $util.error("Invalid dietary preference: $pref")
+    #end
+  #end
+#end
+
+## Iterate through input fields and add them to the update expression if not null
+#foreach($entry in $input.entrySet())
+  #if(!$util.isNull($entry.value))
+    #set($expressionKey = "#key_$entry.key")
+    #set($expressionValue = ":val_$entry.key")
+    $util.qr($expressionNames.put($expressionKey, $entry.key))
+    $util.qr($values.put($expressionValue, $util.dynamodb.toDynamoDB($entry.value)))
+    $util.qr($expressionUpdates.add("$expressionKey = $expressionValue"))
+  #end
+#end
+
+## Add UpdatedAt timestamp automatically
+#set($now = $util.time.nowISO8601())
+#set($values.put(":updatedAt", $util.dynamodb.toDynamoDB($now)))
+$util.qr($expressionNames.put("#updatedAt", "updatedAt"))
+$util.qr($expressionUpdates.add("#updatedAt = :updatedAt"))
+
+## Add CreatedAt only if item doesn't exist
+$util.qr($expressionNames.put("#createdAt", "createdAt"))
+$util.qr($values.put(":createdAt", $util.dynamodb.toDynamoDB($now)))
+$util.qr($expressionUpdates.add("#createdAt = if_not_exists(#createdAt, :createdAt)"))
+
+## Set expression
+#set($expression = "SET " + $util.list.join(", ", $expressionUpdates))
+
+{
+  "version": "2018-05-29",
+  "operation": "UpdateItem",
+  "key": {
+    "PK": $util.dynamodb.toDynamoDBJson($pk),
+    "SK": $util.dynamodb.toDynamoDBJson($sk)
+  },
+  "update": {
+    "expression": "$expression",
+    "expressionNames": $expressionNames,
+    "expressionAttributeValues": $values
+  },
+  "returnValues": "ALL_NEW"
+}

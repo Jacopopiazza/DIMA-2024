@@ -1,0 +1,17 @@
+## Ensure user is authenticated
+#set($userId = $ctx.identity.sub)
+#if(!$userId || $userId == "")
+  $util.unauthorized()
+#end
+
+## Build key using the authenticated user's ID - cannot be spoofed
+#set($pk = "USER#" + $userId)
+
+{
+  "version": "2018-05-29",
+  "operation": "GetItem",
+  "key": {
+    "PK": $util.dynamodb.toDynamoDBJson($pk),
+    "SK": $util.dynamodb.toDynamoDBJson("USER_DETAILS")
+  }
+}

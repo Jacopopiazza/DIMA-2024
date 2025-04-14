@@ -1,0 +1,21 @@
+#if($ctx.error)
+  $util.error($ctx.error.message, $ctx.error.type)
+#end
+
+#if(!$ctx.result)
+  ## Choose one approach based on your requirements:
+  ## Option 1: Return null (client must handle this)
+  ## return null
+  
+  ## Option 2: Return empty object with userId
+  #set($emptyResult = {})
+  $util.qr($emptyResult.put("userId", $ctx.identity.sub))
+  return $util.toJson($emptyResult)
+  
+  ## Option 3: Error if not found (if details MUST exist after signup)
+  $util.error("UserDetailsNotFound: No details found for user.", "NotFound")
+#end
+
+## Add userId to the result, as it's required by the GraphQL schema
+$util.qr($ctx.result.put("userId", $ctx.identity.sub))
+$util.toJson($ctx.result)

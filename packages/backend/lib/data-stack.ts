@@ -38,7 +38,15 @@ export class DataStack extends cdk.Stack {
       partitionKey: { name: 'GSI1PK', type: dynamodb.AttributeType.STRING },
       sortKey: { name: 'GSI1SK', type: dynamodb.AttributeType.STRING },
       projectionType: dynamodb.ProjectionType.INCLUDE, // Include only necessary attributes
-      nonKeyAttributes: ['Name', 'Surname', 'Address'],
+      nonKeyAttributes: [
+        'NutritionistID', // Crucial to identify the nutritionist
+        'GivenName',
+        'FamilyName',
+        'Specialization',
+        'ProfilePictureURL',
+        'IsAvailable',
+        'Bio', // Optional: include if you show a short bio in the list
+      ],
     });
 
     // GSI2 - For retrieving chats by nutritionist
