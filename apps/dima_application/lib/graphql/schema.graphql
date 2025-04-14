@@ -3,25 +3,295 @@ schema {
   mutation: Mutation
 }
 
+type ChatMessage @model {
+  chatId: ID!
+  messageContent: String!
+  #  From PK
+  messageId: ID!
+  #  From SK (e.g., MSG#timestamp)
+  senderId: ID!
+  senderType: SenderType!
+  sentAt: AWSDateTime!
+}
+
+type ChatMessageConnection {
+  items: [ChatMessage!]!
+  nextToken: String
+}
+
+type ChatMetadata @model{
+  chatId: ID!
+  createdAt: AWSDateTime
+  lastMessageSnippet: String
+  #  Denormalized for display
+  lastMessageTimestamp: AWSDateTime
+  mealPlanId: ID!
+  #  Denormalized for display
+  nutritionistGivenName: String
+  nutritionistId: ID!
+  nutritionistUnreadCount: Int
+  planName: String
+  #  Denormalized for easier display in chat lists
+  userGivenName: String
+  userId: ID!
+  userUnreadCount: Int
+}
+
+type ChatMetadataConnection {
+  items: [ChatMetadata!]!
+  nextToken: String
+}
+
+type CompletedMealInfo {
+  #  The identifier (keyword) of the meal completed
+  completionTimestamp: AWSDateTime!
+  #  dayOfWeek: WeekdayEnum! # Might be redundant if date is present
+  mealName: MealNameEnum!
+  mealPlanId: ID!
+}
+
+type CompletedMealLog @model {
+  #  From SK (extracted date part)
+  completedMeals: [CompletedMealInfo!]!
+  #  From PK
+  date: AWSDate!
+  userId: ID!
+}
+
+type DailyPlanData {
+  friday: [Meal!]
+  monday: [Meal!]
+  saturday: [Meal!]
+  sunday: [Meal!]
+  thursday: [Meal!]
+  tuesday: [Meal!]
+  wednesday: [Meal!]
+}
+
+type Ingredient {
+  amount: Float!
+  #  e.g., "g", "ml", "cup". Ensure this is stored in DynamoDB.
+  macros: Macros!
+  name: String!
+  unit: String
+}
+
+type Macros {
+  calories: Float!
+  carbohydrates: Float!
+  fats: Float!
+  proteins: Float!
+}
+
+type Meal {
+  #  Optional: A more descriptive name for the specific recipe used
+  ingredients: [Ingredient!]!
+  name: MealNameEnum!
+  recipe: String
+  #  Using the fixed enum based on i18n requirement
+  recipeName: String
+  totalMacros: Macros!
+}
+
+type MealPlan @model{
+  assignedNutritionistId: ID
+  chatId: ID
+  dailyPlan: DailyPlanData
+  endDate: AWSDate
+  generatedAt: AWSDateTime
+  mealPlanId: ID!
+  #  From PK
+  planName: String
+  startDate: AWSDate
+  status: PlanStatus
+  #  Extracted from SK
+  userId: ID!
+}
+
+#  Pagination Helper Types
+type MealPlanConnection {
+  items: [MealPlan!]!
+  nextToken: String
+}
+
+type MealPlanGenerationStatus {
+  mealPlanId: ID
+  #  Populated if status is COMPLETED
+  message: String
+  status: MealPlanGenerationStatusValue!
+}
+
+#  ===================
+#      MUTATIONS
+# ===================
 type Mutation {
-  putUserPreferences(input: UserPreferencesInput!): UserPreferences
+  assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan @aws_auth(cognito_groups : ["User"])
+  markMealAsCompleted(input: MarkMealCompletedInput!): CompletedMealLog @aws_auth(cognito_groups : ["User"])
+  requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanGenerationStatus @aws_auth(cognito_groups : ["User"])
+  #  Add Pro group check in resolver?
+  sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["User", "Nutritionist"])
+  setActiveMealPlan(mealPlanId: ID!): UserDetails @aws_auth(cognito_groups : ["User"])
+  updateMyUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["User"])
 }
 
+type NutritionistProfile @model {
+  bio: String
+  familyName: String
+  givenName: String
+  isAvailable: Boolean
+  nutritionistId: ID!
+  profilePictureUrl: AWSURL
+  #  email: AWSEmail # Consider privacy if showing email directly to users
+  specialization: String
+}
+
+type NutritionistProfileConnection {
+  items: [NutritionistProfile!]!
+  nextToken: String
+}
+
+#  ===================
+#       QUERIES
+# ===================
 type Query {
-  getUserPreferences: UserPreferences
+  #  Add Pro group check in resolver?
+  getChatMessages(chatId: ID!, limit: Int, nextToken: String): ChatMessageConnection @aws_auth(cognito_groups : ["User", "Nutritionist"])
+  #  Requires complex/pipeline resolver
+  getCompletedMealsForDate(date: AWSDate!): CompletedMealLog @aws_auth(cognito_groups : ["User"])
+  getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["User"])
+  getMyUserDetails: UserDetails @aws_auth(cognito_groups : ["User", "Nutritionist"])
+  getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["User"])
+  listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["Nutritionist"])
+  #  Add Pro group check in resolver?
+  listMyChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["User"])
+  #  Adjust auth as needed
+  listMyMealPlans(limit: Int, nextToken: String): MealPlanConnection @aws_auth(cognito_groups : ["User"])
+  listNutritionists(filter: ListNutritionistsFilter, limit: Int, nextToken: String): NutritionistProfileConnection @aws_auth(cognito_groups : ["User"])
 }
 
-#  graphql/schema.graphql
-type UserPreferences {
-  allergens: [String]
-  frequencyExercise: String
-  mealsPerDay: Int
-  weight: Float
+type TodaysPlan {
+  activePlanDetails: MealPlan
+  #  Extracted meals for the current day from activePlanDetails
+  completedMealsToday: [CompletedMealInfo!]
+  #  Full details of the active plan
+  mealsForToday: [Meal!]
 }
 
-input UserPreferencesInput {
-  allergens: [String]
-  frequencyExercise: String
-  mealsPerDay: Int
-  weight: Float
+#  ===================
+#     OBJECT TYPES
+# ===================
+type UserDetails @model {
+  activeMealPlanId: ID
+  allergies: [String!]
+  #  ID of the currently active MealPlan
+  createdAt: AWSDateTime!
+  dailyMealsPreference: Int
+  dietaryRestrictions: [String!]
+  exerciseFrequency: ExerciseFrequency
+  heightCm: Float
+  openTextPreferences: String
+  targetCalories: Float
+  updatedAt: AWSDateTime!
+  #  Attributes stored in DynamoDB UserDetails item
+  userId: ID!
+  #  Typically the Cognito Sub
+  weightKg: Float
+}
+
+#  For flexible preferences or potentially the DailyPlan if needed, though Map is preferred
+# ===================
+#        ENUMS
+# ===================
+enum ExerciseFrequency {
+  ACTIVE
+  LIGHT
+  MODERATE
+  SEDENTARY
+  VERY_ACTIVE
+}
+
+enum MealNameEnum {
+  BREAKFAST
+  DINNER
+  LUNCH
+  SNACK
+}
+
+enum MealPlanGenerationStatusValue {
+  COMPLETED
+  FAILED
+  IN_PROGRESS
+  PENDING
+}
+
+enum PlanStatus {
+  ACTIVE
+  ARCHIVED
+  GENERATED
+  REVIEW_REQUESTED
+  UNDER_REVIEW
+}
+
+enum SenderType {
+  NUTRITIONIST
+  USER
+}
+
+enum WeekdayEnum {
+  FRIDAY
+  MONDAY
+  SATURDAY
+  SUNDAY
+  THURSDAY
+  TUESDAY
+  WEDNESDAY
+}
+
+input AssignNutritionistInput {
+  mealPlanId: ID!
+  nutritionistId: ID!
+}
+
+input ListNutritionistsFilter {
+  isAvailable: Boolean
+}
+
+input MarkMealCompletedInput {
+  #  Need to know which plan it belongs to
+  # dayOfWeek: WeekdayEnum! # Server can derive from 'today'
+  mealName: MealNameEnum!
+  #  date: AWSDate! # Date is implicitly 'today' for this mutation's logic
+  mealPlanId: ID!
+}
+
+input PlanRequestPreferencesInput {
+  allergies: [String!]
+  dailyMealsPreference: Int
+  dietaryRestrictions: [String!]
+  exerciseFrequency: ExerciseFrequency
+  heightCm: Float
+  openTextPreferences: String
+  targetCalories: Float
+  #  Include fields from UserDetails that can be overridden for this specific plan request
+  weightKg: Float
+}
+
+input SendMessageInput {
+  chatId: ID!
+  #  The ID of the chat session
+  messageContent: String!
+}
+
+#  ===================
+#     INPUT TYPES
+# ===================
+input UpdateUserDetailsInput {
+  allergies: [String!]
+  dailyMealsPreference: Int
+  dietaryRestrictions: [String!]
+  exerciseFrequency: ExerciseFrequency
+  heightCm: Float
+  openTextPreferences: String
+  targetCalories: Float
+  weightKg: Float
 }
