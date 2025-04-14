@@ -195,8 +195,8 @@ export class AuthStack extends cdk.Stack {
         cognito.UserPoolClientIdentityProvider.GOOGLE,
       ],
       oAuth: {
-        callbackUrls: ['http://localhost:3000/profile'],
-        logoutUrls: ['http://localhost:3000/'],
+        callbackUrls: ['http://localhost:3000/profile', 'dima://auth'],
+        logoutUrls: ['http://localhost:3000/', 'dima://logout'],
       },
       accessTokenValidity: cdk.Duration.hours(1),
       idTokenValidity: cdk.Duration.days(1),
