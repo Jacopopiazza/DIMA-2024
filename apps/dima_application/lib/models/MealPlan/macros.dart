@@ -45,4 +45,13 @@ class Macros {
       proteins: total.proteins == 0 ? 0 : proteins / total.proteins,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'proteins': proteins,
+      'carbohydrates': carbohydrates,
+      'fats': fats,
+      'calories': calories,
+    };
+  }
 }

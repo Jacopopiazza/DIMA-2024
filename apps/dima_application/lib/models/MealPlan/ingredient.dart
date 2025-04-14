@@ -11,13 +11,28 @@ class Ingredient {
 
   Ingredient(); // Default constructor needed by Isar
 
-  Ingredient.create({required this.name, required this.amount, required this.macros});
+  Ingredient.create(
+      {required this.name, required this.amount, required this.macros});
 
-   factory Ingredient.fromJson(Map<String, dynamic> json) {
-     return Ingredient.create(
-       name: json['name'] ?? 'Unknown Ingredient',
-       amount: json['amount'] ?? 0,
-       macros: Macros.fromJson(json['macros'] ?? {}),
-     );
-   }
+  factory Ingredient.fromJson(Map<String, dynamic> json) {
+    return Ingredient.create(
+      name: json['name'] ?? 'Unknown Ingredient',
+      amount: _toDouble(json['amount']),
+      macros: Macros.fromJson(json['macros'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'amount': amount,
+      'macros': macros.toJson(),
+    };
+  }
+}
+
+double _toDouble(dynamic value) {
+  if (value is num) return value.toDouble();
+  if (value is String) return double.tryParse(value) ?? 0.0;
+  return 0.0;
 }
