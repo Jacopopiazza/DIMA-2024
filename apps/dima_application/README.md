@@ -43,6 +43,18 @@ To update translations in this project, follow these steps:
     ```  
     Flutter will automatically infer the locale at runtime.
 
+## 🛠️ Generate Isar Models
+
+To generate the Isar models, run the following command from the root of your Flutter project:
+```bash
+flutter pub run build_runner build
+```
+
+💡 Tip: If you run into issues with conflicting files, try this instead:
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
