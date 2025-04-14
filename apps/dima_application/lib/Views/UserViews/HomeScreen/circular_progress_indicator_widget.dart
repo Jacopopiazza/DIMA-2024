@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+/// A customizable circular progress indicator widget that displays both a percentage
+/// and a label.
+///
+/// This widget creates a circular progress indicator with configurable colors,
+/// sizes, and animations. It displays a percentage in the center and a label
+/// underneath.
 class CircularProgressIndicatorWidget extends StatelessWidget {
-  final double percent; // The actual progress value (0.0 to 1.0)
-  final double radius;
-  final double lineWidth;
-  final String label;
-  final Color progressColor;
-  final Color backgroundColor;
-  final Color centerTextColor;
-  final Color labelTextColor;
-  final double? animationValue; // Optional: For direct animation control
+  // Required parameters
+  final double percent; // Progress value (0.0 to 1.0)
+  final String label; // Text label shown below the indicator
+  final Color progressColor; // Color of the progress arc
+  final Color backgroundColor; // Color of the unfilled circle
+  final Color centerTextColor; // Color of the percentage text
+  final Color labelTextColor; // Color of the label text
+
+  // Optional parameters
+  final double?
+      animationValue; // Current animation value for smooth transitions
+
+  // Fixed size parameters (typically provided by parent)
+  final double? fixedRadius; // Outer radius of the circle
+  final double? fixedLineWidth; // Thickness of the progress line
+  final double? fixedCenterFontSize; // Font size of the center percentage
+  final double? fixedLabelFontSize; // Font size of the label text
 
   const CircularProgressIndicatorWidget({
     super.key,
@@ -20,30 +34,39 @@ class CircularProgressIndicatorWidget extends StatelessWidget {
     required this.backgroundColor,
     required this.centerTextColor,
     required this.labelTextColor,
-    this.radius = 28.0,
-    this.lineWidth = 6.0,
-    this.animationValue, // Pass animation value if animating externally
+    this.animationValue,
+    this.fixedRadius,
+    this.fixedLineWidth,
+    this.fixedCenterFontSize,
+    this.fixedLabelFontSize,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Use animationValue if provided, otherwise use static percent
+    // Use animation value if provided, otherwise use static percent
     final displayPercent = animationValue ?? percent;
-    // Ensure percent doesn't go out of bounds during animation
+    // Ensure the percentage stays between 0 and 100%
     final clampedPercent = displayPercent.clamp(0.0, 1.0);
 
+    // Calculate sizes with sensible defaults if fixed values aren't provided
+    final double radius = fixedRadius ?? 35.0;
+    final double lineWidth = fixedLineWidth ?? radius * 0.18;
+    final double centerFontSize = fixedCenterFontSize ?? radius * 0.4;
+    final double labelFontSize = fixedLabelFontSize ?? centerFontSize * 0.9;
+
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
+        // Circular progress indicator
         CircularPercentIndicator(
           radius: radius,
           lineWidth: lineWidth,
-          percent: clampedPercent, // Use clamped animation or static value
+          percent: clampedPercent,
           center: Text(
-            // Always display the final target percentage text
             '${(percent * 100).toInt()}%',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 12.0,
+              fontSize: centerFontSize,
               color: centerTextColor,
             ),
           ),
@@ -52,9 +75,15 @@ class CircularProgressIndicatorWidget extends StatelessWidget {
           circularStrokeCap: CircularStrokeCap.round,
         ),
         const SizedBox(height: 5),
+        // Label text
         Text(
           label,
-          style: TextStyle(color: labelTextColor, fontSize: 12),
+          style: TextStyle(
+            color: labelTextColor,
+            fontSize: labelFontSize,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         )
       ],
     );

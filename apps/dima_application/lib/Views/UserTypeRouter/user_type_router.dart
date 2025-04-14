@@ -1,6 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Utils/user_type_enum.dart';
-import 'package:dima_application/Views/UserViews/gemini_screen.dart';
 import 'package:dima_application/Views/UserViews/home_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/nutritionist_home_screen.dart';
 import 'package:flutter/material.dart';

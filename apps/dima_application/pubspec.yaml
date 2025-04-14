@@ -20,6 +20,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ^3.6.0
+  flutter: ">=3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -43,6 +44,18 @@ dependencies:
     sdk: flutter
   intl: any
   shared_preferences: ^2.5.2
+  percent_indicator: ^4.2.4
+  shimmer: ^3.0.0
+  path_provider: ^2.1.0
+
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  isar: ^3.1.0
+  isar_flutter_libs: ^3.1.0 # solo per Android/iOS, ma non fa danni su altre piattaforme
+  collection: ^1.19.0
+
+
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +67,14 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  build_runner:
+  custom_lint:
+  riverpod_generator: ^2.3.3 
+  riverpod_lint: ^2.1.1
+  isar_generator: ^3.1.0
+  
+
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

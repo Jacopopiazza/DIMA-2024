@@ -6,6 +6,19 @@ import 'package:dima_application/Views/UserTypeRouter/user_type_router.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+const Color _seedColor = Color(0xFFF9A8D4); // rosa tenue - cambia se vuoi
+
+final ThemeData darkTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: _seedColor,
+    brightness: Brightness.dark,
+    surface: Color(0xFF121212),       // dark cards/dialogs
+  ),
+  scaffoldBackgroundColor: Colors.black,
+);
+
+
 // A custom authenticator widget with a custom layout
 class CustomizedAuthenticator extends StatelessWidget {
   const CustomizedAuthenticator({super.key});
@@ -33,8 +46,8 @@ class CustomizedAuthenticator extends StatelessWidget {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           builder: Authenticator.builder(),
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(useMaterial3: true),
+          theme: ThemeData.light(useMaterial3: true),
+          darkTheme: darkTheme,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
 

@@ -52,10 +52,12 @@ const amplifyConfig = r'''{
         "GOOGLE"
       ],
       "redirect_sign_in_uri": [
-        "http://localhost:3000/profile"
+        "http://localhost:3000/profile",
+        "dima://auth"
       ],
       "redirect_sign_out_uri": [
-        "http://localhost:3000/"
+        "http://localhost:3000/",
+        "dima://logout"
       ],
       "response_type": "code",
       "scopes": [
