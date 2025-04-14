@@ -19,7 +19,7 @@ type ChatMessageConnection {
   nextToken: String
 }
 
-type ChatMetadata @model{
+type ChatMetadata @model {
   chatId: ID!
   createdAt: AWSDateTime
   lastMessageSnippet: String
@@ -93,7 +93,7 @@ type Meal {
   totalMacros: Macros!
 }
 
-type MealPlan @model{
+type MealPlan @model {
   assignedNutritionistId: ID
   chatId: ID
   dailyPlan: DailyPlanData

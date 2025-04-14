@@ -1,0 +1,416 @@
+/*
+* Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License").
+* You may not use this file except in compliance with the License.
+* A copy of the License is located at
+*
+*  http://aws.amazon.com/apache2.0
+*
+* or in the "license" file accompanying this file. This file is distributed
+* on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+* express or implied. See the License for the specific language governing
+* permissions and limitations under the License.
+*/
+
+// NOTE: This file is generated and may not follow lint rules defined in your app
+// Generated files can be excluded from analysis in analysis_options.yaml
+// For more info, see: https://dart.dev/guides/language/analysis-options#excluding-code-from-analysis
+
+// ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, override_on_non_overriding_member, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
+
+import 'ModelProvider.dart';
+import 'package:amplify_core/amplify_core.dart' as amplify_core;
+
+
+/** This is an auto generated class representing the MealPlan type in your schema. */
+class MealPlan extends amplify_core.Model {
+  static const classType = const _MealPlanModelType();
+  final String id;
+  final String? _assignedNutritionistId;
+  final String? _chatId;
+  final DailyPlanData? _dailyPlan;
+  final amplify_core.TemporalDate? _endDate;
+  final amplify_core.TemporalDateTime? _generatedAt;
+  final String? _mealPlanId;
+  final String? _planName;
+  final amplify_core.TemporalDate? _startDate;
+  final PlanStatus? _status;
+  final String? _userId;
+  final amplify_core.TemporalDateTime? _createdAt;
+  final amplify_core.TemporalDateTime? _updatedAt;
+
+  @override
+  getInstanceType() => classType;
+  
+  @Deprecated('[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
+  @override
+  String getId() => id;
+  
+  MealPlanModelIdentifier get modelIdentifier {
+      return MealPlanModelIdentifier(
+        id: id
+      );
+  }
+  
+  String? get assignedNutritionistId {
+    return _assignedNutritionistId;
+  }
+  
+  String? get chatId {
+    return _chatId;
+  }
+  
+  DailyPlanData? get dailyPlan {
+    return _dailyPlan;
+  }
+  
+  amplify_core.TemporalDate? get endDate {
+    return _endDate;
+  }
+  
+  amplify_core.TemporalDateTime? get generatedAt {
+    return _generatedAt;
+  }
+  
+  String get mealPlanId {
+    try {
+      return _mealPlanId!;
+    } catch(e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  String? get planName {
+    return _planName;
+  }
+  
+  amplify_core.TemporalDate? get startDate {
+    return _startDate;
+  }
+  
+  PlanStatus? get status {
+    return _status;
+  }
+  
+  String get userId {
+    try {
+      return _userId!;
+    } catch(e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  amplify_core.TemporalDateTime? get createdAt {
+    return _createdAt;
+  }
+  
+  amplify_core.TemporalDateTime? get updatedAt {
+    return _updatedAt;
+  }
+  
+  const MealPlan._internal({required this.id, assignedNutritionistId, chatId, dailyPlan, endDate, generatedAt, required mealPlanId, planName, startDate, status, required userId, createdAt, updatedAt}): _assignedNutritionistId = assignedNutritionistId, _chatId = chatId, _dailyPlan = dailyPlan, _endDate = endDate, _generatedAt = generatedAt, _mealPlanId = mealPlanId, _planName = planName, _startDate = startDate, _status = status, _userId = userId, _createdAt = createdAt, _updatedAt = updatedAt;
+  
+  factory MealPlan({String? id, String? assignedNutritionistId, String? chatId, DailyPlanData? dailyPlan, amplify_core.TemporalDate? endDate, amplify_core.TemporalDateTime? generatedAt, required String mealPlanId, String? planName, amplify_core.TemporalDate? startDate, PlanStatus? status, required String userId}) {
+    return MealPlan._internal(
+      id: id == null ? amplify_core.UUID.getUUID() : id,
+      assignedNutritionistId: assignedNutritionistId,
+      chatId: chatId,
+      dailyPlan: dailyPlan,
+      endDate: endDate,
+      generatedAt: generatedAt,
+      mealPlanId: mealPlanId,
+      planName: planName,
+      startDate: startDate,
+      status: status,
+      userId: userId);
+  }
+  
+  bool equals(Object other) {
+    return this == other;
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is MealPlan &&
+      id == other.id &&
+      _assignedNutritionistId == other._assignedNutritionistId &&
+      _chatId == other._chatId &&
+      _dailyPlan == other._dailyPlan &&
+      _endDate == other._endDate &&
+      _generatedAt == other._generatedAt &&
+      _mealPlanId == other._mealPlanId &&
+      _planName == other._planName &&
+      _startDate == other._startDate &&
+      _status == other._status &&
+      _userId == other._userId;
+  }
+  
+  @override
+  int get hashCode => toString().hashCode;
+  
+  @override
+  String toString() {
+    var buffer = new StringBuffer();
+    
+    buffer.write("MealPlan {");
+    buffer.write("id=" + "$id" + ", ");
+    buffer.write("assignedNutritionistId=" + "$_assignedNutritionistId" + ", ");
+    buffer.write("chatId=" + "$_chatId" + ", ");
+    buffer.write("dailyPlan=" + (_dailyPlan != null ? _dailyPlan!.toString() : "null") + ", ");
+    buffer.write("endDate=" + (_endDate != null ? _endDate!.format() : "null") + ", ");
+    buffer.write("generatedAt=" + (_generatedAt != null ? _generatedAt!.format() : "null") + ", ");
+    buffer.write("mealPlanId=" + "$_mealPlanId" + ", ");
+    buffer.write("planName=" + "$_planName" + ", ");
+    buffer.write("startDate=" + (_startDate != null ? _startDate!.format() : "null") + ", ");
+    buffer.write("status=" + (_status != null ? amplify_core.enumToString(_status)! : "null") + ", ");
+    buffer.write("userId=" + "$_userId" + ", ");
+    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("}");
+    
+    return buffer.toString();
+  }
+  
+  MealPlan copyWith({String? assignedNutritionistId, String? chatId, DailyPlanData? dailyPlan, amplify_core.TemporalDate? endDate, amplify_core.TemporalDateTime? generatedAt, String? mealPlanId, String? planName, amplify_core.TemporalDate? startDate, PlanStatus? status, String? userId}) {
+    return MealPlan._internal(
+      id: id,
+      assignedNutritionistId: assignedNutritionistId ?? this.assignedNutritionistId,
+      chatId: chatId ?? this.chatId,
+      dailyPlan: dailyPlan ?? this.dailyPlan,
+      endDate: endDate ?? this.endDate,
+      generatedAt: generatedAt ?? this.generatedAt,
+      mealPlanId: mealPlanId ?? this.mealPlanId,
+      planName: planName ?? this.planName,
+      startDate: startDate ?? this.startDate,
+      status: status ?? this.status,
+      userId: userId ?? this.userId);
+  }
+  
+  MealPlan copyWithModelFieldValues({
+    ModelFieldValue<String?>? assignedNutritionistId,
+    ModelFieldValue<String?>? chatId,
+    ModelFieldValue<DailyPlanData?>? dailyPlan,
+    ModelFieldValue<amplify_core.TemporalDate?>? endDate,
+    ModelFieldValue<amplify_core.TemporalDateTime?>? generatedAt,
+    ModelFieldValue<String>? mealPlanId,
+    ModelFieldValue<String?>? planName,
+    ModelFieldValue<amplify_core.TemporalDate?>? startDate,
+    ModelFieldValue<PlanStatus?>? status,
+    ModelFieldValue<String>? userId
+  }) {
+    return MealPlan._internal(
+      id: id,
+      assignedNutritionistId: assignedNutritionistId == null ? this.assignedNutritionistId : assignedNutritionistId.value,
+      chatId: chatId == null ? this.chatId : chatId.value,
+      dailyPlan: dailyPlan == null ? this.dailyPlan : dailyPlan.value,
+      endDate: endDate == null ? this.endDate : endDate.value,
+      generatedAt: generatedAt == null ? this.generatedAt : generatedAt.value,
+      mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
+      planName: planName == null ? this.planName : planName.value,
+      startDate: startDate == null ? this.startDate : startDate.value,
+      status: status == null ? this.status : status.value,
+      userId: userId == null ? this.userId : userId.value
+    );
+  }
+  
+  MealPlan.fromJson(Map<String, dynamic> json)  
+    : id = json['id'],
+      _assignedNutritionistId = json['assignedNutritionistId'],
+      _chatId = json['chatId'],
+      _dailyPlan = json['dailyPlan'] != null
+          ? json['dailyPlan']['serializedData'] != null
+              ? DailyPlanData.fromJson(new Map<String, dynamic>.from(json['dailyPlan']['serializedData']))
+              : DailyPlanData.fromJson(new Map<String, dynamic>.from(json['dailyPlan']))
+        : null,
+      _endDate = json['endDate'] != null ? amplify_core.TemporalDate.fromString(json['endDate']) : null,
+      _generatedAt = json['generatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['generatedAt']) : null,
+      _mealPlanId = json['mealPlanId'],
+      _planName = json['planName'],
+      _startDate = json['startDate'] != null ? amplify_core.TemporalDate.fromString(json['startDate']) : null,
+      _status = amplify_core.enumFromString<PlanStatus>(json['status'], PlanStatus.values),
+      _userId = json['userId'],
+      _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
+      _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
+  
+  Map<String, dynamic> toJson() => {
+    'id': id, 'assignedNutritionistId': _assignedNutritionistId, 'chatId': _chatId, 'dailyPlan': _dailyPlan?.toJson(), 'endDate': _endDate?.format(), 'generatedAt': _generatedAt?.format(), 'mealPlanId': _mealPlanId, 'planName': _planName, 'startDate': _startDate?.format(), 'status': amplify_core.enumToString(_status), 'userId': _userId, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+  };
+  
+  Map<String, Object?> toMap() => {
+    'id': id,
+    'assignedNutritionistId': _assignedNutritionistId,
+    'chatId': _chatId,
+    'dailyPlan': _dailyPlan,
+    'endDate': _endDate,
+    'generatedAt': _generatedAt,
+    'mealPlanId': _mealPlanId,
+    'planName': _planName,
+    'startDate': _startDate,
+    'status': _status,
+    'userId': _userId,
+    'createdAt': _createdAt,
+    'updatedAt': _updatedAt
+  };
+
+  static final amplify_core.QueryModelIdentifier<MealPlanModelIdentifier> MODEL_IDENTIFIER = amplify_core.QueryModelIdentifier<MealPlanModelIdentifier>();
+  static final ID = amplify_core.QueryField(fieldName: "id");
+  static final ASSIGNEDNUTRITIONISTID = amplify_core.QueryField(fieldName: "assignedNutritionistId");
+  static final CHATID = amplify_core.QueryField(fieldName: "chatId");
+  static final DAILYPLAN = amplify_core.QueryField(fieldName: "dailyPlan");
+  static final ENDDATE = amplify_core.QueryField(fieldName: "endDate");
+  static final GENERATEDAT = amplify_core.QueryField(fieldName: "generatedAt");
+  static final MEALPLANID = amplify_core.QueryField(fieldName: "mealPlanId");
+  static final PLANNAME = amplify_core.QueryField(fieldName: "planName");
+  static final STARTDATE = amplify_core.QueryField(fieldName: "startDate");
+  static final STATUS = amplify_core.QueryField(fieldName: "status");
+  static final USERID = amplify_core.QueryField(fieldName: "userId");
+  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+    modelSchemaDefinition.name = "MealPlan";
+    modelSchemaDefinition.pluralName = "MealPlans";
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.id());
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.ASSIGNEDNUTRITIONISTID,
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.CHATID,
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
+      fieldName: 'dailyPlan',
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'DailyPlanData')
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.ENDDATE,
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.date)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.GENERATEDAT,
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.MEALPLANID,
+      isRequired: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.PLANNAME,
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.STARTDATE,
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.date)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.STATUS,
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.enumeration)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: MealPlan.USERID,
+      isRequired: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
+      fieldName: 'createdAt',
+      isRequired: false,
+      isReadOnly: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
+      fieldName: 'updatedAt',
+      isRequired: false,
+      isReadOnly: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
+    ));
+  });
+}
+
+class _MealPlanModelType extends amplify_core.ModelType<MealPlan> {
+  const _MealPlanModelType();
+  
+  @override
+  MealPlan fromJson(Map<String, dynamic> jsonData) {
+    return MealPlan.fromJson(jsonData);
+  }
+  
+  @override
+  String modelName() {
+    return 'MealPlan';
+  }
+}
+
+/**
+ * This is an auto generated class representing the model identifier
+ * of [MealPlan] in your schema.
+ */
+class MealPlanModelIdentifier implements amplify_core.ModelIdentifier<MealPlan> {
+  final String id;
+
+  /** Create an instance of MealPlanModelIdentifier using [id] the primary key. */
+  const MealPlanModelIdentifier({
+    required this.id});
+  
+  @override
+  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{
+    'id': id
+  });
+  
+  @override
+  List<Map<String, dynamic>> serializeAsList() => serializeAsMap()
+    .entries
+    .map((entry) => (<String, dynamic>{ entry.key: entry.value }))
+    .toList();
+  
+  @override
+  String serializeAsString() => serializeAsMap().values.join('#');
+  
+  @override
+  String toString() => 'MealPlanModelIdentifier(id: $id)';
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    
+    return other is MealPlanModelIdentifier &&
+      id == other.id;
+  }
+  
+  @override
+  int get hashCode =>
+    id.hashCode;
+}
