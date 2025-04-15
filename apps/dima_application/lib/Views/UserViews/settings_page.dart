@@ -31,28 +31,38 @@ Future<void> signOutGlobally() async {
 }
 
 Future<void> _getData() async {
-  final request = GraphQLRequest<UserPreferences>(
+  final request = GraphQLRequest<UserDetails>(
     document: '''
-    query GetUserPreferences {
-      getUserPreferences {
+    query GetMyUserDetails {
+      getMyUserDetails {
+        userId
         allergens
         mealsPerDay
         weight
         frequencyExercise
+        // Include any other fields from your new UserDetails type
       }
     }
-  ''',
-    decodePath: 'getUserPreferences',
+    ''',
+    decodePath: 'getMyUserDetails',
     modelType:
-        ModelProvider.instance.getModelTypeByModelName('UserPreferences'),
+      ModelProvider.instance.getModelTypeByModelName('UserDetails'), // Make sure to update the model name
   );
-
-  final response = await Amplify.API.query(request: request).response;
-
-  final prefs = response.data;
-
-  safePrint("Utente mangia ${prefs?.mealsPerDay} pasti al giorno");
+  
+  try {
+    final response = await Amplify.API.query(request: request).response;
+    final userDetails = response.data;
+    
+    if (userDetails != null) {
+      safePrint("Utente mangia ${userDetails.dailyMealsPreference} pasti al giorno");
+    } else {
+      safePrint("Nessun dettaglio utente trovato");
+    }
+  } catch (e) {
+    safePrint("Errore nel recupero dei dettagli utente: $e");
+  }
 }
+
 
 Future<void> _deleteAccount(BuildContext context) async {
   try {
