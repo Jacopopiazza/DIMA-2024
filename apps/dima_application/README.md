@@ -5,13 +5,13 @@ A new Flutter project.
 ## Updating AppSync Models
 
 1. **Download updated schema**:
-    Run the following command from project's root folder:
+    Run the following command from Flutter porject root folder:
     ```bash
     aws appsync get-introspection-schema --api-id 52qref744vg4fntr53cogw47ti --region us-west-2 --format SDL ./lib/graphql/schema.graphql 
     ```
 
 2. **Re run model gen command**:
-    Run the following command from project's root folder:
+    Run the following command from Flutter porject root folder:
     ```bash
     npx @aws-amplify/cli codegen models --model-schema ./lib/graphql/schema.graphql --target flutter --output-dir ./lib/generated/flutter-models/
     ```
