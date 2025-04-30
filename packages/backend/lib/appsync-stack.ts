@@ -58,6 +58,94 @@ export class AppSyncApiStack extends cdk.Stack {
       ),
     });
 
+    // ====================================================================
+    //         PIPELINE RESOLVER for Query.getTodaysPlanAndStatus
+    // ====================================================================
+
+    // --- Pipeline Function 1: Get UserDetails (to find active plan ID) ---
+    const getUserDetailsFunc = new appsync.AppsyncFunction(
+      this,
+      'GetUserDetailsFunc',
+      {
+        name: 'getUserDetailsFunc',
+        api: api,
+        dataSource: tableDS,
+        requestMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.getTodaysPlanAndStatus.func1-getUserDetails-request.vtl',
+        ),
+        responseMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.getTodaysPlanAndStatus.func1-getUserDetails-response.vtl',
+        ),
+      },
+    );
+
+    // --- Pipeline Function 2: Get Active MealPlan ---
+    const getActiveMealPlanFunc = new appsync.AppsyncFunction(
+      this,
+      'GetActiveMealPlanFunc',
+      {
+        name: 'getActiveMealPlanFunc',
+        api: api,
+        dataSource: tableDS,
+        requestMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.getTodaysPlanAndStatus.func2-getMealPlan-request.vtl',
+        ),
+        responseMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.getTodaysPlanAndStatus.func2-getMealPlan-response.vtl',
+        ),
+      },
+    );
+
+    // --- Pipeline Function 3: Get Today's Completed Meal Log ---
+    const getCompletedLogFunc = new appsync.AppsyncFunction(
+      this,
+      'GetCompletedLogFunc',
+      {
+        name: 'getCompletedLogFunc',
+        api: api,
+        dataSource: tableDS,
+        requestMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.getTodaysPlanAndStatus.func3-getCompletedLog-request.vtl',
+        ),
+        responseMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.getTodaysPlanAndStatus.func3-getCompletedLog-response.vtl',
+        ),
+      },
+    );
+
+    // --- Pipeline Resolver Definition ---
+    new appsync.Resolver(this, 'PipelineGetTodaysPlanAndStatusResolver', {
+      api: api,
+      typeName: 'Query',
+      fieldName: 'getTodaysPlanAndStatus',
+      // Define the sequence of functions
+      pipelineConfig: [
+        getUserDetailsFunc,
+        getActiveMealPlanFunc,
+        getCompletedLogFunc,
+      ],
+      // Request mapping template for the pipeline resolver itself (usually simple)
+      requestMappingTemplate: appsync.MappingTemplate.fromString(`
+            ## Store identity for use in functions
+            $ctx.stash.identity = $ctx.identity
+            ## Store today's date parts for cxonsistency
+            #set($utils = $util.time)
+            $ctx.stash.todayDate = $utils.nowISO8601().substring(0, 10)
+            $ctx.stash.todayDayOfWeek = $utils.getDayOfWeekISO() ## 1=Monday, 7=Sunday
+            $ctx.stash.weekDayMap = {1: "monday", 2: "tuesday", 3: "wednesday", 4: "thursday", 5: "friday", 6: "saturday", 7: "sunday"}
+            $ctx.stash.todayWeekdayKey = $ctx.stash.weekDayMap[$ctx.stash.todayDayOfWeek]
+            {}
+        `),
+      // Response mapping template - combines results from the functions
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/pipeline.getTodaysPlanAndStatus-response.vtl',
+      ),
+    });
+
+    // ====================================================================
+    //                      MUTATION RESOLVERS
+    // ====================================================================
+
     // Resolver for Mutation.updateMyUserDetails
     tableDS.createResolver('MutationUpdateMyUserDetailsResolver', {
       typeName: 'Mutation',
@@ -68,6 +156,42 @@ export class AppSyncApiStack extends cdk.Stack {
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
         'vtl-templates/updateMyUserDetails-response.vtl',
       ),
+    });
+
+    // --- Resolver for Mutation.setActiveMealPlan ---
+    tableDS.createResolver('MutationSetActiveMealPlanResolver', {
+      typeName: 'Mutation',
+      fieldName: 'setActiveMealPlan',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/mutation.setActiveMealPlan-request.vtl',
+      ),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/mutation.setActiveMealPlan-response.vtl',
+      ),
+    });
+
+    tableDS.createResolver('MutationMarkMealAsCompletedResolver', {
+      typeName: 'Mutation',
+      fieldName: 'markMealAsCompleted',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/mutation.markMealAsCompleted-request.vtl',
+      ), // Ensure this file exists and has the Set logic
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/mutation.markMealAsCompleted-response.vtl',
+      ),
+    });
+
+    // --- Add Resolver for Unmark Meal ---
+    tableDS.createResolver('MutationUnmarkMealAsCompletedResolver', {
+      // New Resolver definition
+      typeName: 'Mutation',
+      fieldName: 'unmarkMealAsCompleted', // New field name from updated schema
+      requestMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/mutation.unmarkMealAsCompleted-request.vtl',
+      ), // New VTL file
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/mutation.unmarkMealAsCompleted-response.vtl',
+      ), // New VTL file
     });
 
     // --------------------------------------------------------------------

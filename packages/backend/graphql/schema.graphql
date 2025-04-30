@@ -15,16 +15,21 @@ scalar AWSJSON # For flexible preferences or potentially the DailyPlan if needed
 #        ENUMS
 # ===================
 enum ExerciseFrequency {
-  SEDENTARY
-  LIGHT
-  MODERATE
-  ACTIVE
-  VERY_ACTIVE
+  NOT_SPECIFIED # Or NONE
+  ONCE_A_WEEK
+  TWICE_A_WEEK
+  THREE_TIMES_A_WEEK
+  FOUR_TIMES_A_WEEK
+  FIVE_TIMES_A_WEEK
+  SIX_TIMES_A_WEEK
+  EVERY_DAY
 }
 
 enum MealNameEnum {
   BREAKFAST
-  SNACK
+  SNACK_MORNING
+  SNACK_AFTERNOON
+  SNACK_EVENING
   LUNCH
   DINNER
   # Add any other fixed meal types you decided on
@@ -60,6 +65,85 @@ enum MealPlanGenerationStatusValue {
   FAILED
 }
 
+"""
+Represents common food allergens based on EU FIC (Regulation (EU) No 1169/2011) and potentially others.
+"""
+enum AllergenEnum {
+  """
+  Cereals containing gluten, namely: wheat (such as spelt and khorasan wheat), rye, barley, oats or their hybridised strains, and products thereof.
+  """
+  GLUTEN_CEREALS
+
+  """
+  Crustaceans and products thereof.
+  """
+  CRUSTACEANS
+
+  """
+  Eggs and products thereof.
+  """
+  EGGS
+
+  """
+  Fish and products thereof.
+  """
+  FISH
+
+  """
+  Peanuts and products thereof.
+  """
+  PEANUTS
+
+  """
+  Soybeans and products thereof.
+  """
+  SOYBEANS
+
+  """
+  Milk and products thereof (including lactose).
+  """
+  MILK
+
+  """
+  Nuts, namely: almonds, hazelnuts, walnuts, cashews, pecan nuts, Brazil nuts, pistachio nuts, macadamia or Queensland nuts, and products thereof.
+  """
+  NUTS
+
+  """
+  Celery and products thereof.
+  """
+  CELERY
+
+  """
+  Mustard and products thereof.
+  """
+  MUSTARD
+
+  """
+  Sesame seeds and products thereof.
+  """
+  SESAME_SEEDS
+
+  """
+  Sulphur dioxide and sulphites at concentrations of more than 10 mg/kg or 10 mg/litre in terms of the total SO2.
+  """
+  SULPHITES
+
+  """
+  Lupin and products thereof.
+  """
+  LUPIN
+
+  """
+  Molluscs and products thereof.
+  """
+  MOLLUSCS
+
+  # If you decide to add an OTHER option for custom text later, you could add:
+  # """ Allows specifying an allergen not listed explicitly. Often used with an accompanying text field. """
+  # OTHER
+}
+
 # ===================
 #     OBJECT TYPES
 # ===================
@@ -74,13 +158,12 @@ type UserDetails @model {
   heightCm: Float
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
-  allergies: [String!]
+  allergies: [AllergenEnum!]
   dietaryRestrictions: [String!]
   openTextPreferences: String
   targetCalories: Float
   activeMealPlanId: ID # ID of the currently active MealPlan
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+  updatedAt: AWSDateTime
   # Note: Cognito standard/custom attributes like email, name, profilePicture, subscriptionStatus
   # are usually accessed via $context.identity in resolvers, not stored duplicatively here.
 }
@@ -148,17 +231,7 @@ Represents the daily completion log stored in DynamoDB.
 type CompletedMealLog @model {
   userId: ID! # From PK
   date: AWSDate! # From SK (extracted date part)
-  completedMeals: [CompletedMealInfo!]! # List of meals completed on this date
-}
-
-"""
-Information about a single completed meal within the log.
-"""
-type CompletedMealInfo {
-  mealPlanId: ID!
-  # dayOfWeek: WeekdayEnum! # Might be redundant if date is present
-  mealName: MealNameEnum! # The identifier (keyword) of the meal completed
-  completionTimestamp: AWSDateTime!
+  completedMealKeys: [String!] # Set of unique keys like "PLANID#MEALNAME"
 }
 
 """
@@ -214,12 +287,19 @@ type ChatMessageConnection {
 }
 
 """
+Represents a Meal along with its completion status for the day
+"""
+type MealWithStatus {
+  meal: Meal!
+  isCompleted: Boolean!
+}
+
+"""
 Combined type for the Today page query result.
 """
 type TodaysPlan {
   activePlanDetails: MealPlan # Full details of the active plan
-  mealsForToday: [Meal!] # Extracted meals for the current day from activePlanDetails
-  completedMealsToday: [CompletedMealInfo!] # From CompletedMealLog for today
+  mealsForToday: [MealWithStatus!] # Extracted meals for the current day from activePlanDetails
 }
 
 """
@@ -257,7 +337,7 @@ input UpdateUserDetailsInput {
   heightCm: Float
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
-  allergies: [String!]
+  allergies: [AllergenEnum!]
   dietaryRestrictions: [String!]
   openTextPreferences: String
   targetCalories: Float
@@ -273,7 +353,7 @@ input PlanRequestPreferencesInput {
   heightCm: Float
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
-  allergies: [String!]
+  allergies: [AllergenEnum!]
   dietaryRestrictions: [String!]
   openTextPreferences: String
   targetCalories: Float
@@ -287,6 +367,14 @@ input MarkMealCompletedInput {
   mealPlanId: ID! # Need to know which plan it belongs to
   # dayOfWeek: WeekdayEnum! # Server can derive from 'today'
   mealName: MealNameEnum! # Which meal name (keyword) was completed
+}
+
+"""
+Input for unmarking a meal as completed for the current day.
+"""
+input UnmarkMealCompletedInput {
+  mealPlanId: ID!
+  mealName: MealNameEnum! # The keyword of the meal to unmark
 }
 
 """
@@ -321,27 +409,28 @@ type Query {
   Fetches the UserDetails (preferences, etc.) for the authenticated user. Replaces getUserPreferences.
   """
   getMyUserDetails: UserDetails
-    @aws_auth(cognito_groups: ["User", "Nutritionist"]) # Adjust auth as needed
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"]) # Adjust auth as needed
   """
   Lists MealPlans for the authenticated user. Supports pagination.
   """
   listMyMealPlans(limit: Int, nextToken: String): MealPlanConnection
-    @aws_auth(cognito_groups: ["User"])
+    @aws_auth(cognito_groups: ["USERS"])
 
   """
   Gets a specific MealPlan by its ID. Resolver must verify ownership.
   """
-  getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups: ["User"])
+  getMealPlanById(mealPlanId: ID!): MealPlan
+    @aws_auth(cognito_groups: ["USERS"])
 
   """
   Fetches data needed for the 'Today' page: active plan's details for today and completion status.
   """
-  getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups: ["User"]) # Requires complex/pipeline resolver
+  getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups: ["USERS"]) # Requires complex/pipeline resolver
   """
   Fetches the completion log for a specific date for the authenticated user.
   """
   getCompletedMealsForDate(date: AWSDate!): CompletedMealLog
-    @aws_auth(cognito_groups: ["User"])
+    @aws_auth(cognito_groups: ["USERS"])
 
   """
   Lists available nutritionists, potentially filterable. Supports pagination. (Pro feature?)
@@ -350,12 +439,12 @@ type Query {
     filter: ListNutritionistsFilter
     limit: Int
     nextToken: String
-  ): NutritionistProfileConnection @aws_auth(cognito_groups: ["User"]) # Add Pro group check in resolver?
+  ): NutritionistProfileConnection @aws_auth(cognito_groups: ["USERS"]) # Add Pro group check in resolver?
   """
   Lists chat sessions for the authenticated user. Supports pagination. (Pro feature)
   """
   listMyChats(limit: Int, nextToken: String): ChatMetadataConnection
-    @aws_auth(cognito_groups: ["User"]) # Add Pro group check in resolver?
+    @aws_auth(cognito_groups: ["USERS"]) # Add Pro group check in resolver?
   """
   Gets messages for a specific chat session. Requires pagination. Resolver must check participation.
   """
@@ -363,13 +452,13 @@ type Query {
     chatId: ID!
     limit: Int
     nextToken: String
-  ): ChatMessageConnection @aws_auth(cognito_groups: ["User", "Nutritionist"])
+  ): ChatMessageConnection @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
 
   """
   Lists chat sessions assigned to the authenticated nutritionist. Supports pagination.
   """
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection
-    @aws_auth(cognito_groups: ["Nutritionist"])
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 }
 
 # ===================
@@ -380,35 +469,41 @@ type Mutation {
   Updates details/preferences for the authenticated user. Replaces putUserPreferences.
   """
   updateMyUserDetails(input: UpdateUserDetailsInput!): UserDetails
-    @aws_auth(cognito_groups: ["User"])
+    @aws_auth(cognito_groups: ["USERS"])
 
   """
   Initiates the generation of a new meal plan, potentially overriding default preferences. Can be async.
   """
   requestNewMealPlan(
     prefsOverride: PlanRequestPreferencesInput
-  ): MealPlanGenerationStatus @aws_auth(cognito_groups: ["User"])
+  ): MealPlanGenerationStatus @aws_auth(cognito_groups: ["USERS"])
 
   """
   Sets a specific meal plan as the active one for the user.
   """
   setActiveMealPlan(mealPlanId: ID!): UserDetails
-    @aws_auth(cognito_groups: ["User"])
+    @aws_auth(cognito_groups: ["USERS"])
 
   """
   Marks a meal as completed for today for the authenticated user.
   """
   markMealAsCompleted(input: MarkMealCompletedInput!): CompletedMealLog
-    @aws_auth(cognito_groups: ["User"])
+    @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Unmarks a meal as completed for today for the authenticated user.
+  """
+  unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): CompletedMealLog
+    @aws_auth(cognito_groups: ["USERS"])
 
   """
   Assigns a nutritionist to a meal plan, initiating the chat capability. (Pro feature)
   """
   assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan
-    @aws_auth(cognito_groups: ["User"]) # Add Pro group check in resolver?
+    @aws_auth(cognito_groups: ["USERS"]) # Add Pro group check in resolver?
   """
   Sends a message within a specific chat session. Resolver must check participation.
   """
   sendChatMessage(input: SendMessageInput!): ChatMessage
-    @aws_auth(cognito_groups: ["User", "Nutritionist"])
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
 }
