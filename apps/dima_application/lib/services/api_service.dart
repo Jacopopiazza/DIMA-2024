@@ -40,6 +40,14 @@ class NetworkException extends ApiServiceException {
       : super(message, underlyingException: underlyingException);
 }
 
+/// Exception when the backend indicates a requested Plan ID was not found.
+class PlanNotFoundException extends ApiServiceException {
+  final String planId;
+  PlanNotFoundException(this.planId, {dynamic underlyingException})
+      : super("Meal plan with ID '$planId' not found.",
+            underlyingException: underlyingException);
+}
+
 /// Exception for errors reported by the API (GraphQL errors, etc.).
 class ApiExceptionWrapper extends ApiServiceException {
   final List<GraphQLResponseError>? errors;
@@ -257,6 +265,7 @@ class ApiService {
 
     // 1. Try fetching from network
     try {
+
       safePrint(
           "[APIService] NETWORK: Attempting to fetch plan $planId from source...");
       // --- TODO: Replace MOCK fetch with actual Amplify GraphQL query ---
@@ -276,6 +285,9 @@ class ApiService {
       // Note: If using the mock, toMealPlan might need createdAt/updatedAt from fetchTime
       return isarPlan
           .toMealPlan(); // Assuming toMealPlan correctly creates the domain model
+    } on PlanNotFoundException catch (e) {
+      safePrint("[APIService] Plan with id $planId not found.\n$e");
+      rethrow; // Rethrow the specific exception
     } catch (e) {
       safePrint(
           "[APIService] Network/API Error encountered for plan $planId: $e");
@@ -394,6 +406,28 @@ class ApiService {
         .filter()
         .mealPlanIdEqualTo(planId)
         .findFirst();
+  }
+
+  /// Clears the locally cached UserDetails entry from Isar.
+  Future<void> clearLocalUserDetailsCache() async {
+    safePrint("[APIService] Clearing local UserDetailsCache from Isar...");
+    try {
+      await _isar.writeTxn(() async {
+        // Assuming you only ever store one UserDetailsCache entry
+        // If you might store multiple, you'd need a filter here.
+        await _isar.userDetailsCaches.clear();
+        // Alternative if you might have multiple but want to delete all:
+        // final allIds = await _isar.userDetailsCaches.where().isarIdProperty().findAll();
+        // await _isar.userDetailsCaches.deleteAll(allIds);
+      });
+      safePrint("[Isar] Cleared UserDetailsCache collection.");
+    } catch (e, stackTrace) {
+      safePrint(
+          "[APIService] Error clearing UserDetailsCache: $e\n$stackTrace");
+      // Decide if you need to rethrow or handle this error
+      throw OperationFailedException("Failed to clear local UserDetails cache",
+          underlyingException: e);
+    }
   }
 
   Future<void> _savePlanToCache(MealPlanCache isarPlan) async {

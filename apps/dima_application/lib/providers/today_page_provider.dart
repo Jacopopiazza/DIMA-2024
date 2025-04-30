@@ -28,6 +28,7 @@ enum DataStatus {
   loadedOffline, // Stale data from cache after network failure
   errorNoPlan, // User has no active plan
   errorNetwork, // Network/API error, no cache available
+  errorInvalidPlanId, // Invalid plan ID
   // 'error_cache_stale' isn't strictly needed if loaded_offline implies stale
   errorOther // Unexpected error
 }
@@ -52,7 +53,11 @@ class TodayPageState {
     this.planLastFetched,
     this.isInitialLoad = true,
   }) : consumedMacros = consumedMacros ??
-            Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0); // Initialize domain Macros
+            Macros(
+                calories: 0,
+                proteins: 0,
+                carbohydrates: 0,
+                fats: 0); // Initialize domain Macros
 
   TodayPageState copyWith({
     DataStatus? status,
@@ -67,9 +72,8 @@ class TodayPageState {
     bool? isInitialLoad,
   }) {
     // Clear meals if requested or if specifically null is passed
-    final List<Meal>? finalTodaysMeals = clearTodaysMeals == true
-        ? null
-        : (todaysMeals ?? this.todaysMeals);
+    final List<Meal>? finalTodaysMeals =
+        clearTodaysMeals == true ? null : (todaysMeals ?? this.todaysMeals);
 
     // Clear completion if requested or if specifically null is passed
     final DailyCompletion? finalDailyCompletion = clearDailyCompletion == true
@@ -108,7 +112,9 @@ class TodayPageState {
         : 'null';
     // Format planLastFetched if not null, otherwise show N/A
     final lastFetchedInfo = planLastFetched != null
-        ? DateFormat.yMd().add_Hms().format(planLastFetched!.toLocal()) // Display in local time
+        ? DateFormat.yMd()
+            .add_Hms()
+            .format(planLastFetched!.toLocal()) // Display in local time
         : 'N/A';
     return 'TodayPageState(status: $status, isInitial: $isInitialLoad, todaysMeals: $mealsInfo, completion: $completionInfo, consumed: ${consumedMacros.calories.round()} kCal, lastFetched: $lastFetchedInfo, error: $errorMessage)';
   }
@@ -117,8 +123,10 @@ class TodayPageState {
 // --- Provider Definition ---
 final todayPageProvider =
     StateNotifierProvider<TodayPageNotifier, TodayPageState>((ref) {
-  final isar = ref.watch(isarProvider); // Assuming isarProvider provides Isar instance
-  final apiService = ref.watch(api_service.apiServiceProvider); // Use the ApiService provider
+  final isar =
+      ref.watch(isarProvider); // Assuming isarProvider provides Isar instance
+  final apiService =
+      ref.watch(api_service.apiServiceProvider); // Use the ApiService provider
   return TodayPageNotifier(isar, apiService);
 });
 
@@ -147,7 +155,11 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
       todaysMeals: stillInitialLoad ? null : state.todaysMeals,
       dailyCompletion: stillInitialLoad ? null : state.dailyCompletion,
       consumedMacros: stillInitialLoad
-          ? Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0) // Reset if initial
+          ? Macros(
+              calories: 0,
+              proteins: 0,
+              carbohydrates: 0,
+              fats: 0) // Reset if initial
           : state.consumedMacros,
       planLastFetched: stillInitialLoad ? null : state.planLastFetched,
       isInitialLoad: stillInitialLoad, // Preserve flag during load
@@ -172,95 +184,171 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           status: DataStatus.errorNoPlan,
           clearTodaysMeals: true,
           clearDailyCompletion: true,
-          consumedMacros: Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0), // Reset
+          consumedMacros: Macros(
+              calories: 0, proteins: 0, carbohydrates: 0, fats: 0), // Reset
           planLastFetched: null,
           errorMessage: "No meal plan selected. Please choose one in settings.",
           isInitialLoad: false, // Load attempt finished
         );
         return;
       }
-      safePrint("[TodayPageNotifier] User has plan ID: $chosenPlanId. Fetching via ApiService...");
+      safePrint(
+          "[TodayPageNotifier] User has plan ID: $chosenPlanId. Fetching via ApiService...");
 
       // 2. Fetch Meal Plan using ApiService
       // ApiService handles network request, cache fallback, and stale data logic
       try {
-        mealPlan = await _apiService.fetchMealPlan(chosenPlanId, forceRefresh: forceRefresh);
+        mealPlan = await _apiService.fetchMealPlan(chosenPlanId,
+            forceRefresh: forceRefresh);
 
         // SUCCESS: Data is fresh (from network or valid cache)
         finalStatus = DataStatus.loadedOnline;
         // Try to get a meaningful timestamp (e.g., when it was last updated on backend)
         // Fallback to now if updatedAt is null
-        planFetchTime = mealPlan.updatedAt?.getDateTimeInUtc() ?? DateTime.now().toUtc();
-        safePrint("[TodayPageNotifier] ApiService success. Status: $finalStatus. Plan Updated/Fetched At (UTC): $planFetchTime");
+        planFetchTime =
+            mealPlan.updatedAt?.getDateTimeInUtc() ?? DateTime.now().toUtc();
+        safePrint(
+            "[TodayPageNotifier] ApiService success. Status: $finalStatus. Plan Updated/Fetched At (UTC): $planFetchTime");
+      } on api_service.PlanNotFoundException catch (e) {
+        // This should be handled by getChosenPlanId, but just in case
+        safePrint(
+            "[TodayPageNotifier] ApiService PlanNotFoundException: ${e.message}. No plan found with given id.");
 
+        await _apiService
+            .clearLocalUserDetailsCache(); // Clear user details cache
+
+        if (!mounted) return;
+        state = state.copyWith(
+          status: DataStatus.errorInvalidPlanId,
+          clearTodaysMeals: true,
+          clearDailyCompletion: true,
+          consumedMacros: Macros(
+              calories: 0, proteins: 0, carbohydrates: 0, fats: 0), // Reset
+          planLastFetched: null,
+          errorMessage:
+              "No active meal plan found. Please choose one in settings.",
+          isInitialLoad: false, // Load attempt finished
+        );
+        return;
       } on api_service.CacheExpiredException catch (e) {
-        safePrint("[TodayPageNotifier] ApiService CacheExpiredException: ${e.message}. Network failed, providing stale data.");
+        safePrint(
+            "[TodayPageNotifier] ApiService CacheExpiredException: ${e.message}. Network failed, providing stale data.");
 
         // STALE DATA: Network failed, but ApiService provided stale cached data
         finalStatus = DataStatus.loadedOffline; // Indicate offline/stale data
         errorMessage = "Offline mode: Displaying previously saved plan.";
-        mealPlan = e.staleData; // *** Use the stale data directly from the exception ***
+        mealPlan = e
+            .staleData; // *** Use the stale data directly from the exception ***
 
         if (mealPlan != null) {
-           // Try to get the timestamp from the stale data itself (e.g., when it was generated/updated)
-           // If this isn't available/meaningful, we know it's old data anyway.
-           planFetchTime = mealPlan.generatedAt?.getDateTimeInUtc() ?? mealPlan.updatedAt?.getDateTimeInUtc();
-           safePrint("[TodayPageNotifier] Using stale plan. Stale Plan Updated/Generated At (UTC): $planFetchTime");
+          // Try to get the timestamp from the stale data itself (e.g., when it was generated/updated)
+          // If this isn't available/meaningful, we know it's old data anyway.
+          planFetchTime = mealPlan.generatedAt?.getDateTimeInUtc() ??
+              mealPlan.updatedAt?.getDateTimeInUtc();
+          safePrint(
+              "[TodayPageNotifier] Using stale plan. Stale Plan Updated/Generated At (UTC): $planFetchTime");
         } else {
-           // This case *shouldn't* happen if CacheExpiredException has staleData, but handle defensively.
-           safePrint("[TodayPageNotifier] Error: CacheExpiredException but staleData was null. Plan ID: $chosenPlanId");
-           finalStatus = DataStatus.errorNetwork; // Fallback to network error
-           errorMessage = "Failed to load plan: Network error and cache issue.";
-           planFetchTime = null;
+          // This case *shouldn't* happen if CacheExpiredException has staleData, but handle defensively.
+          safePrint(
+              "[TodayPageNotifier] Error: CacheExpiredException but staleData was null. Plan ID: $chosenPlanId");
+          finalStatus = DataStatus.errorNetwork; // Fallback to network error
+          errorMessage = "Failed to load plan: Network error and cache issue.";
+          planFetchTime = null;
+          throw Exception(
+              "[TodayPageNotifier] CacheExpiredException but staleData was null. Plan ID: $chosenPlanId");
         }
-
       } on api_service.CacheMissException catch (e) {
-         safePrint("[TodayPageNotifier] ApiService CacheMissException: ${e.message}. Network failed, no cache.");
-         finalStatus = DataStatus.errorNetwork;
-         errorMessage = "Failed to load plan: Network error and no offline data available.";
-         planFetchTime = null;
+        safePrint(
+            "[TodayPageNotifier] ApiService CacheMissException: ${e.message}. Network failed, no cache.");
+        finalStatus = DataStatus.errorNetwork;
+        errorMessage =
+            "Failed to load plan: Network error and no offline data available.";
+        planFetchTime = null;
       } on api_service.NetworkException catch (e) {
-         // Includes SocketException, TimeoutException from ApiService
-         safePrint("[TodayPageNotifier] ApiService NetworkException: ${e.message}.");
-         finalStatus = DataStatus.errorNetwork;
-         errorMessage = "Failed to load plan: Check network connection.";
-         planFetchTime = null;
+        // Includes SocketException, TimeoutException from ApiService
+        safePrint(
+            "[TodayPageNotifier] ApiService NetworkException: ${e.message}.");
+        finalStatus = DataStatus.errorNetwork;
+        errorMessage = "Failed to load plan: Check network connection.";
+        planFetchTime = null;
       } on api_service.ApiExceptionWrapper catch (e) {
-         // GraphQL errors or other API issues from ApiService
-         safePrint("[TodayPageNotifier] ApiService ApiExceptionWrapper: ${e.message}.");
-         finalStatus = DataStatus.errorNetwork; // Treat as network/server issue
-         errorMessage = "Failed to load plan: Server error (${e.errors?.first.message ?? 'details unavailable'}).";
-         planFetchTime = null;
+        // GraphQL errors or other API issues from ApiService
+        safePrint(
+            "[TodayPageNotifier] ApiService ApiExceptionWrapper: ${e.message}.");
+        finalStatus = DataStatus.errorNetwork; // Treat as network/server issue
+        errorMessage =
+            "Failed to load plan: Server error (${e.errors?.first.message ?? 'details unavailable'}).";
+        planFetchTime = null;
       } on api_service.OperationFailedException catch (e) {
-         // Other failures reported by ApiService (e.g., mock data loading failed)
-         safePrint("[TodayPageNotifier] ApiService OperationFailedException: ${e.message}.");
-         finalStatus = DataStatus.errorOther;
-         errorMessage = "Failed to process plan data: ${e.message}";
-         planFetchTime = null;
+        // Other failures reported by ApiService (e.g., mock data loading failed)
+        safePrint(
+            "[TodayPageNotifier] ApiService OperationFailedException: ${e.message}.");
+        finalStatus = DataStatus.errorOther;
+        errorMessage = "Failed to process plan data: ${e.message}";
+        planFetchTime = null;
       }
       // No need to catch generic Exception here if ApiService wraps errors well
+
+      if (finalStatus == DataStatus.errorNetwork ||
+          finalStatus == DataStatus.errorOther ||
+          finalStatus == DataStatus.errorNoPlan) {
+        // Determine the specific error message
+        String displayErrorMessage =
+            errorMessage ?? "An error occurred while loading data.";
+        // *** UPDATE THIS SPECIFIC CONDITION'S MESSAGE ***
+        if (finalStatus == DataStatus.errorNetwork &&
+            state.todaysMeals != null) {
+          // Network failed, but we ARE showing previous data
+          displayErrorMessage = "Refresh failed. Displaying previous data.";
+        } else if (finalStatus ==
+            DataStatus.errorNetwork /* && state.todaysMeals == null */) {
+          // Network failed, AND we have NO previous data (CacheMiss likely led here too)
+          // Keep the original message or make it clearer
+          displayErrorMessage = "Network error. No offline data available.";
+        }
+
+        // Update state with the error, preserving existing data
+        if (mounted) {
+          safePrint(
+              "[TodayPageNotifier] Updating state for ERROR ($finalStatus), preserving existing data via copyWith defaults.");
+          state = state.copyWith(
+            status: finalStatus,
+            errorMessage: displayErrorMessage,
+            planLastFetched: null, // Set plan fetch time to null as it failed
+            isInitialLoad: false,
+          );
+          safePrint("[TodayPageNotifier] Error State Set: $state");
+        }
+        return; // IMPORTANT: Exit the function here after setting error state
+      }
 
       // 3. Process the loaded MealPlan (if successful OR stale data was provided)
       if (mealPlan != null) {
         // Use the domain model `mealPlan.dailyPlan`
-        final todaysMeals = _getMealsForToday(mealPlan.dailyPlan); // Domain model Meal list
+        final todaysMeals =
+            _getMealsForToday(mealPlan.dailyPlan); // Domain model Meal list
 
         if (todaysMeals == null || todaysMeals.isEmpty) {
-          safePrint("[TodayPageNotifier] No meals found for today (Plan ID: $chosenPlanId).");
+          safePrint(
+              "[TodayPageNotifier] No meals found for today (Plan ID: $chosenPlanId).");
           if (!mounted) return;
           // Keep status (loaded_online or loaded_offline) but indicate no meals
           state = state.copyWith(
             status: finalStatus, // Preserve loaded status
             clearTodaysMeals: true,
             clearDailyCompletion: true,
-            consumedMacros: Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0), // Reset
-            planLastFetched: planFetchTime, // Record when the plan *structure* was fetched/valid
-            errorMessage: errorMessage ?? "No meals scheduled for today.", // Keep offline msg or add specific one
+            consumedMacros: Macros(
+                calories: 0, proteins: 0, carbohydrates: 0, fats: 0), // Reset
+            planLastFetched:
+                planFetchTime, // Record when the plan *structure* was fetched/valid
+            errorMessage: errorMessage ??
+                "No meals scheduled for today.", // Keep offline msg or add specific one
             isInitialLoad: false, // Load attempt finished
           );
           return;
         }
-        safePrint("[TodayPageNotifier] Found ${todaysMeals.length} meals for today. Loading completion...");
+        safePrint(
+            "[TodayPageNotifier] Found ${todaysMeals.length} meals for today. Loading completion...");
 
         // 4. Load Today's DailyCompletion record from Isar (local state, independent of plan fetch)
         final todayDateOnly = _dateOnly(DateTime.now());
@@ -268,11 +356,14 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
             .filter() // Use filter for potential optimization with index
             .dateEqualTo(todayDateOnly)
             .findFirst();
-        safePrint("[TodayPageNotifier] Loaded completion record: ${todaysCompletionRecord?.completedMealNames ?? 'None'}");
+        safePrint(
+            "[TodayPageNotifier] Loaded completion record: ${todaysCompletionRecord?.completedMealNames ?? 'None'}");
 
         // 5. Calculate initial consumed macros based on loaded completion and today's meals
-        final initialConsumed = _calculateConsumedMacros(todaysCompletionRecord, todaysMeals); // Uses domain models
-        safePrint("[TodayPageNotifier] Initial consumed macros: ${initialConsumed.calories.round()} kCal");
+        final initialConsumed = _calculateConsumedMacros(
+            todaysCompletionRecord, todaysMeals); // Uses domain models
+        safePrint(
+            "[TodayPageNotifier] Initial consumed macros: ${initialConsumed.calories.round()} kCal");
 
         // 6. Update state with final data
         if (!mounted) return;
@@ -286,35 +377,40 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           isInitialLoad: false, // Load attempt finished
         );
         safePrint("[TodayPageNotifier] Load complete. Final State: $state");
-
-      } else if (finalStatus != DataStatus.errorNetwork && finalStatus != DataStatus.errorNoPlan ) {
-         // This case indicates an error occurred, but mealPlan ended up null unexpectedly.
-         // Errors handled by specific catches should have already set the state.
-         safePrint("[TodayPageNotifier] Error: MealPlan is null despite not having explicit network/no-plan error status ($finalStatus).");
-         // Update state to reflect the error if not already set
-         if (mounted && state.status != DataStatus.errorNetwork && state.status != DataStatus.errorOther) {
-            state = state.copyWith(
-               status: DataStatus.errorOther,
-               errorMessage: errorMessage ?? "Failed to load meal plan data.",
-               clearTodaysMeals: true,
-               clearDailyCompletion: true,
-               consumedMacros: Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0),
-               planLastFetched: null,
-               isInitialLoad: false,
-            );
-         }
+      } else if (finalStatus != DataStatus.errorNetwork &&
+          finalStatus != DataStatus.errorNoPlan) {
+        // This case indicates an error occurred, but mealPlan ended up null unexpectedly.
+        // Errors handled by specific catches should have already set the state.
+        safePrint(
+            "[TodayPageNotifier] Error: MealPlan is null despite not having explicit network/no-plan error status ($finalStatus).");
+        // Update state to reflect the error if not already set
+        if (mounted &&
+            state.status != DataStatus.errorNetwork &&
+            state.status != DataStatus.errorOther) {
+          state = state.copyWith(
+            status: DataStatus.errorOther,
+            errorMessage: errorMessage ?? "Failed to load meal plan data.",
+            clearTodaysMeals: true,
+            clearDailyCompletion: true,
+            consumedMacros:
+                Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0),
+            planLastFetched: null,
+            isInitialLoad: false,
+          );
+        }
       } // else: Error status was already set correctly by a catch block or no-plan condition.
-
     } catch (e, stackTrace) {
       // Catch-all for unexpected errors *outside* the ApiService calls or Isar reads
-      safePrint("[TodayPageNotifier] Unhandled Error during load: $e\n$stackTrace");
+      safePrint(
+          "[TodayPageNotifier] Unhandled Error during load: $e\n$stackTrace");
       if (mounted) {
         state = state.copyWith(
           status: DataStatus.errorOther,
           errorMessage: "An unexpected error occurred: ${e.toString()}",
           clearTodaysMeals: true,
           clearDailyCompletion: true,
-          consumedMacros: Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0), // Reset
+          consumedMacros: Macros(
+              calories: 0, proteins: 0, carbohydrates: 0, fats: 0), // Reset
           planLastFetched: null,
           isInitialLoad: false, // Load attempt finished
         );
@@ -366,12 +462,13 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
     final updatedCompletion = DailyCompletion(
       id: currentCompletion.id, // Preserve Isar ID if it exists for update
       date: todayDateOnly,
-      completedMealNames: updatedNamesSet.toList(), // Convert back to list for storage
+      completedMealNames:
+          updatedNamesSet.toList(), // Convert back to list for storage
     );
 
     // Recalculate consumed macros using the updated completion status
-    final newConsumed =
-        _calculateConsumedMacros(updatedCompletion, state.todaysMeals); // Uses domain models
+    final newConsumed = _calculateConsumedMacros(
+        updatedCompletion, state.todaysMeals); // Uses domain models
 
     // Update state optimistically
     state = state.copyWith(
@@ -408,10 +505,12 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
   /// Uses domain model Meal and Macros.
   Macros _calculateConsumedMacros(
       DailyCompletion? dailyCompletion, List<Meal>? todaysMeals) {
-    if (dailyCompletion == null ||
-        todaysMeals == null ||
-        todaysMeals.isEmpty) {
-      return Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0); // Return default domain Macros
+    if (dailyCompletion == null || todaysMeals == null || todaysMeals.isEmpty) {
+      return Macros(
+          calories: 0,
+          proteins: 0,
+          carbohydrates: 0,
+          fats: 0); // Return default domain Macros
     }
 
     double calories = 0;
@@ -421,19 +520,22 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
     // Use a set for efficient lookup
     final completedNames = dailyCompletion.completedMealNames.toSet();
 
-    for (var meal in todaysMeals) { // Iterate over domain model Meal list
+    for (var meal in todaysMeals) {
+      // Iterate over domain model Meal list
       // IMPORTANT: Assumes `meal.recipeName` is the identifier stored in `completedMealNames`.
       // Adjust if a different identifier (like a unique meal ID) is used.
       if (completedNames.contains(meal.name)) {
         // Access the domain Macros object within the domain Meal object
-        final macros = meal.totalMacros; // Assuming Meal has a `Macros totalMacros` field
+        final macros =
+            meal.totalMacros; // Assuming Meal has a `Macros totalMacros` field
         if (macros != null) {
           calories += macros.calories;
           proteins += macros.proteins;
           carbs += macros.carbohydrates;
           fats += macros.fats;
         } else {
-           safePrint("[TodayPageNotifier] Warning: Meal '${meal.recipeName}' is completed but has null macros.");
+          safePrint(
+              "[TodayPageNotifier] Warning: Meal '${meal.recipeName}' is completed but has null macros.");
         }
       }
     }
@@ -446,34 +548,36 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
   }
 
   /// Extracts the list of meals for the current day of the week from the domain DailyPlan.
-  List<Meal>? _getMealsForToday(DailyPlanData? dailyPlan) { // Expects domain DailyPlan
-     if (dailyPlan == null) {
-       safePrint("[TodayPageNotifier] _getMealsForToday: dailyPlan is null.");
-       return null;
-     }
-     // Use current system time to determine the weekday
-     final String currentWeekday =
-         DateFormat('EEEE').format(DateTime.now()).toLowerCase();
-     safePrint("[TodayPageNotifier] Getting meals for weekday: $currentWeekday");
-     switch (currentWeekday) {
-       case 'monday':
-         return dailyPlan.monday;
-       case 'tuesday':
-         return dailyPlan.tuesday;
-       case 'wednesday':
-         return dailyPlan.wednesday;
-       case 'thursday':
-         return dailyPlan.thursday;
-       case 'friday':
-         return dailyPlan.friday;
-       case 'saturday':
-         return dailyPlan.saturday;
-       case 'sunday':
-         return dailyPlan.sunday;
-       default:
-         safePrint("[TodayPageNotifier] Warning: Unknown weekday '$currentWeekday'.");
-         return null; // Should not happen with DateFormat('EEEE')
-     }
+  List<Meal>? _getMealsForToday(DailyPlanData? dailyPlan) {
+    // Expects domain DailyPlan
+    if (dailyPlan == null) {
+      safePrint("[TodayPageNotifier] _getMealsForToday: dailyPlan is null.");
+      return null;
+    }
+    // Use current system time to determine the weekday
+    final String currentWeekday =
+        DateFormat('EEEE').format(DateTime.now()).toLowerCase();
+    safePrint("[TodayPageNotifier] Getting meals for weekday: $currentWeekday");
+    switch (currentWeekday) {
+      case 'monday':
+        return dailyPlan.monday;
+      case 'tuesday':
+        return dailyPlan.tuesday;
+      case 'wednesday':
+        return dailyPlan.wednesday;
+      case 'thursday':
+        return dailyPlan.thursday;
+      case 'friday':
+        return dailyPlan.friday;
+      case 'saturday':
+        return dailyPlan.saturday;
+      case 'sunday':
+        return dailyPlan.sunday;
+      default:
+        safePrint(
+            "[TodayPageNotifier] Warning: Unknown weekday '$currentWeekday'.");
+        return null; // Should not happen with DateFormat('EEEE')
+    }
   }
 
   /// Returns a DateTime object with time components set to zero (start of the day).
@@ -487,4 +591,3 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
     super.dispose();
   }
 }
-

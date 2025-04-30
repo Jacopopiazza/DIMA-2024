@@ -8,6 +8,7 @@ class ProgressCard extends StatefulWidget {
   final double? proteinPercent;
   final double? carbPercent;
   final bool isLoading;
+  final bool isInitialLoad;
 
   const ProgressCard({
     super.key,
@@ -16,6 +17,7 @@ class ProgressCard extends StatefulWidget {
     this.proteinPercent,
     this.carbPercent,
     this.isLoading = false,
+    this.isInitialLoad = false,
   });
 
   @override
@@ -256,7 +258,8 @@ class _ProgressCardState extends State<ProgressCard>
 
     final localizations = AppLocalizations.of(context)!;
 
-    if (widget.isLoading) {
+    if (widget.isInitialLoad && widget.calories == null) {
+      // Show loading skeleton if initial load and no data
       return _buildLoadingSkeleton(context);
     }
 
