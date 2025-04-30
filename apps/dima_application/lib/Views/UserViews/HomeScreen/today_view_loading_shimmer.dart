@@ -3,7 +3,6 @@ import 'package:dima_application/Views/UserViews/HomeScreen/progress_card.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-
 class LoadingShimmer extends StatelessWidget {
   const LoadingShimmer({super.key});
 
