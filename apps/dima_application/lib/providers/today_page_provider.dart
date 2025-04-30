@@ -78,7 +78,7 @@ class TodayPageState {
     // Clear completion if requested or if specifically null is passed
     final DailyCompletion? finalDailyCompletion = clearDailyCompletion == true
         ? null
-        : (dailyCompletion ?? this.dailyCompletion);
+        : dailyCompletion;
 
     // Clear error if requested
     final String? finalErrorMessage =
