@@ -27,28 +27,22 @@ import 'package:collection/collection.dart';
 /** This is an auto generated class representing the TodaysPlan type in your schema. */
 class TodaysPlan {
   final MealPlan? _activePlanDetails;
-  final List<CompletedMealInfo>? _completedMealsToday;
-  final List<Meal>? _mealsForToday;
+  final List<MealWithStatus>? _mealsForToday;
 
   MealPlan? get activePlanDetails {
     return _activePlanDetails;
   }
   
-  List<CompletedMealInfo>? get completedMealsToday {
-    return _completedMealsToday;
-  }
-  
-  List<Meal>? get mealsForToday {
+  List<MealWithStatus>? get mealsForToday {
     return _mealsForToday;
   }
   
-  const TodaysPlan._internal({activePlanDetails, completedMealsToday, mealsForToday}): _activePlanDetails = activePlanDetails, _completedMealsToday = completedMealsToday, _mealsForToday = mealsForToday;
+  const TodaysPlan._internal({activePlanDetails, mealsForToday}): _activePlanDetails = activePlanDetails, _mealsForToday = mealsForToday;
   
-  factory TodaysPlan({MealPlan? activePlanDetails, List<CompletedMealInfo>? completedMealsToday, List<Meal>? mealsForToday}) {
+  factory TodaysPlan({MealPlan? activePlanDetails, List<MealWithStatus>? mealsForToday}) {
     return TodaysPlan._internal(
       activePlanDetails: activePlanDetails,
-      completedMealsToday: completedMealsToday != null ? List<CompletedMealInfo>.unmodifiable(completedMealsToday) : completedMealsToday,
-      mealsForToday: mealsForToday != null ? List<Meal>.unmodifiable(mealsForToday) : mealsForToday);
+      mealsForToday: mealsForToday != null ? List<MealWithStatus>.unmodifiable(mealsForToday) : mealsForToday);
   }
   
   bool equals(Object other) {
@@ -60,7 +54,6 @@ class TodaysPlan {
     if (identical(other, this)) return true;
     return other is TodaysPlan &&
       _activePlanDetails == other._activePlanDetails &&
-      DeepCollectionEquality().equals(_completedMealsToday, other._completedMealsToday) &&
       DeepCollectionEquality().equals(_mealsForToday, other._mealsForToday);
   }
   
@@ -73,28 +66,24 @@ class TodaysPlan {
     
     buffer.write("TodaysPlan {");
     buffer.write("activePlanDetails=" + (_activePlanDetails != null ? _activePlanDetails!.toString() : "null") + ", ");
-    buffer.write("completedMealsToday=" + (_completedMealsToday != null ? _completedMealsToday!.toString() : "null") + ", ");
     buffer.write("mealsForToday=" + (_mealsForToday != null ? _mealsForToday!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  TodaysPlan copyWith({MealPlan? activePlanDetails, List<CompletedMealInfo>? completedMealsToday, List<Meal>? mealsForToday}) {
+  TodaysPlan copyWith({MealPlan? activePlanDetails, List<MealWithStatus>? mealsForToday}) {
     return TodaysPlan._internal(
       activePlanDetails: activePlanDetails ?? this.activePlanDetails,
-      completedMealsToday: completedMealsToday ?? this.completedMealsToday,
       mealsForToday: mealsForToday ?? this.mealsForToday);
   }
   
   TodaysPlan copyWithModelFieldValues({
     ModelFieldValue<MealPlan?>? activePlanDetails,
-    ModelFieldValue<List<CompletedMealInfo>>? completedMealsToday,
-    ModelFieldValue<List<Meal>>? mealsForToday
+    ModelFieldValue<List<MealWithStatus>>? mealsForToday
   }) {
     return TodaysPlan._internal(
       activePlanDetails: activePlanDetails == null ? this.activePlanDetails : activePlanDetails.value,
-      completedMealsToday: completedMealsToday == null ? this.completedMealsToday : completedMealsToday.value,
       mealsForToday: mealsForToday == null ? this.mealsForToday : mealsForToday.value
     );
   }
@@ -105,26 +94,19 @@ class TodaysPlan {
           ? MealPlan.fromJson(new Map<String, dynamic>.from(json['activePlanDetails']['serializedData']))
           : MealPlan.fromJson(new Map<String, dynamic>.from(json['activePlanDetails']))
         : null,
-      _completedMealsToday = json['completedMealsToday'] is List
-        ? (json['completedMealsToday'] as List)
-          .where((e) => e != null)
-          .map((e) => CompletedMealInfo.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
       _mealsForToday = json['mealsForToday'] is List
         ? (json['mealsForToday'] as List)
           .where((e) => e != null)
-          .map((e) => Meal.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+          .map((e) => MealWithStatus.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
           .toList()
         : null;
   
   Map<String, dynamic> toJson() => {
-    'activePlanDetails': _activePlanDetails?.toJson(), 'completedMealsToday': _completedMealsToday?.map((CompletedMealInfo? e) => e?.toJson()).toList(), 'mealsForToday': _mealsForToday?.map((Meal? e) => e?.toJson()).toList()
+    'activePlanDetails': _activePlanDetails?.toJson(), 'mealsForToday': _mealsForToday?.map((MealWithStatus? e) => e?.toJson()).toList()
   };
   
   Map<String, Object?> toMap() => {
     'activePlanDetails': _activePlanDetails,
-    'completedMealsToday': _completedMealsToday,
     'mealsForToday': _mealsForToday
   };
 
@@ -139,17 +121,10 @@ class TodaysPlan {
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'completedMealsToday',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'CompletedMealInfo')
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
       fieldName: 'mealsForToday',
       isRequired: false,
       isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Meal')
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'MealWithStatus')
     ));
   });
 }

@@ -1,0 +1,51 @@
+{
+    "@@locale": "en",
+    "mealNameBREAKFAST": "Breakfast",
+    "@mealNameBREAKFAST": {
+        "description": "Breakfast meal display name"
+    },
+    "mealNameDINNER": "Dinner",
+    "@mealNameDINNER" : {
+        "description": "Dinner meal display name"
+    },
+    "mealNameLUNCH" : "Lunch",
+    "@mealNameLUNCH" : {
+        "description": "Lunch meal display name"
+    },
+    "mealNameSNACK_MORNING" : "Snack (Morning)",
+    "@mealNameSNACK_MORNING" : {
+        "description": "Morning snack meal display name"
+    },
+    "mealNameSNACK_AFTERNOON": "Snack (Afternoon)",
+    "@mealNameSNACK_AFTERNOON": {
+        "description": "Afternoon snack meal display name"
+    },
+    "mealNameSNACK_EVENING": "Snack (Evening)",
+    "@mealNameSNACK_EVENING": {
+        "description": "Evening snack meal display name"
+    },
+    "todayProgress": "Today's Progress",
+    "@todayProgress": {
+        "description": "Today progress card display name"
+    },
+    "calories": "Calories",
+    "@calories": {
+        "description": "Calories display name"
+    },
+    "carbs": "Carbs",
+    "@carbs": {
+        "description": "Carbs display name"
+    },
+    "fats": "Fats",
+    "@fats": {
+        "description": "Fats display name"
+    },
+    "proteins": "Proteins",
+    "@proteins": {
+        "description": "Proteins display name"
+    },
+    "todaysMeals": "Today's Meals",
+    "@todaysMeals" : {
+        "description": "Today's Meals Label"
+    }
+}

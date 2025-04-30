@@ -9,101 +9,234 @@ part of 'daily_plan.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-const DailyPlanSchema = Schema(
-  name: r'DailyPlan',
-  id: 9074873586170206523,
+const DailyPlanCacheSchema = Schema(
+  name: r'DailyPlanCache',
+  id: 774429399523561471,
   properties: {
-    r'meals': PropertySchema(
+    r'friday': PropertySchema(
       id: 0,
-      name: r'meals',
+      name: r'friday',
       type: IsarType.objectList,
-      target: r'Meal',
+      target: r'MealCache',
     ),
-    r'totalMacros': PropertySchema(
+    r'monday': PropertySchema(
       id: 1,
-      name: r'totalMacros',
-      type: IsarType.object,
-      target: r'Macros',
+      name: r'monday',
+      type: IsarType.objectList,
+      target: r'MealCache',
     ),
-    r'weekday': PropertySchema(
+    r'saturday': PropertySchema(
       id: 2,
-      name: r'weekday',
-      type: IsarType.string,
+      name: r'saturday',
+      type: IsarType.objectList,
+      target: r'MealCache',
+    ),
+    r'sunday': PropertySchema(
+      id: 3,
+      name: r'sunday',
+      type: IsarType.objectList,
+      target: r'MealCache',
+    ),
+    r'thursday': PropertySchema(
+      id: 4,
+      name: r'thursday',
+      type: IsarType.objectList,
+      target: r'MealCache',
+    ),
+    r'tuesday': PropertySchema(
+      id: 5,
+      name: r'tuesday',
+      type: IsarType.objectList,
+      target: r'MealCache',
+    ),
+    r'wednesday': PropertySchema(
+      id: 6,
+      name: r'wednesday',
+      type: IsarType.objectList,
+      target: r'MealCache',
     )
   },
-  estimateSize: _dailyPlanEstimateSize,
-  serialize: _dailyPlanSerialize,
-  deserialize: _dailyPlanDeserialize,
-  deserializeProp: _dailyPlanDeserializeProp,
+  estimateSize: _dailyPlanCacheEstimateSize,
+  serialize: _dailyPlanCacheSerialize,
+  deserialize: _dailyPlanCacheDeserialize,
+  deserializeProp: _dailyPlanCacheDeserializeProp,
 );
 
-int _dailyPlanEstimateSize(
-  DailyPlan object,
+int _dailyPlanCacheEstimateSize(
+  DailyPlanCache object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.meals.length * 3;
+  bytesCount += 3 + object.friday.length * 3;
   {
-    final offsets = allOffsets[Meal]!;
-    for (var i = 0; i < object.meals.length; i++) {
-      final value = object.meals[i];
-      bytesCount += MealSchema.estimateSize(value, offsets, allOffsets);
+    final offsets = allOffsets[MealCache]!;
+    for (var i = 0; i < object.friday.length; i++) {
+      final value = object.friday[i];
+      bytesCount += MealCacheSchema.estimateSize(value, offsets, allOffsets);
     }
   }
-  bytesCount += 3 +
-      MacrosSchema.estimateSize(
-          object.totalMacros, allOffsets[Macros]!, allOffsets);
-  bytesCount += 3 + object.weekday.length * 3;
+  bytesCount += 3 + object.monday.length * 3;
+  {
+    final offsets = allOffsets[MealCache]!;
+    for (var i = 0; i < object.monday.length; i++) {
+      final value = object.monday[i];
+      bytesCount += MealCacheSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
+  bytesCount += 3 + object.saturday.length * 3;
+  {
+    final offsets = allOffsets[MealCache]!;
+    for (var i = 0; i < object.saturday.length; i++) {
+      final value = object.saturday[i];
+      bytesCount += MealCacheSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
+  bytesCount += 3 + object.sunday.length * 3;
+  {
+    final offsets = allOffsets[MealCache]!;
+    for (var i = 0; i < object.sunday.length; i++) {
+      final value = object.sunday[i];
+      bytesCount += MealCacheSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
+  bytesCount += 3 + object.thursday.length * 3;
+  {
+    final offsets = allOffsets[MealCache]!;
+    for (var i = 0; i < object.thursday.length; i++) {
+      final value = object.thursday[i];
+      bytesCount += MealCacheSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
+  bytesCount += 3 + object.tuesday.length * 3;
+  {
+    final offsets = allOffsets[MealCache]!;
+    for (var i = 0; i < object.tuesday.length; i++) {
+      final value = object.tuesday[i];
+      bytesCount += MealCacheSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
+  bytesCount += 3 + object.wednesday.length * 3;
+  {
+    final offsets = allOffsets[MealCache]!;
+    for (var i = 0; i < object.wednesday.length; i++) {
+      final value = object.wednesday[i];
+      bytesCount += MealCacheSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   return bytesCount;
 }
 
-void _dailyPlanSerialize(
-  DailyPlan object,
+void _dailyPlanCacheSerialize(
+  DailyPlanCache object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeObjectList<Meal>(
+  writer.writeObjectList<MealCache>(
     offsets[0],
     allOffsets,
-    MealSchema.serialize,
-    object.meals,
+    MealCacheSchema.serialize,
+    object.friday,
   );
-  writer.writeObject<Macros>(
+  writer.writeObjectList<MealCache>(
     offsets[1],
     allOffsets,
-    MacrosSchema.serialize,
-    object.totalMacros,
+    MealCacheSchema.serialize,
+    object.monday,
   );
-  writer.writeString(offsets[2], object.weekday);
+  writer.writeObjectList<MealCache>(
+    offsets[2],
+    allOffsets,
+    MealCacheSchema.serialize,
+    object.saturday,
+  );
+  writer.writeObjectList<MealCache>(
+    offsets[3],
+    allOffsets,
+    MealCacheSchema.serialize,
+    object.sunday,
+  );
+  writer.writeObjectList<MealCache>(
+    offsets[4],
+    allOffsets,
+    MealCacheSchema.serialize,
+    object.thursday,
+  );
+  writer.writeObjectList<MealCache>(
+    offsets[5],
+    allOffsets,
+    MealCacheSchema.serialize,
+    object.tuesday,
+  );
+  writer.writeObjectList<MealCache>(
+    offsets[6],
+    allOffsets,
+    MealCacheSchema.serialize,
+    object.wednesday,
+  );
 }
 
-DailyPlan _dailyPlanDeserialize(
+DailyPlanCache _dailyPlanCacheDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = DailyPlan();
-  object.meals = reader.readObjectList<Meal>(
+  final object = DailyPlanCache();
+  object.friday = reader.readObjectList<MealCache>(
         offsets[0],
-        MealSchema.deserialize,
+        MealCacheSchema.deserialize,
         allOffsets,
-        Meal(),
+        MealCache(),
       ) ??
       [];
-  object.totalMacros = reader.readObjectOrNull<Macros>(
+  object.monday = reader.readObjectList<MealCache>(
         offsets[1],
-        MacrosSchema.deserialize,
+        MealCacheSchema.deserialize,
         allOffsets,
+        MealCache(),
       ) ??
-      Macros();
-  object.weekday = reader.readString(offsets[2]);
+      [];
+  object.saturday = reader.readObjectList<MealCache>(
+        offsets[2],
+        MealCacheSchema.deserialize,
+        allOffsets,
+        MealCache(),
+      ) ??
+      [];
+  object.sunday = reader.readObjectList<MealCache>(
+        offsets[3],
+        MealCacheSchema.deserialize,
+        allOffsets,
+        MealCache(),
+      ) ??
+      [];
+  object.thursday = reader.readObjectList<MealCache>(
+        offsets[4],
+        MealCacheSchema.deserialize,
+        allOffsets,
+        MealCache(),
+      ) ??
+      [];
+  object.tuesday = reader.readObjectList<MealCache>(
+        offsets[5],
+        MealCacheSchema.deserialize,
+        allOffsets,
+        MealCache(),
+      ) ??
+      [];
+  object.wednesday = reader.readObjectList<MealCache>(
+        offsets[6],
+        MealCacheSchema.deserialize,
+        allOffsets,
+        MealCache(),
+      ) ??
+      [];
   return object;
 }
 
-P _dailyPlanDeserializeProp<P>(
+P _dailyPlanCacheDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -111,34 +244,73 @@ P _dailyPlanDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readObjectList<Meal>(
+      return (reader.readObjectList<MealCache>(
             offset,
-            MealSchema.deserialize,
+            MealCacheSchema.deserialize,
             allOffsets,
-            Meal(),
+            MealCache(),
           ) ??
           []) as P;
     case 1:
-      return (reader.readObjectOrNull<Macros>(
+      return (reader.readObjectList<MealCache>(
             offset,
-            MacrosSchema.deserialize,
+            MealCacheSchema.deserialize,
             allOffsets,
+            MealCache(),
           ) ??
-          Macros()) as P;
+          []) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readObjectList<MealCache>(
+            offset,
+            MealCacheSchema.deserialize,
+            allOffsets,
+            MealCache(),
+          ) ??
+          []) as P;
+    case 3:
+      return (reader.readObjectList<MealCache>(
+            offset,
+            MealCacheSchema.deserialize,
+            allOffsets,
+            MealCache(),
+          ) ??
+          []) as P;
+    case 4:
+      return (reader.readObjectList<MealCache>(
+            offset,
+            MealCacheSchema.deserialize,
+            allOffsets,
+            MealCache(),
+          ) ??
+          []) as P;
+    case 5:
+      return (reader.readObjectList<MealCache>(
+            offset,
+            MealCacheSchema.deserialize,
+            allOffsets,
+            MealCache(),
+          ) ??
+          []) as P;
+    case 6:
+      return (reader.readObjectList<MealCache>(
+            offset,
+            MealCacheSchema.deserialize,
+            allOffsets,
+            MealCache(),
+          ) ??
+          []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-extension DailyPlanQueryFilter
-    on QueryBuilder<DailyPlan, DailyPlan, QFilterCondition> {
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> mealsLengthEqualTo(
-      int length) {
+extension DailyPlanCacheQueryFilter
+    on QueryBuilder<DailyPlanCache, DailyPlanCache, QFilterCondition> {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      fridayLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'meals',
+        r'friday',
         length,
         true,
         length,
@@ -147,10 +319,11 @@ extension DailyPlanQueryFilter
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> mealsIsEmpty() {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      fridayIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'meals',
+        r'friday',
         0,
         true,
         0,
@@ -159,10 +332,11 @@ extension DailyPlanQueryFilter
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> mealsIsNotEmpty() {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      fridayIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'meals',
+        r'friday',
         0,
         false,
         999999,
@@ -171,13 +345,14 @@ extension DailyPlanQueryFilter
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> mealsLengthLessThan(
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      fridayLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'meals',
+        r'friday',
         0,
         true,
         length,
@@ -186,14 +361,14 @@ extension DailyPlanQueryFilter
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition>
-      mealsLengthGreaterThan(
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      fridayLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'meals',
+        r'friday',
         length,
         include,
         999999,
@@ -202,7 +377,8 @@ extension DailyPlanQueryFilter
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> mealsLengthBetween(
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      fridayLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -210,7 +386,7 @@ extension DailyPlanQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'meals',
+        r'friday',
         lower,
         includeLower,
         upper,
@@ -219,151 +395,589 @@ extension DailyPlanQueryFilter
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      mondayLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'weekday',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.listLength(
+        r'monday',
+        length,
+        true,
+        length,
+        true,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayGreaterThan(
-    String value, {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      mondayIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'monday',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      mondayIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'monday',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      mondayLengthLessThan(
+    int length, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'weekday',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.listLength(
+        r'monday',
+        0,
+        true,
+        length,
+        include,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayLessThan(
-    String value, {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      mondayLengthGreaterThan(
+    int length, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'weekday',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.listLength(
+        r'monday',
+        length,
+        include,
+        999999,
+        true,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      mondayLengthBetween(
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'weekday',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.listLength(
+        r'monday',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayStartsWith(
-    String value, {
-    bool caseSensitive = true,
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      saturdayLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'saturday',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      saturdayIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'saturday',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      saturdayIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'saturday',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      saturdayLengthLessThan(
+    int length, {
+    bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'weekday',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.listLength(
+        r'saturday',
+        0,
+        true,
+        length,
+        include,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayEndsWith(
-    String value, {
-    bool caseSensitive = true,
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      saturdayLengthGreaterThan(
+    int length, {
+    bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'weekday',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.listLength(
+        r'saturday',
+        length,
+        include,
+        999999,
+        true,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      saturdayLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'weekday',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.listLength(
+        r'saturday',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      sundayLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'weekday',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.listLength(
+        r'sunday',
+        length,
+        true,
+        length,
+        true,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> weekdayIsEmpty() {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      sundayIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'weekday',
-        value: '',
-      ));
+      return query.listLength(
+        r'sunday',
+        0,
+        true,
+        0,
+        true,
+      );
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition>
-      weekdayIsNotEmpty() {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      sundayIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'weekday',
-        value: '',
-      ));
+      return query.listLength(
+        r'sunday',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      sundayLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'sunday',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      sundayLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'sunday',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      sundayLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'sunday',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      thursdayLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'thursday',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      thursdayIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'thursday',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      thursdayIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'thursday',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      thursdayLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'thursday',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      thursdayLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'thursday',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      thursdayLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'thursday',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      tuesdayLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tuesday',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      tuesdayIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tuesday',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      tuesdayIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tuesday',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      tuesdayLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tuesday',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      tuesdayLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tuesday',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      tuesdayLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tuesday',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      wednesdayLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'wednesday',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      wednesdayIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'wednesday',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      wednesdayIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'wednesday',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      wednesdayLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'wednesday',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      wednesdayLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'wednesday',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      wednesdayLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'wednesday',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 }
 
-extension DailyPlanQueryObject
-    on QueryBuilder<DailyPlan, DailyPlan, QFilterCondition> {
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> mealsElement(
-      FilterQuery<Meal> q) {
+extension DailyPlanCacheQueryObject
+    on QueryBuilder<DailyPlanCache, DailyPlanCache, QFilterCondition> {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      fridayElement(FilterQuery<MealCache> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'meals');
+      return query.object(q, r'friday');
     });
   }
 
-  QueryBuilder<DailyPlan, DailyPlan, QAfterFilterCondition> totalMacros(
-      FilterQuery<Macros> q) {
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      mondayElement(FilterQuery<MealCache> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'totalMacros');
+      return query.object(q, r'monday');
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      saturdayElement(FilterQuery<MealCache> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'saturday');
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      sundayElement(FilterQuery<MealCache> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'sunday');
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      thursdayElement(FilterQuery<MealCache> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'thursday');
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      tuesdayElement(FilterQuery<MealCache> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'tuesday');
+    });
+  }
+
+  QueryBuilder<DailyPlanCache, DailyPlanCache, QAfterFilterCondition>
+      wednesdayElement(FilterQuery<MealCache> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'wednesday');
     });
   }
 }

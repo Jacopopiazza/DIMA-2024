@@ -9,45 +9,89 @@ part of 'meal_plan.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetMealPlanCollection on Isar {
-  IsarCollection<MealPlan> get mealPlans => this.collection();
+extension GetMealPlanCacheCollection on Isar {
+  IsarCollection<MealPlanCache> get mealPlanCaches => this.collection();
 }
 
-const MealPlanSchema = CollectionSchema(
-  name: r'MealPlan',
-  id: 6858060180785015955,
+const MealPlanCacheSchema = CollectionSchema(
+  name: r'MealPlanCache',
+  id: -8556752169949088239,
   properties: {
-    r'dailyPlans': PropertySchema(
+    r'assignedNutritionistId': PropertySchema(
       id: 0,
-      name: r'dailyPlans',
-      type: IsarType.objectList,
-      target: r'DailyPlan',
+      name: r'assignedNutritionistId',
+      type: IsarType.string,
     ),
-    r'lastFetched': PropertySchema(
+    r'chatId': PropertySchema(
       id: 1,
-      name: r'lastFetched',
-      type: IsarType.dateTime,
+      name: r'chatId',
+      type: IsarType.string,
     ),
-    r'planId': PropertySchema(
+    r'dailyPlan': PropertySchema(
       id: 2,
-      name: r'planId',
+      name: r'dailyPlan',
+      type: IsarType.object,
+      target: r'DailyPlanCache',
+    ),
+    r'generatedAtTimestamp': PropertySchema(
+      id: 3,
+      name: r'generatedAtTimestamp',
+      type: IsarType.string,
+    ),
+    r'lastFetchedTimestamp': PropertySchema(
+      id: 4,
+      name: r'lastFetchedTimestamp',
+      type: IsarType.string,
+    ),
+    r'mealPlanId': PropertySchema(
+      id: 5,
+      name: r'mealPlanId',
+      type: IsarType.string,
+    ),
+    r'planName': PropertySchema(
+      id: 6,
+      name: r'planName',
+      type: IsarType.string,
+    ),
+    r'status': PropertySchema(
+      id: 7,
+      name: r'status',
+      type: IsarType.byte,
+      enumMap: _MealPlanCachestatusEnumValueMap,
+    ),
+    r'userId': PropertySchema(
+      id: 8,
+      name: r'userId',
       type: IsarType.string,
     )
   },
-  estimateSize: _mealPlanEstimateSize,
-  serialize: _mealPlanSerialize,
-  deserialize: _mealPlanDeserialize,
-  deserializeProp: _mealPlanDeserializeProp,
+  estimateSize: _mealPlanCacheEstimateSize,
+  serialize: _mealPlanCacheSerialize,
+  deserialize: _mealPlanCacheDeserialize,
+  deserializeProp: _mealPlanCacheDeserializeProp,
   idName: r'id',
   indexes: {
-    r'planId': IndexSchema(
-      id: 7282644713036731817,
-      name: r'planId',
+    r'mealPlanId': IndexSchema(
+      id: 3168714601529429647,
+      name: r'mealPlanId',
       unique: true,
       replace: true,
       properties: [
         IndexPropertySchema(
-          name: r'planId',
+          name: r'mealPlanId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'planName': IndexSchema(
+      id: -2372009361415681807,
+      name: r'planName',
+      unique: true,
+      replace: true,
+      properties: [
+        IndexPropertySchema(
+          name: r'planName',
           type: IndexType.hash,
           caseSensitive: true,
         )
@@ -56,72 +100,96 @@ const MealPlanSchema = CollectionSchema(
   },
   links: {},
   embeddedSchemas: {
-    r'DailyPlan': DailyPlanSchema,
-    r'Meal': MealSchema,
-    r'Ingredient': IngredientSchema,
-    r'Macros': MacrosSchema
+    r'DailyPlanCache': DailyPlanCacheSchema,
+    r'MealCache': MealCacheSchema,
+    r'IngredientCache': IngredientCacheSchema,
+    r'MacrosCache': MacrosCacheSchema
   },
-  getId: _mealPlanGetId,
-  getLinks: _mealPlanGetLinks,
-  attach: _mealPlanAttach,
+  getId: _mealPlanCacheGetId,
+  getLinks: _mealPlanCacheGetLinks,
+  attach: _mealPlanCacheAttach,
   version: '3.1.0+1',
 );
 
-int _mealPlanEstimateSize(
-  MealPlan object,
+int _mealPlanCacheEstimateSize(
+  MealPlanCache object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.dailyPlans.length * 3;
   {
-    final offsets = allOffsets[DailyPlan]!;
-    for (var i = 0; i < object.dailyPlans.length; i++) {
-      final value = object.dailyPlans[i];
-      bytesCount += DailyPlanSchema.estimateSize(value, offsets, allOffsets);
+    final value = object.assignedNutritionistId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.planId.length * 3;
+  {
+    final value = object.chatId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  bytesCount += 3 +
+      DailyPlanCacheSchema.estimateSize(
+          object.dailyPlan, allOffsets[DailyPlanCache]!, allOffsets);
+  bytesCount += 3 + object.generatedAtTimestamp.length * 3;
+  bytesCount += 3 + object.lastFetchedTimestamp.length * 3;
+  bytesCount += 3 + object.mealPlanId.length * 3;
+  bytesCount += 3 + object.planName.length * 3;
+  bytesCount += 3 + object.userId.length * 3;
   return bytesCount;
 }
 
-void _mealPlanSerialize(
-  MealPlan object,
+void _mealPlanCacheSerialize(
+  MealPlanCache object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeObjectList<DailyPlan>(
-    offsets[0],
+  writer.writeString(offsets[0], object.assignedNutritionistId);
+  writer.writeString(offsets[1], object.chatId);
+  writer.writeObject<DailyPlanCache>(
+    offsets[2],
     allOffsets,
-    DailyPlanSchema.serialize,
-    object.dailyPlans,
+    DailyPlanCacheSchema.serialize,
+    object.dailyPlan,
   );
-  writer.writeDateTime(offsets[1], object.lastFetched);
-  writer.writeString(offsets[2], object.planId);
+  writer.writeString(offsets[3], object.generatedAtTimestamp);
+  writer.writeString(offsets[4], object.lastFetchedTimestamp);
+  writer.writeString(offsets[5], object.mealPlanId);
+  writer.writeString(offsets[6], object.planName);
+  writer.writeByte(offsets[7], object.status.index);
+  writer.writeString(offsets[8], object.userId);
 }
 
-MealPlan _mealPlanDeserialize(
+MealPlanCache _mealPlanCacheDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = MealPlan();
-  object.dailyPlans = reader.readObjectList<DailyPlan>(
-        offsets[0],
-        DailyPlanSchema.deserialize,
+  final object = MealPlanCache();
+  object.assignedNutritionistId = reader.readStringOrNull(offsets[0]);
+  object.chatId = reader.readStringOrNull(offsets[1]);
+  object.dailyPlan = reader.readObjectOrNull<DailyPlanCache>(
+        offsets[2],
+        DailyPlanCacheSchema.deserialize,
         allOffsets,
-        DailyPlan(),
       ) ??
-      [];
+      DailyPlanCache();
+  object.generatedAtTimestamp = reader.readString(offsets[3]);
   object.id = id;
-  object.lastFetched = reader.readDateTime(offsets[1]);
-  object.planId = reader.readString(offsets[2]);
+  object.lastFetchedTimestamp = reader.readString(offsets[4]);
+  object.mealPlanId = reader.readString(offsets[5]);
+  object.planName = reader.readString(offsets[6]);
+  object.status =
+      _MealPlanCachestatusValueEnumMap[reader.readByteOrNull(offsets[7])] ??
+          PlanStatus.ACTIVE;
+  object.userId = reader.readString(offsets[8]);
   return object;
 }
 
-P _mealPlanDeserializeProp<P>(
+P _mealPlanCacheDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -129,98 +197,184 @@ P _mealPlanDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readObjectList<DailyPlan>(
-            offset,
-            DailyPlanSchema.deserialize,
-            allOffsets,
-            DailyPlan(),
-          ) ??
-          []) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (reader.readObjectOrNull<DailyPlanCache>(
+            offset,
+            DailyPlanCacheSchema.deserialize,
+            allOffsets,
+          ) ??
+          DailyPlanCache()) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
+      return (_MealPlanCachestatusValueEnumMap[reader.readByteOrNull(offset)] ??
+          PlanStatus.ACTIVE) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _mealPlanGetId(MealPlan object) {
+const _MealPlanCachestatusEnumValueMap = {
+  'ACTIVE': 0,
+  'ARCHIVED': 1,
+  'GENERATED': 2,
+  'REVIEW_REQUESTED': 3,
+  'UNDER_REVIEW': 4,
+};
+const _MealPlanCachestatusValueEnumMap = {
+  0: PlanStatus.ACTIVE,
+  1: PlanStatus.ARCHIVED,
+  2: PlanStatus.GENERATED,
+  3: PlanStatus.REVIEW_REQUESTED,
+  4: PlanStatus.UNDER_REVIEW,
+};
+
+Id _mealPlanCacheGetId(MealPlanCache object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _mealPlanGetLinks(MealPlan object) {
+List<IsarLinkBase<dynamic>> _mealPlanCacheGetLinks(MealPlanCache object) {
   return [];
 }
 
-void _mealPlanAttach(IsarCollection<dynamic> col, Id id, MealPlan object) {
+void _mealPlanCacheAttach(
+    IsarCollection<dynamic> col, Id id, MealPlanCache object) {
   object.id = id;
 }
 
-extension MealPlanByIndex on IsarCollection<MealPlan> {
-  Future<MealPlan?> getByPlanId(String planId) {
-    return getByIndex(r'planId', [planId]);
+extension MealPlanCacheByIndex on IsarCollection<MealPlanCache> {
+  Future<MealPlanCache?> getByMealPlanId(String mealPlanId) {
+    return getByIndex(r'mealPlanId', [mealPlanId]);
   }
 
-  MealPlan? getByPlanIdSync(String planId) {
-    return getByIndexSync(r'planId', [planId]);
+  MealPlanCache? getByMealPlanIdSync(String mealPlanId) {
+    return getByIndexSync(r'mealPlanId', [mealPlanId]);
   }
 
-  Future<bool> deleteByPlanId(String planId) {
-    return deleteByIndex(r'planId', [planId]);
+  Future<bool> deleteByMealPlanId(String mealPlanId) {
+    return deleteByIndex(r'mealPlanId', [mealPlanId]);
   }
 
-  bool deleteByPlanIdSync(String planId) {
-    return deleteByIndexSync(r'planId', [planId]);
+  bool deleteByMealPlanIdSync(String mealPlanId) {
+    return deleteByIndexSync(r'mealPlanId', [mealPlanId]);
   }
 
-  Future<List<MealPlan?>> getAllByPlanId(List<String> planIdValues) {
-    final values = planIdValues.map((e) => [e]).toList();
-    return getAllByIndex(r'planId', values);
+  Future<List<MealPlanCache?>> getAllByMealPlanId(
+      List<String> mealPlanIdValues) {
+    final values = mealPlanIdValues.map((e) => [e]).toList();
+    return getAllByIndex(r'mealPlanId', values);
   }
 
-  List<MealPlan?> getAllByPlanIdSync(List<String> planIdValues) {
-    final values = planIdValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'planId', values);
+  List<MealPlanCache?> getAllByMealPlanIdSync(List<String> mealPlanIdValues) {
+    final values = mealPlanIdValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'mealPlanId', values);
   }
 
-  Future<int> deleteAllByPlanId(List<String> planIdValues) {
-    final values = planIdValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'planId', values);
+  Future<int> deleteAllByMealPlanId(List<String> mealPlanIdValues) {
+    final values = mealPlanIdValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'mealPlanId', values);
   }
 
-  int deleteAllByPlanIdSync(List<String> planIdValues) {
-    final values = planIdValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'planId', values);
+  int deleteAllByMealPlanIdSync(List<String> mealPlanIdValues) {
+    final values = mealPlanIdValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'mealPlanId', values);
   }
 
-  Future<Id> putByPlanId(MealPlan object) {
-    return putByIndex(r'planId', object);
+  Future<Id> putByMealPlanId(MealPlanCache object) {
+    return putByIndex(r'mealPlanId', object);
   }
 
-  Id putByPlanIdSync(MealPlan object, {bool saveLinks = true}) {
-    return putByIndexSync(r'planId', object, saveLinks: saveLinks);
+  Id putByMealPlanIdSync(MealPlanCache object, {bool saveLinks = true}) {
+    return putByIndexSync(r'mealPlanId', object, saveLinks: saveLinks);
   }
 
-  Future<List<Id>> putAllByPlanId(List<MealPlan> objects) {
-    return putAllByIndex(r'planId', objects);
+  Future<List<Id>> putAllByMealPlanId(List<MealPlanCache> objects) {
+    return putAllByIndex(r'mealPlanId', objects);
   }
 
-  List<Id> putAllByPlanIdSync(List<MealPlan> objects, {bool saveLinks = true}) {
-    return putAllByIndexSync(r'planId', objects, saveLinks: saveLinks);
+  List<Id> putAllByMealPlanIdSync(List<MealPlanCache> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'mealPlanId', objects, saveLinks: saveLinks);
+  }
+
+  Future<MealPlanCache?> getByPlanName(String planName) {
+    return getByIndex(r'planName', [planName]);
+  }
+
+  MealPlanCache? getByPlanNameSync(String planName) {
+    return getByIndexSync(r'planName', [planName]);
+  }
+
+  Future<bool> deleteByPlanName(String planName) {
+    return deleteByIndex(r'planName', [planName]);
+  }
+
+  bool deleteByPlanNameSync(String planName) {
+    return deleteByIndexSync(r'planName', [planName]);
+  }
+
+  Future<List<MealPlanCache?>> getAllByPlanName(List<String> planNameValues) {
+    final values = planNameValues.map((e) => [e]).toList();
+    return getAllByIndex(r'planName', values);
+  }
+
+  List<MealPlanCache?> getAllByPlanNameSync(List<String> planNameValues) {
+    final values = planNameValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'planName', values);
+  }
+
+  Future<int> deleteAllByPlanName(List<String> planNameValues) {
+    final values = planNameValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'planName', values);
+  }
+
+  int deleteAllByPlanNameSync(List<String> planNameValues) {
+    final values = planNameValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'planName', values);
+  }
+
+  Future<Id> putByPlanName(MealPlanCache object) {
+    return putByIndex(r'planName', object);
+  }
+
+  Id putByPlanNameSync(MealPlanCache object, {bool saveLinks = true}) {
+    return putByIndexSync(r'planName', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByPlanName(List<MealPlanCache> objects) {
+    return putAllByIndex(r'planName', objects);
+  }
+
+  List<Id> putAllByPlanNameSync(List<MealPlanCache> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'planName', objects, saveLinks: saveLinks);
   }
 }
 
-extension MealPlanQueryWhereSort on QueryBuilder<MealPlan, MealPlan, QWhere> {
-  QueryBuilder<MealPlan, MealPlan, QAfterWhere> anyId() {
+extension MealPlanCacheQueryWhereSort
+    on QueryBuilder<MealPlanCache, MealPlanCache, QWhere> {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension MealPlanQueryWhere on QueryBuilder<MealPlan, MealPlan, QWhereClause> {
-  QueryBuilder<MealPlan, MealPlan, QAfterWhereClause> idEqualTo(Id id) {
+extension MealPlanCacheQueryWhere
+    on QueryBuilder<MealPlanCache, MealPlanCache, QWhereClause> {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause> idEqualTo(
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -229,7 +383,8 @@ extension MealPlanQueryWhere on QueryBuilder<MealPlan, MealPlan, QWhereClause> {
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause> idNotEqualTo(
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -251,7 +406,8 @@ extension MealPlanQueryWhere on QueryBuilder<MealPlan, MealPlan, QWhereClause> {
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause> idGreaterThan(
+      Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -260,7 +416,8 @@ extension MealPlanQueryWhere on QueryBuilder<MealPlan, MealPlan, QWhereClause> {
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause> idLessThan(
+      Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -269,7 +426,7 @@ extension MealPlanQueryWhere on QueryBuilder<MealPlan, MealPlan, QWhereClause> {
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterWhereClause> idBetween(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -285,45 +442,90 @@ extension MealPlanQueryWhere on QueryBuilder<MealPlan, MealPlan, QWhereClause> {
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterWhereClause> planIdEqualTo(
-      String planId) {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause>
+      mealPlanIdEqualTo(String mealPlanId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'planId',
-        value: [planId],
+        indexName: r'mealPlanId',
+        value: [mealPlanId],
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterWhereClause> planIdNotEqualTo(
-      String planId) {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause>
+      mealPlanIdNotEqualTo(String mealPlanId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'planId',
+              indexName: r'mealPlanId',
               lower: [],
-              upper: [planId],
+              upper: [mealPlanId],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'planId',
-              lower: [planId],
+              indexName: r'mealPlanId',
+              lower: [mealPlanId],
               includeLower: false,
               upper: [],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'planId',
-              lower: [planId],
+              indexName: r'mealPlanId',
+              lower: [mealPlanId],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'planId',
+              indexName: r'mealPlanId',
               lower: [],
-              upper: [planId],
+              upper: [mealPlanId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause> planNameEqualTo(
+      String planName) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'planName',
+        value: [planName],
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterWhereClause>
+      planNameNotEqualTo(String planName) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'planName',
+              lower: [],
+              upper: [planName],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'planName',
+              lower: [planName],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'planName',
+              lower: [planName],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'planName',
+              lower: [],
+              upper: [planName],
               includeUpper: false,
             ));
       }
@@ -331,97 +533,456 @@ extension MealPlanQueryWhere on QueryBuilder<MealPlan, MealPlan, QWhereClause> {
   }
 }
 
-extension MealPlanQueryFilter
-    on QueryBuilder<MealPlan, MealPlan, QFilterCondition> {
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition>
-      dailyPlansLengthEqualTo(int length) {
+extension MealPlanCacheQueryFilter
+    on QueryBuilder<MealPlanCache, MealPlanCache, QFilterCondition> {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'dailyPlans',
-        length,
-        true,
-        length,
-        true,
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'assignedNutritionistId',
+      ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> dailyPlansIsEmpty() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'dailyPlans',
-        0,
-        true,
-        0,
-        true,
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'assignedNutritionistId',
+      ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition>
-      dailyPlansIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'dailyPlans',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition>
-      dailyPlansLengthLessThan(
-    int length, {
-    bool include = false,
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'dailyPlans',
-        0,
-        true,
-        length,
-        include,
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'assignedNutritionistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition>
-      dailyPlansLengthGreaterThan(
-    int length, {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdGreaterThan(
+    String? value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'dailyPlans',
-        length,
-        include,
-        999999,
-        true,
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'assignedNutritionistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition>
-      dailyPlansLengthBetween(
-    int lower,
-    int upper, {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'assignedNutritionistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdBetween(
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'dailyPlans',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'assignedNutritionistId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'assignedNutritionistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'assignedNutritionistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdContains(String value,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'assignedNutritionistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdMatches(String pattern,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'assignedNutritionistId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'assignedNutritionistId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      assignedNutritionistIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'assignedNutritionistId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'chatId',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'chatId',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'chatId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'chatId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'chatId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'chatId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'chatId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'chatId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'chatId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'chatId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'chatId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      chatIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'chatId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'generatedAtTimestamp',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'generatedAtTimestamp',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'generatedAtTimestamp',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'generatedAtTimestamp',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'generatedAtTimestamp',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'generatedAtTimestamp',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'generatedAtTimestamp',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'generatedAtTimestamp',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'generatedAtTimestamp',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      generatedAtTimestampIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'generatedAtTimestamp',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition> idEqualTo(
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -430,7 +991,8 @@ extension MealPlanQueryFilter
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -443,7 +1005,7 @@ extension MealPlanQueryFilter
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> idLessThan(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -456,7 +1018,7 @@ extension MealPlanQueryFilter
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> idBetween(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -473,74 +1035,22 @@ extension MealPlanQueryFilter
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> lastFetchedEqualTo(
-      DateTime value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'lastFetched',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition>
-      lastFetchedGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'lastFetched',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> lastFetchedLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'lastFetched',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> lastFetchedBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'lastFetched',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdEqualTo(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdGreaterThan(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -548,14 +1058,15 @@ extension MealPlanQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdLessThan(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -563,14 +1074,15 @@ extension MealPlanQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdBetween(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -579,7 +1091,7 @@ extension MealPlanQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -589,193 +1101,904 @@ extension MealPlanQueryFilter
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdStartsWith(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdEndsWith(
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdIsEmpty() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> planIdIsNotEmpty() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      lastFetchedTimestampIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'planId',
+        property: r'lastFetchedTimestamp',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'mealPlanId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'mealPlanId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'mealPlanId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'mealPlanId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'mealPlanId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'mealPlanId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'mealPlanId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'mealPlanId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'mealPlanId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      mealPlanIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'mealPlanId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'planName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'planName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'planName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'planName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'planName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'planName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'planName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'planName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'planName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      planNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'planName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      statusEqualTo(PlanStatus value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'status',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      statusGreaterThan(
+    PlanStatus value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'status',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      statusLessThan(
+    PlanStatus value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'status',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      statusBetween(
+    PlanStatus lower,
+    PlanStatus upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'status',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition>
+      userIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userId',
         value: '',
       ));
     });
   }
 }
 
-extension MealPlanQueryObject
-    on QueryBuilder<MealPlan, MealPlan, QFilterCondition> {
-  QueryBuilder<MealPlan, MealPlan, QAfterFilterCondition> dailyPlansElement(
-      FilterQuery<DailyPlan> q) {
+extension MealPlanCacheQueryObject
+    on QueryBuilder<MealPlanCache, MealPlanCache, QFilterCondition> {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterFilterCondition> dailyPlan(
+      FilterQuery<DailyPlanCache> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'dailyPlans');
+      return query.object(q, r'dailyPlan');
     });
   }
 }
 
-extension MealPlanQueryLinks
-    on QueryBuilder<MealPlan, MealPlan, QFilterCondition> {}
+extension MealPlanCacheQueryLinks
+    on QueryBuilder<MealPlanCache, MealPlanCache, QFilterCondition> {}
 
-extension MealPlanQuerySortBy on QueryBuilder<MealPlan, MealPlan, QSortBy> {
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> sortByLastFetched() {
+extension MealPlanCacheQuerySortBy
+    on QueryBuilder<MealPlanCache, MealPlanCache, QSortBy> {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      sortByAssignedNutritionistId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lastFetched', Sort.asc);
+      return query.addSortBy(r'assignedNutritionistId', Sort.asc);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> sortByLastFetchedDesc() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      sortByAssignedNutritionistIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lastFetched', Sort.desc);
+      return query.addSortBy(r'assignedNutritionistId', Sort.desc);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> sortByPlanId() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> sortByChatId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'planId', Sort.asc);
+      return query.addSortBy(r'chatId', Sort.asc);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> sortByPlanIdDesc() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> sortByChatIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'planId', Sort.desc);
+      return query.addSortBy(r'chatId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      sortByGeneratedAtTimestamp() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'generatedAtTimestamp', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      sortByGeneratedAtTimestampDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'generatedAtTimestamp', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      sortByLastFetchedTimestamp() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastFetchedTimestamp', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      sortByLastFetchedTimestampDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastFetchedTimestamp', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> sortByMealPlanId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'mealPlanId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      sortByMealPlanIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'mealPlanId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> sortByPlanName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'planName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      sortByPlanNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'planName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> sortByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> sortByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> sortByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> sortByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
     });
   }
 }
 
-extension MealPlanQuerySortThenBy
-    on QueryBuilder<MealPlan, MealPlan, QSortThenBy> {
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> thenById() {
+extension MealPlanCacheQuerySortThenBy
+    on QueryBuilder<MealPlanCache, MealPlanCache, QSortThenBy> {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      thenByAssignedNutritionistId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'assignedNutritionistId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      thenByAssignedNutritionistIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'assignedNutritionistId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByChatId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'chatId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByChatIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'chatId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      thenByGeneratedAtTimestamp() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'generatedAtTimestamp', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      thenByGeneratedAtTimestampDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'generatedAtTimestamp', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> thenByLastFetched() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      thenByLastFetchedTimestamp() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lastFetched', Sort.asc);
+      return query.addSortBy(r'lastFetchedTimestamp', Sort.asc);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> thenByLastFetchedDesc() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      thenByLastFetchedTimestampDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lastFetched', Sort.desc);
+      return query.addSortBy(r'lastFetchedTimestamp', Sort.desc);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> thenByPlanId() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByMealPlanId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'planId', Sort.asc);
+      return query.addSortBy(r'mealPlanId', Sort.asc);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QAfterSortBy> thenByPlanIdDesc() {
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      thenByMealPlanIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'planId', Sort.desc);
+      return query.addSortBy(r'mealPlanId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByPlanName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'planName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy>
+      thenByPlanNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'planName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByUserId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QAfterSortBy> thenByUserIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userId', Sort.desc);
     });
   }
 }
 
-extension MealPlanQueryWhereDistinct
-    on QueryBuilder<MealPlan, MealPlan, QDistinct> {
-  QueryBuilder<MealPlan, MealPlan, QDistinct> distinctByLastFetched() {
+extension MealPlanCacheQueryWhereDistinct
+    on QueryBuilder<MealPlanCache, MealPlanCache, QDistinct> {
+  QueryBuilder<MealPlanCache, MealPlanCache, QDistinct>
+      distinctByAssignedNutritionistId({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'lastFetched');
+      return query.addDistinctBy(r'assignedNutritionistId',
+          caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<MealPlan, MealPlan, QDistinct> distinctByPlanId(
+  QueryBuilder<MealPlanCache, MealPlanCache, QDistinct> distinctByChatId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'planId', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'chatId', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QDistinct>
+      distinctByGeneratedAtTimestamp({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'generatedAtTimestamp',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QDistinct>
+      distinctByLastFetchedTimestamp({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastFetchedTimestamp',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QDistinct> distinctByMealPlanId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'mealPlanId', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QDistinct> distinctByPlanName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'planName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QDistinct> distinctByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'status');
+    });
+  }
+
+  QueryBuilder<MealPlanCache, MealPlanCache, QDistinct> distinctByUserId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userId', caseSensitive: caseSensitive);
     });
   }
 }
 
-extension MealPlanQueryProperty
-    on QueryBuilder<MealPlan, MealPlan, QQueryProperty> {
-  QueryBuilder<MealPlan, int, QQueryOperations> idProperty() {
+extension MealPlanCacheQueryProperty
+    on QueryBuilder<MealPlanCache, MealPlanCache, QQueryProperty> {
+  QueryBuilder<MealPlanCache, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<MealPlan, List<DailyPlan>, QQueryOperations>
-      dailyPlansProperty() {
+  QueryBuilder<MealPlanCache, String?, QQueryOperations>
+      assignedNutritionistIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'dailyPlans');
+      return query.addPropertyName(r'assignedNutritionistId');
     });
   }
 
-  QueryBuilder<MealPlan, DateTime, QQueryOperations> lastFetchedProperty() {
+  QueryBuilder<MealPlanCache, String?, QQueryOperations> chatIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'lastFetched');
+      return query.addPropertyName(r'chatId');
     });
   }
 
-  QueryBuilder<MealPlan, String, QQueryOperations> planIdProperty() {
+  QueryBuilder<MealPlanCache, DailyPlanCache, QQueryOperations>
+      dailyPlanProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'planId');
+      return query.addPropertyName(r'dailyPlan');
+    });
+  }
+
+  QueryBuilder<MealPlanCache, String, QQueryOperations>
+      generatedAtTimestampProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'generatedAtTimestamp');
+    });
+  }
+
+  QueryBuilder<MealPlanCache, String, QQueryOperations>
+      lastFetchedTimestampProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastFetchedTimestamp');
+    });
+  }
+
+  QueryBuilder<MealPlanCache, String, QQueryOperations> mealPlanIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'mealPlanId');
+    });
+  }
+
+  QueryBuilder<MealPlanCache, String, QQueryOperations> planNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'planName');
+    });
+  }
+
+  QueryBuilder<MealPlanCache, PlanStatus, QQueryOperations> statusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'status');
+    });
+  }
+
+  QueryBuilder<MealPlanCache, String, QQueryOperations> userIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userId');
     });
   }
 }

@@ -1,24 +1,27 @@
+import 'package:dima_application/generated/flutter-models/Ingredient.dart';
 import 'package:dima_application/models/MealPlan/macros.dart';
 import 'package:isar/isar.dart';
 
 part 'ingredient.g.dart'; // <-- Add part directive
 
 @embedded // Embed Ingredient within Meal
-class Ingredient {
+class IngredientCache {
   late String name;
   late double amount; // Use num for flexibility (int/double)
-  late Macros macros;
+  late String unit; // unit of measurement (e.g., grams, cups)
+  late MacrosCache macros;
 
-  Ingredient(); // Default constructor needed by Isar
+  IngredientCache(); // Default constructor needed by Isar
 
-  Ingredient.create(
-      {required this.name, required this.amount, required this.macros});
+  IngredientCache.create(
+      {required this.name, required this.amount, required this.macros, required this.unit});
 
-  factory Ingredient.fromJson(Map<String, dynamic> json) {
-    return Ingredient.create(
+  factory IngredientCache.fromJson(Map<String, dynamic> json) {
+    return IngredientCache.create(
       name: json['name'] ?? 'Unknown Ingredient',
       amount: _toDouble(json['amount']),
-      macros: Macros.fromJson(json['macros'] ?? {}),
+      macros: MacrosCache.fromJson(json['macros'] ?? {}),
+      unit: json['unit'] ?? 'g', // Default to grams if not provided
     );
   }
 
@@ -27,7 +30,27 @@ class Ingredient {
       'name': name,
       'amount': amount,
       'macros': macros.toJson(),
+      'unit': unit,
     };
+  }
+
+  // Optional: Factory constructor from Amplify model
+  factory IngredientCache.fromAmplify(Ingredient amplifyIngredient) {
+    return IngredientCache.create(
+      amount: amplifyIngredient.amount,
+      name: amplifyIngredient.name,
+      unit: amplifyIngredient.unit ?? 'g', 
+      macros: MacrosCache.fromAmplify(amplifyIngredient.macros),
+    );
+  }
+
+  Ingredient toIngredient() {
+    return Ingredient(
+      name: name,
+      amount: amount,
+      unit: unit,
+      macros: macros.toMacros(),
+    );
   }
 }
 

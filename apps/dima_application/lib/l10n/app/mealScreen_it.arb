@@ -1,0 +1,10 @@
+{
+    "@@locale": "it",
+    "energy": "Energia",
+    "ingredients" : "Ingredienti",
+    "recipe": "Ricetta",
+    "noRecipe": "Ricetta non disponibile",
+    "mealCompleted" : "Già mangiato",
+    "mealToBeCompleted": "Segna come mangiato",
+    "back": "Indietro"
+}

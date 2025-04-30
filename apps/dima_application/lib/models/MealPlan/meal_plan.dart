@@ -1,118 +1,126 @@
 // lib/models/meal_plan_models.dart (adjust filename as needed)
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/models/MealPlan/meal.dart';
 import 'package:dima_application/models/MealPlan/daily_plan.dart';
 import 'package:dima_application/models/MealPlan/ingredient.dart';
 import 'package:dima_application/models/MealPlan/macros.dart';
-import 'package:dima_application/models/MealPlan/meal.dart';
 
 import 'package:isar/isar.dart';
 
 part 'meal_plan.g.dart';
 
-/// Generated file for all Isar models in this file
-/// Helper function to determine the sort order of weekdays.
-/// Returns an integer representing the day's position (Monday=0, Sunday=6).
-int _weekdayOrder(String weekday) {
-  switch (weekday.toLowerCase()) {
-    case 'monday':
-      return 0;
-    case 'tuesday':
-      return 1;
-    case 'wednesday':
-      return 2;
-    case 'thursday':
-      return 3;
-    case 'friday':
-      return 4;
-    case 'saturday':
-      return 5;
-    case 'sunday':
-      return 6;
-    default:
-      return 7; // Place unknown weekdays last
-  }
-}
-
 //-------------------------------------------------
-// MealPlan Collection - Top Level Object
+// MealPlanCache Collection - Top Level Object
 //-------------------------------------------------
 @collection
-class MealPlan {
+class MealPlanCache {
   Id id = Isar.autoIncrement; // Isar's internal auto-incrementing ID
 
-  @Index(
-      unique: true,
-      replace:
-          true) // Index for efficient lookup and updates based on your backend ID
-  late String planId; // The original ID from your backend/source
+  late String? assignedNutritionistId;
+  late String? chatId;
+  late DailyPlanCache dailyPlan;
+  late String generatedAtTimestamp;
 
-  // Stores DailyPlan objects, each representing a day. Will be sorted by weekday.
-  late List<DailyPlan> dailyPlans;
+  // Use @Index to ensure mealPlanId is unique in the database
+  @Index(unique: true, replace: true)
+  late String mealPlanId;
 
-  late DateTime lastFetched; // Timestamp for cache validity checks
+  // Use @Index to ensure planName is unique in the database
+  @Index(unique: true, replace: true)
+  late String planName;
 
-  // Default constructor needed by Isar.
-  MealPlan();
+  @enumerated
+  late PlanStatus status;
+  late String userId;
+  late String lastFetchedTimestamp;
 
-  // Constructor for creating/updating MealPlan instances programmatically.
-  MealPlan.create(
-      {required this.planId,
-      required this.dailyPlans,
-      required this.lastFetched});
+  @ignore
+  TemporalDateTime get generatedAt => TemporalDateTime.fromString(generatedAtTimestamp);
+  @ignore
+  TemporalDateTime get lastFetched => TemporalDateTime.fromString(lastFetchedTimestamp);
 
-  /// Factory constructor to parse the entire meal plan JSON response.
-  /// The input 'json' is expected to be the object with day names as keys:
-  /// { "monday": { "meals": [...] }, "tuesday": { "meals": [...] }, ... }
-  /// 'originalPlanId' is the ID associated with this plan (e.g., from backend).
-  /// 'fetchedTime' is when the data was retrieved.
-  factory MealPlan.fromJson(
-      Map<String, dynamic> json, String originalPlanId, DateTime fetchedTime) {
-    final List<DailyPlan> parsedDailyPlans = [];
+  // Default constructor needed by Isar
+  MealPlanCache(); // Default constructor needed by Isar
 
-    // Iterate over the keys (day names like "monday", "tuesday") and
-    // values (the corresponding day data objects) of the input JSON map.
-    json.forEach((dayName, dayData) {
-      // Ensure the data for the day is actually a map before processing
-      if (dayData is Map<String, dynamic>) {
-        // Create a DailyPlan object from the day's data, passing the day name.
-        parsedDailyPlans.add(DailyPlan.fromJson(dayName, dayData));
-      } else {
-        // Optional: Log a warning or handle cases where dayData isn't a map
-        print(
-            'Warning: Unexpected data type for day "$dayName" in MealPlan JSON.');
-      }
-    });
+  // Factory constructor from Amplify model
+  factory MealPlanCache.create({
+    required String? assignedNutritionistId,
+    required String? chatId,
+    required DailyPlanCache dailyPlan,
+    required TemporalDateTime generatedAt,
+    required String mealPlanId,
+    required String planName,
+    required PlanStatus status,
+    required String userId,
+    TemporalDateTime? lastFetched,
+  }) {
+    return MealPlanCache()
+      ..assignedNutritionistId = assignedNutritionistId
+      ..chatId = chatId
+      ..dailyPlan = dailyPlan
+      ..generatedAtTimestamp = generatedAt.format()
+      ..mealPlanId = mealPlanId
+      ..planName = planName
+      ..status = status
+      ..userId = userId
+      ..lastFetchedTimestamp = lastFetched?.format() ?? TemporalDateTime.now().format();
+  }
 
-    // *** ADDED: Sort the daily plans by weekday ***
-    // Uses the helper function _weekdayOrder to ensure consistent ordering.
-    parsedDailyPlans.sort(
-        (a, b) => _weekdayOrder(a.weekday).compareTo(_weekdayOrder(b.weekday)));
+  // Optional: Factory constructor from Amplify model
+  factory MealPlanCache.fromAmplify(MealPlan amplifyData) {
+    // Check if amplifyData is null
+    if (amplifyData == null) {
+      throw ArgumentError("amplifyData cannot be null");
+    }
+    // Check if status is null
+    if (amplifyData.status == null) {
+      throw ArgumentError("status cannot be null");
+    }
+    if (amplifyData.dailyPlan == null) {
+      throw ArgumentError("dailyPlan cannot be null");
+    }
+    if (amplifyData.planName == null) {
+      throw ArgumentError("monday meals cannot be null");
+    }
 
-    return MealPlan.create(
-      planId: originalPlanId,
-      dailyPlans: parsedDailyPlans, // Use the sorted list
-      lastFetched: fetchedTime,
+    return MealPlanCache.create(
+      assignedNutritionistId: amplifyData.assignedNutritionistId,
+      chatId: amplifyData.chatId,
+      dailyPlan: DailyPlanCache.fromAmplify(amplifyData.dailyPlan),
+      generatedAt: amplifyData.generatedAt!,
+      mealPlanId: amplifyData.mealPlanId,
+      planName: amplifyData.planName!,
+      status: amplifyData.status!,
+      userId: amplifyData.userId,
+      lastFetched: TemporalDateTime.now(),
     );
   }
 
-  /// Converts the MealPlan object back into a JSON map.
-  /// Useful for sending data back to an API or storing as JSON.
+  MealPlan toMealPlan() {
+    return MealPlan(
+      assignedNutritionistId: assignedNutritionistId,
+      chatId: chatId,
+      dailyPlan: dailyPlan.toDailyPlan(),
+      generatedAt: TemporalDateTime.fromString(generatedAtTimestamp),
+      mealPlanId: mealPlanId,
+      planName: planName,
+      status: status,
+      userId: userId,
+    );
+  }
+
   Map<String, dynamic> toJson() {
-    // Convert list of daily plans back to a map keyed by weekday
-    final Map<String, dynamic> dailyPlansMap = {};
-    for (var plan in dailyPlans) {
-      // Use the weekday name as the key in the map
-      dailyPlansMap[plan.weekday] =
-          plan.toJson(); // Assuming DailyPlan has toJson
-    }
     return {
-      // Isar ID is usually not included in JSON serialization.
-      // 'planId': planId, // Include planId if required by the receiving system.
-
-      // Structure the output map with weekdays as keys, matching the input structure.
-      ...dailyPlansMap,
-
-      // Include lastFetched timestamp in ISO 8601 format if needed.
-      // 'lastFetched': lastFetched.toIso8601String(),
+      'assignedNutritionistId': assignedNutritionistId,
+      'chatId': chatId,
+      'dailyPlan': dailyPlan.toJson(),
+      'generatedAt': generatedAtTimestamp,
+      'mealPlanId': mealPlanId,
+      'planName': planName,
+      'status': status.name,
+      'userId': userId,
+      'lastFetched': lastFetchedTimestamp,
     };
   }
 }

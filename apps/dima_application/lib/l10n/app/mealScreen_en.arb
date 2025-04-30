@@ -1,0 +1,31 @@
+{
+    "@@locale": "en",
+    "energy": "Energy",
+    "@energy": {
+        "description": "Energy label"
+    },
+    "ingredients" : "Ingredients",
+    "@ingredients": {
+        "description": "Ingredients label"
+    },
+    "recipe": "Recipe",
+    "@recipe" : {
+        "description": "Recipe label"
+    },
+    "noRecipe": "No recipe available",
+    "@noRecipe" : {
+        "description": "No recipe placeholder"
+    },
+    "mealCompleted" : "Completed",
+    "@mealCompleted" : {
+        "description": "label for Completed meal in meal screen"
+    },
+    "mealToBeCompleted": "Mark as Done",
+    "@mealToBeCompleted": {
+        "description": "label for Already completed meal in meal screen"
+    },
+    "back": "Back",
+    "@back" : {
+        "description": "back button label"
+    }
+}

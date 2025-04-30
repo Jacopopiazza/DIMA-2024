@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:dima_application/providers/today_page_provider.dart';
 
 class ErrorView extends StatelessWidget {
   final String message;
-  final TodayPageNotifier notifier;
+  // Changed from TodayPageNotifier to a simple VoidCallback
+  final VoidCallback onRetry;
 
   const ErrorView({
     super.key,
     required this.message,
-    required this.notifier,
+    // Updated constructor parameter
+    required this.onRetry,
   });
 
   @override
@@ -30,7 +31,7 @@ class ErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              message,
+              message, // Display the specific error message passed in
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
@@ -38,7 +39,8 @@ class ErrorView extends StatelessWidget {
             ElevatedButton.icon(
               icon: const Icon(Icons.refresh),
               label: const Text("Retry"),
-              onPressed: () => notifier.refreshData(),
+              // Execute the passed-in onRetry callback when pressed
+              onPressed: onRetry,
             )
           ],
         ),

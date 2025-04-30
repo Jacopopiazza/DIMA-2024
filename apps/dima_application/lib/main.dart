@@ -5,12 +5,14 @@ import 'package:dima_application/Views/CustomAuthenticator/customized_authentica
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/models/MealPlan/meal_plan.dart';
 import 'package:dima_application/models/TodayPage/today_page_data.dart';
+import 'package:dima_application/models/UserDetails/user_details_cache.dart';
 import 'package:dima_application/providers/isar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dima_application/models/DailyCompletion/daily_completion.dart';
+
 
 import 'amplify_outputs.dart';
 
@@ -40,7 +42,7 @@ Future<void> main() async {
     // --- Isar Initialization ---
     final dir = await getApplicationDocumentsDirectory();
     final isar = await Isar.open(
-      [TodayPageDataSchema, DailyCompletionSchema, MealPlanSchema], // Add your schema here
+      [TodayPageDataSchema, DailyCompletionSchema, MealPlanCacheSchema, UserDetailsCacheSchema], // Add your schema here
       directory: dir.path,
     );
     // --- End Isar Initialization ---

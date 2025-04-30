@@ -1,5 +1,5 @@
+import 'package:dima_application/Views/UserViews/SettingsScreen/settings_view.dart';
 import 'package:dima_application/Views/UserViews/my_plans_page.dart';
-import 'package:dima_application/Views/UserViews/settings_page.dart';
 import 'package:flutter/material.dart';
 
 import 'HomeScreen/today_view.dart'; // Assuming this path is correct

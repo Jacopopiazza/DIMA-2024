@@ -95,6 +95,432 @@ abstract class AppLocalizations {
     Locale('it')
   ];
 
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @changePreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Preferences'**
+  String get changePreferences;
+
+  /// No description provided for @clearCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Cache'**
+  String get clearCache;
+
+  /// Label of button to sign out the user
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get signOut;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @confirmClearCacheTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Clear Cache'**
+  String get confirmClearCacheTitle;
+
+  /// No description provided for @confirmClearCacheMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.'**
+  String get confirmClearCacheMessage;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @cacheClearedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache cleared successfully.'**
+  String get cacheClearedSuccessfully;
+
+  /// No description provided for @errorClearingCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Error clearing cache.'**
+  String get errorClearingCache;
+
+  /// No description provided for @confirmSignOutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Sign Out'**
+  String get confirmSignOutTitle;
+
+  /// No description provided for @confirmSignOutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get confirmSignOutMessage;
+
+  /// No description provided for @confirmDeleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Account Deletion'**
+  String get confirmDeleteAccountTitle;
+
+  /// No description provided for @confirmDeleteAccountMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'WARNING: This action is irreversible and will permanently delete your account and all associated data. Are you absolutely sure you want to proceed?'**
+  String get confirmDeleteAccountMessage;
+
+  /// No description provided for @accountDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully.'**
+  String get accountDeletedSuccessfully;
+
+  /// No description provided for @errorDeletingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting account. Please try again.'**
+  String get errorDeletingAccount;
+
+  /// No description provided for @errorDeleteAccountRequiresRecentLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion requires a recent sign-in. Please sign out and sign back in.'**
+  String get errorDeleteAccountRequiresRecentLogin;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @preferencesSavedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences saved successfully.'**
+  String get preferencesSavedSuccess;
+
+  /// No description provided for @errorSavingPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving preferences.'**
+  String get errorSavingPreferences;
+
+  /// No description provided for @errorLoadingPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading preferences.'**
+  String get errorLoadingPreferences;
+
+  /// No description provided for @pleaseCorrectErrors.
+  ///
+  /// In en, this message translates to:
+  /// **'Please correct the errors in the form.'**
+  String get pleaseCorrectErrors;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @basicInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Info'**
+  String get basicInfo;
+
+  /// No description provided for @weightKg.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get weightKg;
+
+  /// No description provided for @heightCm.
+  ///
+  /// In en, this message translates to:
+  /// **'Height (cm)'**
+  String get heightCm;
+
+  /// No description provided for @targetCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Daily Calories'**
+  String get targetCalories;
+
+  /// No description provided for @invalidNumberFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number.'**
+  String get invalidNumberFormat;
+
+  /// No description provided for @caloriesOutOfRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories must be between 500 and 10000.'**
+  String get caloriesOutOfRange;
+
+  /// No description provided for @dietaryNeeds.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary Needs'**
+  String get dietaryNeeds;
+
+  /// No description provided for @mealsPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Meals Per Day'**
+  String get mealsPerDay;
+
+  /// No description provided for @dietaryRestrictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary Restrictions'**
+  String get dietaryRestrictions;
+
+  /// No description provided for @dietaryRestrictionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Vegetarian, Vegan, Low-Carb'**
+  String get dietaryRestrictionsHint;
+
+  /// No description provided for @allergies.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergies'**
+  String get allergies;
+
+  /// No description provided for @lifestyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifestyle'**
+  String get lifestyle;
+
+  /// No description provided for @exerciseFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Frequency'**
+  String get exerciseFrequency;
+
+  /// No description provided for @otherPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Preferences'**
+  String get otherPreferences;
+
+  /// No description provided for @additionalNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Notes'**
+  String get additionalNotes;
+
+  /// No description provided for @additionalNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Any other likes, dislikes, or goals?'**
+  String get additionalNotesHint;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App Version'**
+  String get appVersion;
+
+  /// No description provided for @allergenCELERY.
+  ///
+  /// In en, this message translates to:
+  /// **'Celery'**
+  String get allergenCELERY;
+
+  /// No description provided for @allergenCRUSTACEANS.
+  ///
+  /// In en, this message translates to:
+  /// **'Crustaceans'**
+  String get allergenCRUSTACEANS;
+
+  /// No description provided for @allergenEGGS.
+  ///
+  /// In en, this message translates to:
+  /// **'Eggs'**
+  String get allergenEGGS;
+
+  /// No description provided for @allergenFISH.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get allergenFISH;
+
+  /// No description provided for @allergenGLUTEN_CEREALS.
+  ///
+  /// In en, this message translates to:
+  /// **'Gluten Cereals'**
+  String get allergenGLUTEN_CEREALS;
+
+  /// No description provided for @allergenLUPIN.
+  ///
+  /// In en, this message translates to:
+  /// **'Lupin'**
+  String get allergenLUPIN;
+
+  /// No description provided for @allergenMILK.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk'**
+  String get allergenMILK;
+
+  /// No description provided for @allergenMOLLUSCS.
+  ///
+  /// In en, this message translates to:
+  /// **'Molluscs'**
+  String get allergenMOLLUSCS;
+
+  /// No description provided for @allergenMUSTARD.
+  ///
+  /// In en, this message translates to:
+  /// **'Mustard'**
+  String get allergenMUSTARD;
+
+  /// No description provided for @allergenNUTS.
+  ///
+  /// In en, this message translates to:
+  /// **'Nuts'**
+  String get allergenNUTS;
+
+  /// No description provided for @allergenPEANUTS.
+  ///
+  /// In en, this message translates to:
+  /// **'Peanuts'**
+  String get allergenPEANUTS;
+
+  /// No description provided for @allergenSESAME_SEEDS.
+  ///
+  /// In en, this message translates to:
+  /// **'Sesame Seeds'**
+  String get allergenSESAME_SEEDS;
+
+  /// No description provided for @allergenSOYBEANS.
+  ///
+  /// In en, this message translates to:
+  /// **'Soybeans'**
+  String get allergenSOYBEANS;
+
+  /// No description provided for @allergenSULPHITES.
+  ///
+  /// In en, this message translates to:
+  /// **'Sulphites'**
+  String get allergenSULPHITES;
+
+  /// No description provided for @exerciseFrequencyEVERY_DAY.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get exerciseFrequencyEVERY_DAY;
+
+  /// No description provided for @exerciseFrequencyFIVE_TIMES_A_WEEK.
+  ///
+  /// In en, this message translates to:
+  /// **'Five times a week'**
+  String get exerciseFrequencyFIVE_TIMES_A_WEEK;
+
+  /// No description provided for @exerciseFrequencyFOUR_TIMES_A_WEEK.
+  ///
+  /// In en, this message translates to:
+  /// **'Four times a week'**
+  String get exerciseFrequencyFOUR_TIMES_A_WEEK;
+
+  /// No description provided for @exerciseFrequencyNONE.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get exerciseFrequencyNONE;
+
+  /// No description provided for @exerciseFrequencyNOT_SPECIFIED.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get exerciseFrequencyNOT_SPECIFIED;
+
+  /// No description provided for @exerciseFrequencyONCE_A_WEEK.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a week'**
+  String get exerciseFrequencyONCE_A_WEEK;
+
+  /// No description provided for @exerciseFrequencySIX_TIMES_A_WEEK.
+  ///
+  /// In en, this message translates to:
+  /// **'Six times a week'**
+  String get exerciseFrequencySIX_TIMES_A_WEEK;
+
+  /// No description provided for @exerciseFrequencyTHREE_TIMES_A_WEEK.
+  ///
+  /// In en, this message translates to:
+  /// **'Three times a week'**
+  String get exerciseFrequencyTHREE_TIMES_A_WEEK;
+
+  /// No description provided for @exerciseFrequencyTWICE_A_WEEK.
+  ///
+  /// In en, this message translates to:
+  /// **'Twice a week'**
+  String get exerciseFrequencyTWICE_A_WEEK;
+
+  /// Energy label
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get energy;
+
+  /// Ingredients label
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients'**
+  String get ingredients;
+
+  /// Recipe label
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe'**
+  String get recipe;
+
+  /// No recipe placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'No recipe available'**
+  String get noRecipe;
+
+  /// label for Completed meal in meal screen
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get mealCompleted;
+
+  /// label for Already completed meal in meal screen
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Done'**
+  String get mealToBeCompleted;
+
+  /// back button label
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
   /// The conventional newborn programmer greeting
   ///
   /// In en, this message translates to:
@@ -130,6 +556,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.'**
   String get socialSignUpNotice;
+
+  /// Breakfast meal display name
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get mealNameBREAKFAST;
+
+  /// Dinner meal display name
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get mealNameDINNER;
+
+  /// Lunch meal display name
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get mealNameLUNCH;
+
+  /// Morning snack meal display name
+  ///
+  /// In en, this message translates to:
+  /// **'Snack (Morning)'**
+  String get mealNameSNACK_MORNING;
+
+  /// Afternoon snack meal display name
+  ///
+  /// In en, this message translates to:
+  /// **'Snack (Afternoon)'**
+  String get mealNameSNACK_AFTERNOON;
+
+  /// Evening snack meal display name
+  ///
+  /// In en, this message translates to:
+  /// **'Snack (Evening)'**
+  String get mealNameSNACK_EVENING;
+
+  /// Today progress card display name
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Progress'**
+  String get todayProgress;
+
+  /// Calories display name
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get calories;
+
+  /// Carbs display name
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get carbs;
+
+  /// Fats display name
+  ///
+  /// In en, this message translates to:
+  /// **'Fats'**
+  String get fats;
+
+  /// Proteins display name
+  ///
+  /// In en, this message translates to:
+  /// **'Proteins'**
+  String get proteins;
+
+  /// Today's Meals Label
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Meals'**
+  String get todaysMeals;
 
   /// Label of the button to sign in the user.
   ///
@@ -220,12 +718,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy Key'**
   String get copyKey;
-
-  /// Label of button to sign out the user
-  ///
-  /// In en, this message translates to:
-  /// **'Sign Out'**
-  String get signOut;
 
   /// Label of button to return to the previous step
   ///

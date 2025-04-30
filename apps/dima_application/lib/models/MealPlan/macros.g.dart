@@ -9,9 +9,9 @@ part of 'macros.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-const MacrosSchema = Schema(
-  name: r'Macros',
-  id: 2869933105692344639,
+const MacrosCacheSchema = Schema(
+  name: r'MacrosCache',
+  id: -3067593784191098365,
   properties: {
     r'calories': PropertySchema(
       id: 0,
@@ -34,14 +34,14 @@ const MacrosSchema = Schema(
       type: IsarType.double,
     )
   },
-  estimateSize: _macrosEstimateSize,
-  serialize: _macrosSerialize,
-  deserialize: _macrosDeserialize,
-  deserializeProp: _macrosDeserializeProp,
+  estimateSize: _macrosCacheEstimateSize,
+  serialize: _macrosCacheSerialize,
+  deserialize: _macrosCacheDeserialize,
+  deserializeProp: _macrosCacheDeserializeProp,
 );
 
-int _macrosEstimateSize(
-  Macros object,
+int _macrosCacheEstimateSize(
+  MacrosCache object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -49,8 +49,8 @@ int _macrosEstimateSize(
   return bytesCount;
 }
 
-void _macrosSerialize(
-  Macros object,
+void _macrosCacheSerialize(
+  MacrosCache object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -61,13 +61,13 @@ void _macrosSerialize(
   writer.writeDouble(offsets[3], object.proteins);
 }
 
-Macros _macrosDeserialize(
+MacrosCache _macrosCacheDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Macros(
+  final object = MacrosCache(
     calories: reader.readDoubleOrNull(offsets[0]) ?? 0.0,
     carbohydrates: reader.readDoubleOrNull(offsets[1]) ?? 0.0,
     fats: reader.readDoubleOrNull(offsets[2]) ?? 0.0,
@@ -76,7 +76,7 @@ Macros _macrosDeserialize(
   return object;
 }
 
-P _macrosDeserializeProp<P>(
+P _macrosCacheDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -96,8 +96,9 @@ P _macrosDeserializeProp<P>(
   }
 }
 
-extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> caloriesEqualTo(
+extension MacrosCacheQueryFilter
+    on QueryBuilder<MacrosCache, MacrosCache, QFilterCondition> {
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition> caloriesEqualTo(
     double value, {
     double epsilon = Query.epsilon,
   }) {
@@ -110,7 +111,8 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> caloriesGreaterThan(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition>
+      caloriesGreaterThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -125,7 +127,8 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> caloriesLessThan(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition>
+      caloriesLessThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -140,7 +143,7 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> caloriesBetween(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition> caloriesBetween(
     double lower,
     double upper, {
     bool includeLower = true,
@@ -159,7 +162,8 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> carbohydratesEqualTo(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition>
+      carbohydratesEqualTo(
     double value, {
     double epsilon = Query.epsilon,
   }) {
@@ -172,7 +176,8 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> carbohydratesGreaterThan(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition>
+      carbohydratesGreaterThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -187,7 +192,8 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> carbohydratesLessThan(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition>
+      carbohydratesLessThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -202,7 +208,8 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> carbohydratesBetween(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition>
+      carbohydratesBetween(
     double lower,
     double upper, {
     bool includeLower = true,
@@ -221,7 +228,7 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> fatsEqualTo(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition> fatsEqualTo(
     double value, {
     double epsilon = Query.epsilon,
   }) {
@@ -234,7 +241,7 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> fatsGreaterThan(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition> fatsGreaterThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -249,7 +256,7 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> fatsLessThan(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition> fatsLessThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -264,7 +271,7 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> fatsBetween(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition> fatsBetween(
     double lower,
     double upper, {
     bool includeLower = true,
@@ -283,7 +290,7 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> proteinsEqualTo(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition> proteinsEqualTo(
     double value, {
     double epsilon = Query.epsilon,
   }) {
@@ -296,7 +303,8 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> proteinsGreaterThan(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition>
+      proteinsGreaterThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -311,7 +319,8 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> proteinsLessThan(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition>
+      proteinsLessThan(
     double value, {
     bool include = false,
     double epsilon = Query.epsilon,
@@ -326,7 +335,7 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Macros, Macros, QAfterFilterCondition> proteinsBetween(
+  QueryBuilder<MacrosCache, MacrosCache, QAfterFilterCondition> proteinsBetween(
     double lower,
     double upper, {
     bool includeLower = true,
@@ -346,4 +355,5 @@ extension MacrosQueryFilter on QueryBuilder<Macros, Macros, QFilterCondition> {
   }
 }
 
-extension MacrosQueryObject on QueryBuilder<Macros, Macros, QFilterCondition> {}
+extension MacrosCacheQueryObject
+    on QueryBuilder<MacrosCache, MacrosCache, QFilterCondition> {}

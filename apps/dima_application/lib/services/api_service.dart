@@ -1,120 +1,507 @@
-// lib/services/api_service.dart
+import 'dart:async'; // Import for TimeoutException
 import 'dart:convert';
+import 'dart:io'; // Import for SocketException
+
+import 'package:http/http.dart' as http;
+
+import 'package:amplify_flutter/amplify_flutter.dart';
+// Make sure ModelProvider is correctly generated and imported
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+// Import domain/Amplify models
+import 'package:dima_application/models/MealPlan/meal_plan.dart';
+
+// Import Isar cache models
+import 'package:dima_application/models/UserDetails/user_details_cache.dart'; // Isar model
+
+// Import input models
+import 'package:dima_application/models/input/update_user_details_input.dart';
+// Import Isar provider
+import 'package:dima_application/providers/isar_provider.dart'; // Adjust path if needed
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
-import 'package:dima_application/models/MealPlan/meal_plan.dart';
-import 'package:dima_application/providers/isar_provider.dart';
+
+// --- Custom Exception Classes ---
+
+/// Base class for API Service related exceptions.
+class ApiServiceException implements Exception {
+  final String message;
+  final dynamic underlyingException;
+  ApiServiceException(this.message, {this.underlyingException});
+
+  @override
+  String toString() =>
+      'ApiServiceException: $message ${underlyingException != null ? "\nUnderlying: $underlyingException" : ""}';
+}
+
+/// Exception for network-related errors (connection, timeout, etc.).
+class NetworkException extends ApiServiceException {
+  NetworkException(String message, {dynamic underlyingException})
+      : super(message, underlyingException: underlyingException);
+}
+
+/// Exception for errors reported by the API (GraphQL errors, etc.).
+class ApiExceptionWrapper extends ApiServiceException {
+  final List<GraphQLResponseError>? errors;
+  ApiExceptionWrapper(String message,
+      {this.errors, dynamic underlyingException})
+      : super(message, underlyingException: underlyingException);
+
+  @override
+  String toString() {
+    final errorDetails = errors?.map((e) => e.message).join('; ') ?? 'N/A';
+    return 'ApiExceptionWrapper: $message\nGraphQL Errors: $errorDetails ${underlyingException != null ? "\nUnderlying: $underlyingException" : ""}';
+  }
+}
+
+/// Exception when network fails and no cache is available.
+class CacheMissException extends ApiServiceException {
+  CacheMissException(String message, {dynamic underlyingException})
+      : super(message, underlyingException: underlyingException);
+}
+
+/// Exception when network fails and cache is expired or invalid.
+/// Includes the stale data (as a domain model) if found.
+class CacheExpiredException extends ApiServiceException {
+  /// The stale data found in the cache, converted to the domain model.
+  /// This might be null if conversion fails or cache was unexpectedly empty.
+  final MealPlan? staleData;
+
+  CacheExpiredException(String message,
+      {this.staleData, dynamic underlyingException})
+      : super(message, underlyingException: underlyingException);
+}
+
+/// Exception for failed operations like updates.
+class OperationFailedException extends ApiServiceException {
+  OperationFailedException(String message, {dynamic underlyingException})
+      : super(message, underlyingException: underlyingException);
+}
+
+// --- API Service Provider ---
 
 /// Provider that creates and exposes the ApiService instance
-/// Uses the Isar database for local caching
 final apiServiceProvider = Provider<ApiService>((ref) {
-  final isar = ref.watch(isarProvider);
+  final isar = ref.read(isarProvider);
   return ApiService(isar);
 });
 
-/// Service responsible for API operations and local caching
-/// 
-/// Handles fetching meal plans from network and managing local cache
-/// using Isar database for offline support
+// --- API Service Implementation ---
+
+/// Service responsible for API operations and local caching.
 class ApiService {
   final Isar _isar;
-  
-  /// Duration to consider cached data valid before refreshing
-  static const Duration _planCacheDuration = Duration(hours: 24);
-  
-  /// Creates a new ApiService with the provided Isar instance
+  static const Duration _cacheValidityDuration = Duration(hours: 24);
+
   ApiService(this._isar);
 
-  /// Gets the ID of the user's chosen meal plan
-  /// 
-  /// Returns null if no plan has been chosen
-  /// Note: Currently uses mock implementation
-  Future<String?> getChosenPlanId() async {
-    print("[ApiService] MOCK: Checking for chosen plan ID...");
-    
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 50));
-    
-    // Mock implementation - toggle return values to test different scenarios
-     return 'mock_plan_from_gemini_output'; // Uncomment to simulate plan chosen
-    //return null; // Simulate no plan chosen
+  // --- UserDetails Methods ---
+
+  Future<UserDetails> updateMyUserDetails(
+      UpdateUserDetailsInput updateUserDetailsInput) async {
+    safePrint("[APIService] Updating UserDetails via API...");
+    try {
+      // --- TODO: Replace with actual Amplify GraphQL Mutation ---
+      await Future.delayed(
+          const Duration(milliseconds: 300)); // Simulate network
+      final mockUserId = 'mockUserId'; // Replace with actual user ID logic
+      final updatedDetails = UserDetails(
+        id: UUID.getUUID(), // Use actual ID
+        userId: mockUserId,
+        weightKg: updateUserDetailsInput.weightKg,
+        heightCm: updateUserDetailsInput.heightCm,
+        exerciseFrequency: updateUserDetailsInput.exerciseFrequency,
+        dailyMealsPreference: updateUserDetailsInput.dailyMealsPreference,
+        allergies: updateUserDetailsInput.allergies,
+        dietaryRestrictions: updateUserDetailsInput.dietaryRestrictions,
+        openTextPreferences: updateUserDetailsInput.openTextPreferences,
+        targetCalories: updateUserDetailsInput.targetCalories,
+        updatedAt: TemporalDateTime.now(),
+        // createdAt should be set on creation or fetched
+      );
+      // --- End Mock ---
+
+      safePrint("[APIService] NETWORK: Update successful. Updating cache.");
+      final cacheEntry =
+          UserDetailsCache.fromUserDetails(updatedDetails, DateTime.now());
+      await _saveUserDetailsToCache(cacheEntry);
+      return updatedDetails;
+    } on ApiException catch (e) {
+      safePrint("[APIService] API Error updating user details: ${e.message}");
+      throw ApiExceptionWrapper("API error during UserDetails update",
+          underlyingException: e);
+    } on SocketException catch (e) {
+      safePrint("[APIService] Network error updating user details: $e");
+      throw NetworkException("Network error during UserDetails update",
+          underlyingException: e);
+    } catch (e, stackTrace) {
+      safePrint("[APIService] Failed to update user details: $e\n$stackTrace");
+      throw OperationFailedException("Failed to update UserDetails",
+          underlyingException: e);
+    }
   }
 
-  /// Fetches a meal plan with the specified ID
-  /// 
-  /// Implements a cache-first strategy using Isar for offline support
-  /// 
-  /// [planId] - The ID of the plan to fetch
-  /// [forceRefresh] - If true, bypasses valid cache and fetches fresh data
-  /// 
-  /// Returns the meal plan from either cache or network
-  /// Throws an exception if the fetch fails and no cache is available
-  Future<MealPlan> fetchMealPlan(String planId,
-      {bool forceRefresh = false}) async {
-    print("[ApiService] Fetching meal plan (ID: $planId) - Checking Isar cache first...");
-    
+  Future<UserDetails> getMyUserDetails({bool forceRefresh = false}) async {
+    // (Keep the implementation from the previous version - it doesn't need changes for stale MealPlan data)
+    safePrint(
+        "[APIService] Fetching user details (forceRefresh: $forceRefresh) - Network First...");
     final now = DateTime.now();
-    MealPlan? cachedPlan;
 
-    // 1. Check cache unless force refresh is requested
-    if (!forceRefresh) {
-      cachedPlan = await _isar.mealPlans.where().planIdEqualTo(planId).findFirst();
-      
-      if (cachedPlan != null) {
-        if (now.difference(cachedPlan.lastFetched) < _planCacheDuration) {
-          print("[ApiService] ISAR CACHE HIT: Returning valid cached plan for $planId");
-          return cachedPlan;
+    try {
+      safePrint(
+          "[APIService] NETWORK: Attempting to fetch user details from AppSync...");
+      // --- TODO: Replace with actual Amplify GraphQL Query ---
+      final operation = Amplify.API.query(
+        request: GraphQLRequest<UserDetails>(
+          document: '''
+            query GetMyUserDetails {
+              getMyUserDetails {
+                id
+                userId
+                weightKg
+                heightCm
+                exerciseFrequency
+                dailyMealsPreference
+                allergies
+                dietaryRestrictions
+                openTextPreferences
+                targetCalories
+                activeMealPlanId
+                updatedAt
+                createdAt
+              }
+            }
+          ''',
+          modelType:
+              ModelProvider.instance.getModelTypeByModelName('UserDetails'),
+          decodePath: 'getMyUserDetails',
+        ),
+      );
+      final response = await operation.response;
+      final fetchedDetails = response.data;
+      // --- End API Call ---
+
+      if (response.hasErrors || fetchedDetails == null) {
+        throw ApiExceptionWrapper("GraphQL query for UserDetails failed",
+            errors: response.errors);
+      }
+
+      safePrint(
+          "[APIService] NETWORK: Success. Saving user details to Isar cache.");
+      final cacheEntry = UserDetailsCache.fromUserDetails(fetchedDetails, now);
+      await _saveUserDetailsToCache(cacheEntry);
+      return fetchedDetails;
+    } catch (e) {
+      safePrint(
+          "[APIService] Network/API Error encountered fetching UserDetails: $e");
+      if (forceRefresh) {
+        safePrint(
+            "[APIService] FORCE REFRESH: Network failed, rethrowing error (UserDetails).");
+        // Rethrow appropriate wrapped exception
+        _handleForceRefreshError(e); // Helper to avoid repetition
+      }
+
+      // Attempt Fallback
+      safePrint("[APIService] CACHE FALLBACK: Trying UserDetails from Isar...");
+      final UserDetailsCache? cachedDetails = await _isar.userDetailsCaches
+          .where()
+          .sortByLastFetchedDesc()
+          .findFirst();
+
+      if (cachedDetails != null) {
+        if (_isUserDetailsCacheValid(cachedDetails, now)) {
+          safePrint(
+              "[APIService] CACHE HIT (Fallback): Returning valid cached UserDetails.");
+          return cachedDetails.toUserDetails();
         } else {
-          print("[ApiService] ISAR CACHE STALE: Cached plan for $planId is expired.");
+          safePrint(
+              "[APIService] CACHE STALE (Fallback): UserDetails cache expired.");
+          // Here we throw CacheExpiredException, but without stale data, as requested for UserDetails.
+          // Modify if stale UserDetails data should also be included in its exception.
+          throw CacheExpiredException(
+              "Network failed and local UserDetails cache is expired.",
+              underlyingException: e);
         }
       } else {
-        print("[ApiService] ISAR CACHE MISS: No cached plan found for $planId.");
-      }
-    } else {
-      print("[ApiService] FORCE REFRESH: Skipping cache check.");
-      
-      // Still load cache as fallback in case network fails
-      cachedPlan = await _isar.mealPlans.where().planIdEqualTo(planId).findFirst();
-      
-      if (cachedPlan != null) {
-        print("[ApiService] FORCE REFRESH: Found potential stale cache for fallback.");
+        safePrint(
+            "[APIService] CACHE MISS (Fallback): No cached UserDetails found.");
+        throw CacheMissException(
+            "Failed to fetch UserDetails and no cache available.",
+            underlyingException: e);
       }
     }
+  }
 
-    // 2. Fetch from network (mock implementation)
+  // --- Meal Plan Methods ---
+
+  Future<String?> getChosenPlanId() async {
+    // (Keep the implementation from the previous version)
+    safePrint("[APIService] Getting chosen plan ID (via getMyUserDetails)...");
     try {
-      print("[ApiService] MOCK NETWORK: Fetching plan for $planId...");
-      
-      // Simulate network delay
-      await Future.delayed(const Duration(milliseconds: 300));
-      
-      // Load mock data from assets
-      final String jsonString = await rootBundle.loadString('assets/Gemini-Meal-Output.json');
-      final Map<String, dynamic> jsonMap = json.decode(jsonString);
-      
-      // Create meal plan from JSON and store current timestamp
-      final fetchedPlan = MealPlan.fromJson(jsonMap, planId, now);
-      
-      print("[ApiService] MOCK NETWORK: Success. Saving plan to Isar for $planId.");
-      
-      // 3. Save fetched plan to cache
-      await _isar.writeTxn(() async {
-        await _isar.mealPlans.put(fetchedPlan);
-      });
-      
-      return fetchedPlan;
+      // MOCKED IMPLEMENTATION
+      return 'mock_plan_from_gemini_output';
+
+      final userDetails = await getMyUserDetails();
+      return userDetails.activeMealPlanId;
     } catch (e, stackTrace) {
-      print("[ApiService] NETWORK ERROR: Failed to fetch plan for $planId. Error: $e\n$stackTrace");
-      
-      // 4. Fallback to cache on network failure
-      if (cachedPlan != null) {
-        print("[ApiService] NETWORK ERROR FALLBACK: Returning stale Isar cached plan for $planId.");
-        return cachedPlan;
-      } else {
-        print("[ApiService] NETWORK ERROR FALLBACK: No cache available in Isar for $planId.");
-        throw Exception("Failed to fetch plan and no cache available: $e");
+      safePrint("[APIService] Failed to get chosen plan ID: $e\n$stackTrace");
+      return null;
+    }
+  }
+
+  Future<MealPlan> fetchMealPlan(String planId,
+      {bool forceRefresh = false}) async {
+    safePrint(
+        "[APIService] Fetching meal plan (ID: $planId, forceRefresh: $forceRefresh) - Network First...");
+    final now = TemporalDateTime.now();
+
+    // 1. Try fetching from network
+    try {
+      safePrint(
+          "[APIService] NETWORK: Attempting to fetch plan $planId from source...");
+      // --- TODO: Replace MOCK fetch with actual Amplify GraphQL query ---
+      final MealPlan fetchedAmplifyPlan =
+          await _fetchAmplifyPlanFromNetworkMock(planId, now);
+      // --- End Mock / API Call ---
+
+      safePrint(
+          "[APIService] NETWORK: Success. Saving plan $planId to Isar cache.");
+
+      // Convert & Save to Cache
+      final MealPlanCache isarPlan =
+          MealPlanCache.fromAmplify(fetchedAmplifyPlan);
+      await _savePlanToCache(isarPlan);
+
+      // Return the fresh domain model
+      // Note: If using the mock, toMealPlan might need createdAt/updatedAt from fetchTime
+      return isarPlan
+          .toMealPlan(); // Assuming toMealPlan correctly creates the domain model
+    } catch (e) {
+      safePrint(
+          "[APIService] Network/API Error encountered for plan $planId: $e");
+
+      // Handle forceRefresh first
+      if (forceRefresh) {
+        safePrint(
+            "[APIService] FORCE REFRESH: Network failed for plan $planId, rethrowing error.");
+        _handleForceRefreshError(e); // Use helper
       }
+
+      // Determine error type for logging
+      _logNetworkOrApiError(e, planId);
+
+      // 3. Fallback to cache (only if forceRefresh is false)
+      safePrint(
+          "[APIService] CACHE FALLBACK: Trying to load plan $planId from Isar...");
+      final MealPlanCache? cachedPlan = await _getCachedPlan(planId);
+
+      if (cachedPlan != null) {
+        if (_isMealPlanCacheValid(cachedPlan, now)) {
+          // This path should ideally not be hit often if network succeeds,
+          // but handles cases where network fails but cache is still valid.
+          safePrint(
+              "[APIService] CACHE HIT (Fallback - Valid): Returning valid cached plan $planId.");
+          return cachedPlan.toMealPlan();
+        } else {
+          // *** Cache is STALE ***
+          safePrint(
+              "[APIService] CACHE STALE (Fallback): Cached plan $planId is expired. Last fetched: ${cachedPlan.lastFetched}");
+          // *** MODIFICATION: Throw exception WITH the stale data ***
+          throw CacheExpiredException(
+              "Network failed and local cache for plan $planId is expired.",
+              staleData:
+                  cachedPlan.toMealPlan(), // Include stale data (domain model)
+              underlyingException: e // Include original error context
+              );
+        }
+      } else {
+        // *** Cache MISS ***
+        safePrint(
+            "[APIService] CACHE MISS (Fallback): No cached plan found for $planId.");
+        throw CacheMissException(
+            "Failed to fetch plan $planId and no cache available.",
+            underlyingException: e); // Include original error context
+      }
+    }
+  }
+
+  // --- Private Helper Methods ---
+
+  void _handleForceRefreshError(dynamic e) {
+    if (e is ApiException) {
+      throw ApiExceptionWrapper("API error during forced refresh",
+          underlyingException: e);
+    } else if (e is SocketException || e is TimeoutException) {
+      throw NetworkException("Network error during forced refresh",
+          underlyingException: e);
+    } else if (e is ApiServiceException) {
+      // Catch already wrapped ones
+      throw e; // Rethrow as is
+    } else {
+      throw NetworkException("Operation failed during forced refresh",
+          underlyingException: e);
+    }
+  }
+
+  void _logNetworkOrApiError(dynamic e, String contextId) {
+    bool isNetworkOrApiError = e is ApiException ||
+        e is ApiExceptionWrapper ||
+        e is SocketException ||
+        e is TimeoutException;
+    if (isNetworkOrApiError) {
+      safePrint(
+          "[APIService] NETWORK/API ERROR: Confirmed issue for ID $contextId ($e). Attempting cache fallback...");
+    } else {
+      safePrint(
+          "[APIService] UNEXPECTED ERROR for ID $contextId: $e. Attempting cache fallback...");
+      // Consider logging stackTrace here in debug/dev environments: safePrint(stackTrace);
+    }
+  }
+
+  // --- User Details Cache Helpers ---
+  bool _isUserDetailsCacheValid(UserDetailsCache cachedDetails, DateTime now) {
+    return now.difference(cachedDetails.lastFetched) < _cacheValidityDuration;
+  }
+
+  Future<void> _saveUserDetailsToCache(UserDetailsCache detailsCache) async {
+    await _isar.writeTxn(() async {
+      await _isar.userDetailsCaches.clear(); // Assumes single user cache
+      await _isar.userDetailsCaches.put(detailsCache);
+    });
+    safePrint(
+        "[Isar] Saved/Updated UserDetailsCache for user ${detailsCache.userId}.");
+  }
+
+  // --- Meal Plan Cache Helpers ---
+  bool _isMealPlanCacheValid(MealPlanCache cachedPlan, TemporalDateTime now) {
+    final lastFetched = cachedPlan.lastFetched;
+    if (lastFetched == null) return false;
+    // Use DateTime comparison for duration. Ensure timezone consistency.
+    // Use the helper extension if defined elsewhere, or direct conversion.
+    try {
+      // TemporalDateTime's compareTo might be suitable, or convert both to UTC DateTime
+      return now.getDateTimeInUtc().difference(lastFetched.getDateTimeInUtc()) <
+          _cacheValidityDuration;
+    } catch (e) {
+      safePrint("[APIService] Error comparing TemporalDateTime: $e");
+      return false; // Treat comparison error as invalid
+    }
+  }
+
+  Future<MealPlanCache?> _getCachedPlan(String planId) async {
+    // Requires MealPlanCache to have @Index on mealPlanId
+    return await _isar.mealPlanCaches
+        .filter()
+        .mealPlanIdEqualTo(planId)
+        .findFirst();
+  }
+
+  Future<void> _savePlanToCache(MealPlanCache isarPlan) async {
+    // Requires MealPlanCache to have @Index(unique: true, replace: true) on mealPlanId
+    await _isar.writeTxn(() async {
+      await _isar.mealPlanCaches
+          .put(isarPlan); // put handles upsert based on Isar ID (@Id())
+      // If using a specific business key like mealPlanId for upsert:
+      // await _isar.mealPlanCaches.putByMealPlanId(isarPlan); // Requires generated method based on index name
+    });
+    safePrint(
+        "[Isar] Saved/Updated MealPlanCache for ID ${isarPlan.mealPlanId}.");
+  }
+
+  // --- MOCK Network Fetch for Meal Plan ---
+  Future<MealPlan> _fetchAmplifyPlanFromNetworkMock(
+      String planId, TemporalDateTime fetchTime) async {
+    // (Keep the mock implementation from the previous version)
+    safePrint("!! MOCK NETWORK !! Simulating fetch for plan ID $planId...");
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Uncomment to test exceptions:
+    // throw SocketException("Simulated network connection error for $planId");
+    // throw CacheExpiredException("Simulating cache expiry even on mock fetch", staleData: MealPlan(id: 'stale-mock-id', mealPlanId: planId, userId: 'mock-user', planName: 'Stale Mock Plan')); // Example
+
+    try {
+      final String jsonString =
+          await rootBundle.loadString('assets/Gemini-Meal-Output.json');
+      final Map<String, dynamic> jsonMap = json.decode(jsonString);
+      //final dailyPlanData = jsonMap['daily_plan'] as Map<String, dynamic>?;
+
+      return MealPlan(
+        id: UUID.getUUID(),
+        mealPlanId: planId,
+        userId: jsonMap['user_id'] ?? 'mock_user_id_from_mock',
+        planName: jsonMap['plan_name'] ?? 'Mock Plan from JSON',
+        status: PlanStatus.ACTIVE,
+        dailyPlan: _convertJsonToDailyPlanData(jsonMap),
+        generatedAt: fetchTime,
+        // Ensure other required fields have defaults or are mapped
+        // createdAt: fetchTime, // Example
+      );
+    } catch (e, stackTrace) {
+      safePrint(
+          "!! MOCK NETWORK !! Error processing mock JSON for plan $planId: $e\n$stackTrace");
+      throw OperationFailedException(
+          "Failed to process mock network data for plan $planId",
+          underlyingException: e);
+    }
+  }
+
+  // --- MOCK Data Conversion Helpers ---
+  DailyPlanData _convertJsonToDailyPlanData(Map<String, dynamic>? jsonData) {
+    // (Keep the mock implementation from the previous version)
+    if (jsonData == null) {
+      return DailyPlanData(
+          monday: [],
+          tuesday: [],
+          wednesday: [],
+          thursday: [],
+          friday: [],
+          saturday: [],
+          sunday: []); /*  */
+    }
+    List<Meal> parseDay(String day) {
+      final meals = jsonData[day] as List<dynamic>?;
+      if (meals == null) return [];
+      return meals
+          .map((mealJson) => Meal.fromJson(mealJson as Map<String, dynamic>))
+          .toList();
+    } // Placeholder
+
+    return DailyPlanData(
+        monday: parseDay('monday'),
+        tuesday: parseDay('tuesday'),
+        wednesday: parseDay('wednesday'),
+        thursday: parseDay('thursday'),
+        friday: parseDay('friday'),
+        saturday: parseDay('saturday'),
+        sunday: parseDay('sunday'));
+  }
+
+  Macros _convertJsonToMacros(Map<String, dynamic>? jsonMacros) {
+    // (Keep the mock implementation from the previous version)
+    if (jsonMacros == null)
+      return Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0);
+    return Macros(
+        calories: (jsonMacros['calories'] as num?)?.toDouble() ?? 0.0,
+        proteins: (jsonMacros['proteins'] as num?)?.toDouble() ?? 0.0,
+        carbohydrates: (jsonMacros['carbohydrates'] as num?)?.toDouble() ?? 0.0,
+        fats: (jsonMacros['fats'] as num?)?.toDouble() ?? 0.0);
+  }
+}
+
+// --- Helper Extension for TemporalDateTime ---
+// (Keep implementation from previous version or ensure it's defined elsewhere)
+extension TemporalDateTimeComparisonHelper on TemporalDateTime {
+  DateTime getDateTimeInUtc() {
+    // Ensure this conversion handles timezones correctly based on Amplify's TemporalDateTime implementation
+    // The specific method might vary slightly depending on Amplify versions.
+    // Using the built-in method is preferred.
+    try {
+      return this.getDateTimeInUtc(); // Use Amplify's built-in converter
+    } catch (e) {
+      // Fallback or rethrow if conversion fails
+      safePrint("Error converting TemporalDateTime to DateTime UTC: $e");
+      // Return a default or throw an error depending on requirements
+      return DateTime.now().toUtc(); // Example fallback
     }
   }
 }

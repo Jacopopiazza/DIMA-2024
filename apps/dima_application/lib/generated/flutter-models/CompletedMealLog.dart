@@ -28,7 +28,7 @@ import 'package:collection/collection.dart';
 class CompletedMealLog extends amplify_core.Model {
   static const classType = const _CompletedMealLogModelType();
   final String id;
-  final List<CompletedMealInfo>? _completedMeals;
+  final List<String>? _completedMealKeys;
   final amplify_core.TemporalDate? _date;
   final String? _userId;
   final amplify_core.TemporalDateTime? _createdAt;
@@ -47,17 +47,8 @@ class CompletedMealLog extends amplify_core.Model {
       );
   }
   
-  List<CompletedMealInfo> get completedMeals {
-    try {
-      return _completedMeals!;
-    } catch(e) {
-      throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  List<String>? get completedMealKeys {
+    return _completedMealKeys;
   }
   
   amplify_core.TemporalDate get date {
@@ -94,12 +85,12 @@ class CompletedMealLog extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const CompletedMealLog._internal({required this.id, required completedMeals, required date, required userId, createdAt, updatedAt}): _completedMeals = completedMeals, _date = date, _userId = userId, _createdAt = createdAt, _updatedAt = updatedAt;
+  const CompletedMealLog._internal({required this.id, completedMealKeys, required date, required userId, createdAt, updatedAt}): _completedMealKeys = completedMealKeys, _date = date, _userId = userId, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory CompletedMealLog({String? id, required List<CompletedMealInfo> completedMeals, required amplify_core.TemporalDate date, required String userId}) {
+  factory CompletedMealLog({String? id, List<String>? completedMealKeys, required amplify_core.TemporalDate date, required String userId}) {
     return CompletedMealLog._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
-      completedMeals: completedMeals != null ? List<CompletedMealInfo>.unmodifiable(completedMeals) : completedMeals,
+      completedMealKeys: completedMealKeys != null ? List<String>.unmodifiable(completedMealKeys) : completedMealKeys,
       date: date,
       userId: userId);
   }
@@ -113,7 +104,7 @@ class CompletedMealLog extends amplify_core.Model {
     if (identical(other, this)) return true;
     return other is CompletedMealLog &&
       id == other.id &&
-      DeepCollectionEquality().equals(_completedMeals, other._completedMeals) &&
+      DeepCollectionEquality().equals(_completedMealKeys, other._completedMealKeys) &&
       _date == other._date &&
       _userId == other._userId;
   }
@@ -127,7 +118,7 @@ class CompletedMealLog extends amplify_core.Model {
     
     buffer.write("CompletedMealLog {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("completedMeals=" + (_completedMeals != null ? _completedMeals!.toString() : "null") + ", ");
+    buffer.write("completedMealKeys=" + (_completedMealKeys != null ? _completedMealKeys!.toString() : "null") + ", ");
     buffer.write("date=" + (_date != null ? _date!.format() : "null") + ", ");
     buffer.write("userId=" + "$_userId" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
@@ -137,22 +128,22 @@ class CompletedMealLog extends amplify_core.Model {
     return buffer.toString();
   }
   
-  CompletedMealLog copyWith({List<CompletedMealInfo>? completedMeals, amplify_core.TemporalDate? date, String? userId}) {
+  CompletedMealLog copyWith({List<String>? completedMealKeys, amplify_core.TemporalDate? date, String? userId}) {
     return CompletedMealLog._internal(
       id: id,
-      completedMeals: completedMeals ?? this.completedMeals,
+      completedMealKeys: completedMealKeys ?? this.completedMealKeys,
       date: date ?? this.date,
       userId: userId ?? this.userId);
   }
   
   CompletedMealLog copyWithModelFieldValues({
-    ModelFieldValue<List<CompletedMealInfo>>? completedMeals,
+    ModelFieldValue<List<String>>? completedMealKeys,
     ModelFieldValue<amplify_core.TemporalDate>? date,
     ModelFieldValue<String>? userId
   }) {
     return CompletedMealLog._internal(
       id: id,
-      completedMeals: completedMeals == null ? this.completedMeals : completedMeals.value,
+      completedMealKeys: completedMealKeys == null ? this.completedMealKeys : completedMealKeys.value,
       date: date == null ? this.date : date.value,
       userId: userId == null ? this.userId : userId.value
     );
@@ -160,24 +151,19 @@ class CompletedMealLog extends amplify_core.Model {
   
   CompletedMealLog.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _completedMeals = json['completedMeals'] is List
-        ? (json['completedMeals'] as List)
-          .where((e) => e != null)
-          .map((e) => CompletedMealInfo.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
+      _completedMealKeys = json['completedMealKeys']?.cast<String>(),
       _date = json['date'] != null ? amplify_core.TemporalDate.fromString(json['date']) : null,
       _userId = json['userId'],
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'completedMeals': _completedMeals?.map((CompletedMealInfo? e) => e?.toJson()).toList(), 'date': _date?.format(), 'userId': _userId, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'completedMealKeys': _completedMealKeys, 'date': _date?.format(), 'userId': _userId, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
     'id': id,
-    'completedMeals': _completedMeals,
+    'completedMealKeys': _completedMealKeys,
     'date': _date,
     'userId': _userId,
     'createdAt': _createdAt,
@@ -186,7 +172,7 @@ class CompletedMealLog extends amplify_core.Model {
 
   static final amplify_core.QueryModelIdentifier<CompletedMealLogModelIdentifier> MODEL_IDENTIFIER = amplify_core.QueryModelIdentifier<CompletedMealLogModelIdentifier>();
   static final ID = amplify_core.QueryField(fieldName: "id");
-  static final COMPLETEDMEALS = amplify_core.QueryField(fieldName: "completedMeals");
+  static final COMPLETEDMEALKEYS = amplify_core.QueryField(fieldName: "completedMealKeys");
   static final DATE = amplify_core.QueryField(fieldName: "date");
   static final USERID = amplify_core.QueryField(fieldName: "userId");
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
@@ -195,11 +181,11 @@ class CompletedMealLog extends amplify_core.Model {
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'completedMeals',
-      isRequired: true,
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: CompletedMealLog.COMPLETEDMEALKEYS,
+      isRequired: false,
       isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'CompletedMealInfo')
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.collection, ofModelName: amplify_core.ModelFieldTypeEnum.string.name)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(

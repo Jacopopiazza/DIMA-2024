@@ -28,21 +28,21 @@ import 'NutritionistProfile.dart';
 import 'UserDetails.dart';
 import 'ChatMessageConnection.dart';
 import 'ChatMetadataConnection.dart';
-import 'CompletedMealInfo.dart';
 import 'DailyPlanData.dart';
 import 'Ingredient.dart';
 import 'Macros.dart';
 import 'Meal.dart';
 import 'MealPlanConnection.dart';
 import 'MealPlanGenerationStatus.dart';
+import 'MealWithStatus.dart';
 import 'NutritionistProfileConnection.dart';
 import 'TodaysPlan.dart';
 
+export 'AllergenEnum.dart';
 export 'ChatMessage.dart';
 export 'ChatMessageConnection.dart';
 export 'ChatMetadata.dart';
 export 'ChatMetadataConnection.dart';
-export 'CompletedMealInfo.dart';
 export 'CompletedMealLog.dart';
 export 'DailyPlanData.dart';
 export 'ExerciseFrequency.dart';
@@ -54,6 +54,7 @@ export 'MealPlan.dart';
 export 'MealPlanConnection.dart';
 export 'MealPlanGenerationStatus.dart';
 export 'MealPlanGenerationStatusValue.dart';
+export 'MealWithStatus.dart';
 export 'NutritionistProfile.dart';
 export 'NutritionistProfileConnection.dart';
 export 'PlanStatus.dart';
@@ -64,11 +65,11 @@ export 'WeekdayEnum.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "40b1fbdabe31fd6362d1cb7726946a1d";
+  String version = "d73585c30e25d3a7f0c9b60805b64430";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [ChatMessage.schema, ChatMetadata.schema, CompletedMealLog.schema, MealPlan.schema, NutritionistProfile.schema, UserDetails.schema];
   @override
-  List<amplify_core.ModelSchema> customTypeSchemas = [ChatMessageConnection.schema, ChatMetadataConnection.schema, CompletedMealInfo.schema, DailyPlanData.schema, Ingredient.schema, Macros.schema, Meal.schema, MealPlanConnection.schema, MealPlanGenerationStatus.schema, NutritionistProfileConnection.schema, TodaysPlan.schema];
+  List<amplify_core.ModelSchema> customTypeSchemas = [ChatMessageConnection.schema, ChatMetadataConnection.schema, DailyPlanData.schema, Ingredient.schema, Macros.schema, Meal.schema, MealPlanConnection.schema, MealPlanGenerationStatus.schema, MealWithStatus.schema, NutritionistProfileConnection.schema, TodaysPlan.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;

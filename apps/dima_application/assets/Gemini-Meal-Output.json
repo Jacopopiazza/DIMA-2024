@@ -1,1150 +1,1854 @@
 {
-  "friday": {
-    "meals": [
-      {
-        "ingredients": [
-          {
-            "amount": 70,
-            "macros": {
-              "calories": 242,
-              "carbohydrates": 42,
-              "fats": 2,
-              "proteins": 14
-            },
-            "name": "Oats"
+  "friday": [
+    {
+      "ingredients": [
+        {
+          "amount": 25.0,
+          "macros": {
+            "calories": 10.0,
+            "carbohydrates": 1.0,
+            "fats": 0.0,
+            "proteins": 1.0
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 100,
-              "carbohydrates": 12,
-              "fats": 0.2,
-              "proteins": 8
-            },
-            "name": "Skimmed Milk"
+          "name": "Espresso shot",
+          "unit": "ml"
+        },
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 60.0,
+            "carbohydrates": 6.0,
+            "fats": 1.5,
+            "proteins": 4.5
           },
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 160,
-              "carbohydrates": 15,
-              "fats": 10,
-              "proteins": 3
-            },
-            "name": "Almonds"
-          }
-        ],
-        "name": "breakfast",
-        "recipe": "Mix all ingredients in a bowl.",
-        "total_macros": {
-          "calories": 502,
-          "carbohydrates": 69,
-          "fats": 12.2,
-          "proteins": 25
+          "name": "Lactose-free milk",
+          "unit": "ml"
+        },
+        {
+          "amount": 80.0,
+          "macros": {
+            "calories": 200.0,
+            "carbohydrates": 40.0,
+            "fats": 2.4,
+            "proteins": 8.0
+          },
+          "name": "Whole wheat bread",
+          "unit": "g"
+        },
+        {
+          "amount": 20.0,
+          "macros": {
+            "calories": 118.0,
+            "carbohydrates": 4.0,
+            "fats": 10.0,
+            "proteins": 5.0
+          },
+          "name": "Peanut butter",
+          "unit": "g"
+        },
+        {
+          "amount": 15.0,
+          "macros": {
+            "calories": 38.0,
+            "carbohydrates": 9.0,
+            "fats": 0.0,
+            "proteins": 0.1
+          },
+          "name": "Jam",
+          "unit": "g"
         }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 165,
-              "carbohydrates": 20,
-              "fats": 2,
-              "proteins": 17
-            },
-            "name": "Chicken Breast"
-          },
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 51,
-              "carbohydrates": 12,
-              "fats": 0.2,
-              "proteins": 1
-            },
-            "name": "Broccoli"
-          },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 130,
-              "carbohydrates": 30,
-              "fats": 0.5,
-              "proteins": 3
-            },
-            "name": "Brown Rice"
-          }
-        ],
-        "name": "lunch",
-        "recipe": "Steam broccoli, grill chicken breast, boil rice.",
-        "total_macros": {
-          "calories": 346,
-          "carbohydrates": 62,
-          "fats": 2.7,
-          "proteins": 21
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 180,
-            "macros": {
-              "calories": 220,
-              "carbohydrates": 25,
-              "fats": 8,
-              "proteins": 15
-            },
-            "name": "Salmon"
-          },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 174,
-              "carbohydrates": 41,
-              "fats": 0.7,
-              "proteins": 4
-            },
-            "name": "Sweet Potato"
-          },
-          {
-            "amount": 5,
-            "macros": {
-              "calories": 40,
-              "carbohydrates": 0,
-              "fats": 4,
-              "proteins": 0
-            },
-            "name": "Olive Oil"
-          }
-        ],
-        "name": "dinner",
-        "recipe": "Bake salmon with olive oil, bake sweet potato.",
-        "total_macros": {
-          "calories": 434,
-          "carbohydrates": 66,
-          "fats": 12.7,
-          "proteins": 19
-        }
+      ],
+      "name": "BREAKFAST",
+      "recipe": "Prepare an espresso shot. Heat and froth the lactose-free milk. Combine espresso and milk to make a cappuccino. Toast the whole wheat bread slices (if desired). Spread peanut butter on one slice and jam on the other. Serve the cappuccino with the bread.",
+      "recipeName": "Cappuccino with Bread, Peanut Butter, and Jam",
+      "totalMacros": {
+        "calories": 426.0,
+        "carbohydrates": 60.0,
+        "fats": 13.9,
+        "proteins": 18.6
       }
-    ]
-  },
-  "monday": {
-    "meals": [
-      {
-        "ingredients": [
-          {
-            "amount": 3,
-            "macros": {
-              "calories": 225,
-              "carbohydrates": 3,
-              "fats": 15,
-              "proteins": 18
-            },
-            "name": "Eggs"
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 248.0,
+            "carbohydrates": 0.0,
+            "fats": 8.3,
+            "proteins": 46.5
           },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 130,
-              "carbohydrates": 24,
-              "fats": 1.5,
-              "proteins": 5
-            },
-            "name": "Whole Wheat Bread"
-          }
-        ],
-        "name": "breakfast",
-        "recipe": "Scramble eggs, toast bread.",
-        "total_macros": {
-          "calories": 355,
-          "carbohydrates": 27,
-          "fats": 16.5,
-          "proteins": 23
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 165,
-              "carbohydrates": 20,
-              "fats": 2,
-              "proteins": 17
-            },
-            "name": "Chicken Breast"
+          "name": "Chicken breast",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 37.0,
+            "carbohydrates": 7.4,
+            "fats": 0.4,
+            "proteins": 1.3
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 68,
-              "carbohydrates": 15,
-              "fats": 0.4,
-              "proteins": 3
-            },
-            "name": "Green Beans"
+          "name": "Quinoa",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 7.5,
+            "carbohydrates": 1.8,
+            "fats": 0.1,
+            "proteins": 0.4
           },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 130,
-              "carbohydrates": 30,
-              "fats": 0.5,
-              "proteins": 3
-            },
-            "name": "Brown Rice"
-          }
-        ],
-        "name": "lunch",
-        "recipe": "Steam green beans, grill chicken breast, boil rice.",
-        "total_macros": {
-          "calories": 363,
-          "carbohydrates": 65,
-          "fats": 2.9,
-          "proteins": 23
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 300,
-              "carbohydrates": 25,
-              "fats": 12,
-              "proteins": 25
-            },
-            "name": "Lean Beef"
+          "name": "Cucumber",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 18.0,
+            "carbohydrates": 3.9,
+            "fats": 0.2,
+            "proteins": 0.9
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 100,
-              "carbohydrates": 20,
-              "fats": 1,
-              "proteins": 3
-            },
-            "name": "Mixed Vegetables"
-          }
-        ],
-        "name": "dinner",
-        "recipe": "Stir-fry beef with mixed vegetables.",
-        "total_macros": {
-          "calories": 400,
-          "carbohydrates": 45,
-          "fats": 13,
-          "proteins": 28
+          "name": "Tomato",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Lemon juice",
+          "unit": "ml"
         }
+      ],
+      "name": "LUNCH",
+      "recipe": "Cook quinoa according to package directions. Cube the cooked chicken breast. Dice the cucumber, tomato, and bell pepper. Combine the chicken, quinoa, and vegetables in a bowl. Whisk together olive oil and lemon juice to make a dressing. Pour dressing over the salad and toss gently.",
+      "recipeName": "Chicken & Quinoa Mediterranean Salad",
+      "totalMacros": {
+        "calories": 439.5,
+        "carbohydrates": 19.1,
+        "fats": 19.4,
+        "proteins": 49.6
       }
-    ]
-  },
-  "saturday": {
-    "meals": [
-      {
-        "ingredients": [
-          {
-            "amount": 60,
-            "macros": {
-              "calories": 210,
-              "carbohydrates": 36,
-              "fats": 1,
-              "proteins": 5
-            },
-            "name": "Whole Wheat Cereal"
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 166.0,
+            "carbohydrates": 14.3,
+            "fats": 9.6,
+            "proteins": 7.9
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 100,
-              "carbohydrates": 12,
-              "fats": 0.2,
-              "proteins": 8
-            },
-            "name": "Skimmed Milk"
+          "name": "Hummus",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 31.0,
+            "carbohydrates": 6.0,
+            "fats": 0.3,
+            "proteins": 1.0
           },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 52,
-              "carbohydrates": 14,
-              "fats": 0.3,
-              "proteins": 1
-            },
-            "name": "Banana"
-          }
-        ],
-        "name": "breakfast",
-        "recipe": "Mix cereal and milk in a bowl, add banana slices.",
-        "total_macros": {
-          "calories": 362,
-          "carbohydrates": 62,
-          "fats": 1.5,
-          "proteins": 14
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 285,
-              "carbohydrates": 0,
-              "fats": 20,
-              "proteins": 25
-            },
-            "name": "Steak"
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 7.5,
+            "carbohydrates": 1.8,
+            "fats": 0.1,
+            "proteins": 0.4
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 54,
-              "carbohydrates": 12,
-              "fats": 0.1,
-              "proteins": 1
-            },
-            "name": "Spinach"
-          }
-        ],
-        "name": "lunch",
-        "recipe": "Grill steak, saute spinach.",
-        "total_macros": {
-          "calories": 339,
-          "carbohydrates": 12,
-          "fats": 20.1,
-          "proteins": 26
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 250,
-              "carbohydrates": 30,
-              "fats": 5,
-              "proteins": 20
-            },
-            "name": "Pork Tenderloin"
+          "name": "Cucumber",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 20.0,
+            "carbohydrates": 4.7,
+            "fats": 0.0,
+            "proteins": 0.6
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 130,
-              "carbohydrates": 30,
-              "fats": 1,
-              "proteins": 2
-            },
-            "name": "Quinoa"
-          },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 51,
-              "carbohydrates": 12,
-              "fats": 0.2,
-              "proteins": 1
-            },
-            "name": "Asparagus"
-          }
-        ],
-        "name": "dinner",
-        "recipe": "Bake pork tenderloin, boil quinoa, steam asparagus.",
-        "total_macros": {
-          "calories": 431,
-          "carbohydrates": 72,
-          "fats": 6.2,
-          "proteins": 23
+          "name": "Carrot",
+          "unit": "g"
         }
+      ],
+      "name": "SNACK_AFTERNOON",
+      "recipe": "Cut the bell pepper, cucumber, and carrot into sticks. Serve the vegetable sticks with the hummus for dipping.",
+      "recipeName": "Hummus with Veggie Sticks",
+      "totalMacros": {
+        "calories": 224.5,
+        "carbohydrates": 26.8,
+        "fats": 10.0,
+        "proteins": 9.9
       }
-    ]
-  },
-  "sunday": {
-    "meals": [
-      {
-        "ingredients": [
-          {
-            "amount": 75,
-            "macros": {
-              "calories": 258,
-              "carbohydrates": 45,
-              "fats": 2,
-              "proteins": 15
-            },
-            "name": "Oats"
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 312.0,
+            "carbohydrates": 0.0,
+            "fats": 19.5,
+            "proteins": 30.0
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 100,
-              "carbohydrates": 12,
-              "fats": 0.2,
-              "proteins": 8
-            },
-            "name": "Skimmed Milk"
+          "name": "Salmon fillet",
+          "unit": "g"
+        },
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 62.0,
+            "carbohydrates": 12.0,
+            "fats": 0.6,
+            "proteins": 2.0
           },
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 170,
-              "carbohydrates": 4,
-              "fats": 16,
-              "proteins": 4
-            },
-            "name": "Peanuts"
-          }
-        ],
-        "name": "breakfast",
-        "recipe": "Mix all ingredients in a bowl.",
-        "total_macros": {
-          "calories": 528,
-          "carbohydrates": 61,
-          "fats": 18.2,
-          "proteins": 27
+          "name": "Broccoli florets",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 31.0,
+            "carbohydrates": 6.0,
+            "fats": 0.3,
+            "proteins": 1.0
+          },
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
         }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 165,
-              "carbohydrates": 20,
-              "fats": 2,
-              "proteins": 17
-            },
-            "name": "Chicken Breast"
-          },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 80,
-              "carbohydrates": 20,
-              "fats": 0,
-              "proteins": 1
-            },
-            "name": "Carrots"
-          },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 77,
-              "carbohydrates": 20,
-              "fats": 0.3,
-              "proteins": 2
-            },
-            "name": "Potatoes"
-          }
-        ],
-        "name": "lunch",
-        "recipe": "Roast chicken breast, boil potatoes, steam carrots.",
-        "total_macros": {
-          "calories": 322,
-          "carbohydrates": 60,
-          "fats": 2.3,
-          "proteins": 20
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 280,
-              "carbohydrates": 28,
-              "fats": 8,
-              "proteins": 25
-            },
-            "name": "Ground Turkey"
-          },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 100,
-              "carbohydrates": 20,
-              "fats": 1,
-              "proteins": 3
-            },
-            "name": "Tomato Sauce"
-          },
-          {
-            "amount": 50,
-            "macros": {
-              "calories": 40,
-              "carbohydrates": 7,
-              "fats": 0,
-              "proteins": 3
-            },
-            "name": "Lentils"
-          }
-        ],
-        "name": "dinner",
-        "recipe": "Cook ground turkey with tomato sauce and lentils.",
-        "total_macros": {
-          "calories": 420,
-          "carbohydrates": 55,
-          "fats": 9,
-          "proteins": 31
-        }
+      ],
+      "name": "DINNER",
+      "recipe": "Preheat oven to 200°C (400°F). Toss broccoli florets and bell pepper chunks with olive oil, salt, and pepper on a baking sheet. Place the salmon fillet on the same baking sheet. Roast for 15-20 minutes, or until salmon is cooked through and vegetables are tender.",
+      "recipeName": "Roasted Salmon with Broccoli and Bell Pepper",
+      "totalMacros": {
+        "calories": 493.0,
+        "carbohydrates": 18.0,
+        "fats": 30.4,
+        "proteins": 33.0
       }
-    ]
-  },
-  "thursday": {
-    "meals": [
-      {
-        "ingredients": [
-          {
-            "amount": 3,
-            "macros": {
-              "calories": 225,
-              "carbohydrates": 3,
-              "fats": 15,
-              "proteins": 18
-            },
-            "name": "Eggs"
+    }
+  ],
+  "monday": [
+    {
+      "ingredients": [
+        {
+          "amount": 25.0,
+          "macros": {
+            "calories": 10.0,
+            "carbohydrates": 1.0,
+            "fats": 0.0,
+            "proteins": 1.0
           },
-          {
-            "amount": 75,
-            "macros": {
-              "calories": 60,
-              "carbohydrates": 8,
-              "fats": 2,
-              "proteins": 3
-            },
-            "name": "Avocado"
-          }
-        ],
-        "name": "breakfast",
-        "recipe": "Scramble eggs, mash avocado on top.",
-        "total_macros": {
-          "calories": 285,
-          "carbohydrates": 11,
-          "fats": 17,
-          "proteins": 21
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 165,
-              "carbohydrates": 20,
-              "fats": 2,
-              "proteins": 17
-            },
-            "name": "Chicken Breast"
+          "name": "Espresso shot",
+          "unit": "ml"
+        },
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 60.0,
+            "carbohydrates": 6.0,
+            "fats": 1.5,
+            "proteins": 4.5
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 140,
-              "carbohydrates": 35,
-              "fats": 0.5,
-              "proteins": 1
-            },
-            "name": "Couscous"
+          "name": "Lactose-free milk",
+          "unit": "ml"
+        },
+        {
+          "amount": 80.0,
+          "macros": {
+            "calories": 200.0,
+            "carbohydrates": 40.0,
+            "fats": 2.4,
+            "proteins": 8.0
           },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 20,
-              "carbohydrates": 4,
-              "fats": 0.1,
-              "proteins": 1
-            },
-            "name": "Cucumber"
-          }
-        ],
-        "name": "lunch",
-        "recipe": "Grill chicken breast, boil couscous, slice cucumber.",
-        "total_macros": {
-          "calories": 325,
-          "carbohydrates": 59,
-          "fats": 2.6,
-          "proteins": 19
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 300,
-              "carbohydrates": 30,
-              "fats": 10,
-              "proteins": 25
-            },
-            "name": "Lean Beef"
+          "name": "Whole wheat bread",
+          "unit": "g"
+        },
+        {
+          "amount": 20.0,
+          "macros": {
+            "calories": 118.0,
+            "carbohydrates": 4.0,
+            "fats": 10.0,
+            "proteins": 5.0
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 70,
-              "carbohydrates": 15,
-              "fats": 0.5,
-              "proteins": 2
-            },
-            "name": "Bell Peppers"
+          "name": "Peanut butter",
+          "unit": "g"
+        },
+        {
+          "amount": 15.0,
+          "macros": {
+            "calories": 38.0,
+            "carbohydrates": 9.0,
+            "fats": 0.0,
+            "proteins": 0.1
           },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 40,
-              "carbohydrates": 9,
-              "fats": 0.2,
-              "proteins": 1
-            },
-            "name": "Onions"
-          }
-        ],
-        "name": "dinner",
-        "recipe": "Stir-fry beef with bell peppers and onions.",
-        "total_macros": {
-          "calories": 410,
-          "carbohydrates": 54,
-          "fats": 10.7,
-          "proteins": 28
+          "name": "Jam",
+          "unit": "g"
         }
+      ],
+      "name": "BREAKFAST",
+      "recipe": "Prepare an espresso shot. Heat and froth the lactose-free milk. Combine espresso and milk to make a cappuccino. Toast the whole wheat bread slices (if desired). Spread peanut butter on one slice and jam on the other. Serve the cappuccino with the bread.",
+      "recipeName": "Cappuccino with Bread, Peanut Butter, and Jam",
+      "totalMacros": {
+        "calories": 426.0,
+        "carbohydrates": 60.0,
+        "fats": 13.9,
+        "proteins": 18.6
       }
-    ]
-  },
-  "tuesday": {
-    "meals": [
-      {
-        "ingredients": [
-          {
-            "amount": 70,
-            "macros": {
-              "calories": 242,
-              "carbohydrates": 42,
-              "fats": 2,
-              "proteins": 14
-            },
-            "name": "Oats"
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 165.0,
+            "carbohydrates": 0.0,
+            "fats": 3.9,
+            "proteins": 31.0
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 100,
-              "carbohydrates": 12,
-              "fats": 0.2,
-              "proteins": 8
-            },
-            "name": "Skimmed Milk"
+          "name": "Tuna (canned in water, drained)",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 25.0,
+            "carbohydrates": 5.0,
+            "fats": 0.2,
+            "proteins": 1.0
           },
-          {
-            "amount": 50,
-            "macros": {
-              "calories": 29,
-              "carbohydrates": 7,
-              "fats": 0.2,
-              "proteins": 0.5
-            },
-            "name": "Blueberries"
-          }
-        ],
-        "name": "breakfast",
-        "recipe": "Mix all ingredients in a bowl.",
-        "total_macros": {
-          "calories": 371,
-          "carbohydrates": 61,
-          "fats": 2.4,
-          "proteins": 22.5
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 165,
-              "carbohydrates": 20,
-              "fats": 2,
-              "proteins": 17
-            },
-            "name": "Chicken Breast"
+          "name": "Mixed greens",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 9.0,
+            "carbohydrates": 1.9,
+            "fats": 0.1,
+            "proteins": 0.4
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 120,
-              "carbohydrates": 28,
-              "fats": 0.3,
-              "proteins": 2
-            },
-            "name": "Peas"
+          "name": "Cherry tomatoes",
+          "unit": "g"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 54.0,
+            "carbohydrates": 1.3,
+            "fats": 4.8,
+            "proteins": 2.5
           },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 130,
-              "carbohydrates": 30,
-              "fats": 0.5,
-              "proteins": 3
-            },
-            "name": "Brown Rice"
-          }
-        ],
-        "name": "lunch",
-        "recipe": "Steam peas, grill chicken breast, boil rice.",
-        "total_macros": {
-          "calories": 415,
-          "carbohydrates": 78,
-          "fats": 2.8,
-          "proteins": 22
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 280,
-              "carbohydrates": 20,
-              "fats": 12,
-              "proteins": 25
-            },
-            "name": "Pork Loin"
+          "name": "Black olives",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 100,
-              "carbohydrates": 20,
-              "fats": 1,
-              "proteins": 3
-            },
-            "name": "Mixed Vegetables"
-          }
-        ],
-        "name": "dinner",
-        "recipe": "Roast pork loin, steam mixed vegetables.",
-        "total_macros": {
-          "calories": 380,
-          "carbohydrates": 40,
-          "fats": 13,
-          "proteins": 28
+          "name": "Olive oil",
+          "unit": "ml"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Red wine vinegar",
+          "unit": "ml"
         }
+      ],
+      "name": "LUNCH",
+      "recipe": "Combine mixed greens, cherry tomatoes, and black olives in a bowl. Flake the drained tuna over the salad. Whisk together olive oil and red wine vinegar for the dressing. Pour dressing over the salad and toss gently.",
+      "recipeName": "Mediterranean Tuna Salad",
+      "totalMacros": {
+        "calories": 356.5,
+        "carbohydrates": 11.2,
+        "fats": 19.2,
+        "proteins": 35.4
       }
-    ]
-  },
-  "wednesday": {
-    "meals": [
-      {
-        "ingredients": [
-          {
-            "amount": 3,
-            "macros": {
-              "calories": 225,
-              "carbohydrates": 3,
-              "fats": 15,
-              "proteins": 18
-            },
-            "name": "Eggs"
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 1.0,
+          "macros": {
+            "calories": 52.0,
+            "carbohydrates": 14.0,
+            "fats": 0.2,
+            "proteins": 0.3
           },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 130,
-              "carbohydrates": 24,
-              "fats": 1.5,
-              "proteins": 5
-            },
-            "name": "Whole Wheat Bread"
-          }
-        ],
-        "name": "breakfast",
-        "recipe": "Scramble eggs, toast bread.",
-        "total_macros": {
-          "calories": 355,
-          "carbohydrates": 27,
-          "fats": 16.5,
-          "proteins": 23
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 165,
-              "carbohydrates": 20,
-              "fats": 2,
-              "proteins": 17
-            },
-            "name": "Chicken Breast"
+          "name": "Apple",
+          "unit": "medium"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 174.0,
+            "carbohydrates": 6.6,
+            "fats": 15.3,
+            "proteins": 6.3
           },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 70,
-              "carbohydrates": 15,
-              "fats": 0.5,
-              "proteins": 2
-            },
-            "name": "Bell Peppers"
-          },
-          {
-            "amount": 100,
-            "macros": {
-              "calories": 130,
-              "carbohydrates": 30,
-              "fats": 0.5,
-              "proteins": 3
-            },
-            "name": "Brown Rice"
-          }
-        ],
-        "name": "lunch",
-        "recipe": "Steam bell peppers, grill chicken breast, boil rice.",
-        "total_macros": {
-          "calories": 365,
-          "carbohydrates": 65,
-          "fats": 3,
-          "proteins": 22
+          "name": "Almonds",
+          "unit": "g"
         }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 30,
-            "macros": {
-              "calories": 150,
-              "carbohydrates": 26,
-              "fats": 3,
-              "proteins": 4
-            },
-            "name": "Protein Bar"
-          }
-        ],
-        "name": "snack",
-        "recipe": "Eat the protein bar",
-        "total_macros": {
-          "calories": 150,
-          "carbohydrates": 26,
-          "fats": 3,
-          "proteins": 4
-        }
-      },
-      {
-        "ingredients": [
-          {
-            "amount": 150,
-            "macros": {
-              "calories": 300,
-              "carbohydrates": 25,
-              "fats": 12,
-              "proteins": 25
-            },
-            "name": "Lean Beef"
-          },
-          {
-            "amount": 200,
-            "macros": {
-              "calories": 100,
-              "carbohydrates": 20,
-              "fats": 1,
-              "proteins": 3
-            },
-            "name": "Mixed Vegetables"
-          }
-        ],
-        "name": "dinner",
-        "recipe": "Stir-fry beef with mixed vegetables.",
-        "total_macros": {
-          "calories": 400,
-          "carbohydrates": 45,
-          "fats": 13,
-          "proteins": 28
-        }
+      ],
+      "name": "SNACK_AFTERNOON",
+      "recipe": "Wash and slice the apple. Enjoy the apple slices with a handful of almonds.",
+      "recipeName": "Apple and Almonds",
+      "totalMacros": {
+        "calories": 226.0,
+        "carbohydrates": 20.6,
+        "fats": 15.5,
+        "proteins": 6.6
       }
-    ]
-  }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 522.0,
+            "carbohydrates": 0.0,
+            "fats": 34.5,
+            "proteins": 48.0
+          },
+          "name": "Lean ground beef",
+          "unit": "g"
+        },
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 74.0,
+            "carbohydrates": 14.8,
+            "fats": 0.8,
+            "proteins": 2.6
+          },
+          "name": "Brown rice",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 40.0,
+            "carbohydrates": 9.3,
+            "fats": 0.1,
+            "proteins": 1.1
+          },
+          "name": "Onion",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 18.0,
+            "carbohydrates": 3.9,
+            "fats": 0.2,
+            "proteins": 0.9
+          },
+          "name": "Tomato",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 31.0,
+            "carbohydrates": 6.0,
+            "fats": 0.3,
+            "proteins": 1.0
+          },
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 44.0,
+            "carbohydrates": 0.0,
+            "fats": 5.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        }
+      ],
+      "name": "DINNER",
+      "recipe": "Cook brown rice according to package directions. Heat olive oil in a pan over medium heat. Add chopped onion, tomato, and bell pepper, sauté until softened. Add ground beef and cook, breaking it apart, until browned. Season with salt, pepper, and Mediterranean herbs like oregano. Serve the beef and vegetable mixture over brown rice.",
+      "recipeName": "Mediterranean Ground Beef with Rice and Vegetables",
+      "totalMacros": {
+        "calories": 769.0,
+        "carbohydrates": 34.0,
+        "fats": 40.0,
+        "proteins": 53.0
+      }
+    }
+  ],
+  "saturday": [
+    {
+      "ingredients": [
+        {
+          "amount": 25.0,
+          "macros": {
+            "calories": 10.0,
+            "carbohydrates": 1.0,
+            "fats": 0.0,
+            "proteins": 1.0
+          },
+          "name": "Espresso shot",
+          "unit": "ml"
+        },
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 60.0,
+            "carbohydrates": 6.0,
+            "fats": 1.5,
+            "proteins": 4.5
+          },
+          "name": "Lactose-free milk",
+          "unit": "ml"
+        },
+        {
+          "amount": 80.0,
+          "macros": {
+            "calories": 200.0,
+            "carbohydrates": 40.0,
+            "fats": 2.4,
+            "proteins": 8.0
+          },
+          "name": "Whole wheat bread",
+          "unit": "g"
+        },
+        {
+          "amount": 20.0,
+          "macros": {
+            "calories": 118.0,
+            "carbohydrates": 4.0,
+            "fats": 10.0,
+            "proteins": 5.0
+          },
+          "name": "Peanut butter",
+          "unit": "g"
+        },
+        {
+          "amount": 15.0,
+          "macros": {
+            "calories": 38.0,
+            "carbohydrates": 9.0,
+            "fats": 0.0,
+            "proteins": 0.1
+          },
+          "name": "Jam",
+          "unit": "g"
+        }
+      ],
+      "name": "BREAKFAST",
+      "recipe": "Prepare an espresso shot. Heat and froth the lactose-free milk. Combine espresso and milk to make a cappuccino. Toast the whole wheat bread slices (if desired). Spread peanut butter on one slice and jam on the other. Serve the cappuccino with the bread.",
+      "recipeName": "Cappuccino with Bread, Peanut Butter, and Jam",
+      "totalMacros": {
+        "calories": 426.0,
+        "carbohydrates": 60.0,
+        "fats": 13.9,
+        "proteins": 18.6
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 704.0,
+            "carbohydrates": 126.0,
+            "fats": 2.0,
+            "proteins": 48.0
+          },
+          "name": "Lentils (cooked)",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 40.0,
+            "carbohydrates": 9.3,
+            "fats": 0.1,
+            "proteins": 1.1
+          },
+          "name": "Onion",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 20.0,
+            "carbohydrates": 4.7,
+            "fats": 0.0,
+            "proteins": 0.6
+          },
+          "name": "Carrot",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 31.0,
+            "carbohydrates": 6.0,
+            "fats": 0.3,
+            "proteins": 1.0
+          },
+          "name": "Celery",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 18.0,
+            "carbohydrates": 3.9,
+            "fats": 0.2,
+            "proteins": 0.9
+          },
+          "name": "Tomato paste",
+          "unit": "g"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 44.0,
+            "carbohydrates": 0.0,
+            "fats": 5.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        },
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 4.0,
+            "carbohydrates": 0.8,
+            "fats": 0.0,
+            "proteins": 0.4
+          },
+          "name": "Vegetable broth",
+          "unit": "ml"
+        }
+      ],
+      "name": "LUNCH",
+      "recipe": "In a pot, heat olive oil over medium heat. Add chopped onion, carrot, and celery and sauté until softened. Stir in tomato paste and cook for 1 minute. Add cooked lentils and vegetable broth. Bring to a simmer, then reduce heat and cook for 15-20 minutes, allowing flavors to meld. Season with salt and pepper.",
+      "recipeName": "Hearty Lentil Soup",
+      "totalMacros": {
+        "calories": 861.0,
+        "carbohydrates": 140.7,
+        "fats": 7.6,
+        "proteins": 52.0
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 180.0,
+            "carbohydrates": 20.0,
+            "fats": 10.0,
+            "proteins": 2.0
+          },
+          "name": "Coconut yogurt alternative",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 152.0,
+            "carbohydrates": 41.0,
+            "fats": 0.0,
+            "proteins": 0.2
+          },
+          "name": "Honey",
+          "unit": "g"
+        }
+      ],
+      "name": "SNACK_AFTERNOON",
+      "recipe": "Combine the coconut yogurt alternative and honey in a bowl. Stir well. Enjoy.",
+      "recipeName": "Coconut Yogurt Alternative with Honey",
+      "totalMacros": {
+        "calories": 332.0,
+        "carbohydrates": 61.0,
+        "fats": 10.0,
+        "proteins": 2.2
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 540.0,
+            "carbohydrates": 105.0,
+            "fats": 1.5,
+            "proteins": 15.0
+          },
+          "name": "Pizza dough",
+          "unit": "g"
+        },
+        {
+          "amount": 80.0,
+          "macros": {
+            "calories": 25.6,
+            "carbohydrates": 5.6,
+            "fats": 0.2,
+            "proteins": 1.1
+          },
+          "name": "Tomato sauce",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 280.0,
+            "carbohydrates": 5.0,
+            "fats": 20.0,
+            "proteins": 20.0
+          },
+          "name": "Lactose-free mozzarella alternative",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 9.0,
+            "carbohydrates": 1.9,
+            "fats": 0.1,
+            "proteins": 0.4
+          },
+          "name": "Cherry tomatoes",
+          "unit": "g"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 54.0,
+            "carbohydrates": 1.3,
+            "fats": 4.8,
+            "proteins": 2.5
+          },
+          "name": "Black olives",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        }
+      ],
+      "name": "DINNER",
+      "recipe": "Preheat oven and pizza stone (if using) to the highest temperature. Roll out or stretch the pizza dough into your desired shape and thickness. Spread tomato sauce evenly over the dough, leaving a border for the crust. Sprinkle lactose-free mozzarella alternative over the sauce. Add sliced bell pepper, halved cherry tomatoes, and black olives as toppings. Drizzle with olive oil. Carefully transfer the pizza to the oven or pizza stone and bake for 10-15 minutes, or until the crust is golden brown and the cheese alternative is melted and bubbly.",
+      "recipeName": "Lactose-Free Mediterranean Veggie Pizza",
+      "totalMacros": {
+        "calories": 1016.1,
+        "carbohydrates": 122.4,
+        "fats": 36.8,
+        "proteins": 39.5
+      }
+    }
+  ],
+  "sunday": [
+    {
+      "ingredients": [
+        {
+          "amount": 25.0,
+          "macros": {
+            "calories": 10.0,
+            "carbohydrates": 1.0,
+            "fats": 0.0,
+            "proteins": 1.0
+          },
+          "name": "Espresso shot",
+          "unit": "ml"
+        },
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 60.0,
+            "carbohydrates": 6.0,
+            "fats": 1.5,
+            "proteins": 4.5
+          },
+          "name": "Lactose-free milk",
+          "unit": "ml"
+        },
+        {
+          "amount": 80.0,
+          "macros": {
+            "calories": 200.0,
+            "carbohydrates": 40.0,
+            "fats": 2.4,
+            "proteins": 8.0
+          },
+          "name": "Whole wheat bread",
+          "unit": "g"
+        },
+        {
+          "amount": 20.0,
+          "macros": {
+            "calories": 118.0,
+            "carbohydrates": 4.0,
+            "fats": 10.0,
+            "proteins": 5.0
+          },
+          "name": "Peanut butter",
+          "unit": "g"
+        },
+        {
+          "amount": 15.0,
+          "macros": {
+            "calories": 38.0,
+            "carbohydrates": 9.0,
+            "fats": 0.0,
+            "proteins": 0.1
+          },
+          "name": "Jam",
+          "unit": "g"
+        }
+      ],
+      "name": "BREAKFAST",
+      "recipe": "Prepare an espresso shot. Heat and froth the lactose-free milk. Combine espresso and milk to make a cappuccino. Toast the whole wheat bread slices (if desired). Spread peanut butter on one slice and jam on the other. Serve the cappuccino with the bread.",
+      "recipeName": "Cappuccino with Bread, Peanut Butter, and Jam",
+      "totalMacros": {
+        "calories": 426.0,
+        "carbohydrates": 60.0,
+        "fats": 13.9,
+        "proteins": 18.6
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 248.0,
+            "carbohydrates": 0.0,
+            "fats": 8.3,
+            "proteins": 46.5
+          },
+          "name": "Chicken breast",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 164.0,
+            "carbohydrates": 27.4,
+            "fats": 2.6,
+            "proteins": 8.9
+          },
+          "name": "Chickpeas (canned, drained)",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 7.5,
+            "carbohydrates": 1.8,
+            "fats": 0.1,
+            "proteins": 0.4
+          },
+          "name": "Cucumber",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 18.0,
+            "carbohydrates": 3.9,
+            "fats": 0.2,
+            "proteins": 0.9
+          },
+          "name": "Tomato",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Lemon juice",
+          "unit": "ml"
+        }
+      ],
+      "name": "LUNCH",
+      "recipe": "Cube the cooked chicken breast. Combine chicken, chickpeas, diced cucumber, and tomato in a bowl. Whisk together olive oil and lemon juice to make a dressing. Pour dressing over the ingredients and toss gently.",
+      "recipeName": "Chicken & Chickpea Salad",
+      "totalMacros": {
+        "calories": 553.0,
+        "carbohydrates": 36.1,
+        "fats": 21.4,
+        "proteins": 57.2
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 1.0,
+          "macros": {
+            "calories": 89.0,
+            "carbohydrates": 23.0,
+            "fats": 0.3,
+            "proteins": 1.1
+          },
+          "name": "Banana",
+          "unit": "medium"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 174.0,
+            "carbohydrates": 6.6,
+            "fats": 15.3,
+            "proteins": 6.3
+          },
+          "name": "Walnuts",
+          "unit": "g"
+        }
+      ],
+      "name": "SNACK_AFTERNOON",
+      "recipe": "Peel the banana and enjoy with a handful of walnuts.",
+      "recipeName": "Banana and Walnuts",
+      "totalMacros": {
+        "calories": 263.0,
+        "carbohydrates": 29.6,
+        "fats": 15.6,
+        "proteins": 7.4
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 248.0,
+            "carbohydrates": 0.0,
+            "fats": 8.3,
+            "proteins": 46.5
+          },
+          "name": "Chicken breast",
+          "unit": "g"
+        },
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 111.0,
+            "carbohydrates": 22.2,
+            "fats": 1.2,
+            "proteins": 3.9
+          },
+          "name": "Brown rice",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 31.0,
+            "carbohydrates": 6.0,
+            "fats": 0.3,
+            "proteins": 1.0
+          },
+          "name": "Zucchini",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 31.0,
+            "carbohydrates": 6.0,
+            "fats": 0.3,
+            "proteins": 1.0
+          },
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        }
+      ],
+      "name": "DINNER",
+      "recipe": "Cook brown rice according to package directions. Cube the chicken breast. Chop zucchini and bell pepper into bite-sized pieces. Heat olive oil in a pan over medium-high heat. Add chicken and cook until browned and cooked through. Add zucchini and bell pepper and sauté until tender-crisp. Season with salt, pepper, and dried herbs like oregano and basil. Serve the chicken and vegetable mixture alongside the brown rice.",
+      "recipeName": "Mediterranean Chicken Stir-fry with Rice",
+      "totalMacros": {
+        "calories": 509.0,
+        "carbohydrates": 34.2,
+        "fats": 19.8,
+        "proteins": 52.4
+      }
+    }
+  ],
+  "thursday": [
+    {
+      "ingredients": [
+        {
+          "amount": 25.0,
+          "macros": {
+            "calories": 10.0,
+            "carbohydrates": 1.0,
+            "fats": 0.0,
+            "proteins": 1.0
+          },
+          "name": "Espresso shot",
+          "unit": "ml"
+        },
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 60.0,
+            "carbohydrates": 6.0,
+            "fats": 1.5,
+            "proteins": 4.5
+          },
+          "name": "Lactose-free milk",
+          "unit": "ml"
+        },
+        {
+          "amount": 80.0,
+          "macros": {
+            "calories": 200.0,
+            "carbohydrates": 40.0,
+            "fats": 2.4,
+            "proteins": 8.0
+          },
+          "name": "Whole wheat bread",
+          "unit": "g"
+        },
+        {
+          "amount": 20.0,
+          "macros": {
+            "calories": 118.0,
+            "carbohydrates": 4.0,
+            "fats": 10.0,
+            "proteins": 5.0
+          },
+          "name": "Peanut butter",
+          "unit": "g"
+        },
+        {
+          "amount": 15.0,
+          "macros": {
+            "calories": 38.0,
+            "carbohydrates": 9.0,
+            "fats": 0.0,
+            "proteins": 0.1
+          },
+          "name": "Jam",
+          "unit": "g"
+        }
+      ],
+      "name": "BREAKFAST",
+      "recipe": "Prepare an espresso shot. Heat and froth the lactose-free milk. Combine espresso and milk to make a cappuccino. Toast the whole wheat bread slices (if desired). Spread peanut butter on one slice and jam on the other. Serve the cappuccino with the bread.",
+      "recipeName": "Cappuccino with Bread, Peanut Butter, and Jam",
+      "totalMacros": {
+        "calories": 426.0,
+        "carbohydrates": 60.0,
+        "fats": 13.9,
+        "proteins": 18.6
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 164.0,
+            "carbohydrates": 27.4,
+            "fats": 2.6,
+            "proteins": 8.9
+          },
+          "name": "Chickpeas (canned, drained)",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 9.0,
+            "carbohydrates": 1.9,
+            "fats": 0.1,
+            "proteins": 0.4
+          },
+          "name": "Cherry tomatoes",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 7.5,
+            "carbohydrates": 1.8,
+            "fats": 0.1,
+            "proteins": 0.4
+          },
+          "name": "Cucumber",
+          "unit": "g"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 54.0,
+            "carbohydrates": 1.3,
+            "fats": 4.8,
+            "proteins": 2.5
+          },
+          "name": "Black olives",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Red wine vinegar",
+          "unit": "ml"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 25.0,
+            "carbohydrates": 5.0,
+            "fats": 0.2,
+            "proteins": 1.0
+          },
+          "name": "Mixed greens",
+          "unit": "g"
+        }
+      ],
+      "name": "LUNCH",
+      "recipe": "Combine chickpeas, cherry tomatoes, cucumber, black olives, and mixed greens in a bowl. Whisk together olive oil and red wine vinegar for the dressing. Pour dressing over the salad and toss gently.",
+      "recipeName": "Mediterranean Chickpea Salad",
+      "totalMacros": {
+        "calories": 374.0,
+        "carbohydrates": 40.4,
+        "fats": 17.9,
+        "proteins": 13.8
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 1.0,
+          "macros": {
+            "calories": 47.0,
+            "carbohydrates": 12.0,
+            "fats": 0.1,
+            "proteins": 0.9
+          },
+          "name": "Orange",
+          "unit": "medium"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 174.0,
+            "carbohydrates": 6.6,
+            "fats": 15.3,
+            "proteins": 6.3
+          },
+          "name": "Pistachios",
+          "unit": "g"
+        }
+      ],
+      "name": "SNACK_AFTERNOON",
+      "recipe": "Peel and segment the orange. Enjoy the orange with a handful of pistachios.",
+      "recipeName": "Orange and Pistachios",
+      "totalMacros": {
+        "calories": 221.0,
+        "carbohydrates": 18.6,
+        "fats": 15.4,
+        "proteins": 7.2
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 416.0,
+            "carbohydrates": 0.0,
+            "fats": 26.0,
+            "proteins": 40.0
+          },
+          "name": "Salmon fillet",
+          "unit": "g"
+        },
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 62.0,
+            "carbohydrates": 12.0,
+            "fats": 0.6,
+            "proteins": 2.0
+          },
+          "name": "Asparagus",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 40.0,
+            "carbohydrates": 9.3,
+            "fats": 0.1,
+            "proteins": 1.1
+          },
+          "name": "Red onion",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        }
+      ],
+      "name": "DINNER",
+      "recipe": "Preheat oven to 200°C (400°F). Toss asparagus spears and red onion wedges with olive oil, salt, and pepper on a baking sheet. Place the salmon fillet on the same baking sheet. Roast for 15-20 minutes, or until salmon is cooked through and vegetables are tender.",
+      "recipeName": "Roasted Salmon with Asparagus and Red Onion",
+      "totalMacros": {
+        "calories": 606.0,
+        "carbohydrates": 21.3,
+        "fats": 36.7,
+        "proteins": 43.1
+      }
+    }
+  ],
+  "tuesday": [
+    {
+      "ingredients": [
+        {
+          "amount": 25.0,
+          "macros": {
+            "calories": 10.0,
+            "carbohydrates": 1.0,
+            "fats": 0.0,
+            "proteins": 1.0
+          },
+          "name": "Espresso shot",
+          "unit": "ml"
+        },
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 60.0,
+            "carbohydrates": 6.0,
+            "fats": 1.5,
+            "proteins": 4.5
+          },
+          "name": "Lactose-free milk",
+          "unit": "ml"
+        },
+        {
+          "amount": 80.0,
+          "macros": {
+            "calories": 200.0,
+            "carbohydrates": 40.0,
+            "fats": 2.4,
+            "proteins": 8.0
+          },
+          "name": "Whole wheat bread",
+          "unit": "g"
+        },
+        {
+          "amount": 20.0,
+          "macros": {
+            "calories": 118.0,
+            "carbohydrates": 4.0,
+            "fats": 10.0,
+            "proteins": 5.0
+          },
+          "name": "Peanut butter",
+          "unit": "g"
+        },
+        {
+          "amount": 15.0,
+          "macros": {
+            "calories": 38.0,
+            "carbohydrates": 9.0,
+            "fats": 0.0,
+            "proteins": 0.1
+          },
+          "name": "Jam",
+          "unit": "g"
+        }
+      ],
+      "name": "BREAKFAST",
+      "recipe": "Prepare an espresso shot. Heat and froth the lactose-free milk. Combine espresso and milk to make a cappuccino. Toast the whole wheat bread slices (if desired). Spread peanut butter on one slice and jam on the other. Serve the cappuccino with the bread.",
+      "recipeName": "Cappuccino with Bread, Peanut Butter, and Jam",
+      "totalMacros": {
+        "calories": 426.0,
+        "carbohydrates": 60.0,
+        "fats": 13.9,
+        "proteins": 18.6
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 248.0,
+            "carbohydrates": 0.0,
+            "fats": 8.3,
+            "proteins": 46.5
+          },
+          "name": "Chicken breast",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 37.0,
+            "carbohydrates": 7.4,
+            "fats": 0.4,
+            "proteins": 1.3
+          },
+          "name": "Quinoa",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 7.5,
+            "carbohydrates": 1.8,
+            "fats": 0.1,
+            "proteins": 0.4
+          },
+          "name": "Cucumber",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 18.0,
+            "carbohydrates": 3.9,
+            "fats": 0.2,
+            "proteins": 0.9
+          },
+          "name": "Tomato",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Lemon juice",
+          "unit": "ml"
+        }
+      ],
+      "name": "LUNCH",
+      "recipe": "Cook quinoa according to package directions. Cube the cooked chicken breast. Dice the cucumber, tomato, and bell pepper. Combine the chicken, quinoa, and vegetables in a bowl. Whisk together olive oil and lemon juice to make a dressing. Pour dressing over the salad and toss gently.",
+      "recipeName": "Chicken & Quinoa Mediterranean Salad",
+      "totalMacros": {
+        "calories": 439.5,
+        "carbohydrates": 19.1,
+        "fats": 19.4,
+        "proteins": 49.6
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 1.0,
+          "macros": {
+            "calories": 52.0,
+            "carbohydrates": 14.0,
+            "fats": 0.2,
+            "proteins": 0.3
+          },
+          "name": "Apple",
+          "unit": "medium"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 174.0,
+            "carbohydrates": 6.6,
+            "fats": 15.3,
+            "proteins": 6.3
+          },
+          "name": "Almonds",
+          "unit": "g"
+        }
+      ],
+      "name": "SNACK_AFTERNOON",
+      "recipe": "Wash and slice the apple. Enjoy the apple slices with a handful of almonds.",
+      "recipeName": "Apple and Almonds",
+      "totalMacros": {
+        "calories": 226.0,
+        "carbohydrates": 20.6,
+        "fats": 15.5,
+        "proteins": 6.6
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 312.0,
+            "carbohydrates": 0.0,
+            "fats": 19.5,
+            "proteins": 30.0
+          },
+          "name": "Salmon fillet",
+          "unit": "g"
+        },
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 62.0,
+            "carbohydrates": 12.0,
+            "fats": 0.6,
+            "proteins": 2.0
+          },
+          "name": "Broccoli florets",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 31.0,
+            "carbohydrates": 6.0,
+            "fats": 0.3,
+            "proteins": 1.0
+          },
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        }
+      ],
+      "name": "DINNER",
+      "recipe": "Preheat oven to 200°C (400°F). Toss broccoli florets and bell pepper chunks with olive oil, salt, and pepper on a baking sheet. Place the salmon fillet on the same baking sheet. Roast for 15-20 minutes, or until salmon is cooked through and vegetables are tender.",
+      "recipeName": "Roasted Salmon with Broccoli and Bell Pepper",
+      "totalMacros": {
+        "calories": 493.0,
+        "carbohydrates": 18.0,
+        "fats": 30.4,
+        "proteins": 33.0
+      }
+    }
+  ],
+  "wednesday": [
+    {
+      "ingredients": [
+        {
+          "amount": 25.0,
+          "macros": {
+            "calories": 10.0,
+            "carbohydrates": 1.0,
+            "fats": 0.0,
+            "proteins": 1.0
+          },
+          "name": "Espresso shot",
+          "unit": "ml"
+        },
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 60.0,
+            "carbohydrates": 6.0,
+            "fats": 1.5,
+            "proteins": 4.5
+          },
+          "name": "Lactose-free milk",
+          "unit": "ml"
+        },
+        {
+          "amount": 80.0,
+          "macros": {
+            "calories": 200.0,
+            "carbohydrates": 40.0,
+            "fats": 2.4,
+            "proteins": 8.0
+          },
+          "name": "Whole wheat bread",
+          "unit": "g"
+        },
+        {
+          "amount": 20.0,
+          "macros": {
+            "calories": 118.0,
+            "carbohydrates": 4.0,
+            "fats": 10.0,
+            "proteins": 5.0
+          },
+          "name": "Peanut butter",
+          "unit": "g"
+        },
+        {
+          "amount": 15.0,
+          "macros": {
+            "calories": 38.0,
+            "carbohydrates": 9.0,
+            "fats": 0.0,
+            "proteins": 0.1
+          },
+          "name": "Jam",
+          "unit": "g"
+        }
+      ],
+      "name": "BREAKFAST",
+      "recipe": "Prepare an espresso shot. Heat and froth the lactose-free milk. Combine espresso and milk to make a cappuccino. Toast the whole wheat bread slices (if desired). Spread peanut butter on one slice and jam on the other. Serve the cappuccino with the bread.",
+      "recipeName": "Cappuccino with Bread, Peanut Butter, and Jam",
+      "totalMacros": {
+        "calories": 426.0,
+        "carbohydrates": 60.0,
+        "fats": 13.9,
+        "proteins": 18.6
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 164.0,
+            "carbohydrates": 27.4,
+            "fats": 2.6,
+            "proteins": 8.9
+          },
+          "name": "Chickpeas (canned, drained)",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 9.0,
+            "carbohydrates": 1.9,
+            "fats": 0.1,
+            "proteins": 0.4
+          },
+          "name": "Cherry tomatoes",
+          "unit": "g"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 7.5,
+            "carbohydrates": 1.8,
+            "fats": 0.1,
+            "proteins": 0.4
+          },
+          "name": "Cucumber",
+          "unit": "g"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 54.0,
+            "carbohydrates": 1.3,
+            "fats": 4.8,
+            "proteins": 2.5
+          },
+          "name": "Black olives",
+          "unit": "g"
+        },
+        {
+          "amount": 10.0,
+          "macros": {
+            "calories": 88.0,
+            "carbohydrates": 0.0,
+            "fats": 10.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 15.5,
+            "carbohydrates": 3.0,
+            "fats": 0.2,
+            "proteins": 0.5
+          },
+          "name": "Red wine vinegar",
+          "unit": "ml"
+        },
+        {
+          "amount": 50.0,
+          "macros": {
+            "calories": 25.0,
+            "carbohydrates": 5.0,
+            "fats": 0.2,
+            "proteins": 1.0
+          },
+          "name": "Mixed greens",
+          "unit": "g"
+        }
+      ],
+      "name": "LUNCH",
+      "recipe": "Combine chickpeas, cherry tomatoes, cucumber, black olives, and mixed greens in a bowl. Whisk together olive oil and red wine vinegar for the dressing. Pour dressing over the salad and toss gently.",
+      "recipeName": "Mediterranean Chickpea Salad",
+      "totalMacros": {
+        "calories": 374.0,
+        "carbohydrates": 40.4,
+        "fats": 17.9,
+        "proteins": 13.8
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 1.0,
+          "macros": {
+            "calories": 89.0,
+            "carbohydrates": 23.0,
+            "fats": 0.3,
+            "proteins": 1.1
+          },
+          "name": "Banana",
+          "unit": "medium"
+        },
+        {
+          "amount": 30.0,
+          "macros": {
+            "calories": 174.0,
+            "carbohydrates": 6.6,
+            "fats": 15.3,
+            "proteins": 6.3
+          },
+          "name": "Walnuts",
+          "unit": "g"
+        }
+      ],
+      "name": "SNACK_AFTERNOON",
+      "recipe": "Peel the banana and enjoy with a handful of walnuts.",
+      "recipeName": "Banana and Walnuts",
+      "totalMacros": {
+        "calories": 263.0,
+        "carbohydrates": 29.6,
+        "fats": 15.6,
+        "proteins": 7.4
+      }
+    },
+    {
+      "ingredients": [
+        {
+          "amount": 150.0,
+          "macros": {
+            "calories": 522.0,
+            "carbohydrates": 0.0,
+            "fats": 34.5,
+            "proteins": 48.0
+          },
+          "name": "Lean ground beef",
+          "unit": "g"
+        },
+        {
+          "amount": 200.0,
+          "macros": {
+            "calories": 74.0,
+            "carbohydrates": 14.8,
+            "fats": 0.8,
+            "proteins": 2.6
+          },
+          "name": "Brown rice",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 40.0,
+            "carbohydrates": 9.3,
+            "fats": 0.1,
+            "proteins": 1.1
+          },
+          "name": "Onion",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 18.0,
+            "carbohydrates": 3.9,
+            "fats": 0.2,
+            "proteins": 0.9
+          },
+          "name": "Tomato",
+          "unit": "g"
+        },
+        {
+          "amount": 100.0,
+          "macros": {
+            "calories": 31.0,
+            "carbohydrates": 6.0,
+            "fats": 0.3,
+            "proteins": 1.0
+          },
+          "name": "Bell pepper",
+          "unit": "g"
+        },
+        {
+          "amount": 5.0,
+          "macros": {
+            "calories": 44.0,
+            "carbohydrates": 0.0,
+            "fats": 5.0,
+            "proteins": 0.0
+          },
+          "name": "Olive oil",
+          "unit": "ml"
+        }
+      ],
+      "name": "DINNER",
+      "recipe": "Cook brown rice according to package directions. Heat olive oil in a pan over medium heat. Add chopped onion, tomato, and bell pepper, sauté until softened. Add ground beef and cook, breaking it apart, until browned. Season with salt, pepper, and Mediterranean herbs like oregano. Serve the beef and vegetable mixture over brown rice.",
+      "recipeName": "Mediterranean Ground Beef with Rice and Vegetables",
+      "totalMacros": {
+        "calories": 769.0,
+        "carbohydrates": 34.0,
+        "fats": 40.0,
+        "proteins": 53.0
+      }
+    }
+  ]
 }

@@ -9,109 +9,124 @@ part of 'meal.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-const MealSchema = Schema(
-  name: r'Meal',
-  id: 2462895270179255875,
+const MealCacheSchema = Schema(
+  name: r'MealCache',
+  id: -65665653055929442,
   properties: {
     r'ingredients': PropertySchema(
       id: 0,
       name: r'ingredients',
       type: IsarType.objectList,
-      target: r'Ingredient',
+      target: r'IngredientCache',
     ),
     r'name': PropertySchema(
       id: 1,
       name: r'name',
       type: IsarType.string,
+      enumMap: _MealCachenameEnumValueMap,
     ),
     r'recipe': PropertySchema(
       id: 2,
       name: r'recipe',
       type: IsarType.string,
     ),
-    r'totalMacros': PropertySchema(
+    r'recipeName': PropertySchema(
       id: 3,
+      name: r'recipeName',
+      type: IsarType.string,
+    ),
+    r'totalMacros': PropertySchema(
+      id: 4,
       name: r'totalMacros',
       type: IsarType.object,
-      target: r'Macros',
+      target: r'MacrosCache',
     )
   },
-  estimateSize: _mealEstimateSize,
-  serialize: _mealSerialize,
-  deserialize: _mealDeserialize,
-  deserializeProp: _mealDeserializeProp,
+  estimateSize: _mealCacheEstimateSize,
+  serialize: _mealCacheSerialize,
+  deserialize: _mealCacheDeserialize,
+  deserializeProp: _mealCacheDeserializeProp,
 );
 
-int _mealEstimateSize(
-  Meal object,
+int _mealCacheEstimateSize(
+  MealCache object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.ingredients.length * 3;
   {
-    final offsets = allOffsets[Ingredient]!;
+    final offsets = allOffsets[IngredientCache]!;
     for (var i = 0; i < object.ingredients.length; i++) {
       final value = object.ingredients[i];
-      bytesCount += IngredientSchema.estimateSize(value, offsets, allOffsets);
+      bytesCount +=
+          IngredientCacheSchema.estimateSize(value, offsets, allOffsets);
     }
   }
-  bytesCount += 3 + object.name.length * 3;
+  {
+    final value = object.name;
+    if (value != null) {
+      bytesCount += 3 + value.name.length * 3;
+    }
+  }
   bytesCount += 3 + object.recipe.length * 3;
+  bytesCount += 3 + object.recipeName.length * 3;
   bytesCount += 3 +
-      MacrosSchema.estimateSize(
-          object.totalMacros, allOffsets[Macros]!, allOffsets);
+      MacrosCacheSchema.estimateSize(
+          object.totalMacros, allOffsets[MacrosCache]!, allOffsets);
   return bytesCount;
 }
 
-void _mealSerialize(
-  Meal object,
+void _mealCacheSerialize(
+  MealCache object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeObjectList<Ingredient>(
+  writer.writeObjectList<IngredientCache>(
     offsets[0],
     allOffsets,
-    IngredientSchema.serialize,
+    IngredientCacheSchema.serialize,
     object.ingredients,
   );
-  writer.writeString(offsets[1], object.name);
+  writer.writeString(offsets[1], object.name?.name);
   writer.writeString(offsets[2], object.recipe);
-  writer.writeObject<Macros>(
-    offsets[3],
+  writer.writeString(offsets[3], object.recipeName);
+  writer.writeObject<MacrosCache>(
+    offsets[4],
     allOffsets,
-    MacrosSchema.serialize,
+    MacrosCacheSchema.serialize,
     object.totalMacros,
   );
 }
 
-Meal _mealDeserialize(
+MealCache _mealCacheDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Meal();
-  object.ingredients = reader.readObjectList<Ingredient>(
+  final object = MealCache();
+  object.ingredients = reader.readObjectList<IngredientCache>(
         offsets[0],
-        IngredientSchema.deserialize,
+        IngredientCacheSchema.deserialize,
         allOffsets,
-        Ingredient(),
+        IngredientCache(),
       ) ??
       [];
-  object.name = reader.readString(offsets[1]);
+  object.name = _MealCachenameValueEnumMap[reader.readStringOrNull(offsets[1])];
   object.recipe = reader.readString(offsets[2]);
-  object.totalMacros = reader.readObjectOrNull<Macros>(
-        offsets[3],
-        MacrosSchema.deserialize,
+  object.recipeName = reader.readString(offsets[3]);
+  object.totalMacros = reader.readObjectOrNull<MacrosCache>(
+        offsets[4],
+        MacrosCacheSchema.deserialize,
         allOffsets,
       ) ??
-      Macros();
+      MacrosCache();
   return object;
 }
 
-P _mealDeserializeProp<P>(
+P _mealCacheDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -119,32 +134,52 @@ P _mealDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readObjectList<Ingredient>(
+      return (reader.readObjectList<IngredientCache>(
             offset,
-            IngredientSchema.deserialize,
+            IngredientCacheSchema.deserialize,
             allOffsets,
-            Ingredient(),
+            IngredientCache(),
           ) ??
           []) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (_MealCachenameValueEnumMap[reader.readStringOrNull(offset)]) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readObjectOrNull<Macros>(
+      return (reader.readString(offset)) as P;
+    case 4:
+      return (reader.readObjectOrNull<MacrosCache>(
             offset,
-            MacrosSchema.deserialize,
+            MacrosCacheSchema.deserialize,
             allOffsets,
           ) ??
-          Macros()) as P;
+          MacrosCache()) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> ingredientsLengthEqualTo(
-      int length) {
+const _MealCachenameEnumValueMap = {
+  r'BREAKFAST': r'BREAKFAST',
+  r'DINNER': r'DINNER',
+  r'LUNCH': r'LUNCH',
+  r'SNACK_MORNING': r'SNACK_MORNING',
+  r'SNACK_AFTERNOON': r'SNACK_AFTERNOON',
+  r'SNACK_EVENING': r'SNACK_EVENING',
+};
+const _MealCachenameValueEnumMap = {
+  r'BREAKFAST': MealNameEnum.BREAKFAST,
+  r'DINNER': MealNameEnum.DINNER,
+  r'LUNCH': MealNameEnum.LUNCH,
+  r'SNACK_MORNING': MealNameEnum.SNACK_MORNING,
+  r'SNACK_AFTERNOON': MealNameEnum.SNACK_AFTERNOON,
+  r'SNACK_EVENING': MealNameEnum.SNACK_EVENING,
+};
+
+extension MealCacheQueryFilter
+    on QueryBuilder<MealCache, MealCache, QFilterCondition> {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      ingredientsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'ingredients',
@@ -156,7 +191,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> ingredientsIsEmpty() {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      ingredientsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'ingredients',
@@ -168,7 +204,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> ingredientsIsNotEmpty() {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      ingredientsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'ingredients',
@@ -180,7 +217,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> ingredientsLengthLessThan(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      ingredientsLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -195,7 +233,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> ingredientsLengthGreaterThan(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      ingredientsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
@@ -210,7 +249,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> ingredientsLengthBetween(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      ingredientsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -227,8 +267,24 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameEqualTo(
-    String value, {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameEqualTo(
+    MealNameEnum? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -240,8 +296,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameGreaterThan(
-    String value, {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameGreaterThan(
+    MealNameEnum? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -255,8 +311,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameLessThan(
-    String value, {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameLessThan(
+    MealNameEnum? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -270,9 +326,9 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameBetween(
+    MealNameEnum? lower,
+    MealNameEnum? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -289,7 +345,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -302,7 +358,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -315,7 +371,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameContains(String value,
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameContains(
+      String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -326,7 +383,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameMatches(String pattern,
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameMatches(
+      String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -337,7 +395,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'name',
@@ -346,7 +404,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameIsNotEmpty() {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
@@ -355,7 +413,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeEqualTo(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -368,7 +426,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeGreaterThan(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -383,7 +441,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeLessThan(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -398,7 +456,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeBetween(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -417,7 +475,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeStartsWith(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -430,7 +488,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeEndsWith(
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -443,7 +501,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeContains(String value,
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeContains(
+      String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -454,7 +513,8 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeMatches(String pattern,
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeMatches(
+      String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -465,7 +525,7 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeIsEmpty() {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'recipe',
@@ -474,26 +534,161 @@ extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> recipeIsNotEmpty() {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'recipe',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'recipeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      recipeNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'recipeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'recipeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'recipeName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      recipeNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'recipeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'recipeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'recipeName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> recipeNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'recipeName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      recipeNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'recipeName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition>
+      recipeNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'recipeName',
         value: '',
       ));
     });
   }
 }
 
-extension MealQueryObject on QueryBuilder<Meal, Meal, QFilterCondition> {
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> ingredientsElement(
-      FilterQuery<Ingredient> q) {
+extension MealCacheQueryObject
+    on QueryBuilder<MealCache, MealCache, QFilterCondition> {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> ingredientsElement(
+      FilterQuery<IngredientCache> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'ingredients');
     });
   }
 
-  QueryBuilder<Meal, Meal, QAfterFilterCondition> totalMacros(
-      FilterQuery<Macros> q) {
+  QueryBuilder<MealCache, MealCache, QAfterFilterCondition> totalMacros(
+      FilterQuery<MacrosCache> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'totalMacros');
     });

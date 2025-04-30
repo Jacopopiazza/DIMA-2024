@@ -1,3 +1,4 @@
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'circular_progress_indicator_widget.dart'; // Import the widget
 
@@ -145,7 +146,7 @@ class _ProgressCardState extends State<ProgressCard>
         ? colorScheme.surfaceContainerHighest.withAlpha(128)
         : Colors.grey[300]!;
     final placeholderColor = Theme.of(context).brightness == Brightness.dark
-        ? Colors.white.withOpacity(0.1) // Placeholder elements within skeleton
+        ? Colors.white.withAlpha(25) // Placeholder elements within skeleton
         : Colors.grey[400]!;
 
     return Container(
@@ -253,6 +254,8 @@ class _ProgressCardState extends State<ProgressCard>
     final Color carbColor = colorScheme.secondary;
     final Color progressBackgroundColor = colorScheme.surfaceContainerHighest;
 
+    final localizations = AppLocalizations.of(context)!;
+
     if (widget.isLoading) {
       return _buildLoadingSkeleton(context);
     }
@@ -310,7 +313,7 @@ class _ProgressCardState extends State<ProgressCard>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Today's Progress",
+                  localizations.todayProgress,
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -332,7 +335,7 @@ class _ProgressCardState extends State<ProgressCard>
                       MainAxisAlignment.center, // Center vertically if needed
                   children: [
                     Text(
-                      'Calories',
+                      localizations.calories,
                       style: TextStyle(
                           color: secondaryTextColor,
                           fontSize: 16), // Slightly smaller?
@@ -390,7 +393,7 @@ class _ProgressCardState extends State<ProgressCard>
                           _buildProgressIndicator(
                             percent: widget.fatPercent!,
                             animation: _fatAnimation,
-                            label: 'Fat',
+                            label: localizations.fats,
                             progressColor: fatColor,
                             backgroundColor: progressBackgroundColor,
                             centerTextColor: textColor,
@@ -403,7 +406,7 @@ class _ProgressCardState extends State<ProgressCard>
                           _buildProgressIndicator(
                             percent: widget.proteinPercent!,
                             animation: _proAnimation,
-                            label: 'Pro',
+                            label: localizations.proteins,
                             progressColor: proColor,
                             backgroundColor: progressBackgroundColor,
                             centerTextColor: textColor,
@@ -416,7 +419,7 @@ class _ProgressCardState extends State<ProgressCard>
                           _buildProgressIndicator(
                             percent: widget.carbPercent!,
                             animation: _carbAnimation,
-                            label: 'Carb',
+                            label: localizations.carbs,
                             progressColor: carbColor,
                             backgroundColor: progressBackgroundColor,
                             centerTextColor: textColor,

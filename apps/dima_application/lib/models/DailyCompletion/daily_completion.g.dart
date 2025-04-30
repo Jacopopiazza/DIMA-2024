@@ -20,7 +20,8 @@ const DailyCompletionSchema = CollectionSchema(
     r'completedMealNames': PropertySchema(
       id: 0,
       name: r'completedMealNames',
-      type: IsarType.stringList,
+      type: IsarType.byteList,
+      enumMap: _DailyCompletioncompletedMealNamesEnumValueMap,
     ),
     r'date': PropertySchema(
       id: 1,
@@ -37,8 +38,8 @@ const DailyCompletionSchema = CollectionSchema(
     r'date': IndexSchema(
       id: -7552997827385218417,
       name: r'date',
-      unique: false,
-      replace: false,
+      unique: true,
+      replace: true,
       properties: [
         IndexPropertySchema(
           name: r'date',
@@ -62,13 +63,7 @@ int _dailyCompletionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.completedMealNames.length * 3;
-  {
-    for (var i = 0; i < object.completedMealNames.length; i++) {
-      final value = object.completedMealNames[i];
-      bytesCount += value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.completedMealNames.length;
   return bytesCount;
 }
 
@@ -78,7 +73,8 @@ void _dailyCompletionSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeStringList(offsets[0], object.completedMealNames);
+  writer.writeByteList(
+      offsets[0], object.completedMealNames.map((e) => e.index).toList());
   writer.writeDateTime(offsets[1], object.date);
 }
 
@@ -89,10 +85,16 @@ DailyCompletion _dailyCompletionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = DailyCompletion(
-    completedMealNames: reader.readStringList(offsets[0]) ?? const [],
+    completedMealNames: reader
+            .readByteList(offsets[0])
+            ?.map((e) =>
+                _DailyCompletioncompletedMealNamesValueEnumMap[e] ??
+                MealNameEnum.BREAKFAST)
+            .toList() ??
+        const [],
     date: reader.readDateTime(offsets[1]),
+    id: id,
   );
-  object.id = id;
   return object;
 }
 
@@ -104,13 +106,36 @@ P _dailyCompletionDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringList(offset) ?? const []) as P;
+      return (reader
+              .readByteList(offset)
+              ?.map((e) =>
+                  _DailyCompletioncompletedMealNamesValueEnumMap[e] ??
+                  MealNameEnum.BREAKFAST)
+              .toList() ??
+          const []) as P;
     case 1:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _DailyCompletioncompletedMealNamesEnumValueMap = {
+  'BREAKFAST': 0,
+  'DINNER': 1,
+  'LUNCH': 2,
+  'SNACK_MORNING': 3,
+  'SNACK_AFTERNOON': 4,
+  'SNACK_EVENING': 5,
+};
+const _DailyCompletioncompletedMealNamesValueEnumMap = {
+  0: MealNameEnum.BREAKFAST,
+  1: MealNameEnum.DINNER,
+  2: MealNameEnum.LUNCH,
+  3: MealNameEnum.SNACK_MORNING,
+  4: MealNameEnum.SNACK_AFTERNOON,
+  5: MealNameEnum.SNACK_EVENING,
+};
 
 Id _dailyCompletionGetId(DailyCompletion object) {
   return object.id;
@@ -123,6 +148,61 @@ List<IsarLinkBase<dynamic>> _dailyCompletionGetLinks(DailyCompletion object) {
 void _dailyCompletionAttach(
     IsarCollection<dynamic> col, Id id, DailyCompletion object) {
   object.id = id;
+}
+
+extension DailyCompletionByIndex on IsarCollection<DailyCompletion> {
+  Future<DailyCompletion?> getByDate(DateTime date) {
+    return getByIndex(r'date', [date]);
+  }
+
+  DailyCompletion? getByDateSync(DateTime date) {
+    return getByIndexSync(r'date', [date]);
+  }
+
+  Future<bool> deleteByDate(DateTime date) {
+    return deleteByIndex(r'date', [date]);
+  }
+
+  bool deleteByDateSync(DateTime date) {
+    return deleteByIndexSync(r'date', [date]);
+  }
+
+  Future<List<DailyCompletion?>> getAllByDate(List<DateTime> dateValues) {
+    final values = dateValues.map((e) => [e]).toList();
+    return getAllByIndex(r'date', values);
+  }
+
+  List<DailyCompletion?> getAllByDateSync(List<DateTime> dateValues) {
+    final values = dateValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'date', values);
+  }
+
+  Future<int> deleteAllByDate(List<DateTime> dateValues) {
+    final values = dateValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'date', values);
+  }
+
+  int deleteAllByDateSync(List<DateTime> dateValues) {
+    final values = dateValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'date', values);
+  }
+
+  Future<Id> putByDate(DailyCompletion object) {
+    return putByIndex(r'date', object);
+  }
+
+  Id putByDateSync(DailyCompletion object, {bool saveLinks = true}) {
+    return putByIndexSync(r'date', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByDate(List<DailyCompletion> objects) {
+    return putAllByIndex(r'date', objects);
+  }
+
+  List<Id> putAllByDateSync(List<DailyCompletion> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'date', objects, saveLinks: saveLinks);
+  }
 }
 
 extension DailyCompletionQueryWhereSort
@@ -308,58 +388,49 @@ extension DailyCompletionQueryWhere
 extension DailyCompletionQueryFilter
     on QueryBuilder<DailyCompletion, DailyCompletion, QFilterCondition> {
   QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
-      completedMealNamesElementEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      completedMealNamesElementEqualTo(MealNameEnum value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'completedMealNames',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
       completedMealNamesElementGreaterThan(
-    String value, {
+    MealNameEnum value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'completedMealNames',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
       completedMealNamesElementLessThan(
-    String value, {
+    MealNameEnum value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'completedMealNames',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
       completedMealNamesElementBetween(
-    String lower,
-    String upper, {
+    MealNameEnum lower,
+    MealNameEnum upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -368,79 +439,6 @@ extension DailyCompletionQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
-      completedMealNamesElementStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'completedMealNames',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
-      completedMealNamesElementEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'completedMealNames',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
-      completedMealNamesElementContains(String value,
-          {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'completedMealNames',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
-      completedMealNamesElementMatches(String pattern,
-          {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'completedMealNames',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
-      completedMealNamesElementIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'completedMealNames',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
-      completedMealNamesElementIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'completedMealNames',
-        value: '',
       ));
     });
   }
@@ -721,7 +719,7 @@ extension DailyCompletionQueryProperty
     });
   }
 
-  QueryBuilder<DailyCompletion, List<String>, QQueryOperations>
+  QueryBuilder<DailyCompletion, List<MealNameEnum>, QQueryOperations>
       completedMealNamesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'completedMealNames');

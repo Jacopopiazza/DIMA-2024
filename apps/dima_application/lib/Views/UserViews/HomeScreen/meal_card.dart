@@ -1,5 +1,6 @@
+import 'package:dima_application/Utils/localization_helpers.dart';
 import 'package:dima_application/Views/UserViews/MealScreen/meal_details_view.dart';
-import 'package:dima_application/models/MealPlan/meal.dart';
+import 'package:dima_application/generated/flutter-models/Meal.dart';
 import 'package:flutter/material.dart';
 
 /// A card widget that displays meal information with loading states and completion status
@@ -111,7 +112,7 @@ class MealCard extends StatelessWidget {
               _buildGradientOverlay(),
 
               // Meal title
-              _buildMealTitle(),
+              _buildMealTitle(context),
 
               // Completion status indicator
               _buildCompletionStatus(
@@ -188,11 +189,11 @@ class MealCard extends StatelessWidget {
   }
 
   /// Builds the meal title with styling
-  Widget _buildMealTitle() {
+  Widget _buildMealTitle(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Text(
-        meal.name.substring(0, 1).toUpperCase() + meal.name.substring(1),
+        localizeMealName(context, meal.name),
         style: const TextStyle(
             color: Colors.white,
             fontSize: 22,

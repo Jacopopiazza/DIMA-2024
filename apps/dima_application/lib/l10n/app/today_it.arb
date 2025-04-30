@@ -1,0 +1,21 @@
+{
+    "@@locale": "it",
+    "mealNameBREAKFAST": "Colazione",
+
+    "mealNameDINNER": "Cena",
+
+    "mealNameLUNCH" : "Pranzo",
+
+    "mealNameSNACK_MORNING" : "Snack (Mattina)",
+
+    "mealNameSNACK_AFTERNOON": "Snack (Pomeriggio)",
+
+    "mealNameSNACK_EVENING": "Snack (Dopo cena)",
+    "todayProgress": "Progressi di oggi",
+    "calories": "Calorie",
+    "carbs": "Carboidrati",
+    "fats": "Grassi",
+    "proteins": "Proteine",
+    "todaysMeals": "Ricette odierne"
+
+}

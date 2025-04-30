@@ -42,17 +42,9 @@ type ChatMetadataConnection {
   nextToken: String
 }
 
-type CompletedMealInfo {
-  #  The identifier (keyword) of the meal completed
-  completionTimestamp: AWSDateTime!
-  #  dayOfWeek: WeekdayEnum! # Might be redundant if date is present
-  mealName: MealNameEnum!
-  mealPlanId: ID!
-}
-
 type CompletedMealLog @model {
   #  From SK (extracted date part)
-  completedMeals: [CompletedMealInfo!]!
+  completedMealKeys: [String!]
   #  From PK
   date: AWSDate!
   userId: ID!
@@ -121,17 +113,23 @@ type MealPlanGenerationStatus {
   status: MealPlanGenerationStatusValue!
 }
 
+type MealWithStatus {
+  isCompleted: Boolean!
+  meal: Meal!
+}
+
 #  ===================
 #      MUTATIONS
 # ===================
 type Mutation {
-  assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan @aws_auth(cognito_groups : ["User"])
-  markMealAsCompleted(input: MarkMealCompletedInput!): CompletedMealLog @aws_auth(cognito_groups : ["User"])
-  requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanGenerationStatus @aws_auth(cognito_groups : ["User"])
+  assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan @aws_auth(cognito_groups : ["USERS"])
+  markMealAsCompleted(input: MarkMealCompletedInput!): CompletedMealLog @aws_auth(cognito_groups : ["USERS"])
+  requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanGenerationStatus @aws_auth(cognito_groups : ["USERS"])
   #  Add Pro group check in resolver?
-  sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["User", "Nutritionist"])
-  setActiveMealPlan(mealPlanId: ID!): UserDetails @aws_auth(cognito_groups : ["User"])
-  updateMyUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["User"])
+  sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
+  setActiveMealPlan(mealPlanId: ID!): UserDetails @aws_auth(cognito_groups : ["USERS"])
+  unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): CompletedMealLog @aws_auth(cognito_groups : ["USERS"])
+  updateMyUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["USERS"])
 }
 
 type NutritionistProfile @model {
@@ -155,26 +153,24 @@ type NutritionistProfileConnection {
 # ===================
 type Query {
   #  Add Pro group check in resolver?
-  getChatMessages(chatId: ID!, limit: Int, nextToken: String): ChatMessageConnection @aws_auth(cognito_groups : ["User", "Nutritionist"])
+  getChatMessages(chatId: ID!, limit: Int, nextToken: String): ChatMessageConnection @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   #  Requires complex/pipeline resolver
-  getCompletedMealsForDate(date: AWSDate!): CompletedMealLog @aws_auth(cognito_groups : ["User"])
-  getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["User"])
-  getMyUserDetails: UserDetails @aws_auth(cognito_groups : ["User", "Nutritionist"])
-  getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["User"])
-  listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["Nutritionist"])
+  getCompletedMealsForDate(date: AWSDate!): CompletedMealLog @aws_auth(cognito_groups : ["USERS"])
+  getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS"])
+  getMyUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
+  getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["USERS"])
+  listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   #  Add Pro group check in resolver?
-  listMyChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["User"])
+  listMyChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["USERS"])
   #  Adjust auth as needed
-  listMyMealPlans(limit: Int, nextToken: String): MealPlanConnection @aws_auth(cognito_groups : ["User"])
-  listNutritionists(filter: ListNutritionistsFilter, limit: Int, nextToken: String): NutritionistProfileConnection @aws_auth(cognito_groups : ["User"])
+  listMyMealPlans(limit: Int, nextToken: String): MealPlanConnection @aws_auth(cognito_groups : ["USERS"])
+  listNutritionists(filter: ListNutritionistsFilter, limit: Int, nextToken: String): NutritionistProfileConnection @aws_auth(cognito_groups : ["USERS"])
 }
 
 type TodaysPlan {
   activePlanDetails: MealPlan
-  #  Extracted meals for the current day from activePlanDetails
-  completedMealsToday: [CompletedMealInfo!]
   #  Full details of the active plan
-  mealsForToday: [Meal!]
+  mealsForToday: [MealWithStatus!]
 }
 
 #  ===================
@@ -182,20 +178,36 @@ type TodaysPlan {
 # ===================
 type UserDetails @model {
   activeMealPlanId: ID
-  allergies: [String!]
-  #  ID of the currently active MealPlan
-  createdAt: AWSDateTime!
+  allergies: [AllergenEnum!]
   dailyMealsPreference: Int
   dietaryRestrictions: [String!]
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
   openTextPreferences: String
   targetCalories: Float
-  updatedAt: AWSDateTime!
+  #  ID of the currently active MealPlan
+  updatedAt: AWSDateTime
   #  Attributes stored in DynamoDB UserDetails item
   userId: ID!
   #  Typically the Cognito Sub
   weightKg: Float
+}
+
+enum AllergenEnum {
+  CELERY
+  CRUSTACEANS
+  EGGS
+  FISH
+  GLUTEN_CEREALS
+  LUPIN
+  MILK
+  MOLLUSCS
+  MUSTARD
+  NUTS
+  PEANUTS
+  SESAME_SEEDS
+  SOYBEANS
+  SULPHITES
 }
 
 #  For flexible preferences or potentially the DailyPlan if needed, though Map is preferred
@@ -203,18 +215,25 @@ type UserDetails @model {
 #        ENUMS
 # ===================
 enum ExerciseFrequency {
-  ACTIVE
-  LIGHT
-  MODERATE
-  SEDENTARY
-  VERY_ACTIVE
+  EVERY_DAY
+  FIVE_TIMES_A_WEEK
+  FOUR_TIMES_A_WEEK
+  NONE
+  NOT_SPECIFIED
+  ONCE_A_WEEK
+  Or
+  SIX_TIMES_A_WEEK
+  THREE_TIMES_A_WEEK
+  TWICE_A_WEEK
 }
 
 enum MealNameEnum {
   BREAKFAST
   DINNER
   LUNCH
-  SNACK
+  SNACK_AFTERNOON
+  SNACK_EVENING
+  SNACK_MORNING
 }
 
 enum MealPlanGenerationStatusValue {
@@ -265,7 +284,7 @@ input MarkMealCompletedInput {
 }
 
 input PlanRequestPreferencesInput {
-  allergies: [String!]
+  allergies: [AllergenEnum!]
   dailyMealsPreference: Int
   dietaryRestrictions: [String!]
   exerciseFrequency: ExerciseFrequency
@@ -282,11 +301,16 @@ input SendMessageInput {
   messageContent: String!
 }
 
+input UnmarkMealCompletedInput {
+  mealName: MealNameEnum!
+  mealPlanId: ID!
+}
+
 #  ===================
 #     INPUT TYPES
 # ===================
 input UpdateUserDetailsInput {
-  allergies: [String!]
+  allergies: [AllergenEnum!]
   dailyMealsPreference: Int
   dietaryRestrictions: [String!]
   exerciseFrequency: ExerciseFrequency

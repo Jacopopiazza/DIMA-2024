@@ -1,4 +1,5 @@
 // lib/models/daily_completion.dart (or similar file)
+import 'package:dima_application/generated/flutter-models/MealNameEnum.dart';
 import 'package:isar/isar.dart';
 
 part 'daily_completion.g.dart'; // Generate this with build_runner
@@ -7,10 +8,11 @@ part 'daily_completion.g.dart'; // Generate this with build_runner
 class DailyCompletion {
   Id id = Isar.autoIncrement; // Or manage ID differently if needed
 
-  @Index(type: IndexType.value, caseSensitive: false) // Index for efficient date lookup
+  @Index(type: IndexType.value, caseSensitive: false, unique: true, replace: true) // Index for efficient date lookup
   late DateTime date; // Store date only (set time to 00:00:00)
 
-  late List<String> completedMealNames;
+  @enumerated
+  late List<MealNameEnum> completedMealNames;
 
   // Optional: Add a user identifier if multiple users might use the app on one device
   // String userId;
@@ -18,7 +20,7 @@ class DailyCompletion {
   DailyCompletion({
      required this.date,
      this.completedMealNames = const [],
-     // required this.userId,
+     this.id = Isar.autoIncrement,
   });
 
   // Helper to ensure date is stored without time component
@@ -27,7 +29,7 @@ class DailyCompletion {
    }
 
    // Constructor that normalizes the date
-   factory DailyCompletion.forDate(DateTime date, {List<String> completedMeals = const []}) {
+   factory DailyCompletion.forDate(DateTime date, {List<MealNameEnum> completedMeals = const []}) {
       return DailyCompletion(
          date: _dateOnly(date),
          completedMealNames: completedMeals,

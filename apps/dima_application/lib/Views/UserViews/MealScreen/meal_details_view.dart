@@ -1,7 +1,9 @@
+import 'package:dima_application/Utils/localization_helpers.dart';
+import 'package:dima_application/generated/flutter-models/Ingredient.dart';
+import 'package:dima_application/generated/flutter-models/Macros.dart';
+import 'package:dima_application/generated/flutter-models/Meal.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dima_application/models/MealPlan/ingredient.dart';
-import 'package:dima_application/models/MealPlan/macros.dart';
-import 'package:dima_application/models/MealPlan/meal.dart';
 import 'package:dima_application/providers/today_page_provider.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -38,7 +40,8 @@ class MealDetailsDraggablePage extends ConsumerWidget {
     // Watch the completion status to update the UI accordingly
     final todayPageState = ref.watch(todayPageProvider);
     final bool isMealCompleted =
-        todayPageState.mealCompletionStatus[meal.name] ?? false;
+        todayPageState.dailyCompletion?.completedMealNames.contains(meal.name) ??
+            false;
 
     // Calculations for draggable sheet
     final double imageHeight = screenSize.height * 0.40;
@@ -117,6 +120,9 @@ class MealDetailsDraggablePage extends ConsumerWidget {
       EdgeInsets safeAreaPadding,
       TextTheme textTheme,
       ColorScheme colorScheme) {
+
+final localizations = AppLocalizations.of(context)!;
+
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surface,
@@ -156,7 +162,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
               children: [
                 // Meal Title
                 Text(
-                  meal.name,
+                  localizeMealName(context, meal.name),
                   textAlign: TextAlign.center,
                   style: textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
@@ -173,7 +179,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Ingredients',
+                    localizations.ingredients,
                     style: textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
@@ -200,7 +206,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Recipe",
+                      localizations.recipe,
                       style: textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: colorScheme.onSurface,
@@ -212,7 +218,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    meal.recipe,
+                    meal.recipe ?? localizations.noRecipe,
                     style: textTheme.bodyMedium
                         ?.copyWith(color: colorScheme.onSurfaceVariant),
                   ),
@@ -236,10 +242,10 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                 isMealCompleted ? Icons.check_circle : Icons.circle_outlined,
                 color: colorScheme.onPrimary,
               ),
-              label: Text(isMealCompleted ? 'Completed' : 'Mark as Done'),
+              label: Text(isMealCompleted ? localizations.mealCompleted : localizations.mealToBeCompleted),
               style: ElevatedButton.styleFrom(
                 backgroundColor: isMealCompleted
-                    ? colorScheme.primary.withOpacity(0.8)
+                    ? colorScheme.primary.withAlpha(204)
                     : colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
                 minimumSize: Size(double.infinity, _buttonHeight),
@@ -261,6 +267,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
   }
 
   Widget _buildAppBarIcons(BuildContext context, EdgeInsets safeAreaPadding) {
+    final localizations = AppLocalizations.of(context)!;
     return Positioned(
       top: safeAreaPadding.top,
       left: 0,
@@ -272,7 +279,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
-              tooltip: 'Back',
+              tooltip: localizations.back,
               style: IconButton.styleFrom(
                 backgroundColor: Colors.black.withAlpha(100),
                 padding: const EdgeInsets.all(8),
@@ -328,22 +335,23 @@ class MealDetailsDraggablePage extends ConsumerWidget {
 
   // Helper methods (same as before, not modified for brevity)
   Widget _buildNutritionInfo(BuildContext context, Macros totalMacros) {
+    final localizations = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Flexible(
             child: _buildNutritionItem(context,
-                totalMacros.calories.toStringAsFixed(0), 'kcal', 'Energy')),
+                totalMacros.calories.toStringAsFixed(0), 'kcal', localizations.energy)),
         Flexible(
             child: _buildNutritionItem(context,
-                totalMacros.proteins.toStringAsFixed(1), 'g', 'Protein')),
+                totalMacros.proteins.toStringAsFixed(1), 'g', localizations.proteins)),
         Flexible(
             child: _buildNutritionItem(context,
-                totalMacros.carbohydrates.toStringAsFixed(1), 'g', 'Carbs')),
+                totalMacros.carbohydrates.toStringAsFixed(1), 'g', localizations.carbs)),
         Flexible(
             child: _buildNutritionItem(
-                context, totalMacros.fats.toStringAsFixed(1), 'g', 'Fat')),
+                context, totalMacros.fats.toStringAsFixed(1), 'g', localizations.carbs)),
       ],
     );
   }

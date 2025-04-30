@@ -9,6 +9,219 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get changePreferences => 'Change Preferences';
+
+  @override
+  String get clearCache => 'Clear Cache';
+
+  @override
+  String get signOut => 'Sign Out';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get confirmClearCacheTitle => 'Confirm Clear Cache';
+
+  @override
+  String get confirmClearCacheMessage => 'Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get cacheClearedSuccessfully => 'Cache cleared successfully.';
+
+  @override
+  String get errorClearingCache => 'Error clearing cache.';
+
+  @override
+  String get confirmSignOutTitle => 'Confirm Sign Out';
+
+  @override
+  String get confirmSignOutMessage => 'Are you sure you want to sign out?';
+
+  @override
+  String get confirmDeleteAccountTitle => 'Confirm Account Deletion';
+
+  @override
+  String get confirmDeleteAccountMessage => 'WARNING: This action is irreversible and will permanently delete your account and all associated data. Are you absolutely sure you want to proceed?';
+
+  @override
+  String get accountDeletedSuccessfully => 'Account deleted successfully.';
+
+  @override
+  String get errorDeletingAccount => 'Error deleting account. Please try again.';
+
+  @override
+  String get errorDeleteAccountRequiresRecentLogin => 'Account deletion requires a recent sign-in. Please sign out and sign back in.';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get preferencesSavedSuccess => 'Preferences saved successfully.';
+
+  @override
+  String get errorSavingPreferences => 'Error saving preferences.';
+
+  @override
+  String get errorLoadingPreferences => 'Error loading preferences.';
+
+  @override
+  String get pleaseCorrectErrors => 'Please correct the errors in the form.';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get basicInfo => 'Basic Info';
+
+  @override
+  String get weightKg => 'Weight (kg)';
+
+  @override
+  String get heightCm => 'Height (cm)';
+
+  @override
+  String get targetCalories => 'Target Daily Calories';
+
+  @override
+  String get invalidNumberFormat => 'Please enter a valid number.';
+
+  @override
+  String get caloriesOutOfRange => 'Calories must be between 500 and 10000.';
+
+  @override
+  String get dietaryNeeds => 'Dietary Needs';
+
+  @override
+  String get mealsPerDay => 'Meals Per Day';
+
+  @override
+  String get dietaryRestrictions => 'Dietary Restrictions';
+
+  @override
+  String get dietaryRestrictionsHint => 'e.g., Vegetarian, Vegan, Low-Carb';
+
+  @override
+  String get allergies => 'Allergies';
+
+  @override
+  String get lifestyle => 'Lifestyle';
+
+  @override
+  String get exerciseFrequency => 'Exercise Frequency';
+
+  @override
+  String get otherPreferences => 'Other Preferences';
+
+  @override
+  String get additionalNotes => 'Additional Notes';
+
+  @override
+  String get additionalNotesHint => 'Any other likes, dislikes, or goals?';
+
+  @override
+  String get appVersion => 'App Version';
+
+  @override
+  String get allergenCELERY => 'Celery';
+
+  @override
+  String get allergenCRUSTACEANS => 'Crustaceans';
+
+  @override
+  String get allergenEGGS => 'Eggs';
+
+  @override
+  String get allergenFISH => 'Fish';
+
+  @override
+  String get allergenGLUTEN_CEREALS => 'Gluten Cereals';
+
+  @override
+  String get allergenLUPIN => 'Lupin';
+
+  @override
+  String get allergenMILK => 'Milk';
+
+  @override
+  String get allergenMOLLUSCS => 'Molluscs';
+
+  @override
+  String get allergenMUSTARD => 'Mustard';
+
+  @override
+  String get allergenNUTS => 'Nuts';
+
+  @override
+  String get allergenPEANUTS => 'Peanuts';
+
+  @override
+  String get allergenSESAME_SEEDS => 'Sesame Seeds';
+
+  @override
+  String get allergenSOYBEANS => 'Soybeans';
+
+  @override
+  String get allergenSULPHITES => 'Sulphites';
+
+  @override
+  String get exerciseFrequencyEVERY_DAY => 'Every day';
+
+  @override
+  String get exerciseFrequencyFIVE_TIMES_A_WEEK => 'Five times a week';
+
+  @override
+  String get exerciseFrequencyFOUR_TIMES_A_WEEK => 'Four times a week';
+
+  @override
+  String get exerciseFrequencyNONE => 'None';
+
+  @override
+  String get exerciseFrequencyNOT_SPECIFIED => 'Not specified';
+
+  @override
+  String get exerciseFrequencyONCE_A_WEEK => 'Once a week';
+
+  @override
+  String get exerciseFrequencySIX_TIMES_A_WEEK => 'Six times a week';
+
+  @override
+  String get exerciseFrequencyTHREE_TIMES_A_WEEK => 'Three times a week';
+
+  @override
+  String get exerciseFrequencyTWICE_A_WEEK => 'Twice a week';
+
+  @override
+  String get energy => 'Energy';
+
+  @override
+  String get ingredients => 'Ingredients';
+
+  @override
+  String get recipe => 'Recipe';
+
+  @override
+  String get noRecipe => 'No recipe available';
+
+  @override
+  String get mealCompleted => 'Completed';
+
+  @override
+  String get mealToBeCompleted => 'Mark as Done';
+
+  @override
+  String get back => 'Back';
+
+  @override
   String get helloWorld => 'Hello World!';
 
   @override
@@ -25,6 +238,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get socialSignUpNotice => 'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.';
+
+  @override
+  String get mealNameBREAKFAST => 'Breakfast';
+
+  @override
+  String get mealNameDINNER => 'Dinner';
+
+  @override
+  String get mealNameLUNCH => 'Lunch';
+
+  @override
+  String get mealNameSNACK_MORNING => 'Snack (Morning)';
+
+  @override
+  String get mealNameSNACK_AFTERNOON => 'Snack (Afternoon)';
+
+  @override
+  String get mealNameSNACK_EVENING => 'Snack (Evening)';
+
+  @override
+  String get todayProgress => 'Today\'s Progress';
+
+  @override
+  String get calories => 'Calories';
+
+  @override
+  String get carbs => 'Carbs';
+
+  @override
+  String get fats => 'Fats';
+
+  @override
+  String get proteins => 'Proteins';
+
+  @override
+  String get todaysMeals => 'Today\'s Meals';
 
   @override
   String get signIn => 'Sign In';
@@ -70,9 +319,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copyKey => 'Copy Key';
-
-  @override
-  String get signOut => 'Sign Out';
 
   @override
   String backTo(String previousStep) {
