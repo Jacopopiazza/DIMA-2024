@@ -124,17 +124,17 @@ const _DailyCompletioncompletedMealNamesEnumValueMap = {
   'BREAKFAST': 0,
   'DINNER': 1,
   'LUNCH': 2,
-  'SNACK_MORNING': 3,
-  'SNACK_AFTERNOON': 4,
-  'SNACK_EVENING': 5,
+  'SNACK_AFTERNOON': 3,
+  'SNACK_EVENING': 4,
+  'SNACK_MORNING': 5,
 };
 const _DailyCompletioncompletedMealNamesValueEnumMap = {
   0: MealNameEnum.BREAKFAST,
   1: MealNameEnum.DINNER,
   2: MealNameEnum.LUNCH,
-  3: MealNameEnum.SNACK_MORNING,
-  4: MealNameEnum.SNACK_AFTERNOON,
-  5: MealNameEnum.SNACK_EVENING,
+  3: MealNameEnum.SNACK_AFTERNOON,
+  4: MealNameEnum.SNACK_EVENING,
+  5: MealNameEnum.SNACK_MORNING,
 };
 
 Id _dailyCompletionGetId(DailyCompletion object) {

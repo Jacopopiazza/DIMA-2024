@@ -163,17 +163,17 @@ const _MealCachenameEnumValueMap = {
   r'BREAKFAST': r'BREAKFAST',
   r'DINNER': r'DINNER',
   r'LUNCH': r'LUNCH',
-  r'SNACK_MORNING': r'SNACK_MORNING',
   r'SNACK_AFTERNOON': r'SNACK_AFTERNOON',
   r'SNACK_EVENING': r'SNACK_EVENING',
+  r'SNACK_MORNING': r'SNACK_MORNING',
 };
 const _MealCachenameValueEnumMap = {
   r'BREAKFAST': MealNameEnum.BREAKFAST,
   r'DINNER': MealNameEnum.DINNER,
   r'LUNCH': MealNameEnum.LUNCH,
-  r'SNACK_MORNING': MealNameEnum.SNACK_MORNING,
   r'SNACK_AFTERNOON': MealNameEnum.SNACK_AFTERNOON,
   r'SNACK_EVENING': MealNameEnum.SNACK_EVENING,
+  r'SNACK_MORNING': MealNameEnum.SNACK_MORNING,
 };
 
 extension MealCacheQueryFilter
