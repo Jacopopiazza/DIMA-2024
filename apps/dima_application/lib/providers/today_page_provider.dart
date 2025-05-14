@@ -43,6 +43,7 @@ class TodayPageState {
   final String? errorMessage;
   final DateTime? planLastFetched; // When the plan data was obtained (UTC)
   final bool isInitialLoad;
+  final String? mealPlanId; // ID of the fetch meal plan
 
   TodayPageState({
     this.status = DataStatus.initial,
@@ -52,6 +53,7 @@ class TodayPageState {
     this.errorMessage,
     this.planLastFetched,
     this.isInitialLoad = true,
+    this.mealPlanId,
   }) : consumedMacros = consumedMacros ??
             Macros(
                 calories: 0,
@@ -70,15 +72,15 @@ class TodayPageState {
     bool? clearError,
     bool? clearTodaysMeals,
     bool? isInitialLoad,
+    String? mealPlanId,
   }) {
     // Clear meals if requested or if specifically null is passed
     final List<Meal>? finalTodaysMeals =
         clearTodaysMeals == true ? null : (todaysMeals ?? this.todaysMeals);
 
     // Clear completion if requested or if specifically null is passed
-    final DailyCompletion? finalDailyCompletion = clearDailyCompletion == true
-        ? null
-        : dailyCompletion;
+    final DailyCompletion? finalDailyCompletion =
+        clearDailyCompletion == true ? null : dailyCompletion;
 
     // Clear error if requested
     final String? finalErrorMessage =
@@ -95,6 +97,7 @@ class TodayPageState {
       errorMessage: finalErrorMessage,
       planLastFetched: planLastFetched ?? this.planLastFetched,
       isInitialLoad: isInitialLoad ?? this.isInitialLoad,
+      mealPlanId: mealPlanId ?? this.mealPlanId,
     );
   }
 
@@ -163,6 +166,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           : state.consumedMacros,
       planLastFetched: stillInitialLoad ? null : state.planLastFetched,
       isInitialLoad: stillInitialLoad, // Preserve flag during load
+      mealPlanId: stillInitialLoad ? null : state.mealPlanId,
     );
 
     String? chosenPlanId;
@@ -189,6 +193,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           planLastFetched: null,
           errorMessage: "No meal plan selected. Please choose one in settings.",
           isInitialLoad: false, // Load attempt finished
+          mealPlanId: null, // Clear plan ID
         );
         return;
       }
@@ -228,6 +233,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           errorMessage:
               "No active meal plan found. Please choose one in settings.",
           isInitialLoad: false, // Load attempt finished
+          mealPlanId: null, // Clear plan ID
         );
         return;
       } on api_service.CacheExpiredException catch (e) {
@@ -316,6 +322,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
             errorMessage: displayErrorMessage,
             planLastFetched: null, // Set plan fetch time to null as it failed
             isInitialLoad: false,
+            mealPlanId: null, // Clear plan ID
           );
           safePrint("[TodayPageNotifier] Error State Set: $state");
         }
@@ -344,6 +351,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
             errorMessage: errorMessage ??
                 "No meals scheduled for today.", // Keep offline msg or add specific one
             isInitialLoad: false, // Load attempt finished
+            mealPlanId: chosenPlanId, // Clear plan ID
           );
           return;
         }
@@ -351,10 +359,14 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
             "[TodayPageNotifier] Found ${todaysMeals.length} meals for today. Loading completion...");
 
         // 4. Load Today's DailyCompletion record from Isar (local state, independent of plan fetch)
-        final todayDateOnly = _dateOnly(DateTime.now());
+
+        final todayDateOnly = DailyCompletion.dateOnly(DateTime.now());
+        safePrint(
+            '[TodayPageNotifier] Looking for completition record for mealPlanId: $chosenPlanId & date: $todayDateOnly');
+
         todaysCompletionRecord = await _isar.dailyCompletions
-            .filter() // Use filter for potential optimization with index
-            .dateEqualTo(todayDateOnly)
+            .where() // Use filter for potential optimization with index
+            .planIdDateEqualTo(chosenPlanId, todayDateOnly)
             .findFirst();
         safePrint(
             "[TodayPageNotifier] Loaded completion record: ${todaysCompletionRecord?.completedMealNames ?? 'None'}");
@@ -375,6 +387,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           planLastFetched: planFetchTime, // UTC timestamp
           errorMessage: errorMessage, // Keep potential offline message
           isInitialLoad: false, // Load attempt finished
+          mealPlanId: chosenPlanId, // Set the plan ID
         );
         safePrint("[TodayPageNotifier] Load complete. Final State: $state");
       } else if (finalStatus != DataStatus.errorNetwork &&
@@ -396,6 +409,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
                 Macros(calories: 0, proteins: 0, carbohydrates: 0, fats: 0),
             planLastFetched: null,
             isInitialLoad: false,
+            mealPlanId: null, // Clear plan ID
           );
         }
       } // else: Error status was already set correctly by a catch block or no-plan condition.
@@ -413,6 +427,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
               calories: 0, proteins: 0, carbohydrates: 0, fats: 0), // Reset
           planLastFetched: null,
           isInitialLoad: false, // Load attempt finished
+          mealPlanId: null, // Clear plan ID
         );
       }
     }
@@ -428,7 +443,8 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
 
   /// Toggles the completion status of a specific meal. Persists locally to Isar.
   /// This logic remains primarily local Isar interaction.
-  Future<void> toggleMealCompletion(MealNameEnum meal) async {
+  Future<void> toggleMealCompletion(
+      MealNameEnum meal, String mealPlanId) async {
     // Ensure we have meals loaded before allowing toggling
     if (!mounted ||
         state.todaysMeals == null ||
@@ -438,12 +454,11 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           "[TodayPageNotifier] Skipping toggle meal (invalid state: ${state.status}, meals loaded: ${state.todaysMeals != null && state.todaysMeals!.isNotEmpty})");
       return;
     }
-    safePrint("[TodayPageNotifier] Toggling completion for: $meal");
 
-    final todayDateOnly = _dateOnly(DateTime.now());
+    final todayDateOnly = DailyCompletion.dateOnly(DateTime.now());
     // Get current completion or create a new one for today if null
-    final DailyCompletion currentCompletion =
-        state.dailyCompletion ?? DailyCompletion.forDate(todayDateOnly);
+    final DailyCompletion currentCompletion = state.dailyCompletion ??
+        DailyCompletion.forDate(planId: mealPlanId, date: todayDateOnly);
 
     // Use a Set for efficient checking and manipulation
     final Set<MealNameEnum> updatedNamesSet =
@@ -460,8 +475,10 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
 
     // Create the updated Isar object
     final updatedCompletion = DailyCompletion(
+      planId: mealPlanId, // Use the active plan ID
       id: currentCompletion.id, // Preserve Isar ID if it exists for update
       date: todayDateOnly,
+      latestUpdate: DateTime.now(), // Update timestamp
       completedMealNames:
           updatedNamesSet.toList(), // Convert back to list for storage
     );
@@ -578,11 +595,6 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
             "[TodayPageNotifier] Warning: Unknown weekday '$currentWeekday'.");
         return null; // Should not happen with DateFormat('EEEE')
     }
-  }
-
-  /// Returns a DateTime object with time components set to zero (start of the day).
-  DateTime _dateOnly(DateTime dt) {
-    return DateTime.utc(dt.year, dt.month, dt.day); // Use UTC for consistency
   }
 
   @override

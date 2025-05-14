@@ -13,6 +13,9 @@ class MealCard extends StatelessWidget {
   /// The meal data object containing details like name, image, etc.
   final Meal meal;
 
+  /// The id of the mealPlan to which this meal belongs.
+  final String mealPlanId;
+
   /// A boolean flag indicating whether this meal has been marked as completed.
   final bool isCompleted;
 
@@ -34,6 +37,7 @@ class MealCard extends StatelessWidget {
     super.key,
     required this.meal,
     required this.isCompleted,
+    required this.mealPlanId,
     this.isLoading = false,
     this.imageUrl,
   });
@@ -134,7 +138,7 @@ class MealCard extends StatelessWidget {
           context,
           // Navigate to the MealDetailsDraggablePage when the card is tapped
           MaterialPageRoute(
-              builder: (context) => MealDetailsDraggablePage(meal: meal)),
+              builder: (context) => MealDetailsDraggablePage(meal: meal, mealPlanId: mealPlanId,)),
         ),
         child: Ink(
           color: Colors

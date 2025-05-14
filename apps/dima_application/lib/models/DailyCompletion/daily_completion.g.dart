@@ -27,6 +27,16 @@ const DailyCompletionSchema = CollectionSchema(
       id: 1,
       name: r'date',
       type: IsarType.dateTime,
+    ),
+    r'latestUpdate': PropertySchema(
+      id: 2,
+      name: r'latestUpdate',
+      type: IsarType.dateTime,
+    ),
+    r'planId': PropertySchema(
+      id: 3,
+      name: r'planId',
+      type: IsarType.string,
     )
   },
   estimateSize: _dailyCompletionEstimateSize,
@@ -35,12 +45,17 @@ const DailyCompletionSchema = CollectionSchema(
   deserializeProp: _dailyCompletionDeserializeProp,
   idName: r'id',
   indexes: {
-    r'date': IndexSchema(
-      id: -7552997827385218417,
-      name: r'date',
+    r'planId_date': IndexSchema(
+      id: 3595198103568269663,
+      name: r'planId_date',
       unique: true,
       replace: true,
       properties: [
+        IndexPropertySchema(
+          name: r'planId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        ),
         IndexPropertySchema(
           name: r'date',
           type: IndexType.value,
@@ -64,6 +79,7 @@ int _dailyCompletionEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.completedMealNames.length;
+  bytesCount += 3 + object.planId.length * 3;
   return bytesCount;
 }
 
@@ -76,6 +92,8 @@ void _dailyCompletionSerialize(
   writer.writeByteList(
       offsets[0], object.completedMealNames.map((e) => e.index).toList());
   writer.writeDateTime(offsets[1], object.date);
+  writer.writeDateTime(offsets[2], object.latestUpdate);
+  writer.writeString(offsets[3], object.planId);
 }
 
 DailyCompletion _dailyCompletionDeserialize(
@@ -94,6 +112,8 @@ DailyCompletion _dailyCompletionDeserialize(
         const [],
     date: reader.readDateTime(offsets[1]),
     id: id,
+    latestUpdate: reader.readDateTime(offsets[2]),
+    planId: reader.readString(offsets[3]),
   );
   return object;
 }
@@ -115,6 +135,10 @@ P _dailyCompletionDeserializeProp<P>(
           const []) as P;
     case 1:
       return (reader.readDateTime(offset)) as P;
+    case 2:
+      return (reader.readDateTime(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -151,57 +175,89 @@ void _dailyCompletionAttach(
 }
 
 extension DailyCompletionByIndex on IsarCollection<DailyCompletion> {
-  Future<DailyCompletion?> getByDate(DateTime date) {
-    return getByIndex(r'date', [date]);
+  Future<DailyCompletion?> getByPlanIdDate(String planId, DateTime date) {
+    return getByIndex(r'planId_date', [planId, date]);
   }
 
-  DailyCompletion? getByDateSync(DateTime date) {
-    return getByIndexSync(r'date', [date]);
+  DailyCompletion? getByPlanIdDateSync(String planId, DateTime date) {
+    return getByIndexSync(r'planId_date', [planId, date]);
   }
 
-  Future<bool> deleteByDate(DateTime date) {
-    return deleteByIndex(r'date', [date]);
+  Future<bool> deleteByPlanIdDate(String planId, DateTime date) {
+    return deleteByIndex(r'planId_date', [planId, date]);
   }
 
-  bool deleteByDateSync(DateTime date) {
-    return deleteByIndexSync(r'date', [date]);
+  bool deleteByPlanIdDateSync(String planId, DateTime date) {
+    return deleteByIndexSync(r'planId_date', [planId, date]);
   }
 
-  Future<List<DailyCompletion?>> getAllByDate(List<DateTime> dateValues) {
-    final values = dateValues.map((e) => [e]).toList();
-    return getAllByIndex(r'date', values);
+  Future<List<DailyCompletion?>> getAllByPlanIdDate(
+      List<String> planIdValues, List<DateTime> dateValues) {
+    final len = planIdValues.length;
+    assert(
+        dateValues.length == len, 'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([planIdValues[i], dateValues[i]]);
+    }
+
+    return getAllByIndex(r'planId_date', values);
   }
 
-  List<DailyCompletion?> getAllByDateSync(List<DateTime> dateValues) {
-    final values = dateValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'date', values);
+  List<DailyCompletion?> getAllByPlanIdDateSync(
+      List<String> planIdValues, List<DateTime> dateValues) {
+    final len = planIdValues.length;
+    assert(
+        dateValues.length == len, 'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([planIdValues[i], dateValues[i]]);
+    }
+
+    return getAllByIndexSync(r'planId_date', values);
   }
 
-  Future<int> deleteAllByDate(List<DateTime> dateValues) {
-    final values = dateValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'date', values);
+  Future<int> deleteAllByPlanIdDate(
+      List<String> planIdValues, List<DateTime> dateValues) {
+    final len = planIdValues.length;
+    assert(
+        dateValues.length == len, 'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([planIdValues[i], dateValues[i]]);
+    }
+
+    return deleteAllByIndex(r'planId_date', values);
   }
 
-  int deleteAllByDateSync(List<DateTime> dateValues) {
-    final values = dateValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'date', values);
+  int deleteAllByPlanIdDateSync(
+      List<String> planIdValues, List<DateTime> dateValues) {
+    final len = planIdValues.length;
+    assert(
+        dateValues.length == len, 'All index values must have the same length');
+    final values = <List<dynamic>>[];
+    for (var i = 0; i < len; i++) {
+      values.add([planIdValues[i], dateValues[i]]);
+    }
+
+    return deleteAllByIndexSync(r'planId_date', values);
   }
 
-  Future<Id> putByDate(DailyCompletion object) {
-    return putByIndex(r'date', object);
+  Future<Id> putByPlanIdDate(DailyCompletion object) {
+    return putByIndex(r'planId_date', object);
   }
 
-  Id putByDateSync(DailyCompletion object, {bool saveLinks = true}) {
-    return putByIndexSync(r'date', object, saveLinks: saveLinks);
+  Id putByPlanIdDateSync(DailyCompletion object, {bool saveLinks = true}) {
+    return putByIndexSync(r'planId_date', object, saveLinks: saveLinks);
   }
 
-  Future<List<Id>> putAllByDate(List<DailyCompletion> objects) {
-    return putAllByIndex(r'date', objects);
+  Future<List<Id>> putAllByPlanIdDate(List<DailyCompletion> objects) {
+    return putAllByIndex(r'planId_date', objects);
   }
 
-  List<Id> putAllByDateSync(List<DailyCompletion> objects,
+  List<Id> putAllByPlanIdDateSync(List<DailyCompletion> objects,
       {bool saveLinks = true}) {
-    return putAllByIndexSync(r'date', objects, saveLinks: saveLinks);
+    return putAllByIndexSync(r'planId_date', objects, saveLinks: saveLinks);
   }
 }
 
@@ -210,14 +266,6 @@ extension DailyCompletionQueryWhereSort
   QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
-    });
-  }
-
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhere> anyDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'date'),
-      );
     });
   }
 }
@@ -292,45 +340,45 @@ extension DailyCompletionQueryWhere
     });
   }
 
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause> dateEqualTo(
-      DateTime date) {
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause>
+      planIdEqualToAnyDate(String planId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'date',
-        value: [date],
+        indexName: r'planId_date',
+        value: [planId],
       ));
     });
   }
 
   QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause>
-      dateNotEqualTo(DateTime date) {
+      planIdNotEqualToAnyDate(String planId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
+              indexName: r'planId_date',
               lower: [],
-              upper: [date],
+              upper: [planId],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [date],
+              indexName: r'planId_date',
+              lower: [planId],
               includeLower: false,
               upper: [],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
-              lower: [date],
+              indexName: r'planId_date',
+              lower: [planId],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'date',
+              indexName: r'planId_date',
               lower: [],
-              upper: [date],
+              upper: [planId],
               includeUpper: false,
             ));
       }
@@ -338,36 +386,85 @@ extension DailyCompletionQueryWhere
   }
 
   QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause>
-      dateGreaterThan(
-    DateTime date, {
-    bool include = false,
-  }) {
+      planIdDateEqualTo(String planId, DateTime date) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [date],
-        includeLower: include,
-        upper: [],
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'planId_date',
+        value: [planId, date],
       ));
     });
   }
 
   QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause>
-      dateLessThan(
+      planIdEqualToDateNotEqualTo(String planId, DateTime date) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'planId_date',
+              lower: [planId],
+              upper: [planId, date],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'planId_date',
+              lower: [planId, date],
+              includeLower: false,
+              upper: [planId],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'planId_date',
+              lower: [planId, date],
+              includeLower: false,
+              upper: [planId],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'planId_date',
+              lower: [planId],
+              upper: [planId, date],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause>
+      planIdEqualToDateGreaterThan(
+    String planId,
     DateTime date, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [],
-        upper: [date],
+        indexName: r'planId_date',
+        lower: [planId, date],
+        includeLower: include,
+        upper: [planId],
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause>
+      planIdEqualToDateLessThan(
+    String planId,
+    DateTime date, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'planId_date',
+        lower: [planId],
+        upper: [planId, date],
         includeUpper: include,
       ));
     });
   }
 
-  QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause> dateBetween(
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterWhereClause>
+      planIdEqualToDateBetween(
+    String planId,
     DateTime lowerDate,
     DateTime upperDate, {
     bool includeLower = true,
@@ -375,10 +472,10 @@ extension DailyCompletionQueryWhere
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'date',
-        lower: [lowerDate],
+        indexName: r'planId_date',
+        lower: [planId, lowerDate],
         includeLower: includeLower,
-        upper: [upperDate],
+        upper: [planId, upperDate],
         includeUpper: includeUpper,
       ));
     });
@@ -643,6 +740,198 @@ extension DailyCompletionQueryFilter
       ));
     });
   }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      latestUpdateEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'latestUpdate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      latestUpdateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'latestUpdate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      latestUpdateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'latestUpdate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      latestUpdateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'latestUpdate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'planId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'planId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'planId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'planId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'planId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'planId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'planId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'planId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'planId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterFilterCondition>
+      planIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'planId',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension DailyCompletionQueryObject
@@ -663,6 +952,33 @@ extension DailyCompletionQuerySortBy
       sortByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterSortBy>
+      sortByLatestUpdate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'latestUpdate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterSortBy>
+      sortByLatestUpdateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'latestUpdate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterSortBy> sortByPlanId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'planId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterSortBy>
+      sortByPlanIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'planId', Sort.desc);
     });
   }
 }
@@ -693,6 +1009,33 @@ extension DailyCompletionQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterSortBy>
+      thenByLatestUpdate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'latestUpdate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterSortBy>
+      thenByLatestUpdateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'latestUpdate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterSortBy> thenByPlanId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'planId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QAfterSortBy>
+      thenByPlanIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'planId', Sort.desc);
+    });
+  }
 }
 
 extension DailyCompletionQueryWhereDistinct
@@ -707,6 +1050,20 @@ extension DailyCompletionQueryWhereDistinct
   QueryBuilder<DailyCompletion, DailyCompletion, QDistinct> distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QDistinct>
+      distinctByLatestUpdate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'latestUpdate');
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DailyCompletion, QDistinct> distinctByPlanId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'planId', caseSensitive: caseSensitive);
     });
   }
 }
@@ -729,6 +1086,19 @@ extension DailyCompletionQueryProperty
   QueryBuilder<DailyCompletion, DateTime, QQueryOperations> dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
+    });
+  }
+
+  QueryBuilder<DailyCompletion, DateTime, QQueryOperations>
+      latestUpdateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'latestUpdate');
+    });
+  }
+
+  QueryBuilder<DailyCompletion, String, QQueryOperations> planIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'planId');
     });
   }
 }

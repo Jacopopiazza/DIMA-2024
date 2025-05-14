@@ -288,6 +288,7 @@ class TodayPage extends ConsumerWidget {
             padding: const EdgeInsets.only(bottom: 16.0), // Space below each meal card
             child: MealCard(
               meal: meal, // Pass the meal data
+              mealPlanId: state.mealPlanId!,
               isCompleted: isCompleted, // Pass the completion status
               imageUrl: _getMealImageUrl(meal.name), // Get the image URL for the meal type
               // onToggle: () => notifier.toggleMealCompletion(meal.name), // Optional: Callback for toggling completion

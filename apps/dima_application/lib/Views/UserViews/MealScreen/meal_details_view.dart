@@ -20,11 +20,13 @@ class MealDetailsDraggablePage extends ConsumerWidget {
   );
 
   final Meal meal;
+  final String mealPlanId;
   final String defaultImageUrl = 'https://i.imgur.com/Vrt2j1I.jpeg';
 
   const MealDetailsDraggablePage({
     super.key,
     required this.meal,
+    required this.mealPlanId,
   });
 
   @override
@@ -236,7 +238,7 @@ final localizations = AppLocalizations.of(context)!;
                 // Use the existing provider to toggle meal status
                 ref
                     .read(todayPageProvider.notifier)
-                    .toggleMealCompletion(meal.name);
+                    .toggleMealCompletion(meal.name, mealPlanId);
               },
               icon: Icon(
                 isMealCompleted ? Icons.check_circle : Icons.circle_outlined,
