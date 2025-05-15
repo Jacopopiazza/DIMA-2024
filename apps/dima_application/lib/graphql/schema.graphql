@@ -42,14 +42,6 @@ type ChatMetadataConnection {
   nextToken: String
 }
 
-type CompletedMealLog @model {
-  #  From SK (extracted date part)
-  completedMealKeys: [String!]
-  #  From PK
-  date: AWSDate!
-  userId: ID!
-}
-
 type DailyPlanData {
   friday: [Meal!]
   monday: [Meal!]
@@ -123,12 +115,13 @@ type MealWithStatus {
 # ===================
 type Mutation {
   assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan @aws_auth(cognito_groups : ["USERS"])
-  markMealAsCompleted(input: MarkMealCompletedInput!): CompletedMealLog @aws_auth(cognito_groups : ["USERS"])
+  markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanGenerationStatus @aws_auth(cognito_groups : ["USERS"])
   #  Add Pro group check in resolver?
   sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   setActiveMealPlan(mealPlanId: ID!): UserDetails @aws_auth(cognito_groups : ["USERS"])
-  unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): CompletedMealLog @aws_auth(cognito_groups : ["USERS"])
+  setPlanDayCompletion(input: SetPlanDayCompletionInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
+  unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   updateMyUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["USERS"])
 }
 
@@ -148,29 +141,42 @@ type NutritionistProfileConnection {
   nextToken: String
 }
 
+type PlanDayCompletion @model {
+  #  The specific date of completion
+  completedMealNames: [MealNameEnum!]!
+  #  Identifies the meal plan
+  date: AWSDate!
+  #  Matches user, for authorization and potential PK
+  planId: ID!
+  #  List of completed meal names
+  updatedAt: AWSDateTime!
+  #  If using Amplify @model, ensure it maps to the correct DDB keys
+  userId: ID!
+}
+
 #  ===================
 #       QUERIES
 # ===================
 type Query {
   #  Add Pro group check in resolver?
   getChatMessages(chatId: ID!, limit: Int, nextToken: String): ChatMessageConnection @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
-  #  Requires complex/pipeline resolver
-  getCompletedMealsForDate(date: AWSDate!): CompletedMealLog @aws_auth(cognito_groups : ["USERS"])
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS"])
   getMyUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
+  getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["USERS"])
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   #  Add Pro group check in resolver?
   listMyChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["USERS"])
   #  Adjust auth as needed
   listMyMealPlans(limit: Int, nextToken: String): MealPlanConnection @aws_auth(cognito_groups : ["USERS"])
+  #  Requires complex/pipeline resolver
   listNutritionists(filter: ListNutritionistsFilter, limit: Int, nextToken: String): NutritionistProfileConnection @aws_auth(cognito_groups : ["USERS"])
 }
 
 type TodaysPlan {
   activePlanDetails: MealPlan
-  #  Full details of the active plan
   mealsForToday: [MealWithStatus!]
+  todaysCompletion: PlanDayCompletion
 }
 
 #  ===================
@@ -276,10 +282,8 @@ input ListNutritionistsFilter {
 }
 
 input MarkMealCompletedInput {
-  #  Need to know which plan it belongs to
-  # dayOfWeek: WeekdayEnum! # Server can derive from 'today'
+  date: AWSDate
   mealName: MealNameEnum!
-  #  date: AWSDate! # Date is implicitly 'today' for this mutation's logic
   mealPlanId: ID!
 }
 
@@ -301,7 +305,14 @@ input SendMessageInput {
   messageContent: String!
 }
 
+input SetPlanDayCompletionInput {
+  completedMealNames: [MealNameEnum!]!
+  date: AWSDate!
+  planId: ID!
+}
+
 input UnmarkMealCompletedInput {
+  date: AWSDate
   mealName: MealNameEnum!
   mealPlanId: ID!
 }

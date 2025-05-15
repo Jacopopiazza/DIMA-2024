@@ -28,6 +28,7 @@ import 'package:collection/collection.dart';
 class TodaysPlan {
   final MealPlan? _activePlanDetails;
   final List<MealWithStatus>? _mealsForToday;
+  final PlanDayCompletion? _todaysCompletion;
 
   MealPlan? get activePlanDetails {
     return _activePlanDetails;
@@ -37,12 +38,17 @@ class TodaysPlan {
     return _mealsForToday;
   }
   
-  const TodaysPlan._internal({activePlanDetails, mealsForToday}): _activePlanDetails = activePlanDetails, _mealsForToday = mealsForToday;
+  PlanDayCompletion? get todaysCompletion {
+    return _todaysCompletion;
+  }
   
-  factory TodaysPlan({MealPlan? activePlanDetails, List<MealWithStatus>? mealsForToday}) {
+  const TodaysPlan._internal({activePlanDetails, mealsForToday, todaysCompletion}): _activePlanDetails = activePlanDetails, _mealsForToday = mealsForToday, _todaysCompletion = todaysCompletion;
+  
+  factory TodaysPlan({MealPlan? activePlanDetails, List<MealWithStatus>? mealsForToday, PlanDayCompletion? todaysCompletion}) {
     return TodaysPlan._internal(
       activePlanDetails: activePlanDetails,
-      mealsForToday: mealsForToday != null ? List<MealWithStatus>.unmodifiable(mealsForToday) : mealsForToday);
+      mealsForToday: mealsForToday != null ? List<MealWithStatus>.unmodifiable(mealsForToday) : mealsForToday,
+      todaysCompletion: todaysCompletion);
   }
   
   bool equals(Object other) {
@@ -54,7 +60,8 @@ class TodaysPlan {
     if (identical(other, this)) return true;
     return other is TodaysPlan &&
       _activePlanDetails == other._activePlanDetails &&
-      DeepCollectionEquality().equals(_mealsForToday, other._mealsForToday);
+      DeepCollectionEquality().equals(_mealsForToday, other._mealsForToday) &&
+      _todaysCompletion == other._todaysCompletion;
   }
   
   @override
@@ -66,25 +73,29 @@ class TodaysPlan {
     
     buffer.write("TodaysPlan {");
     buffer.write("activePlanDetails=" + (_activePlanDetails != null ? _activePlanDetails!.toString() : "null") + ", ");
-    buffer.write("mealsForToday=" + (_mealsForToday != null ? _mealsForToday!.toString() : "null"));
+    buffer.write("mealsForToday=" + (_mealsForToday != null ? _mealsForToday!.toString() : "null") + ", ");
+    buffer.write("todaysCompletion=" + (_todaysCompletion != null ? _todaysCompletion!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  TodaysPlan copyWith({MealPlan? activePlanDetails, List<MealWithStatus>? mealsForToday}) {
+  TodaysPlan copyWith({MealPlan? activePlanDetails, List<MealWithStatus>? mealsForToday, PlanDayCompletion? todaysCompletion}) {
     return TodaysPlan._internal(
       activePlanDetails: activePlanDetails ?? this.activePlanDetails,
-      mealsForToday: mealsForToday ?? this.mealsForToday);
+      mealsForToday: mealsForToday ?? this.mealsForToday,
+      todaysCompletion: todaysCompletion ?? this.todaysCompletion);
   }
   
   TodaysPlan copyWithModelFieldValues({
     ModelFieldValue<MealPlan?>? activePlanDetails,
-    ModelFieldValue<List<MealWithStatus>>? mealsForToday
+    ModelFieldValue<List<MealWithStatus>>? mealsForToday,
+    ModelFieldValue<PlanDayCompletion?>? todaysCompletion
   }) {
     return TodaysPlan._internal(
       activePlanDetails: activePlanDetails == null ? this.activePlanDetails : activePlanDetails.value,
-      mealsForToday: mealsForToday == null ? this.mealsForToday : mealsForToday.value
+      mealsForToday: mealsForToday == null ? this.mealsForToday : mealsForToday.value,
+      todaysCompletion: todaysCompletion == null ? this.todaysCompletion : todaysCompletion.value
     );
   }
   
@@ -99,15 +110,21 @@ class TodaysPlan {
           .where((e) => e != null)
           .map((e) => MealWithStatus.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
           .toList()
+        : null,
+      _todaysCompletion = json['todaysCompletion'] != null
+        ? json['todaysCompletion']['serializedData'] != null
+          ? PlanDayCompletion.fromJson(new Map<String, dynamic>.from(json['todaysCompletion']['serializedData']))
+          : PlanDayCompletion.fromJson(new Map<String, dynamic>.from(json['todaysCompletion']))
         : null;
   
   Map<String, dynamic> toJson() => {
-    'activePlanDetails': _activePlanDetails?.toJson(), 'mealsForToday': _mealsForToday?.map((MealWithStatus? e) => e?.toJson()).toList()
+    'activePlanDetails': _activePlanDetails?.toJson(), 'mealsForToday': _mealsForToday?.map((MealWithStatus? e) => e?.toJson()).toList(), 'todaysCompletion': _todaysCompletion?.toJson()
   };
   
   Map<String, Object?> toMap() => {
     'activePlanDetails': _activePlanDetails,
-    'mealsForToday': _mealsForToday
+    'mealsForToday': _mealsForToday,
+    'todaysCompletion': _todaysCompletion
   };
 
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
@@ -125,6 +142,12 @@ class TodaysPlan {
       isRequired: false,
       isArray: true,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'MealWithStatus')
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
+      fieldName: 'todaysCompletion',
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
     ));
   });
 }

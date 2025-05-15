@@ -22,9 +22,9 @@
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'ChatMessage.dart';
 import 'ChatMetadata.dart';
-import 'CompletedMealLog.dart';
 import 'MealPlan.dart';
 import 'NutritionistProfile.dart';
+import 'PlanDayCompletion.dart';
 import 'UserDetails.dart';
 import 'ChatMessageConnection.dart';
 import 'ChatMetadataConnection.dart';
@@ -43,7 +43,6 @@ export 'ChatMessage.dart';
 export 'ChatMessageConnection.dart';
 export 'ChatMetadata.dart';
 export 'ChatMetadataConnection.dart';
-export 'CompletedMealLog.dart';
 export 'DailyPlanData.dart';
 export 'ExerciseFrequency.dart';
 export 'Ingredient.dart';
@@ -57,6 +56,7 @@ export 'MealPlanGenerationStatusValue.dart';
 export 'MealWithStatus.dart';
 export 'NutritionistProfile.dart';
 export 'NutritionistProfileConnection.dart';
+export 'PlanDayCompletion.dart';
 export 'PlanStatus.dart';
 export 'SenderType.dart';
 export 'TodaysPlan.dart';
@@ -65,9 +65,9 @@ export 'WeekdayEnum.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "d73585c30e25d3a7f0c9b60805b64430";
+  String version = "3af2a27df663fb51d992fb66edce3ec5";
   @override
-  List<amplify_core.ModelSchema> modelSchemas = [ChatMessage.schema, ChatMetadata.schema, CompletedMealLog.schema, MealPlan.schema, NutritionistProfile.schema, UserDetails.schema];
+  List<amplify_core.ModelSchema> modelSchemas = [ChatMessage.schema, ChatMetadata.schema, MealPlan.schema, NutritionistProfile.schema, PlanDayCompletion.schema, UserDetails.schema];
   @override
   List<amplify_core.ModelSchema> customTypeSchemas = [ChatMessageConnection.schema, ChatMetadataConnection.schema, DailyPlanData.schema, Ingredient.schema, Macros.schema, Meal.schema, MealPlanConnection.schema, MealPlanGenerationStatus.schema, MealWithStatus.schema, NutritionistProfileConnection.schema, TodaysPlan.schema];
   static final ModelProvider _instance = ModelProvider();
@@ -80,12 +80,12 @@ class ModelProvider implements amplify_core.ModelProviderInterface {
         return ChatMessage.classType;
       case "ChatMetadata":
         return ChatMetadata.classType;
-      case "CompletedMealLog":
-        return CompletedMealLog.classType;
       case "MealPlan":
         return MealPlan.classType;
       case "NutritionistProfile":
         return NutritionistProfile.classType;
+      case "PlanDayCompletion":
+        return PlanDayCompletion.classType;
       case "UserDetails":
         return UserDetails.classType;
       default:
