@@ -7,7 +7,7 @@ A new Flutter project.
 1. **Download updated schema**:
     Run the following command from Flutter porject root folder:
     ```bash
-    aws appsync get-introspection-schema --api-id 52qref744vg4fntr53cogw47ti --region us-west-2 --format SDL ./lib/graphql/schema.graphql 
+    aws appsync get-introspection-schema --api-id 5gxyjmvojva2vkqkqy47erbhoa --region us-west-2 --format SDL ./lib/graphql/schema.graphql 
     ```
 
 2. **Re run model gen command**:

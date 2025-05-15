@@ -2,7 +2,7 @@ const amplifyConfig = r'''{
   "version": "1",
   "data": {
     "aws_region": "us-west-2",
-    "url": "https://gh4czzpqc5fr5l3quge5pnmldi.appsync-api.us-west-2.amazonaws.com/graphql",
+    "url": "https://3da5tishfjahzix25xcwypcr3q.appsync-api.us-west-2.amazonaws.com/graphql",
     "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
     "authorization_types": ["AMAZON_COGNITO_USER_POOLS"]
   },
