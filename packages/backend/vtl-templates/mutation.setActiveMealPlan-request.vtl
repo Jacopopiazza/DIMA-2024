@@ -1,0 +1,51 @@
+## Mutation: setActiveMealPlan(mealPlanId: ID!)
+## Action: Update USER_DETAILS item to set activeMealPlanId
+
+#set($userId = $ctx.identity.sub)
+#if(!$userId || $userId == "")
+  $util.unauthorized()
+#end
+
+#set($pk = "USER#" + $userId)
+#set($sk = "USER_DETAILS")
+#set($mealPlanId = $ctx.args.mealPlanId)
+
+## Validate mealPlanId format if necessary (e.g., starts with PLAN#)
+#if(!$mealPlanId || $mealPlanId == "")
+  $util.error("mealPlanId is required.", "ValidationException")
+#end
+
+#set($values = {})
+#set($expressionNames = {})
+#set($expressionUpdates = [])
+
+## Set activeMealPlanId
+$util.qr($expressionNames.put("#activeMP", "activeMealPlanId"))
+$util.qr($values.put(":activeMP", $util.dynamodb.toDynamoDB($mealPlanId)))
+$util.qr($expressionUpdates.add("#activeMP = :activeMP"))
+
+## Add UpdatedAt timestamp
+#set($now = $util.time.nowISO8601())
+$util.qr($expressionNames.put("#updatedAt", "updatedAt"))
+$util.qr($values.put(":updatedAt", $util.dynamodb.toDynamoDB($now)))
+$util.qr($expressionUpdates.add("#updatedAt = :updatedAt"))
+
+#set($expression = "SET " + $util.list.join(", ", $expressionUpdates))
+
+{
+  "version": "2018-05-29",
+  "operation": "UpdateItem",
+  "key": {
+    "PK": $util.dynamodb.toDynamoDBJson($pk),
+    "SK": $util.dynamodb.toDynamoDBJson($sk)
+  },
+  "update": {
+    "expression": $expression,
+    "expressionNames": $expressionNames,
+    "expressionAttributeValues": $values
+  },
+  "condition": { ## Ensure the UserDetails item exists before updating
+    "expression": "attribute_exists(PK)"
+  },
+  "returnValues": "ALL_NEW" ## Return the updated UserDetails item
+}

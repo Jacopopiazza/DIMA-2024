@@ -1,21 +1,19 @@
-export interface UserProfile {
-  /**
-   * Unique identifier for the user (e.g. 'U123').
-   * You may derive this from Cognito sub or Cognito username.
-   */
-  userId: string;
+import { AllergenEnum } from "./AllergenEnum";
+import { ExerciseFrequency } from "./ExerciseFrequency";
 
-  /**
-   * Customizable preferences for the user:
-   * sex, age, weight, daily meals, allergies, exercise frequency, etc.
-   */
+// backend/src/types/UserProfile.ts
+export interface UserProfile {
+  userId: string;
   preferences: {
     sex?: 'male' | 'female' | 'other';
     age?: number;
-    weight?: number;
-    mealsPerDay?: number;
-    allergies?: string[];
-    exerciseFrequency?: string;
-    specialRequests?: string[]; // e.g. ["Pizza on Friday evening", "No zucchini"]
+    weightKg?: number; // Match GraphQL
+    heightCm?: number; // Match GraphQL
+    dailyMealsPreference?: number; // Match GraphQL
+    allergies?: AllergenEnum[]; // Consider using the AllergenEnum if applicable in Lambda too
+    dietaryRestrictions?: string[]; // Match GraphQL
+    exerciseFrequency?: ExerciseFrequency; // Or ExerciseFrequency enum
+    openTextPreferences?: string; // Match GraphQL
+    targetCalories?: number; // Match GraphQL
   };
 }
