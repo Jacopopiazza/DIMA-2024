@@ -14,17 +14,16 @@
 #set($expressionNames = {})
 #set($expressionUpdates = [])
 
-## Field validation examples (add your business rules here)
-#if(!$util.isNull($input.calorieTarget) && ($input.calorieTarget < 500 || $input.calorieTarget > 5000))
-  $util.error("Invalid calorie target. Value must be between 500 and 5000.")
+## Field validation examples (adapt to your business rules)
+#if(!$util.isNull($input.targetCalories) && ($input.targetCalories < 500 || $input.targetCalories > 10000)) ## Using targetCalories
+  $util.error("Invalid target calories. Value must be between 500 and 10000.", "ValidationException")
 #end
 
-#if(!$util.isNull($input.dietaryPreferences))
-  ## Validate dietary preferences are from allowed list
-  #set($allowedPreferences = ["VEGETARIAN", "VEGAN", "KETO", "PALEO", "MEDITERRANEAN", "NONE"])
-  #foreach($pref in $input.dietaryPreferences)
-    #if(!$allowedPreferences.contains($pref))
-      $util.error("Invalid dietary preference: $pref")
+#if(!$util.isNull($input.dietaryRestrictions))
+  ## Example: Validate dietary restrictions are not excessively long or contain invalid characters
+  #foreach($restriction in $input.dietaryRestrictions)
+    #if($restriction.length() > 100)
+      $util.error("Dietary restriction '$restriction' is too long.", "ValidationException")
     #end
   #end
 #end
@@ -42,16 +41,14 @@
 
 ## Add UpdatedAt timestamp automatically
 #set($now = $util.time.nowISO8601())
-#set($values.put(":updatedAt", $util.dynamodb.toDynamoDB($now)))
+$util.qr($values.put(":updatedAt", $util.dynamodb.toDynamoDB($now)))
 $util.qr($expressionNames.put("#updatedAt", "updatedAt"))
 $util.qr($expressionUpdates.add("#updatedAt = :updatedAt"))
 
-## Add CreatedAt only if item doesn't exist
-$util.qr($expressionNames.put("#createdAt", "createdAt"))
-$util.qr($values.put(":createdAt", $util.dynamodb.toDynamoDB($now)))
-$util.qr($expressionUpdates.add("#createdAt = if_not_exists(#createdAt, :createdAt)"))
-
 ## Set expression
+#if($expressionUpdates.isEmpty())
+  $util.error("No updatable fields provided.", "ValidationException")
+#end
 #set($expression = "SET " + $util.list.join(", ", $expressionUpdates))
 
 {

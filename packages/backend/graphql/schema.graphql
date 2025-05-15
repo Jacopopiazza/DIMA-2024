@@ -226,12 +226,15 @@ type Macros {
 }
 
 """
-Represents the daily completion log stored in DynamoDB.
+Represents the completion status of meals for a specific plan on a specific date.
 """
-type CompletedMealLog @model {
-  userId: ID! # From PK
-  date: AWSDate! # From SK (extracted date part)
-  completedMealKeys: [String!] # Set of unique keys like "PLANID#MEALNAME"
+type PlanDayCompletion
+  @model { # If using Amplify @model, ensure it maps to the correct DDB keys
+  userId: ID! # Matches user, for authorization and potential PK
+  planId: ID! # Identifies the meal plan
+  date: AWSDate! # The specific date of completion
+  completedMealNames: [MealNameEnum!]! # List of completed meal names
+  updatedAt: AWSDateTime! # Timestamp of the last update for this record
 }
 
 """
@@ -298,8 +301,9 @@ type MealWithStatus {
 Combined type for the Today page query result.
 """
 type TodaysPlan {
-  activePlanDetails: MealPlan # Full details of the active plan
-  mealsForToday: [MealWithStatus!] # Extracted meals for the current day from activePlanDetails
+  activePlanDetails: MealPlan
+  mealsForToday: [MealWithStatus!]
+  todaysCompletion: PlanDayCompletion # Optional: The raw completion data for today's active plan
 }
 
 """
@@ -363,10 +367,9 @@ input PlanRequestPreferencesInput {
 Input for marking a meal as completed for the current day.
 """
 input MarkMealCompletedInput {
-  # date: AWSDate! # Date is implicitly 'today' for this mutation's logic
-  mealPlanId: ID! # Need to know which plan it belongs to
-  # dayOfWeek: WeekdayEnum! # Server can derive from 'today'
-  mealName: MealNameEnum! # Which meal name (keyword) was completed
+  mealPlanId: ID!
+  mealName: MealNameEnum!
+  date: AWSDate # Optional: Defaults to today if not provided by server
 }
 
 """
@@ -374,7 +377,17 @@ Input for unmarking a meal as completed for the current day.
 """
 input UnmarkMealCompletedInput {
   mealPlanId: ID!
-  mealName: MealNameEnum! # The keyword of the meal to unmark
+  mealName: MealNameEnum!
+  date: AWSDate # Optional: Defaults to today if not provided by server
+}
+
+"""
+Input for setting the completion status of a meal plan for a specific day. Used to sync offline data.
+"""
+input SetPlanDayCompletionInput {
+  planId: ID!
+  date: AWSDate!
+  completedMealNames: [MealNameEnum!]!
 }
 
 """
@@ -427,12 +440,6 @@ type Query {
   """
   getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups: ["USERS"]) # Requires complex/pipeline resolver
   """
-  Fetches the completion log for a specific date for the authenticated user.
-  """
-  getCompletedMealsForDate(date: AWSDate!): CompletedMealLog
-    @aws_auth(cognito_groups: ["USERS"])
-
-  """
   Lists available nutritionists, potentially filterable. Supports pagination. (Pro feature?)
   """
   listNutritionists(
@@ -459,6 +466,12 @@ type Query {
   """
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection
     @aws_auth(cognito_groups: ["NUTRITIONISTS"])
+
+  """
+  Fetches the meal completion status for a specific plan on a specific date for the authenticated user.
+  """
+  getPlanDayCompletion(planId: ID!, date: AWSDate!): PlanDayCompletion
+    @aws_auth(cognito_groups: ["USERS"])
 }
 
 # ===================
@@ -487,13 +500,20 @@ type Mutation {
   """
   Marks a meal as completed for today for the authenticated user.
   """
-  markMealAsCompleted(input: MarkMealCompletedInput!): CompletedMealLog
+  markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion
     @aws_auth(cognito_groups: ["USERS"])
 
   """
   Unmarks a meal as completed for today for the authenticated user.
   """
-  unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): CompletedMealLog
+  unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion
+    @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Sets the complete list of completed meals for a specific plan on a specific date.
+  Useful for bulk updates or syncing from an offline-first client.
+  """
+  setPlanDayCompletion(input: SetPlanDayCompletionInput!): PlanDayCompletion
     @aws_auth(cognito_groups: ["USERS"])
 
   """
