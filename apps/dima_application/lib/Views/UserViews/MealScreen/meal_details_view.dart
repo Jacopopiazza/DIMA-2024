@@ -238,7 +238,7 @@ final localizations = AppLocalizations.of(context)!;
                 // Use the existing provider to toggle meal status
                 ref
                     .read(todayPageProvider.notifier)
-                    .toggleMealCompletion(meal.name, mealPlanId);
+                    .toggleMealCompletion(meal.name);
               },
               icon: Icon(
                 isMealCompleted ? Icons.check_circle : Icons.circle_outlined,
