@@ -46,15 +46,15 @@ export class AppSyncApiStack extends cdk.Stack {
     // RESOLVERS FOR USER DETAILS (FORMERLY PREFERENCES)
     // --------------------------------------------------------------------
 
-    // Resolver for Query.getMyUserDetails
-    tableDS.createResolver('QueryGetMyUserDetailsResolver', {
+    // Resolver for Query.getUserDetails
+    tableDS.createResolver('QueryGetUserDetailsResolver', {
       typeName: 'Query',
-      fieldName: 'getMyUserDetails',
+      fieldName: 'getUserDetails',
       requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/getMyUserDetails-request.vtl',
+        'vtl-templates/getUserDetails-request.vtl',
       ),
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/getMyUserDetails-response.vtl',
+        'vtl-templates/getUserDetails-response.vtl',
       ),
     });
 
@@ -147,14 +147,14 @@ export class AppSyncApiStack extends cdk.Stack {
     // ====================================================================
 
     // Resolver for Mutation.updateMyUserDetails
-    tableDS.createResolver('MutationUpdateMyUserDetailsResolver', {
+    tableDS.createResolver('MutationUpdateUserDetailsResolver', {
       typeName: 'Mutation',
-      fieldName: 'updateMyUserDetails',
+      fieldName: 'updateUserDetails',
       requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/updateMyUserDetails-request.vtl',
+        'vtl-templates/updateUserDetails-request.vtl',
       ),
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/updateMyUserDetails-response.vtl',
+        'vtl-templates/updateUserDetails-response.vtl',
       ),
     });
 

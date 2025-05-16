@@ -15,7 +15,8 @@ scalar AWSJSON # For flexible preferences or potentially the DailyPlan if needed
 #        ENUMS
 # ===================
 enum ExerciseFrequency {
-  NOT_SPECIFIED # Or NONE
+  NOT_SPECIFIED
+  NONE
   ONCE_A_WEEK
   TWICE_A_WEEK
   THREE_TIMES_A_WEEK
@@ -153,17 +154,17 @@ Represents user profile details and preferences stored in DynamoDB.
 """
 type UserDetails @model {
   # Attributes stored in DynamoDB UserDetails item
-  userId: ID! # Typically the Cognito Sub
+  userId: ID! @primaryKey # Typically the Cognito Sub
   weightKg: Float
   heightCm: Float
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
-  dietaryRestrictions: [String!]
   openTextPreferences: String
   targetCalories: Float
   activeMealPlanId: ID # ID of the currently active MealPlan
-  updatedAt: AWSDateTime
+  updatedAt: AWSDateTime # Timestamp of the last update for this record
+  createdAt: AWSDateTime # Timestamp of when the user was created
   # Note: Cognito standard/custom attributes like email, name, profilePicture, subscriptionStatus
   # are usually accessed via $context.identity in resolvers, not stored duplicatively here.
 }
@@ -342,10 +343,9 @@ input UpdateUserDetailsInput {
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
-  dietaryRestrictions: [String!]
+  dietaryRestrictions: String
   openTextPreferences: String
   targetCalories: Float
-  # Note: activeMealPlanId is updated via setActiveMealPlan mutation
 }
 
 """
@@ -419,9 +419,9 @@ input ListNutritionistsFilter {
 # ===================
 type Query {
   """
-  Fetches the UserDetails (preferences, etc.) for the authenticated user. Replaces getUserPreferences.
+  Fetches the UserDetails (preferences, etc.) for the authenticated user.
   """
-  getMyUserDetails: UserDetails
+  getUserDetails(userId: ID!): UserDetails
     @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"]) # Adjust auth as needed
   """
   Lists MealPlans for the authenticated user. Supports pagination.
@@ -481,7 +481,7 @@ type Mutation {
   """
   Updates details/preferences for the authenticated user. Replaces putUserPreferences.
   """
-  updateMyUserDetails(input: UpdateUserDetailsInput!): UserDetails
+  updateUserDetails(input: UpdateUserDetailsInput!): UserDetails
     @aws_auth(cognito_groups: ["USERS"])
 
   """

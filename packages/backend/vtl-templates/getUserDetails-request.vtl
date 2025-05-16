@@ -1,0 +1,42 @@
+## Get the userId passed as an argument in the GraphQL query
+#set($requestedUserId = $ctx.args.userId)
+
+## Get the authenticated user's sub (identity)
+#set($authenticatedUserId = $ctx.identity.sub)
+
+## --- AUTHORIZATION CHECK ---
+#set($isOwner = $requestedUserId == $authenticatedUserId)
+
+## Optional: Admin check (if you have an "Admin" group in Cognito)
+#set($isAdmin = false)
+#if($ctx.identity.claims.get("cognito:groups"))
+  #foreach($group in $ctx.identity.claims.get("cognito:groups"))
+    #if($group == "ADMIN")
+      #set($isAdmin = true)
+    #end
+  #end
+#end
+
+#if(!($isOwner || $isAdmin))
+  $util.unauthorized() ## Block access if not the owner and not an admin
+#end
+## --- END AUTHORIZATION CHECK ---
+
+
+## If authorization passed, proceed to build the DynamoDB request
+## Ensure authenticatedUserId is not null (should be caught by AppSync auth modes anyway)
+#if(!$authenticatedUserId || $authenticatedUserId == "")
+    $util.unauthorized()
+#end
+
+## Build key using the (now authorized) requestedUserId from the arguments
+#set($pk = "USER#" + $requestedUserId)
+
+{
+  "version": "2018-05-29",
+  "operation": "GetItem",
+  "key": {
+    "PK": $util.dynamodb.toDynamoDBJson($pk),
+    "SK": $util.dynamodb.toDynamoDBJson("USER_DETAILS")
+  }
+}

@@ -1,0 +1,45 @@
+#if($ctx.error)
+  $util.error($ctx.error.message, $ctx.error.type)
+#end
+
+#if(!$ctx.result)
+  ## Item not found in DynamoDB.
+  ## Construct a minimal UserDetails object with the requested userId and null for other fields.
+  ## This ensures the client receives a UserDetails object that can be deserialized,
+  ## rather than just 'null' for the whole getUserDetails field, which might be
+  ## ambiguous (did it fail, or does it just not exist?).
+
+  #set($responseObject = {})
+  ## The userId field is required by the UserDetails model because it's the @primaryKey.
+  ## We get it from the arguments passed to the query.
+  $util.qr($responseObject.put("userId", $ctx.args.userId))
+
+  ## Explicitly set other fields defined in your UserDetails GraphQL type to null.
+  ## This is good practice for clarity and to ensure the GraphQL response shape is consistent.
+  ## List all your *nullable* fields from the UserDetails type in your schema.graphql.
+  $util.qr($responseObject.put("activeMealPlanId", $null))
+  $util.qr($responseObject.put("allergies", $null)) ## Or [] if it's a list and empty list is preferred over null
+  $util.qr($responseObject.put("dailyMealsPreference", $null))
+  $util.qr($responseObject.put("dietaryRestrictions", $null)) ## Or []
+  $util.qr($responseObject.put("exerciseFrequency", $null))
+  $util.qr($responseObject.put("heightCm", $null))
+  $util.qr($responseObject.put("openTextPreferences", $null))
+  $util.qr($responseObject.put("targetCalories", $null))
+  $util.qr($responseObject.put("updatedAt", $null))
+  $util.qr($responseObject.put("weightKg", $null))
+  #if($ctx.stash.modelQueryExpression) ## For fields like createdAt that are auto-populated by @model
+      #if($ctx.stash.modelQueryExpression.expressionNames.containsKey("#createdAt"))
+          $util.qr($responseObject.put("createdAt", $null))
+      #end
+  #end
+
+  $util.toJson($responseObject)
+#else
+  ## Item was found in DynamoDB.
+  ## Ensure the userId from the argument is present if it wasn't part of the DDB item (should be).
+  ## Your primaryKey 'userId' should definitely be in $ctx.result if it comes from DDB.
+  #if(!$ctx.result.containsKey("userId") && $ctx.args.userId)
+    $util.qr($ctx.result.put("userId", $ctx.args.userId))
+  #end
+  $util.toJson($ctx.result)
+#end
