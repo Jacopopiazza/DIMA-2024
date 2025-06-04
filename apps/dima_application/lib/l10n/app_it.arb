@@ -164,7 +164,8 @@
     "placeholders": {
       "previousStep": {
         "example": "signIn",
-        "description": "The title of the previous step."
+        "description": "The title of the previous step.",
+        "type": "String"
       }
     }
   },
@@ -174,7 +175,8 @@
     "placeholders": {
       "provider": {
         "example": "google",
-        "description": "The social sign-in provider"
+        "description": "The social sign-in provider",
+        "type": "String"
       }
     }
   }
