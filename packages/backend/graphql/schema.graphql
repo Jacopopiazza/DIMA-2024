@@ -421,8 +421,7 @@ type Query {
   """
   Fetches the UserDetails (preferences, etc.) for the authenticated user.
   """
-  getUserDetails(userId: ID!): UserDetails
-    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"]) # Adjust auth as needed
+  getUserDetails: UserDetails @aws_auth(cognito_groups: ["USERS"]) # Adjust auth as needed
   """
   Lists MealPlans for the authenticated user. Supports pagination.
   """

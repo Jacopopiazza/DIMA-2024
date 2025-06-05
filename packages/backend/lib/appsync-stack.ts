@@ -143,20 +143,59 @@ export class AppSyncApiStack extends cdk.Stack {
     });
 
     // ====================================================================
+    //                      PIPELINE RESOLVER UpdateMyUserDetails
+    // ====================================================================
+    const updateUserDetailsFunction = new appsync.AppsyncFunction(
+      this,
+      'UpdateUserDetailsFunctionForUserDetails',
+      {
+        api,
+        name: 'UpdateUserDetailsFunctionForUserDetails',
+        dataSource: tableDS,
+        requestMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.updateUserDetails.UpdateUserDetailsFunction-request.vtl',
+        ),
+        responseMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.updateUserDetails.UpdateUserDetailsFunction-response.vtl',
+        ),
+      },
+    );
+
+    const getUserDetailsFunction = new appsync.AppsyncFunction(
+      this,
+      'GetUserDetailsFunctionForUserDetails',
+      {
+        api,
+        name: 'GetUserDetailsFunction',
+        dataSource: tableDS,
+        requestMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/getUserDetails-request.vtl',
+        ),
+        responseMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/getUserDetails-response.vtl',
+        ),
+      },
+    );
+
+    const pipelineResolver = new appsync.Resolver(
+      this,
+      'MutationUpdateUserDetailsResolver',
+      {
+        api,
+        typeName: 'Mutation',
+        fieldName: 'updateUserDetails',
+        pipelineConfig: [updateUserDetailsFunction, getUserDetailsFunction],
+        requestMappingTemplate:
+          appsync.MappingTemplate.fromString('$util.toJson({})'), // <-- ADD THIS
+        responseMappingTemplate: appsync.MappingTemplate.fromFile(
+          'vtl-templates/pipeline.updateUserDetails-response.vtl',
+        ),
+      },
+    );
+
+    // ====================================================================
     //                      MUTATION RESOLVERS
     // ====================================================================
-
-    // Resolver for Mutation.updateMyUserDetails
-    tableDS.createResolver('MutationUpdateUserDetailsResolver', {
-      typeName: 'Mutation',
-      fieldName: 'updateUserDetails',
-      requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/updateUserDetails-request.vtl',
-      ),
-      responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/updateUserDetails-response.vtl',
-      ),
-    });
 
     // --- Resolver for Mutation.setActiveMealPlan ---
     tableDS.createResolver('MutationSetActiveMealPlanResolver', {
