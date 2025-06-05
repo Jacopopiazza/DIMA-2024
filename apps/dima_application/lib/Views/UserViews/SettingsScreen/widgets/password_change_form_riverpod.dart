@@ -3,7 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../providers/user_details_provider.dart';
 
 class PasswordChangeFormRiverpod extends ConsumerStatefulWidget {
-  const PasswordChangeFormRiverpod({Key? key}) : super(key: key);
+  final Future<bool> Function(String oldPassword, String newPassword) onChangePassword;
+
+  const PasswordChangeFormRiverpod({
+    Key? key,
+    required this.onChangePassword,
+  }) : super(key: key);
 
   @override
   ConsumerState<PasswordChangeFormRiverpod> createState() => _PasswordChangeFormRiverpodState();

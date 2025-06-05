@@ -19,23 +19,7 @@ class SettingsScreenRiverpod extends ConsumerWidget {
         child: userIdAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stackTrace) => Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
-                const SizedBox(height: 16),
-                Text(
-                  'Error loading settings',
-                  style: theme.textTheme.titleLarge,
-                ),
-                const SizedBox(height: 8),
-                ElevatedButton.icon(
-                  onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
-                  icon: const Icon(Icons.login),
-                  label: const Text('Return to Login'),
-                ),
-              ],
-            ),
+            child: Text('Error: ${error.toString()}'),
           ),
           data: (userId) {
             if (userId == null) {
@@ -43,11 +27,11 @@ class SettingsScreenRiverpod extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.account_circle_outlined, size: 48, color: theme.colorScheme.primary),
+                    Icon(Icons.account_circle_outlined, size: 48, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(height: 16),
                     Text(
                       'Not signed in',
-                      style: theme.textTheme.titleLarge,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 8),
                     ElevatedButton.icon(
@@ -60,95 +44,75 @@ class SettingsScreenRiverpod extends ConsumerWidget {
               );
             }
 
-            return userDetailsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Error loading user details',
-                      style: theme.textTheme.titleLarge,
+            return RefreshIndicator(
+              displacement: 60.0,
+              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              onRefresh: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return ListView(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
                     ),
-                    const SizedBox(height: 8),
-                    ElevatedButton.icon(
-                      onPressed: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              ),
-              data: (userDetails) => RefreshIndicator(
-                onRefresh: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(16.0),
-                  children: [
-                    if (userDetails != null) ...[
-                      UserDetailsFormRiverpod(
-                        userDetails: userDetails,
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                    const PasswordChangeFormRiverpod(),
-                    const SizedBox(height: 24),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                        child: Stack(
                           children: [
-                            Text(
-                              'Account Actions',
-                              style: theme.textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    icon: const Icon(Icons.cleaning_services),
-                                    label: const Text('Clear Cache'),
-                                    onPressed: () async {
-                                      await ref.read(userDetailsProvider.notifier).clearCache(userId);
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Cache cleared successfully')),
-                                        );
+                            // Main content
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  userDetailsAsync.when(
+                                    // By using `skipLoadingOnRefresh: true`, we keep the old data visible.
+                                    skipLoadingOnRefresh: true,
+                                    loading: () => const Center(child: CircularProgressIndicator()),
+                                    error: (error, stackTrace) => Center(child: Text('Error: $error')),
+                                    data: (data) {
+                                      final userDetails = data.$1;
+                                      final uniqueId = data.$2;
+
+                                      if (userDetails == null) {
+                                        return const Center(child: Text('No user details available.'));
                                       }
+
+                                      return Column(
+                                        children: [
+                                          UserDetailsFormRiverpod(
+                                            key: ValueKey(uniqueId), // Use the unique ID for the key
+                                            userDetails: userDetails,
+                                            onUpdate: (updatedDetails) async {
+                                              return await ref
+                                                  .read(userDetailsProvider.notifier)
+                                                  .updateUserDetails(updatedDetails);
+                                            },
+                                          ),
+                                          const SizedBox(height: 24),
+                                          PasswordChangeFormRiverpod(
+                                            onChangePassword: (oldPassword, newPassword) async {
+                                              return await ref
+                                                  .read(userDetailsProvider.notifier)
+                                                  .changePassword(oldPassword, newPassword);
+                                            },
+                                          ),
+                                        ],
+                                      );
                                     },
                                   ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    icon: const Icon(Icons.logout),
-                                    label: const Text('Sign Out'),
-                                    onPressed: () async {
-                                      await ref.read(userDetailsProvider.notifier).signOut(userId);
-                                      if (context.mounted) {
-                                        Navigator.of(context).pushReplacementNamed('/login');
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: theme.colorScheme.secondary,
-                                      foregroundColor: theme.colorScheme.onSecondary,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                  const SizedBox(height: 24),
+                                  DangerZoneSectionRiverpod(userId: userId),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    DangerZoneSectionRiverpod(userId: userId),
-                  ],
-                ),
+                    ],
+                  );
+                },
               ),
             );
           },
