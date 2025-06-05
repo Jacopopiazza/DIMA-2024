@@ -4,6 +4,8 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   amplify_db_common
+  connectivity_plus
+  isar_flutter_libs
   url_launcher_windows
 )
 

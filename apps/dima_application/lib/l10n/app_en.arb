@@ -1540,4 +1540,25 @@
   "@verifyUser": {
     "description": "Title of the Verify and Confirm Verify User s and forms"
   }
+  "calories": "Calories",
+  "proteins": "Proteins",
+  "carbs": "Carbs",
+  "fats": "Fats",
+  "energy": "Energy",
+  "ingredients": "Ingredients",
+  "recipe": "Recipe",
+  "noRecipe": "No recipe provided for this meal.",
+  "mealCompleted": "Meal Completed",
+  "mealToBeCompleted": "Mark as Completed",
+  "back": "Back",
+  "editMeal": "Edit meal",
+  "shareMeal": "Share meal",
+  "switchMealPlan": "Switch Meal Plan",
+  "noOtherMealPlans": "No other meal plans available.",
+  "unnamedPlan": "Unnamed Plan",
+  "switchingPlan": "Switching plan...",
+  "switchedToPlan": "Switched to plan",
+  "failedToSwitchPlan": "Failed to switch plan",
+  "errorLoadingPlans": "Error loading plans",
+  "moreOptions": "More options"
 }

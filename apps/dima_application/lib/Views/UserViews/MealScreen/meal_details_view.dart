@@ -3,10 +3,9 @@ import 'package:dima_application/generated/flutter-models/Ingredient.dart';
 import 'package:dima_application/generated/flutter-models/Macros.dart';
 import 'package:dima_application/generated/flutter-models/Meal.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dima_application/providers/today_page_provider.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MealDetailsDraggablePage extends ConsumerWidget {
   // Constants for UI measurements
@@ -41,9 +40,10 @@ class MealDetailsDraggablePage extends ConsumerWidget {
 
     // Watch the completion status to update the UI accordingly
     final todayPageState = ref.watch(todayPageProvider);
-    final bool isMealCompleted =
-        todayPageState.dailyCompletion?.completedMealNames.contains(meal.name) ??
-            false;
+    final bool isMealCompleted = todayPageState
+            .dailyCompletion?.completedMealNames
+            .contains(meal.name) ??
+        false;
 
     // Calculations for draggable sheet
     final double imageHeight = screenSize.height * 0.40;
@@ -122,8 +122,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
       EdgeInsets safeAreaPadding,
       TextTheme textTheme,
       ColorScheme colorScheme) {
-
-final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
 
     return Container(
       decoration: BoxDecoration(
@@ -244,7 +243,9 @@ final localizations = AppLocalizations.of(context)!;
                 isMealCompleted ? Icons.check_circle : Icons.circle_outlined,
                 color: colorScheme.onPrimary,
               ),
-              label: Text(isMealCompleted ? localizations.mealCompleted : localizations.mealToBeCompleted),
+              label: Text(isMealCompleted
+                  ? localizations.mealCompleted
+                  : localizations.mealToBeCompleted),
               style: ElevatedButton.styleFrom(
                 backgroundColor: isMealCompleted
                     ? colorScheme.primary.withAlpha(204)
@@ -343,17 +344,26 @@ final localizations = AppLocalizations.of(context)!;
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Flexible(
-            child: _buildNutritionItem(context,
-                totalMacros.calories.toStringAsFixed(0), 'kcal', localizations.energy)),
-        Flexible(
-            child: _buildNutritionItem(context,
-                totalMacros.proteins.toStringAsFixed(1), 'g', localizations.proteins)),
-        Flexible(
-            child: _buildNutritionItem(context,
-                totalMacros.carbohydrates.toStringAsFixed(1), 'g', localizations.carbs)),
+            child: _buildNutritionItem(
+                context,
+                totalMacros.calories.toStringAsFixed(0),
+                'kcal',
+                localizations.energy)),
         Flexible(
             child: _buildNutritionItem(
-                context, totalMacros.fats.toStringAsFixed(1), 'g', localizations.carbs)),
+                context,
+                totalMacros.proteins.toStringAsFixed(1),
+                'g',
+                localizations.proteins)),
+        Flexible(
+            child: _buildNutritionItem(
+                context,
+                totalMacros.carbohydrates.toStringAsFixed(1),
+                'g',
+                localizations.carbs)),
+        Flexible(
+            child: _buildNutritionItem(context,
+                totalMacros.fats.toStringAsFixed(1), 'g', localizations.carbs)),
       ],
     );
   }

@@ -2,17 +2,14 @@ import 'dart:async'; // Import for TimeoutException
 import 'dart:convert';
 import 'dart:io'; // Import for SocketException
 
-import 'package:http/http.dart' as http;
-
 import 'package:amplify_flutter/amplify_flutter.dart';
 // Make sure ModelProvider is correctly generated and imported
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 // Import domain/Amplify models
 import 'package:dima_application/models/MealPlan/meal_plan.dart';
-
+import 'package:dima_application/models/MealPlanList/meal_plan_list.dart';
 // Import Isar cache models
 import 'package:dima_application/models/UserDetails/user_details_cache.dart'; // Isar model
-
 // Import input models
 import 'package:dima_application/models/input/update_user_details_input.dart';
 // Import Isar provider
@@ -265,7 +262,6 @@ class ApiService {
 
     // 1. Try fetching from network
     try {
-
       safePrint(
           "[APIService] NETWORK: Attempting to fetch plan $planId from source...");
       // --- TODO: Replace MOCK fetch with actual Amplify GraphQL query ---
@@ -335,6 +331,29 @@ class ApiService {
             underlyingException: e); // Include original error context
       }
     }
+  }
+
+  Future<MealPlanList> fetchAllMealPlansForUser(String userId) async {
+    // TODO: Implement actual Amplify GraphQL query
+    safePrint("[APIService] Fetching all meal plans for user...");
+    try {
+      // MOCKED IMPLEMENTATION
+      return MealPlanList(currentMealPlan: null, allMealPlans: []);
+    } catch (e) {
+      safePrint("[APIService] Error fetching all meal plans for user: $e");
+      throw OperationFailedException("Failed to fetch all meal plans for user",
+          underlyingException: e);
+    }
+  }
+
+  Future<void> setChosenPlanId(String mealPlanId) async {
+    // TODO: Implement actual Amplify GraphQL mutation
+    safePrint("[APIService] Setting chosen plan ID: $mealPlanId");
+  }
+
+  Future<void> deleteMealPlan(String mealPlanId) async {
+    // TODO: Implement actual Amplify GraphQL mutation
+    safePrint("[APIService] Deleting meal plan: $mealPlanId");
   }
 
   // --- Private Helper Methods ---
