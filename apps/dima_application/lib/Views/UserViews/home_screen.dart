@@ -1,11 +1,10 @@
-import 'package:dima_application/Views/UserViews/SettingsScreen/settings_view.dart';
 import 'package:dima_application/Views/UserViews/my_plans_page.dart';
 import 'package:flutter/material.dart';
-
-import 'HomeScreen/today_view.dart'; // Assuming this path is correct
+import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
+import 'HomeScreen/today_view.dart';
 
 class UserHomeScreen extends StatefulWidget {
-  const UserHomeScreen({super.key});
+  const UserHomeScreen({Key? key}) : super(key: key);
 
   @override
   State<UserHomeScreen> createState() => _UserHomeScreenState();
@@ -15,11 +14,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   int _selectedIndex = 0; // Start with the 'Today' tab (index 0)
 
   // List of widgets to display based on the selected tab
-  // Making it static const improves performance as it's created only once.
   static const List<Widget> _widgetOptions = <Widget>[
     TodayPage(), // Index 0
     MyPlansPage(), // Index 1
-    SettingsPage(), // Index 2
+    SettingsScreenRiverpod(), // Index 2 - Using the new Riverpod version
   ];
 
   // Callback function when a bottom navigation item is tapped
@@ -45,8 +43,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   // Helper method to build the BottomNavigationBar
   BottomNavigationBar _buildBottomNavigationBar() {
-    // The appearance (colors, elevation, etc.) is controlled by
-    // the BottomNavigationBarThemeData defined in your app's ThemeData.
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
@@ -69,7 +65,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       onTap: _onItemTapped,         // Callback when a tab is tapped
       type: BottomNavigationBarType.fixed, // Ensures all items are visible with labels
       showUnselectedLabels: true,      // Keep labels visible even for unselected items
-      // No hardcoded colors or elevation here - relies on the theme!
     );
   }
 }

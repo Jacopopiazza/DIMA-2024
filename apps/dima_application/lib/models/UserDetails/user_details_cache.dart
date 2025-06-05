@@ -25,7 +25,6 @@ class UserDetailsCache {
   String? activeMealPlanId;
   List<String>? allergiesJson; // Store as String list since we can't store enums directly
   int? dailyMealsPreference;
-  List<String>? dietaryRestrictions;
   String? exerciseFrequencyString; // Store as String since we can't store enums directly
   double? heightCm;
   String? openTextPreferences;
@@ -41,7 +40,6 @@ class UserDetailsCache {
       ..activeMealPlanId = details.activeMealPlanId
       ..allergiesJson = details.allergies?.map((e) => e.name).toList()
       ..dailyMealsPreference = details.dailyMealsPreference
-      ..dietaryRestrictions = details.dietaryRestrictions
       ..exerciseFrequencyString = details.exerciseFrequency?.name
       ..heightCm = details.heightCm
       ..openTextPreferences = details.openTextPreferences
@@ -59,7 +57,6 @@ class UserDetailsCache {
           (allergen) => allergen.name == e,
           orElse: () => AllergenEnum.values.first)).toList(),
       dailyMealsPreference: dailyMealsPreference,
-      dietaryRestrictions: dietaryRestrictions,
       exerciseFrequency: exerciseFrequencyString != null
           ? ExerciseFrequency.values.firstWhere(
               (frequency) => frequency.name == exerciseFrequencyString,

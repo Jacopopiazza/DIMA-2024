@@ -26,7 +26,6 @@ enum ExerciseFrequency {
   NONE,
   NOT_SPECIFIED,
   ONCE_A_WEEK,
-  Or,
   SIX_TIMES_A_WEEK,
   THREE_TIMES_A_WEEK,
   TWICE_A_WEEK
