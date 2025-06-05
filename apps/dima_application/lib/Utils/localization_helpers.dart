@@ -79,11 +79,7 @@ String localizeExerciseFrequency(BuildContext context, ExerciseFrequency frequen
       return localizations.exerciseFrequencyTHREE_TIMES_A_WEEK;
     case ExerciseFrequency.TWICE_A_WEEK:
       return localizations.exerciseFrequencyTWICE_A_WEEK;
-    case ExerciseFrequency.Or:
-       // Decide how to handle the 'Or' value. Maybe return an empty string,
-       // a specific placeholder, or just the name itself if it shouldn't appear.
-       debugPrint("Warning: Encountered unexpected ExerciseFrequency.Or value for localization.");
-       return "Or"; // Or "" or localizations.notApplicable etc.
+
     default:
       // Fallback: Log a warning and return the raw enum name
       debugPrint('Warning: Missing localization for ExerciseFrequency.${frequency.name}');

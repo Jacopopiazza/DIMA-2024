@@ -122,7 +122,7 @@ type Mutation {
   setActiveMealPlan(mealPlanId: ID!): UserDetails @aws_auth(cognito_groups : ["USERS"])
   setPlanDayCompletion(input: SetPlanDayCompletionInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
-  updateMyUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["USERS"])
+  updateUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["USERS"])
 }
 
 type NutritionistProfile @model {
@@ -161,9 +161,9 @@ type Query {
   #  Add Pro group check in resolver?
   getChatMessages(chatId: ID!, limit: Int, nextToken: String): ChatMessageConnection @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS"])
-  getMyUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["USERS"])
+  getUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS"])
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   #  Add Pro group check in resolver?
   listMyChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["USERS"])
@@ -185,8 +185,9 @@ type TodaysPlan {
 type UserDetails @model {
   activeMealPlanId: ID
   allergies: [AllergenEnum!]
+  #  Timestamp of the last update for this record
+  createdAt: AWSDateTime
   dailyMealsPreference: Int
-  dietaryRestrictions: [String!]
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
   openTextPreferences: String
@@ -194,7 +195,7 @@ type UserDetails @model {
   #  ID of the currently active MealPlan
   updatedAt: AWSDateTime
   #  Attributes stored in DynamoDB UserDetails item
-  userId: ID!
+  userId: ID! @primaryKey
   #  Typically the Cognito Sub
   weightKg: Float
 }
@@ -227,7 +228,6 @@ enum ExerciseFrequency {
   NONE
   NOT_SPECIFIED
   ONCE_A_WEEK
-  Or
   SIX_TIMES_A_WEEK
   THREE_TIMES_A_WEEK
   TWICE_A_WEEK
@@ -323,7 +323,7 @@ input UnmarkMealCompletedInput {
 input UpdateUserDetailsInput {
   allergies: [AllergenEnum!]
   dailyMealsPreference: Int
-  dietaryRestrictions: [String!]
+  dietaryRestrictions: String
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
   openTextPreferences: String

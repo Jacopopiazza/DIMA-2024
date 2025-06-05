@@ -111,14 +111,12 @@ class ApiService {
           const Duration(milliseconds: 300)); // Simulate network
       final mockUserId = 'mockUserId'; // Replace with actual user ID logic
       final updatedDetails = UserDetails(
-        id: UUID.getUUID(), // Use actual ID
         userId: mockUserId,
         weightKg: updateUserDetailsInput.weightKg,
         heightCm: updateUserDetailsInput.heightCm,
         exerciseFrequency: updateUserDetailsInput.exerciseFrequency,
         dailyMealsPreference: updateUserDetailsInput.dailyMealsPreference,
         allergies: updateUserDetailsInput.allergies,
-        dietaryRestrictions: updateUserDetailsInput.dietaryRestrictions,
         openTextPreferences: updateUserDetailsInput.openTextPreferences,
         targetCalories: updateUserDetailsInput.targetCalories,
         updatedAt: TemporalDateTime.now(),

@@ -1,45 +1,42 @@
+## vtl-templates/getUserDetails-response.vtl (SHARED)
+
 #if($ctx.error)
   $util.error($ctx.error.message, $ctx.error.type)
 #end
 
 #if(!$ctx.result)
   ## Item not found in DynamoDB.
-  ## Construct a minimal UserDetails object with the requested userId and null for other fields.
-  ## This ensures the client receives a UserDetails object that can be deserialized,
-  ## rather than just 'null' for the whole getUserDetails field, which might be
-  ## ambiguous (did it fail, or does it just not exist?).
-
   #set($responseObject = {})
-  ## The userId field is required by the UserDetails model because it's the @primaryKey.
-  ## We get it from the arguments passed to the query.
-  $util.qr($responseObject.put("userId", $ctx.args.userId))
+  ## Use the userId that was determined in the request template and stashed ($ctx.identity.sub).
+  $util.qr($responseObject.put("userId", $ctx.stash.resolvedUserId))
 
-  ## Explicitly set other fields defined in your UserDetails GraphQL type to null.
-  ## This is good practice for clarity and to ensure the GraphQL response shape is consistent.
-  ## List all your *nullable* fields from the UserDetails type in your schema.graphql.
+  ## Set other fields to null as before
   $util.qr($responseObject.put("activeMealPlanId", $null))
-  $util.qr($responseObject.put("allergies", $null)) ## Or [] if it's a list and empty list is preferred over null
+  $util.qr($responseObject.put("allergies", $null))
   $util.qr($responseObject.put("dailyMealsPreference", $null))
-  $util.qr($responseObject.put("dietaryRestrictions", $null)) ## Or []
+  $util.qr($responseObject.put("dietaryRestrictions", $null))
   $util.qr($responseObject.put("exerciseFrequency", $null))
   $util.qr($responseObject.put("heightCm", $null))
   $util.qr($responseObject.put("openTextPreferences", $null))
   $util.qr($responseObject.put("targetCalories", $null))
   $util.qr($responseObject.put("updatedAt", $null))
   $util.qr($responseObject.put("weightKg", $null))
-  #if($ctx.stash.modelQueryExpression) ## For fields like createdAt that are auto-populated by @model
-      #if($ctx.stash.modelQueryExpression.expressionNames.containsKey("#createdAt"))
-          $util.qr($responseObject.put("createdAt", $null))
-      #end
-  #end
 
   $util.toJson($responseObject)
 #else
   ## Item was found in DynamoDB.
-  ## Ensure the userId from the argument is present if it wasn't part of the DDB item (should be).
-  ## Your primaryKey 'userId' should definitely be in $ctx.result if it comes from DDB.
-  #if(!$ctx.result.containsKey("userId") && $ctx.args.userId)
-    $util.qr($ctx.result.put("userId", $ctx.args.userId))
+  ## Ensure the top-level 'userId' field (as per your GraphQL schema) is populated.
+  ## This uses the stashed resolvedUserId ($ctx.identity.sub) if not directly present in the DDB item.
+  #if (!$ctx.result.userId && $ctx.stash.resolvedUserId)
+      $util.qr($ctx.result.put("userId", $ctx.stash.resolvedUserId))
   #end
+  ## If your DDB PK attribute (e.g., 'PK') stores 'USER#<id>' and you need to derive it explicitly:
+  #if ($ctx.result.PK && !$ctx.result.userId)
+      #set($pkParts = $ctx.result.PK.split("#"))
+      #if($pkParts.size() > 1)
+          $util.qr($ctx.result.put("userId", $pkParts[1]))
+      #end
+  #end
+
   $util.toJson($ctx.result)
 #end

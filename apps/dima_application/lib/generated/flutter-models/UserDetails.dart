@@ -27,11 +27,10 @@ import 'package:collection/collection.dart';
 /** This is an auto generated class representing the UserDetails type in your schema. */
 class UserDetails extends amplify_core.Model {
   static const classType = const _UserDetailsModelType();
-  final String id;
   final String? _activeMealPlanId;
   final List<AllergenEnum>? _allergies;
+  final amplify_core.TemporalDateTime? _createdAt;
   final int? _dailyMealsPreference;
-  final List<String>? _dietaryRestrictions;
   final ExerciseFrequency? _exerciseFrequency;
   final double? _heightCm;
   final String? _openTextPreferences;
@@ -39,19 +38,27 @@ class UserDetails extends amplify_core.Model {
   final amplify_core.TemporalDateTime? _updatedAt;
   final String? _userId;
   final double? _weightKg;
-  final amplify_core.TemporalDateTime? _createdAt;
 
   @override
   getInstanceType() => classType;
   
   @Deprecated('[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
   @override
-  String getId() => id;
+  String getId() => modelIdentifier.serializeAsString();
   
   UserDetailsModelIdentifier get modelIdentifier {
+    try {
       return UserDetailsModelIdentifier(
-        id: id
+        userId: _userId!
       );
+    } catch(e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   String? get activeMealPlanId {
@@ -62,12 +69,12 @@ class UserDetails extends amplify_core.Model {
     return _allergies;
   }
   
-  int? get dailyMealsPreference {
-    return _dailyMealsPreference;
+  amplify_core.TemporalDateTime? get createdAt {
+    return _createdAt;
   }
   
-  List<String>? get dietaryRestrictions {
-    return _dietaryRestrictions;
+  int? get dailyMealsPreference {
+    return _dailyMealsPreference;
   }
   
   ExerciseFrequency? get exerciseFrequency {
@@ -107,19 +114,14 @@ class UserDetails extends amplify_core.Model {
     return _weightKg;
   }
   
-  amplify_core.TemporalDateTime? get createdAt {
-    return _createdAt;
-  }
+  const UserDetails._internal({activeMealPlanId, allergies, createdAt, dailyMealsPreference, exerciseFrequency, heightCm, openTextPreferences, targetCalories, updatedAt, required userId, weightKg}): _activeMealPlanId = activeMealPlanId, _allergies = allergies, _createdAt = createdAt, _dailyMealsPreference = dailyMealsPreference, _exerciseFrequency = exerciseFrequency, _heightCm = heightCm, _openTextPreferences = openTextPreferences, _targetCalories = targetCalories, _updatedAt = updatedAt, _userId = userId, _weightKg = weightKg;
   
-  const UserDetails._internal({required this.id, activeMealPlanId, allergies, dailyMealsPreference, dietaryRestrictions, exerciseFrequency, heightCm, openTextPreferences, targetCalories, updatedAt, required userId, weightKg, createdAt}): _activeMealPlanId = activeMealPlanId, _allergies = allergies, _dailyMealsPreference = dailyMealsPreference, _dietaryRestrictions = dietaryRestrictions, _exerciseFrequency = exerciseFrequency, _heightCm = heightCm, _openTextPreferences = openTextPreferences, _targetCalories = targetCalories, _updatedAt = updatedAt, _userId = userId, _weightKg = weightKg, _createdAt = createdAt;
-  
-  factory UserDetails({String? id, String? activeMealPlanId, List<AllergenEnum>? allergies, int? dailyMealsPreference, List<String>? dietaryRestrictions, ExerciseFrequency? exerciseFrequency, double? heightCm, String? openTextPreferences, double? targetCalories, amplify_core.TemporalDateTime? updatedAt, required String userId, double? weightKg}) {
+  factory UserDetails({String? activeMealPlanId, List<AllergenEnum>? allergies, amplify_core.TemporalDateTime? createdAt, int? dailyMealsPreference, ExerciseFrequency? exerciseFrequency, double? heightCm, String? openTextPreferences, double? targetCalories, amplify_core.TemporalDateTime? updatedAt, required String userId, double? weightKg}) {
     return UserDetails._internal(
-      id: id == null ? amplify_core.UUID.getUUID() : id,
       activeMealPlanId: activeMealPlanId,
       allergies: allergies != null ? List<AllergenEnum>.unmodifiable(allergies) : allergies,
+      createdAt: createdAt,
       dailyMealsPreference: dailyMealsPreference,
-      dietaryRestrictions: dietaryRestrictions != null ? List<String>.unmodifiable(dietaryRestrictions) : dietaryRestrictions,
       exerciseFrequency: exerciseFrequency,
       heightCm: heightCm,
       openTextPreferences: openTextPreferences,
@@ -137,11 +139,10 @@ class UserDetails extends amplify_core.Model {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is UserDetails &&
-      id == other.id &&
       _activeMealPlanId == other._activeMealPlanId &&
       DeepCollectionEquality().equals(_allergies, other._allergies) &&
+      _createdAt == other._createdAt &&
       _dailyMealsPreference == other._dailyMealsPreference &&
-      DeepCollectionEquality().equals(_dietaryRestrictions, other._dietaryRestrictions) &&
       _exerciseFrequency == other._exerciseFrequency &&
       _heightCm == other._heightCm &&
       _openTextPreferences == other._openTextPreferences &&
@@ -159,114 +160,104 @@ class UserDetails extends amplify_core.Model {
     var buffer = new StringBuffer();
     
     buffer.write("UserDetails {");
-    buffer.write("id=" + "$id" + ", ");
     buffer.write("activeMealPlanId=" + "$_activeMealPlanId" + ", ");
     buffer.write("allergies=" + (_allergies != null ? _allergies!.map((e) => amplify_core.enumToString(e)).toString() : "null") + ", ");
+    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("dailyMealsPreference=" + (_dailyMealsPreference != null ? _dailyMealsPreference!.toString() : "null") + ", ");
-    buffer.write("dietaryRestrictions=" + (_dietaryRestrictions != null ? _dietaryRestrictions!.toString() : "null") + ", ");
     buffer.write("exerciseFrequency=" + (_exerciseFrequency != null ? amplify_core.enumToString(_exerciseFrequency)! : "null") + ", ");
     buffer.write("heightCm=" + (_heightCm != null ? _heightCm!.toString() : "null") + ", ");
     buffer.write("openTextPreferences=" + "$_openTextPreferences" + ", ");
     buffer.write("targetCalories=" + (_targetCalories != null ? _targetCalories!.toString() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
     buffer.write("userId=" + "$_userId" + ", ");
-    buffer.write("weightKg=" + (_weightKg != null ? _weightKg!.toString() : "null") + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null"));
+    buffer.write("weightKg=" + (_weightKg != null ? _weightKg!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  UserDetails copyWith({String? activeMealPlanId, List<AllergenEnum>? allergies, int? dailyMealsPreference, List<String>? dietaryRestrictions, ExerciseFrequency? exerciseFrequency, double? heightCm, String? openTextPreferences, double? targetCalories, amplify_core.TemporalDateTime? updatedAt, String? userId, double? weightKg}) {
+  UserDetails copyWith({String? activeMealPlanId, List<AllergenEnum>? allergies, amplify_core.TemporalDateTime? createdAt, int? dailyMealsPreference, ExerciseFrequency? exerciseFrequency, double? heightCm, String? openTextPreferences, double? targetCalories, amplify_core.TemporalDateTime? updatedAt, double? weightKg}) {
     return UserDetails._internal(
-      id: id,
       activeMealPlanId: activeMealPlanId ?? this.activeMealPlanId,
       allergies: allergies ?? this.allergies,
+      createdAt: createdAt ?? this.createdAt,
       dailyMealsPreference: dailyMealsPreference ?? this.dailyMealsPreference,
-      dietaryRestrictions: dietaryRestrictions ?? this.dietaryRestrictions,
       exerciseFrequency: exerciseFrequency ?? this.exerciseFrequency,
       heightCm: heightCm ?? this.heightCm,
       openTextPreferences: openTextPreferences ?? this.openTextPreferences,
       targetCalories: targetCalories ?? this.targetCalories,
       updatedAt: updatedAt ?? this.updatedAt,
-      userId: userId ?? this.userId,
+      userId: userId,
       weightKg: weightKg ?? this.weightKg);
   }
   
   UserDetails copyWithModelFieldValues({
     ModelFieldValue<String?>? activeMealPlanId,
     ModelFieldValue<List<AllergenEnum>>? allergies,
+    ModelFieldValue<amplify_core.TemporalDateTime?>? createdAt,
     ModelFieldValue<int?>? dailyMealsPreference,
-    ModelFieldValue<List<String>>? dietaryRestrictions,
     ModelFieldValue<ExerciseFrequency?>? exerciseFrequency,
     ModelFieldValue<double?>? heightCm,
     ModelFieldValue<String?>? openTextPreferences,
     ModelFieldValue<double?>? targetCalories,
     ModelFieldValue<amplify_core.TemporalDateTime?>? updatedAt,
-    ModelFieldValue<String>? userId,
     ModelFieldValue<double?>? weightKg
   }) {
     return UserDetails._internal(
-      id: id,
       activeMealPlanId: activeMealPlanId == null ? this.activeMealPlanId : activeMealPlanId.value,
       allergies: allergies == null ? this.allergies : allergies.value,
+      createdAt: createdAt == null ? this.createdAt : createdAt.value,
       dailyMealsPreference: dailyMealsPreference == null ? this.dailyMealsPreference : dailyMealsPreference.value,
-      dietaryRestrictions: dietaryRestrictions == null ? this.dietaryRestrictions : dietaryRestrictions.value,
       exerciseFrequency: exerciseFrequency == null ? this.exerciseFrequency : exerciseFrequency.value,
       heightCm: heightCm == null ? this.heightCm : heightCm.value,
       openTextPreferences: openTextPreferences == null ? this.openTextPreferences : openTextPreferences.value,
       targetCalories: targetCalories == null ? this.targetCalories : targetCalories.value,
       updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
-      userId: userId == null ? this.userId : userId.value,
+      userId: userId,
       weightKg: weightKg == null ? this.weightKg : weightKg.value
     );
   }
   
   UserDetails.fromJson(Map<String, dynamic> json)  
-    : id = json['id'],
-      _activeMealPlanId = json['activeMealPlanId'],
+    : _activeMealPlanId = json['activeMealPlanId'],
       _allergies = json['allergies'] is List
         ? (json['allergies'] as List)
           .map((e) => amplify_core.enumFromString<AllergenEnum>(e, AllergenEnum.values)!)
           .toList()
         : null,
+      _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _dailyMealsPreference = (json['dailyMealsPreference'] as num?)?.toInt(),
-      _dietaryRestrictions = json['dietaryRestrictions']?.cast<String>(),
       _exerciseFrequency = amplify_core.enumFromString<ExerciseFrequency>(json['exerciseFrequency'], ExerciseFrequency.values),
       _heightCm = (json['heightCm'] as num?)?.toDouble(),
       _openTextPreferences = json['openTextPreferences'],
       _targetCalories = (json['targetCalories'] as num?)?.toDouble(),
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null,
       _userId = json['userId'],
-      _weightKg = (json['weightKg'] as num?)?.toDouble(),
-      _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null;
+      _weightKg = (json['weightKg'] as num?)?.toDouble();
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'activeMealPlanId': _activeMealPlanId, 'allergies': _allergies?.map((e) => amplify_core.enumToString(e)).toList(), 'dailyMealsPreference': _dailyMealsPreference, 'dietaryRestrictions': _dietaryRestrictions, 'exerciseFrequency': amplify_core.enumToString(_exerciseFrequency), 'heightCm': _heightCm, 'openTextPreferences': _openTextPreferences, 'targetCalories': _targetCalories, 'updatedAt': _updatedAt?.format(), 'userId': _userId, 'weightKg': _weightKg, 'createdAt': _createdAt?.format()
+    'activeMealPlanId': _activeMealPlanId, 'allergies': _allergies?.map((e) => amplify_core.enumToString(e)).toList(), 'createdAt': _createdAt?.format(), 'dailyMealsPreference': _dailyMealsPreference, 'exerciseFrequency': amplify_core.enumToString(_exerciseFrequency), 'heightCm': _heightCm, 'openTextPreferences': _openTextPreferences, 'targetCalories': _targetCalories, 'updatedAt': _updatedAt?.format(), 'userId': _userId, 'weightKg': _weightKg
   };
   
   Map<String, Object?> toMap() => {
-    'id': id,
     'activeMealPlanId': _activeMealPlanId,
     'allergies': _allergies,
+    'createdAt': _createdAt,
     'dailyMealsPreference': _dailyMealsPreference,
-    'dietaryRestrictions': _dietaryRestrictions,
     'exerciseFrequency': _exerciseFrequency,
     'heightCm': _heightCm,
     'openTextPreferences': _openTextPreferences,
     'targetCalories': _targetCalories,
     'updatedAt': _updatedAt,
     'userId': _userId,
-    'weightKg': _weightKg,
-    'createdAt': _createdAt
+    'weightKg': _weightKg
   };
 
   static final amplify_core.QueryModelIdentifier<UserDetailsModelIdentifier> MODEL_IDENTIFIER = amplify_core.QueryModelIdentifier<UserDetailsModelIdentifier>();
-  static final ID = amplify_core.QueryField(fieldName: "id");
   static final ACTIVEMEALPLANID = amplify_core.QueryField(fieldName: "activeMealPlanId");
   static final ALLERGIES = amplify_core.QueryField(fieldName: "allergies");
+  static final CREATEDAT = amplify_core.QueryField(fieldName: "createdAt");
   static final DAILYMEALSPREFERENCE = amplify_core.QueryField(fieldName: "dailyMealsPreference");
-  static final DIETARYRESTRICTIONS = amplify_core.QueryField(fieldName: "dietaryRestrictions");
   static final EXERCISEFREQUENCY = amplify_core.QueryField(fieldName: "exerciseFrequency");
   static final HEIGHTCM = amplify_core.QueryField(fieldName: "heightCm");
   static final OPENTEXTPREFERENCES = amplify_core.QueryField(fieldName: "openTextPreferences");
@@ -278,7 +269,9 @@ class UserDetails extends amplify_core.Model {
     modelSchemaDefinition.name = "UserDetails";
     modelSchemaDefinition.pluralName = "UserDetails";
     
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.id());
+    modelSchemaDefinition.indexes = [
+      amplify_core.ModelIndex(fields: const ["userId"], name: null)
+    ];
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
       key: UserDetails.ACTIVEMEALPLANID,
@@ -294,16 +287,15 @@ class UserDetails extends amplify_core.Model {
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: UserDetails.DAILYMEALSPREFERENCE,
+      key: UserDetails.CREATEDAT,
       isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.int)
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: UserDetails.DIETARYRESTRICTIONS,
+      key: UserDetails.DAILYMEALSPREFERENCE,
       isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.collection, ofModelName: amplify_core.ModelFieldTypeEnum.string.name)
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.int)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
@@ -347,13 +339,6 @@ class UserDetails extends amplify_core.Model {
       isRequired: false,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
     ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
-      fieldName: 'createdAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
-    ));
   });
 }
 
@@ -376,15 +361,15 @@ class _UserDetailsModelType extends amplify_core.ModelType<UserDetails> {
  * of [UserDetails] in your schema.
  */
 class UserDetailsModelIdentifier implements amplify_core.ModelIdentifier<UserDetails> {
-  final String id;
+  final String userId;
 
-  /** Create an instance of UserDetailsModelIdentifier using [id] the primary key. */
+  /** Create an instance of UserDetailsModelIdentifier using [userId] the primary key. */
   const UserDetailsModelIdentifier({
-    required this.id});
+    required this.userId});
   
   @override
   Map<String, dynamic> serializeAsMap() => (<String, dynamic>{
-    'id': id
+    'userId': userId
   });
   
   @override
@@ -397,7 +382,7 @@ class UserDetailsModelIdentifier implements amplify_core.ModelIdentifier<UserDet
   String serializeAsString() => serializeAsMap().values.join('#');
   
   @override
-  String toString() => 'UserDetailsModelIdentifier(id: $id)';
+  String toString() => 'UserDetailsModelIdentifier(userId: $userId)';
   
   @override
   bool operator ==(Object other) {
@@ -406,10 +391,10 @@ class UserDetailsModelIdentifier implements amplify_core.ModelIdentifier<UserDet
     }
     
     return other is UserDetailsModelIdentifier &&
-      id == other.id;
+      userId == other.userId;
   }
   
   @override
   int get hashCode =>
-    id.hashCode;
+    userId.hashCode;
 }

@@ -65,7 +65,7 @@ export 'WeekdayEnum.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "3af2a27df663fb51d992fb66edce3ec5";
+  String version = "a911b60e050e7911e3c0031dc0bc836c";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [ChatMessage.schema, ChatMetadata.schema, MealPlan.schema, NutritionistProfile.schema, PlanDayCompletion.schema, UserDetails.schema];
   @override
