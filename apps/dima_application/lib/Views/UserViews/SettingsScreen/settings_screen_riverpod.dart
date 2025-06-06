@@ -4,6 +4,7 @@ import '../../../providers/user_details_provider.dart';
 import 'widgets/user_details_form_riverpod.dart';
 import 'widgets/password_change_form_riverpod.dart';
 import 'widgets/danger_zone_section_riverpod.dart';
+import 'widgets/actions_section_riverpod.dart';
 
 class SettingsScreenRiverpod extends ConsumerWidget {
   const SettingsScreenRiverpod({Key? key}) : super(key: key);
@@ -12,110 +13,113 @@ class SettingsScreenRiverpod extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userIdAsync = ref.watch(userIdProvider);
     final userDetailsAsync = ref.watch(userDetailsProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              userIdAsync.whenData((userId) {
-                if (userId != null) {
-                  ref.read(userDetailsProvider.notifier).loadUserDetails(userId);
-                }
-              });
-            },
+      body: SafeArea(
+        child: userIdAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stackTrace) => Center(
+            child: Text('Error: ${error.toString()}'),
           ),
-        ],
-      ),
-      body: userIdAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Error loading settings'),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
-                child: const Text('Return to Login'),
-              ),
-            ],
-          ),
-        ),
-        data: (userId) {
-          if (userId == null) {
-            return Center(
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
-                child: const Text('Return to Login'),
-              ),
-            );
-          }
-
-          return userDetailsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stackTrace) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Error loading user details'),
-                  ElevatedButton(
-                    onPressed: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            ),
-            data: (userDetails) => RefreshIndicator(
-              onRefresh: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16.0),
+          data: (userId) {
+            if (userId == null) {
+              return Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if ( userDetails != null)
-                      UserDetailsFormRiverpod(
-                        userDetails: userDetails,
-                      ),
-                    const SizedBox(height: 24),
-                    const PasswordChangeFormRiverpod(),
-                    const SizedBox(height: 24),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.cleaning_services),
-                      label: const Text('Clear Cache'),
-                      onPressed: () async {
-                        await ref.read(userDetailsProvider.notifier).clearCache(userId);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Cache cleared successfully')),
-                          );
-                        }
-                      },
+                    Icon(Icons.account_circle_outlined, size: 48, color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Not signed in',
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 8),
                     ElevatedButton.icon(
-                      icon: const Icon(Icons.logout),
-                      label: const Text('Sign Out'),
-                      onPressed: () async {
-                        await ref.read(userDetailsProvider.notifier).signOut(userId);
-                        if (context.mounted) {
-                          Navigator.of(context).pushReplacementNamed('/login');
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                      ),
+                      onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
+                      icon: const Icon(Icons.login),
+                      label: const Text('Sign In'),
                     ),
-                    const SizedBox(height: 24),
-                    DangerZoneSectionRiverpod(userId: userId),
                   ],
                 ),
+              );
+            }
+
+            return RefreshIndicator(
+              displacement: 60.0,
+              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              onRefresh: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return ListView(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                        child: Stack(
+                          children: [
+                            // Main content
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  userDetailsAsync.when(
+                                    // By using `skipLoadingOnRefresh: true`, we keep the old data visible.
+                                    skipLoadingOnRefresh: true,
+                                    loading: () => const Center(child: CircularProgressIndicator()),
+                                    error: (error, stackTrace) => Center(child: Text('Error: $error')),
+                                    data: (data) {
+                                      final userDetails = data.$1;
+                                      final uniqueId = data.$2;
+
+                                      if (userDetails == null) {
+                                        return const Center(child: Text('No user details available.'));
+                                      }
+
+                                      return Column(
+                                        children: [
+                                          UserDetailsFormRiverpod(
+                                            key: ValueKey(uniqueId), // Use the unique ID for the key
+                                            userDetails: userDetails,
+                                            onUpdate: (updatedDetails) async {
+                                              return await ref
+                                                  .read(userDetailsProvider.notifier)
+                                                  .updateUserDetails(updatedDetails);
+                                            },
+                                          ),
+                                          const SizedBox(height: 24),
+                                          PasswordChangeFormRiverpod(
+                                            onChangePassword: (oldPassword, newPassword) async {
+                                              return await ref
+                                                  .read(userDetailsProvider.notifier)
+                                                  .changePassword(oldPassword, newPassword);
+                                            },
+                                          ),
+                                          const SizedBox(height: 24),
+                                          ActionsSectionRiverpod(userId: userId),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 24),
+                                  DangerZoneSectionRiverpod(userId: userId),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

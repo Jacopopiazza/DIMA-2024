@@ -14,7 +14,13 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Account'),
+        title: Row(
+          children: [
+            Icon(Icons.warning, color: Theme.of(context).colorScheme.error),
+            const SizedBox(width: 8),
+            const Text('Delete Account'),
+          ],
+        ),
         content: const Text(
           'Are you sure you want to delete your account? This action cannot be undone.',
         ),
@@ -26,7 +32,7 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(
-              foregroundColor: Colors.red,
+              foregroundColor: Theme.of(context).colorScheme.error,
             ),
             child: const Text('DELETE'),
           ),
@@ -57,43 +63,86 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      color: Colors.grey[100],
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark 
+          ? theme.colorScheme.errorContainer.withOpacity(0.3)
+          : theme.colorScheme.error.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.error.withOpacity(isDark ? 0.5 : 0.3),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.error.withOpacity(isDark ? 0.2 : 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
                 Icon(
                   Icons.warning,
-                  color: Colors.red,
+                  color: theme.colorScheme.error,
+                  size: 28,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'Danger Zone',
-                  style: TextStyle(
-                    fontSize: 20,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: theme.colorScheme.error,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'The actions below are destructive and cannot be undone. Please proceed with caution.',
-              style: TextStyle(color: Colors.grey),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isDark
+                  ? theme.colorScheme.error.withOpacity(0.1)
+                  : theme.colorScheme.error.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: theme.colorScheme.error.withOpacity(isDark ? 0.2 : 0.1),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                'The actions below are destructive and cannot be undone. Please proceed with caution.',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+              ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.delete_forever),
-              label: const Text('Delete Account'),
-              onPressed: () => _showDeleteConfirmation(context, ref),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+            Center(
+              child: ElevatedButton.icon(
+                icon: Icon(
+                  Icons.delete_forever,
+                  color: theme.colorScheme.onError,
+                  size: 20,
+                ),
+                label: const Text('Delete Account'),
+                onPressed: () => _showDeleteConfirmation(context, ref),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.colorScheme.error,
+                  foregroundColor: theme.colorScheme.onError,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  elevation: 2,
+                  iconColor: theme.colorScheme.onError,
+                ),
               ),
             ),
           ],

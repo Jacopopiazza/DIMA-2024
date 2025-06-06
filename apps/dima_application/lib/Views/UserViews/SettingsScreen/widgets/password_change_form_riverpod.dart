@@ -3,7 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../providers/user_details_provider.dart';
 
 class PasswordChangeFormRiverpod extends ConsumerStatefulWidget {
-  const PasswordChangeFormRiverpod({Key? key}) : super(key: key);
+  final Future<bool> Function(String oldPassword, String newPassword) onChangePassword;
+
+  const PasswordChangeFormRiverpod({
+    Key? key,
+    required this.onChangePassword,
+  }) : super(key: key);
 
   @override
   ConsumerState<PasswordChangeFormRiverpod> createState() => _PasswordChangeFormRiverpodState();
@@ -15,6 +20,9 @@ class _PasswordChangeFormRiverpodState extends ConsumerState<PasswordChangeFormR
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscureOldPassword = true;
+  bool _obscureNewPassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
@@ -61,29 +69,56 @@ class _PasswordChangeFormRiverpodState extends ConsumerState<PasswordChangeFormR
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Form(
       key: _formKey,
-      child: Card(
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark 
+            ? theme.colorScheme.secondary.withOpacity(0.1)
+            : theme.colorScheme.primary.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.primary.withOpacity(isDark ? 0.3 : 0.2),
+            width: 1,
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Change Password',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  Icon(Icons.lock_outline, color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Change Password',
+                    style: theme.textTheme.titleLarge,
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               TextFormField(
                 controller: _oldPasswordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Current Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureOldPassword ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureOldPassword = !_obscureOldPassword;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: _obscureOldPassword,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your current password';
@@ -94,11 +129,22 @@ class _PasswordChangeFormRiverpodState extends ConsumerState<PasswordChangeFormR
               const SizedBox(height: 16),
               TextFormField(
                 controller: _newPasswordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'New Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureNewPassword ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureNewPassword = !_obscureNewPassword;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: _obscureNewPassword,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a new password';
@@ -112,11 +158,22 @@ class _PasswordChangeFormRiverpodState extends ConsumerState<PasswordChangeFormR
               const SizedBox(height: 16),
               TextFormField(
                 controller: _confirmPasswordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Confirm New Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: _obscureConfirmPassword,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please confirm your new password';
@@ -131,9 +188,13 @@ class _PasswordChangeFormRiverpodState extends ConsumerState<PasswordChangeFormR
               Center(
                 child: _isLoading
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
+                    : ElevatedButton.icon(
                         onPressed: _handleSubmit,
-                        child: const Text('Change Password'),
+                        icon: const Icon(Icons.save),
+                        label: const Text('Change Password'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        ),
                       ),
               ),
             ],
