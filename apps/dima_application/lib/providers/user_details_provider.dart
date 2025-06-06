@@ -116,4 +116,10 @@ class UserDetailsNotifier extends StateNotifier<AsyncValue<(UserDetails?, String
       return false;
     }
   }
+
+  Future<void> signOut(String userId) async {
+    final service = await ref.read(userDetailsServiceProvider);
+    await service.signOut(userId);
+    state = AsyncValue.data((null, const Uuid().v4()));
+  }
 } 

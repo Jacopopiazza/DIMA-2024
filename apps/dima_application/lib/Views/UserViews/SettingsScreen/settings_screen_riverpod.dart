@@ -4,6 +4,7 @@ import '../../../providers/user_details_provider.dart';
 import 'widgets/user_details_form_riverpod.dart';
 import 'widgets/password_change_form_riverpod.dart';
 import 'widgets/danger_zone_section_riverpod.dart';
+import 'widgets/actions_section_riverpod.dart';
 
 class SettingsScreenRiverpod extends ConsumerWidget {
   const SettingsScreenRiverpod({Key? key}) : super(key: key);
@@ -98,6 +99,8 @@ class SettingsScreenRiverpod extends ConsumerWidget {
                                                   .changePassword(oldPassword, newPassword);
                                             },
                                           ),
+                                          const SizedBox(height: 24),
+                                          ActionsSectionRiverpod(userId: userId),
                                         ],
                                       );
                                     },

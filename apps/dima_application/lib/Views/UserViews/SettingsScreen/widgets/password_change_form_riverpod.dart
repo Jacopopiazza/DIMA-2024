@@ -70,10 +70,21 @@ class _PasswordChangeFormRiverpodState extends ConsumerState<PasswordChangeFormR
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+    final isDark = theme.brightness == Brightness.dark;
+
     return Form(
       key: _formKey,
-      child: Card(
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark 
+            ? theme.colorScheme.secondary.withOpacity(0.1)
+            : theme.colorScheme.primary.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.primary.withOpacity(isDark ? 0.3 : 0.2),
+            width: 1,
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
