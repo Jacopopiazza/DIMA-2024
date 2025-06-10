@@ -2,15 +2,15 @@ const amplifyConfig = r'''{
   "version": "1",
   "data": {
     "aws_region": "us-west-2",
-    "url": "https://3da5tishfjahzix25xcwypcr3q.appsync-api.us-west-2.amazonaws.com/graphql",
+    "url": "https://5axd2a24h5aejazz5tmvhgukqq.appsync-api.us-west-2.amazonaws.com/graphql",
     "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
     "authorization_types": ["AMAZON_COGNITO_USER_POOLS"]
   },
   "auth": {
     "aws_region": "us-west-2",
-    "user_pool_id": "us-west-2_EI4S3Cg61",
-    "user_pool_client_id": "6hd1vduncndssibncoss6c7pte",
-    "identity_pool_id": "us-west-2:6c6872b5-9506-4a38-bacf-5b11d2cfefe4",
+    "user_pool_id": "us-west-2_fQpGATfnW",
+    "user_pool_client_id": "1jpsfjkq93r6isi22opgl398kn",
+    "identity_pool_id": "us-west-2:92fa5e1c-ce70-4a66-9b32-06ae93c14dcd",
     "username_attributes": ["email"],
     "standard_required_attributes": [
       "email",

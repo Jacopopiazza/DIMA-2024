@@ -31,6 +31,7 @@ class UserDetails extends amplify_core.Model {
   final List<AllergenEnum>? _allergies;
   final amplify_core.TemporalDateTime? _createdAt;
   final int? _dailyMealsPreference;
+  final List<String>? _dietaryRestrictions;
   final ExerciseFrequency? _exerciseFrequency;
   final double? _heightCm;
   final String? _openTextPreferences;
@@ -77,6 +78,10 @@ class UserDetails extends amplify_core.Model {
     return _dailyMealsPreference;
   }
   
+  List<String>? get dietaryRestrictions {
+    return _dietaryRestrictions;
+  }
+  
   ExerciseFrequency? get exerciseFrequency {
     return _exerciseFrequency;
   }
@@ -114,14 +119,15 @@ class UserDetails extends amplify_core.Model {
     return _weightKg;
   }
   
-  const UserDetails._internal({activeMealPlanId, allergies, createdAt, dailyMealsPreference, exerciseFrequency, heightCm, openTextPreferences, targetCalories, updatedAt, required userId, weightKg}): _activeMealPlanId = activeMealPlanId, _allergies = allergies, _createdAt = createdAt, _dailyMealsPreference = dailyMealsPreference, _exerciseFrequency = exerciseFrequency, _heightCm = heightCm, _openTextPreferences = openTextPreferences, _targetCalories = targetCalories, _updatedAt = updatedAt, _userId = userId, _weightKg = weightKg;
+  const UserDetails._internal({activeMealPlanId, allergies, createdAt, dailyMealsPreference, dietaryRestrictions, exerciseFrequency, heightCm, openTextPreferences, targetCalories, updatedAt, required userId, weightKg}): _activeMealPlanId = activeMealPlanId, _allergies = allergies, _createdAt = createdAt, _dailyMealsPreference = dailyMealsPreference, _dietaryRestrictions = dietaryRestrictions, _exerciseFrequency = exerciseFrequency, _heightCm = heightCm, _openTextPreferences = openTextPreferences, _targetCalories = targetCalories, _updatedAt = updatedAt, _userId = userId, _weightKg = weightKg;
   
-  factory UserDetails({String? activeMealPlanId, List<AllergenEnum>? allergies, amplify_core.TemporalDateTime? createdAt, int? dailyMealsPreference, ExerciseFrequency? exerciseFrequency, double? heightCm, String? openTextPreferences, double? targetCalories, amplify_core.TemporalDateTime? updatedAt, required String userId, double? weightKg}) {
+  factory UserDetails({String? activeMealPlanId, List<AllergenEnum>? allergies, amplify_core.TemporalDateTime? createdAt, int? dailyMealsPreference, List<String>? dietaryRestrictions, ExerciseFrequency? exerciseFrequency, double? heightCm, String? openTextPreferences, double? targetCalories, amplify_core.TemporalDateTime? updatedAt, required String userId, double? weightKg}) {
     return UserDetails._internal(
       activeMealPlanId: activeMealPlanId,
       allergies: allergies != null ? List<AllergenEnum>.unmodifiable(allergies) : allergies,
       createdAt: createdAt,
       dailyMealsPreference: dailyMealsPreference,
+      dietaryRestrictions: dietaryRestrictions != null ? List<String>.unmodifiable(dietaryRestrictions) : dietaryRestrictions,
       exerciseFrequency: exerciseFrequency,
       heightCm: heightCm,
       openTextPreferences: openTextPreferences,
@@ -143,6 +149,7 @@ class UserDetails extends amplify_core.Model {
       DeepCollectionEquality().equals(_allergies, other._allergies) &&
       _createdAt == other._createdAt &&
       _dailyMealsPreference == other._dailyMealsPreference &&
+      DeepCollectionEquality().equals(_dietaryRestrictions, other._dietaryRestrictions) &&
       _exerciseFrequency == other._exerciseFrequency &&
       _heightCm == other._heightCm &&
       _openTextPreferences == other._openTextPreferences &&
@@ -164,6 +171,7 @@ class UserDetails extends amplify_core.Model {
     buffer.write("allergies=" + (_allergies != null ? _allergies!.map((e) => amplify_core.enumToString(e)).toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("dailyMealsPreference=" + (_dailyMealsPreference != null ? _dailyMealsPreference!.toString() : "null") + ", ");
+    buffer.write("dietaryRestrictions=" + (_dietaryRestrictions != null ? _dietaryRestrictions!.toString() : "null") + ", ");
     buffer.write("exerciseFrequency=" + (_exerciseFrequency != null ? amplify_core.enumToString(_exerciseFrequency)! : "null") + ", ");
     buffer.write("heightCm=" + (_heightCm != null ? _heightCm!.toString() : "null") + ", ");
     buffer.write("openTextPreferences=" + "$_openTextPreferences" + ", ");
@@ -176,12 +184,13 @@ class UserDetails extends amplify_core.Model {
     return buffer.toString();
   }
   
-  UserDetails copyWith({String? activeMealPlanId, List<AllergenEnum>? allergies, amplify_core.TemporalDateTime? createdAt, int? dailyMealsPreference, ExerciseFrequency? exerciseFrequency, double? heightCm, String? openTextPreferences, double? targetCalories, amplify_core.TemporalDateTime? updatedAt, double? weightKg}) {
+  UserDetails copyWith({String? activeMealPlanId, List<AllergenEnum>? allergies, amplify_core.TemporalDateTime? createdAt, int? dailyMealsPreference, List<String>? dietaryRestrictions, ExerciseFrequency? exerciseFrequency, double? heightCm, String? openTextPreferences, double? targetCalories, amplify_core.TemporalDateTime? updatedAt, double? weightKg}) {
     return UserDetails._internal(
       activeMealPlanId: activeMealPlanId ?? this.activeMealPlanId,
       allergies: allergies ?? this.allergies,
       createdAt: createdAt ?? this.createdAt,
       dailyMealsPreference: dailyMealsPreference ?? this.dailyMealsPreference,
+      dietaryRestrictions: dietaryRestrictions ?? this.dietaryRestrictions,
       exerciseFrequency: exerciseFrequency ?? this.exerciseFrequency,
       heightCm: heightCm ?? this.heightCm,
       openTextPreferences: openTextPreferences ?? this.openTextPreferences,
@@ -196,6 +205,7 @@ class UserDetails extends amplify_core.Model {
     ModelFieldValue<List<AllergenEnum>>? allergies,
     ModelFieldValue<amplify_core.TemporalDateTime?>? createdAt,
     ModelFieldValue<int?>? dailyMealsPreference,
+    ModelFieldValue<List<String>>? dietaryRestrictions,
     ModelFieldValue<ExerciseFrequency?>? exerciseFrequency,
     ModelFieldValue<double?>? heightCm,
     ModelFieldValue<String?>? openTextPreferences,
@@ -208,6 +218,7 @@ class UserDetails extends amplify_core.Model {
       allergies: allergies == null ? this.allergies : allergies.value,
       createdAt: createdAt == null ? this.createdAt : createdAt.value,
       dailyMealsPreference: dailyMealsPreference == null ? this.dailyMealsPreference : dailyMealsPreference.value,
+      dietaryRestrictions: dietaryRestrictions == null ? this.dietaryRestrictions : dietaryRestrictions.value,
       exerciseFrequency: exerciseFrequency == null ? this.exerciseFrequency : exerciseFrequency.value,
       heightCm: heightCm == null ? this.heightCm : heightCm.value,
       openTextPreferences: openTextPreferences == null ? this.openTextPreferences : openTextPreferences.value,
@@ -227,6 +238,7 @@ class UserDetails extends amplify_core.Model {
         : null,
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _dailyMealsPreference = (json['dailyMealsPreference'] as num?)?.toInt(),
+      _dietaryRestrictions = json['dietaryRestrictions']?.cast<String>(),
       _exerciseFrequency = amplify_core.enumFromString<ExerciseFrequency>(json['exerciseFrequency'], ExerciseFrequency.values),
       _heightCm = (json['heightCm'] as num?)?.toDouble(),
       _openTextPreferences = json['openTextPreferences'],
@@ -236,7 +248,7 @@ class UserDetails extends amplify_core.Model {
       _weightKg = (json['weightKg'] as num?)?.toDouble();
   
   Map<String, dynamic> toJson() => {
-    'activeMealPlanId': _activeMealPlanId, 'allergies': _allergies?.map((e) => amplify_core.enumToString(e)).toList(), 'createdAt': _createdAt?.format(), 'dailyMealsPreference': _dailyMealsPreference, 'exerciseFrequency': amplify_core.enumToString(_exerciseFrequency), 'heightCm': _heightCm, 'openTextPreferences': _openTextPreferences, 'targetCalories': _targetCalories, 'updatedAt': _updatedAt?.format(), 'userId': _userId, 'weightKg': _weightKg
+    'activeMealPlanId': _activeMealPlanId, 'allergies': _allergies?.map((e) => amplify_core.enumToString(e)).toList(), 'createdAt': _createdAt?.format(), 'dailyMealsPreference': _dailyMealsPreference, 'dietaryRestrictions': _dietaryRestrictions, 'exerciseFrequency': amplify_core.enumToString(_exerciseFrequency), 'heightCm': _heightCm, 'openTextPreferences': _openTextPreferences, 'targetCalories': _targetCalories, 'updatedAt': _updatedAt?.format(), 'userId': _userId, 'weightKg': _weightKg
   };
   
   Map<String, Object?> toMap() => {
@@ -244,6 +256,7 @@ class UserDetails extends amplify_core.Model {
     'allergies': _allergies,
     'createdAt': _createdAt,
     'dailyMealsPreference': _dailyMealsPreference,
+    'dietaryRestrictions': _dietaryRestrictions,
     'exerciseFrequency': _exerciseFrequency,
     'heightCm': _heightCm,
     'openTextPreferences': _openTextPreferences,
@@ -258,6 +271,7 @@ class UserDetails extends amplify_core.Model {
   static final ALLERGIES = amplify_core.QueryField(fieldName: "allergies");
   static final CREATEDAT = amplify_core.QueryField(fieldName: "createdAt");
   static final DAILYMEALSPREFERENCE = amplify_core.QueryField(fieldName: "dailyMealsPreference");
+  static final DIETARYRESTRICTIONS = amplify_core.QueryField(fieldName: "dietaryRestrictions");
   static final EXERCISEFREQUENCY = amplify_core.QueryField(fieldName: "exerciseFrequency");
   static final HEIGHTCM = amplify_core.QueryField(fieldName: "heightCm");
   static final OPENTEXTPREFERENCES = amplify_core.QueryField(fieldName: "openTextPreferences");
@@ -296,6 +310,13 @@ class UserDetails extends amplify_core.Model {
       key: UserDetails.DAILYMEALSPREFERENCE,
       isRequired: false,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: UserDetails.DIETARYRESTRICTIONS,
+      isRequired: false,
+      isArray: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.collection, ofModelName: amplify_core.ModelFieldTypeEnum.string.name)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
