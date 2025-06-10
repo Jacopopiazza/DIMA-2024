@@ -1,0 +1,29 @@
+## Query: listMyMealPlans(limit: Int, nextToken: String)
+## Action: Retrieve all MEAL_PLAN items for the authenticated user.
+
+#if(!$ctx.identity.sub)
+  $util.unauthorized()
+#end
+
+#set($userId = $ctx.identity.sub)
+#set($pk = "USER#" + $userId)
+
+{
+  "version": "2018-05-29",
+  "operation": "Query",
+  "query": {
+    "expression": "PK = :pk AND begins_with(SK, :sk)",
+    "expressionValues": {
+      ":pk": $util.dynamodb.toDynamoDBJson($pk),
+      ":sk": $util.dynamodb.toDynamoDBJson("PLAN#")
+    }
+  },
+  #if($ctx.args.limit)
+    "limit": $ctx.args.limit,
+  #else
+    "limit": 20,
+  #end
+  #if($ctx.args.nextToken)
+    "nextToken": $ctx.args.nextToken,
+  #end
+} 

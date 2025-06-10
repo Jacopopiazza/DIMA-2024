@@ -233,6 +233,30 @@ export class AppSyncApiStack extends cdk.Stack {
       ), // New VTL file
     });
 
+    // --- Resolver for Mutation.createMealPlan ---
+    tableDS.createResolver('MutationCreateMealPlanResolver', {
+      typeName: 'Mutation',
+      fieldName: 'createMealPlan',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/mutation.createMealPlan-request.vtl',
+      ),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/mutation.createMealPlan-response.vtl',
+      ),
+    });
+
+    // --- Resolver for Query.listMyMealPlans ---
+    tableDS.createResolver('QueryListMyMealPlansResolver', {
+      typeName: 'Query',
+      fieldName: 'listMyMealPlans',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/query.listMyMealPlans-request.vtl',
+      ),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/query.listMyMealPlans-response.vtl',
+      ),
+    });
+
     // --------------------------------------------------------------------
     // OTHER RESOLVERS WILL BE ADDED LATER
     // --------------------------------------------------------------------

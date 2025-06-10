@@ -1,0 +1,39 @@
+## Mutation: createMealPlan(input: CreateMealPlanInput!)
+## Action: Create a new MEAL_PLAN item for a user.
+
+#if(!$ctx.identity.sub)
+  $util.unauthorized()
+#end
+
+## The PK for a meal plan is USER#[userId], and the SK is PLAN#[planId]
+#set($userId = $ctx.identity.sub)
+#set($planId = $util.autoId()) ## Generate a unique ID for the new plan
+#set($pk = "USER#" + $userId)
+#set($sk = "PLAN#" + $planId)
+
+#set($details = $ctx.args.input)
+#if($details.dailyPlan)
+    #set($details.dailyPlan = $util.dynamodb.toMapValues($details.dailyPlan))
+#end
+
+#set($attributeValues = $util.dynamodb.toMapValues($details))
+$util.qr($attributeValues.put("mealPlanId", $util.dynamodb.toDynamoDB($planId)))
+$util.qr($attributeValues.put("PK", $util.dynamodb.toDynamoDB($pk)))
+$util.qr($attributeValues.put("SK", $util.dynamodb.toDynamoDB($sk)))
+$util.qr($attributeValues.put("entityType", $util.dynamodb.toDynamoDB("MEAL_PLAN")))
+$util.qr($attributeValues.put("createdAt", $util.dynamodb.toDynamoDB($util.time.nowISO8601())))
+$util.qr($attributeValues.put("updatedAt", $util.dynamodb.toDynamoDB($util.time.nowISO8601())))
+
+
+{
+  "version": "2018-05-29",
+  "operation": "PutItem",
+  "key": {
+    "PK": $util.dynamodb.toDynamoDBJson($pk),
+    "SK": $util.dynamodb.toDynamoDBJson($sk)
+  },
+  "attributeValues": $util.toJson($attributeValues),
+  "condition": {
+    "expression": "attribute_not_exists(PK) AND attribute_not_exists(SK)"
+  }
+}
