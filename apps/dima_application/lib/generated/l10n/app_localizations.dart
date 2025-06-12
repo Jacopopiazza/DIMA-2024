@@ -2530,6 +2530,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account recovery requires verified contact information'**
   String get verifyUser;
+
+  /// No description provided for @editMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit meal'**
+  String get editMeal;
+
+  /// No description provided for @shareMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Share meal'**
+  String get shareMeal;
+
+  /// No description provided for @switchMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Meal Plan'**
+  String get switchMealPlan;
+
+  /// No description provided for @noOtherMealPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No other meal plans available.'**
+  String get noOtherMealPlans;
+
+  /// No description provided for @unnamedPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Unnamed Plan'**
+  String get unnamedPlan;
+
+  /// No description provided for @switchingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Switching plan...'**
+  String get switchingPlan;
+
+  /// No description provided for @switchedToPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Switched to plan'**
+  String get switchedToPlan;
+
+  /// No description provided for @failedToSwitchPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to switch plan'**
+  String get failedToSwitchPlan;
+
+  /// No description provided for @errorLoadingPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading plans'**
+  String get errorLoadingPlans;
+
+  /// No description provided for @moreOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get moreOptions;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

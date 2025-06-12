@@ -1,6 +1,7 @@
-import 'package:dima_application/Views/UserViews/my_plans_page.dart';
-import 'package:flutter/material.dart';
+import 'package:dima_application/Views/UserViews/MyPlansScreen/my_plans_page.dart';
 import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
+import 'package:flutter/material.dart';
+
 import 'HomeScreen/today_view.dart';
 
 class UserHomeScreen extends StatefulWidget {
@@ -47,7 +48,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.wb_sunny_outlined), // Icon when tab is inactive
-          activeIcon: Icon(Icons.wb_sunny),      // Icon when tab is active
+          activeIcon: Icon(Icons.wb_sunny), // Icon when tab is active
           label: 'Today',
         ),
         BottomNavigationBarItem(
@@ -62,9 +63,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         ),
       ],
       currentIndex: _selectedIndex, // Highlights the current tab
-      onTap: _onItemTapped,         // Callback when a tab is tapped
-      type: BottomNavigationBarType.fixed, // Ensures all items are visible with labels
-      showUnselectedLabels: true,      // Keep labels visible even for unselected items
+      onTap: _onItemTapped, // Callback when a tab is tapped
+      type: BottomNavigationBarType
+          .fixed, // Ensures all items are visible with labels
+      showUnselectedLabels:
+          true, // Keep labels visible even for unselected items
     );
   }
 }

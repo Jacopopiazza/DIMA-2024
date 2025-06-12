@@ -55,9 +55,6 @@
   "allergenSESAME_SEEDS": "Sesame Seeds",
   "allergenSOYBEANS": "Soybeans",
   "allergenSULPHITES": "Sulphites",
-  "@_ allergens": {
-    "description": "Localization keys for AllergenEnum values"
-  },
   "exerciseFrequencyEVERY_DAY": "Every day",
   "exerciseFrequencyFIVE_TIMES_A_WEEK": "Five times a week",
   "exerciseFrequencyFOUR_TIMES_A_WEEK": "Four times a week",
@@ -67,9 +64,6 @@
   "exerciseFrequencySIX_TIMES_A_WEEK": "Six times a week",
   "exerciseFrequencyTHREE_TIMES_A_WEEK": "Three times a week",
   "exerciseFrequencyTWICE_A_WEEK": "Twice a week",
-  "@_ exerciseFrequencies": {
-    "description": "Localization keys for ExerciseFrequency enum values. Note: 'Or' is excluded."
-  },
   "energy": "Energy",
   "@energy": {
     "description": "Energy label"
@@ -1539,18 +1533,7 @@
   "verifyUser": "Account recovery requires verified contact information",
   "@verifyUser": {
     "description": "Title of the Verify and Confirm Verify User s and forms"
-  }
-  "calories": "Calories",
-  "proteins": "Proteins",
-  "carbs": "Carbs",
-  "fats": "Fats",
-  "energy": "Energy",
-  "ingredients": "Ingredients",
-  "recipe": "Recipe",
-  "noRecipe": "No recipe provided for this meal.",
-  "mealCompleted": "Meal Completed",
-  "mealToBeCompleted": "Mark as Completed",
-  "back": "Back",
+  },
   "editMeal": "Edit meal",
   "shareMeal": "Share meal",
   "switchMealPlan": "Switch Meal Plan",

@@ -80,9 +80,6 @@
   "allergenSESAME_SEEDS": "Semi di sesamo",
   "allergenSOYBEANS": "Soia",
   "allergenSULPHITES": "Solfiti",
-  "@_ allergens": {
-    "description": "Chiavi di localizzazione per i valori di AllergenEnum"
-  },
   "exerciseFrequencyEVERY_DAY": "Ogni giorno",
   "exerciseFrequencyFIVE_TIMES_A_WEEK": "Cinque volte a settimana",
   "exerciseFrequencyFOUR_TIMES_A_WEEK": "Quattro volte a settimana",
@@ -92,9 +89,6 @@
   "exerciseFrequencySIX_TIMES_A_WEEK": "Sei volte a settimana",
   "exerciseFrequencyTHREE_TIMES_A_WEEK": "Tre volte a settimana",
   "exerciseFrequencyTWICE_A_WEEK": "Due volte a settimana",
-  "@_ exerciseFrequencies": {
-    "description": "Chiavi di localizzazione per i valori di ExerciseFrequency enum. Nota: 'Or' è escluso."
-  },
   "signIn": "Accedi",
   "@signIn": {
     "description": "Label of the button to sign in the user."
