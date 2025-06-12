@@ -1539,7 +1539,7 @@
   "verifyUser": "Account recovery requires verified contact information",
   "@verifyUser": {
     "description": "Title of the Verify and Confirm Verify User s and forms"
-  }
+  },
   "calories": "Calories",
   "proteins": "Proteins",
   "carbs": "Carbs",
