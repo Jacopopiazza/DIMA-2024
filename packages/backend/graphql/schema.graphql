@@ -449,7 +449,7 @@ input UpdateUserDetailsInput {
 """
 The response after creating a meal plan.
 """
-type CreateMealPlanResponse {
+type MealPlanResponse {
   success: Boolean!
   message: String
   mealPlanId: ID
@@ -516,6 +516,11 @@ type Query {
     limit: Int
     nextToken: String
   ): NutritionistProfileConnection @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Get the meal plan currently active for the user.
+  """
+  getActiveMealPlan: MealPlan @aws_auth(cognito_groups: ["USERS"])
 }
 
 # ===================
@@ -532,8 +537,20 @@ type Mutation {
   Directly creates a new meal plan.
   Typically used by nutritionists or for admin purposes.
   """
-  createMealPlan(input: CreateMealPlanInput!): CreateMealPlanResponse
+  createMealPlan(input: CreateMealPlanInput!): MealPlanResponse
     @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Deletes a meal plan.
+  """
+  deleteMealPlan(mealPlanId: ID!): MealPlanResponse
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+
+  """
+  Gets a meal plan by its ID.
+  """
+  getMealPlanById(mealPlanId: ID!): MealPlan
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
 
   """
   Marks a meal as completed for today for the authenticated user.

@@ -234,6 +234,24 @@ class DeleteConfirmationDialog extends StatelessWidget {
 }
 // endregion
 
+class MealPlanDetailsPage extends StatelessWidget {
+  final String planId;
+
+  const MealPlanDetailsPage({super.key, required this.planId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Meal Plan Details'),
+      ),
+      body: Center(
+        child: Text('Details for plan: $planId\nTo be implemented'),
+      ),
+    );
+  }
+}
+
 class MyPlansPage extends ConsumerWidget {
   const MyPlansPage({super.key});
 
@@ -329,6 +347,16 @@ class MyPlansPage extends ConsumerWidget {
                                 ),
                               ),
                             ),
+                          if (!isCurrent)
+                            IconButton(
+                              icon: const Icon(Icons.check_circle_outline),
+                              tooltip: 'Make this plan active',
+                              onPressed: () {
+                                ref
+                                    .read(mealPlansProvider.notifier)
+                                    .setActivePlan(plan.mealPlanId);
+                              },
+                            ),
                           IconButton(
                             icon: const Icon(Icons.edit),
                             tooltip: 'Edit plan name',
@@ -374,11 +402,13 @@ class MyPlansPage extends ConsumerWidget {
                         ],
                       ),
                       onTap: () {
-                        if (!isCurrent) {
-                          ref
-                              .read(mealPlansProvider.notifier)
-                              .setActivePlan(plan.mealPlanId);
-                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MealPlanDetailsPage(planId: plan.mealPlanId),
+                          ),
+                        );
                       },
                     ),
                   );

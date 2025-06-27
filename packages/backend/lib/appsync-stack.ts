@@ -32,6 +32,7 @@ export class AppSyncApiStack extends cdk.Stack {
       logConfig: {
         fieldLogLevel: appsync.FieldLogLevel.ALL,
         retention: logs.RetentionDays.ONE_WEEK,
+        excludeVerboseContent: false,
       },
       xrayEnabled: true,
     });
@@ -125,20 +126,24 @@ export class AppSyncApiStack extends cdk.Stack {
         getCompletedLogFunc,
       ],
       // Request mapping template for the pipeline resolver itself (usually simple)
-      requestMappingTemplate: appsync.MappingTemplate.fromString(`
-            ## Store identity for use in functions
-            $ctx.stash.identity = $ctx.identity
-            ## Store today's date parts for cxonsistency
-            #set($utils = $util.time)
-            $ctx.stash.todayDate = $utils.nowISO8601().substring(0, 10)
-            $ctx.stash.todayDayOfWeek = $utils.getDayOfWeekISO() ## 1=Monday, 7=Sunday
-            $ctx.stash.weekDayMap = {1: "monday", 2: "tuesday", 3: "wednesday", 4: "thursday", 5: "friday", 6: "saturday", 7: "sunday"}
-            $ctx.stash.todayWeekdayKey = $ctx.stash.weekDayMap[$ctx.stash.todayDayOfWeek]
-            {}
-        `),
+      requestMappingTemplate: appsync.MappingTemplate.fromString('{}'),
       // Response mapping template - combines results from the functions
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
         'vtl-templates/pipeline.getTodaysPlanAndStatus-response.vtl',
+      ),
+    });
+
+    // ====================================================================
+    //         PIPELINE RESOLVER for Query.getActiveMealPlan
+    // ====================================================================
+    new appsync.Resolver(this, 'PipelineGetActiveMealPlanResolver', {
+      api: api,
+      typeName: 'Query',
+      fieldName: 'getActiveMealPlan',
+      pipelineConfig: [getUserDetailsFunc, getActiveMealPlanFunc],
+      requestMappingTemplate: appsync.MappingTemplate.fromString('{}'),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/pipeline.getActiveMealPlan-response.vtl',
       ),
     });
 
@@ -245,6 +250,14 @@ export class AppSyncApiStack extends cdk.Stack {
       ),
     });
 
+    // --- Resolver for Mutation.deleteMealPlan ---
+    tableDS.createResolver('MutationDeleteMealPlanResolver', {
+      typeName: 'Mutation',
+      fieldName: 'deleteMealPlan',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('vtl-templates/mutation.deleteMealPlan.js'),
+    });
+
     // --- Resolver for Query.listMyMealPlans ---
     tableDS.createResolver('QueryListMyMealPlansResolver', {
       typeName: 'Query',
@@ -254,6 +267,18 @@ export class AppSyncApiStack extends cdk.Stack {
       ),
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
         'vtl-templates/query.listMyMealPlans-response.vtl',
+      ),
+    });
+
+    // --- Resolver for Query.getMealPlanById ---
+    tableDS.createResolver('QueryGetMealPlanByIdResolver', {
+      typeName: 'Query',
+      fieldName: 'getMealPlanById',
+      requestMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/query.getMealPlanById-request.vtl',
+      ),
+      responseMappingTemplate: appsync.MappingTemplate.fromFile(
+        'vtl-templates/query.getMealPlanById-response.vtl',
       ),
     });
 
