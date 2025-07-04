@@ -45,12 +45,6 @@ type ChatMetadataConnection {
   nextToken: String
 }
 
-type CreateMealPlanResponse {
-  mealPlanId: ID
-  message: String
-  success: Boolean!
-}
-
 type DailyPlanData {
   friday: [Meal!]
   monday: [Meal!]
@@ -114,6 +108,12 @@ type MealPlanGenerationStatus {
   status: MealPlanGenerationStatusValue!
 }
 
+type MealPlanResponse {
+  mealPlanId: ID
+  message: String
+  success: Boolean!
+}
+
 type MealWithStatus {
   isCompleted: Boolean!
   meal: Meal!
@@ -124,7 +124,9 @@ type MealWithStatus {
 # ===================
 type Mutation {
   assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan @aws_auth(cognito_groups : ["USERS"])
-  createMealPlan(input: CreateMealPlanInput!): CreateMealPlanResponse @aws_auth(cognito_groups : ["USERS"])
+  createMealPlan(input: CreateMealPlanInput!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
+  deleteMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
+  getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanGenerationStatus @aws_auth(cognito_groups : ["USERS"])
   sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
@@ -167,6 +169,7 @@ type PlanDayCompletion @model {
 #       QUERIES
 # ===================
 type Query {
+  getActiveMealPlan: MealPlan @aws_auth(cognito_groups : ["USERS"])
   getChatMessages(chatId: ID!, limit: Int, nextToken: String): ChatMessageConnection @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS"])
   getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
