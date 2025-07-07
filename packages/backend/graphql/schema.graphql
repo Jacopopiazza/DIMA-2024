@@ -234,6 +234,7 @@ type MealPlan @model {
 type MealPlanConnection {
   items: [MealPlan!]!
   nextToken: String
+  activeMealPlan: MealPlan
 }
 
 """
@@ -455,6 +456,15 @@ type MealPlanResponse {
   mealPlanId: ID
 }
 
+"""
+Represents a list of meal plans for the authenticated user.
+"""
+type MealPlanList {
+  items: [MealPlan!]!
+  nextToken: String
+  activeMealPlan: ID
+}
+
 # ===================
 #       QUERIES
 # ===================
@@ -505,7 +515,7 @@ type Query {
   """
   Lists MealPlans for the authenticated user. Supports pagination.
   """
-  listMyMealPlans(limit: Int, nextToken: String): MealPlanConnection
+  listMyMealPlans(limit: Int, nextToken: String): MealPlanList
     @aws_auth(cognito_groups: ["USERS"])
 
   """

@@ -262,12 +262,8 @@ export class AppSyncApiStack extends cdk.Stack {
     tableDS.createResolver('QueryListMyMealPlansResolver', {
       typeName: 'Query',
       fieldName: 'listMyMealPlans',
-      requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/query.listMyMealPlans-request.vtl',
-      ),
-      responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/query.listMyMealPlans-response.vtl',
-      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('vtl-templates/query.listMyMealPlans.js'),
     });
 
     // --- Resolver for Query.getMealPlanById ---
