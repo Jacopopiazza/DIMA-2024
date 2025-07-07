@@ -1,102 +1,72 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'package:collection/collection.dart'; // Added for firstWhereOrNull
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/models/MealPlan/meal_plan.dart'; // For MealPlanCache
 import 'package:isar/isar.dart';
 
 class MealPlanList {
-  final MealPlan? currentMealPlan;
-  final List<MealPlan> allMealPlans;
+  final List<MealPlan> items;
+  final String? nextToken;
+  final String? activeMealPlan;
 
-  MealPlanList({
-    this.currentMealPlan,
-    required this.allMealPlans,
-  });
+  MealPlanList({required this.items, this.nextToken, this.activeMealPlan});
+
+  factory MealPlanList.fromJson(Map<String, dynamic> json) {
+    return MealPlanList(
+      items: (json['items'] as List<dynamic>?)?.map((item) {
+            // Create a simplified MealPlan with only the fields from the list query
+            final itemMap = Map<String, dynamic>.from(item);
+            return MealPlan(
+              mealPlanId: itemMap['mealPlanId'] as String,
+              planName: itemMap['planName'] as String?,
+              startDate: itemMap['startDate'] != null
+                  ? amplify_core.TemporalDate.fromString(
+                      itemMap['startDate'] as String)
+                  : null,
+              endDate: itemMap['endDate'] != null
+                  ? amplify_core.TemporalDate.fromString(
+                      itemMap['endDate'] as String)
+                  : null,
+              status: itemMap['status'] != null
+                  ? amplify_core.enumFromString<PlanStatus>(
+                      itemMap['status'] as String, PlanStatus.values)
+                  : null,
+              userId:
+                  '', // This field is required but not returned by the list query
+            );
+          }).toList() ??
+          [],
+      nextToken: json['nextToken'] as String?,
+      activeMealPlan: json['activeMealPlan'] as String?,
+    );
+  }
 
   // Optional: Add a copyWith method if you need to create modified instances
   MealPlanList copyWith({
-    MealPlan? currentMealPlan,
-    List<MealPlan>? allMealPlans,
+    List<MealPlan>? items,
+    String? nextToken,
+    String? activeMealPlan,
   }) {
     return MealPlanList(
-      currentMealPlan: currentMealPlan ?? this.currentMealPlan,
-      allMealPlans: allMealPlans ?? this.allMealPlans,
+      items: items ?? this.items,
+      nextToken: nextToken ?? this.nextToken,
+      activeMealPlan: activeMealPlan ?? this.activeMealPlan,
     );
   }
 
   // Optional: Add factory constructor for empty state or initial state
   factory MealPlanList.initial() {
     return MealPlanList(
-      allMealPlans: [],
+      items: [],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'currentMealPlan':
-          currentMealPlan?.toJson(), // Amplify MealPlan has toJson()
-      'allMealPlans': allMealPlans.map((mp) => mp.toJson()).toList(),
+      'items': items.map((mp) => mp.toJson()).toList(),
+      'nextToken': nextToken,
+      'activeMealPlan': activeMealPlan,
     };
-  }
-
-  factory MealPlanList.fromJson(Map<String, dynamic> json) {
-    MealPlan mealPlanFromJson(Map<String, dynamic> mpJson) {
-      List<Meal> parseMeals(List<dynamic>? mealListJson) {
-        if (mealListJson == null) return [];
-        return mealListJson.map((mJson) {
-          final m = mJson as Map<String, dynamic>;
-          return Meal(
-            name: MealNameEnum.values.byName(m['name'] as String),
-            recipe: m['recipe'] as String?,
-            recipeName: m['recipeName'] as String?,
-            ingredients: (m['ingredients'] as List<dynamic>?)
-                    ?.map((iJson) =>
-                        Ingredient.fromJson(iJson as Map<String, dynamic>))
-                    .toList() ??
-                [],
-            totalMacros:
-                Macros.fromJson(m['totalMacros'] as Map<String, dynamic>),
-          );
-        }).toList();
-      }
-
-      final dailyPlanJson = mpJson['dailyPlan'] as Map<String, dynamic>?;
-      DailyPlanData? dailyPlanData;
-      if (dailyPlanJson != null) {
-        dailyPlanData = DailyPlanData(
-          monday: parseMeals(dailyPlanJson['monday'] as List<dynamic>?),
-          tuesday: parseMeals(dailyPlanJson['tuesday'] as List<dynamic>?),
-          wednesday: parseMeals(dailyPlanJson['wednesday'] as List<dynamic>?),
-          thursday: parseMeals(dailyPlanJson['thursday'] as List<dynamic>?),
-          friday: parseMeals(dailyPlanJson['friday'] as List<dynamic>?),
-          saturday: parseMeals(dailyPlanJson['saturday'] as List<dynamic>?),
-          sunday: parseMeals(dailyPlanJson['sunday'] as List<dynamic>?),
-        );
-      }
-
-      return MealPlan(
-        id: mpJson['id'] as String, // Amplify ID
-        mealPlanId: mpJson['mealPlanId'] as String,
-        userId: mpJson['userId'] as String,
-        planName: mpJson['planName'] as String,
-        status: PlanStatus.values.byName(mpJson['status'] as String),
-        generatedAt:
-            TemporalDateTime.fromString(mpJson['generatedAt'] as String),
-        assignedNutritionistId: mpJson['assignedNutritionistId'] as String?,
-        chatId: mpJson['chatId'] as String?,
-        dailyPlan: dailyPlanData,
-        // lastModifiedAt, createdAt, updatedAt, owner are also part of Amplify model but often handled by DataStore
-      );
-    }
-
-    return MealPlanList(
-      currentMealPlan: json['currentMealPlan'] != null
-          ? mealPlanFromJson(json['currentMealPlan'] as Map<String, dynamic>)
-          : null,
-      allMealPlans: (json['allMealPlans'] as List<dynamic>)
-          .map((mpJson) => mealPlanFromJson(mpJson as Map<String, dynamic>))
-          .toList(),
-    );
   }
 
   factory MealPlanList.fromAmplifyModels(
@@ -121,8 +91,9 @@ class MealPlanList {
     // }
 
     return MealPlanList(
-      currentMealPlan: current,
-      allMealPlans: List<MealPlan>.from(mealPlans), // Create a new list
+      items: List<MealPlan>.from(mealPlans), // Create a new list
+      nextToken: null,
+      activeMealPlan: current?.mealPlanId,
     );
   }
 }
@@ -151,9 +122,8 @@ class MealPlanListCache {
   factory MealPlanListCache.fromDomain(MealPlanList domainList, String userId) {
     return MealPlanListCache()
       ..userId = userId
-      ..currentMealPlanId = domainList.currentMealPlan?.mealPlanId
-      ..allMealPlanIds =
-          domainList.allMealPlans.map((mp) => mp.mealPlanId).toList();
+      ..currentMealPlanId = domainList.activeMealPlan
+      ..allMealPlanIds = domainList.items.map((mp) => mp.mealPlanId).toList();
   }
 
   Future<MealPlanList> toDomain(Isar isar) async {
@@ -184,8 +154,9 @@ class MealPlanListCache {
         .firstWhereOrNull((mp) => mp.status == PlanStatus.ACTIVE);
 
     return MealPlanList(
-      currentMealPlan: resolvedCurrentMealPlan,
-      allMealPlans: resolvedMealPlans,
+      items: resolvedMealPlans,
+      nextToken: null,
+      activeMealPlan: resolvedCurrentMealPlan?.mealPlanId,
     );
   }
 
@@ -209,5 +180,75 @@ class MealPlanListCache {
     //   cache.id = json['id'] as int;
     // }
     return cache;
+  }
+}
+
+class LightMealPlan {
+  final String mealPlanId;
+  final String? planName;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final PlanStatus? status;
+
+  LightMealPlan({
+    required this.mealPlanId,
+    this.planName,
+    this.startDate,
+    this.endDate,
+    this.status,
+  });
+
+  factory LightMealPlan.fromJson(Map<String, dynamic> json) {
+    return LightMealPlan(
+      mealPlanId: json['mealPlanId'] as String,
+      planName: json['planName'] as String?,
+      startDate:
+          json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
+      status: json['status'] != null
+          ? amplify_core.enumFromString<PlanStatus>(
+              json['status'] as String, PlanStatus.values)
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'mealPlanId': mealPlanId,
+      'planName': planName,
+      'startDate': startDate?.toIso8601String(),
+      'endDate': endDate?.toIso8601String(),
+      'status': status?.name,
+    };
+  }
+}
+
+class LightMealPlanList {
+  final List<LightMealPlan> items;
+  final String? nextToken;
+  final String? activeMealPlan;
+
+  LightMealPlanList({required this.items, this.nextToken, this.activeMealPlan});
+
+  factory LightMealPlanList.fromJson(Map<String, dynamic> json) {
+    final rawItems = json['listMyMealPlans']['items'] as List<dynamic>? ?? [];
+    final items = rawItems
+        .where((item) => item != null)
+        .map((item) => LightMealPlan.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+
+    return LightMealPlanList(
+      items: items,
+      nextToken: json['nextToken'] as String?,
+      activeMealPlan: json['activeMealPlan'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'items': items.map((mp) => mp.toJson()).toList(),
+      'nextToken': nextToken,
+      'activeMealPlan': activeMealPlan,
+    };
   }
 }

@@ -162,7 +162,7 @@ class MyPlansPage extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: ListTile(
-                  title: Text(plan.planName),
+                  title: Text(plan.planName ?? 'Unnamed Plan'),
                   subtitle: Text('ID: ${plan.mealPlanId}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -178,7 +178,7 @@ class MyPlansPage extends ConsumerWidget {
                               return AlertDialog(
                                 title: const Text('Delete Meal Plan'),
                                 content: Text(
-                                    'Are you sure you want to delete the plan "${plan.planName}"?'),
+                                    'Are you sure you want to delete the plan "${plan.planName ?? 'Unnamed Plan'}"?'),
                                 actions: [
                                   TextButton(
                                     onPressed: () =>
@@ -187,9 +187,7 @@ class MyPlansPage extends ConsumerWidget {
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      await ref
-                                          .read(mealPlansProvider.notifier)
-                                          .deletePlan(plan.mealPlanId);
+                                      // TODO: Implement delete functionality
                                       Navigator.of(dialogContext).pop();
                                     },
                                     child: const Text('Delete',

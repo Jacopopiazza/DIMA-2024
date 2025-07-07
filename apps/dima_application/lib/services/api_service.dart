@@ -7,7 +7,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 // Import domain/Amplify models
 import 'package:dima_application/models/MealPlan/meal_plan.dart';
-import 'package:dima_application/models/MealPlanList/meal_plan_list.dart';
 // Import Isar cache models
 import 'package:dima_application/models/UserDetails/user_details_cache.dart'; // Isar model
 // Import input models
@@ -331,27 +330,9 @@ class ApiService {
     }
   }
 
-  Future<MealPlanList> fetchAllMealPlansForUser(String userId) async {
-    // TODO: Implement actual Amplify GraphQL query
-    safePrint("[APIService] Fetching all meal plans for user...");
-    try {
-      // MOCKED IMPLEMENTATION
-      return MealPlanList(currentMealPlan: null, allMealPlans: []);
-    } catch (e) {
-      safePrint("[APIService] Error fetching all meal plans for user: $e");
-      throw OperationFailedException("Failed to fetch all meal plans for user",
-          underlyingException: e);
-    }
-  }
-
   Future<void> setChosenPlanId(String mealPlanId) async {
     // TODO: Implement actual Amplify GraphQL mutation
     safePrint("[APIService] Setting chosen plan ID: $mealPlanId");
-  }
-
-  Future<void> deleteMealPlan(String mealPlanId) async {
-    // TODO: Implement actual Amplify GraphQL mutation
-    safePrint("[APIService] Deleting meal plan: $mealPlanId");
   }
 
   // --- Private Helper Methods ---

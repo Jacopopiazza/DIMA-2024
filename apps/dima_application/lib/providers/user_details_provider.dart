@@ -1,13 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import '../generated/flutter-models/UserDetails.dart';
-import '../services/user_details_service.dart';
-import '../services/auth_service.dart';
-import '../providers/isar_provider.dart';
 
+import '../generated/flutter-models/UserDetails.dart';
+import '../providers/isar_provider.dart';
+import '../services/auth_service.dart';
+import '../services/user_details_service.dart';
 
 // Provider for the UserDetailsService
-final userDetailsServiceProvider = Provider<Future<UserDetailsService>>((ref) async {
+final userDetailsServiceProvider =
+    Provider<Future<UserDetailsService>>((ref) async {
   final isar = await ref.watch(isarProvider);
   return UserDetailsService(isar: isar);
 });
@@ -18,12 +19,14 @@ final userIdProvider = FutureProvider<String?>((ref) async {
 });
 
 // Provider for the user details state. The String is a unique ID to force rebuilds.
-final userDetailsProvider = StateNotifierProvider<UserDetailsNotifier, AsyncValue<(UserDetails?, String)>>((ref) {
+final userDetailsProvider = StateNotifierProvider<UserDetailsNotifier,
+    AsyncValue<(UserDetails?, String)>>((ref) {
   return UserDetailsNotifier(ref);
 });
 
 // Notifier class to manage user details state
-class UserDetailsNotifier extends StateNotifier<AsyncValue<(UserDetails?, String)>> {
+class UserDetailsNotifier
+    extends StateNotifier<AsyncValue<(UserDetails?, String)>> {
   final Ref ref;
 
   UserDetailsNotifier(this.ref) : super(const AsyncValue.loading()) {
@@ -47,19 +50,21 @@ class UserDetailsNotifier extends StateNotifier<AsyncValue<(UserDetails?, String
   Future<void> loadUserDetails(String userId) async {
     final previousState = state;
     // Set state to loading, but `copyWithPrevious` will keep the old data and set isRefreshing to true.
-    state = AsyncValue<(UserDetails?, String)>.loading().copyWithPrevious(previousState);
+    state = AsyncValue<(UserDetails?, String)>.loading()
+        .copyWithPrevious(previousState);
 
     try {
       final service = await ref.read(userDetailsServiceProvider);
       // Force a fresh fetch from the server
       await service.clearCache(userId);
       final details = await service.getUserDetails(userId);
-      
+
       // On success, update the state with the new data and a unique ID.
       state = AsyncValue.data((details, const Uuid().v4()));
     } catch (error, stackTrace) {
       // On error, report the error but keep the previous data.
-      state = AsyncValue<(UserDetails?, String)>.error(error, stackTrace).copyWithPrevious(previousState);
+      state = AsyncValue<(UserDetails?, String)>.error(error, stackTrace)
+          .copyWithPrevious(previousState);
     }
   }
 
@@ -89,7 +94,8 @@ class UserDetailsNotifier extends StateNotifier<AsyncValue<(UserDetails?, String
       }
     } catch (error, stackTrace) {
       // If update failed, revert to previous state and show error
-      state = AsyncValue<(UserDetails?, String)>.error(error, stackTrace).copyWithPrevious(previousState);
+      state = AsyncValue<(UserDetails?, String)>.error(error, stackTrace)
+          .copyWithPrevious(previousState);
       return false;
     }
   }
@@ -122,4 +128,4 @@ class UserDetailsNotifier extends StateNotifier<AsyncValue<(UserDetails?, String
     await service.signOut(userId);
     state = AsyncValue.data((null, const Uuid().v4()));
   }
-} 
+}

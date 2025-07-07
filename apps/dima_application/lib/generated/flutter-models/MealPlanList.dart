@@ -24,13 +24,13 @@ import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'package:collection/collection.dart';
 
 
-/** This is an auto generated class representing the MealPlanConnection type in your schema. */
-class MealPlanConnection {
-  final MealPlan? _activeMealPlan;
+/** This is an auto generated class representing the MealPlanList type in your schema. */
+class MealPlanList {
+  final String? _activeMealPlan;
   final List<MealPlan>? _items;
   final String? _nextToken;
 
-  MealPlan? get activeMealPlan {
+  String? get activeMealPlan {
     return _activeMealPlan;
   }
   
@@ -51,10 +51,10 @@ class MealPlanConnection {
     return _nextToken;
   }
   
-  const MealPlanConnection._internal({activeMealPlan, required items, nextToken}): _activeMealPlan = activeMealPlan, _items = items, _nextToken = nextToken;
+  const MealPlanList._internal({activeMealPlan, required items, nextToken}): _activeMealPlan = activeMealPlan, _items = items, _nextToken = nextToken;
   
-  factory MealPlanConnection({MealPlan? activeMealPlan, required List<MealPlan> items, String? nextToken}) {
-    return MealPlanConnection._internal(
+  factory MealPlanList({String? activeMealPlan, required List<MealPlan> items, String? nextToken}) {
+    return MealPlanList._internal(
       activeMealPlan: activeMealPlan,
       items: items != null ? List<MealPlan>.unmodifiable(items) : items,
       nextToken: nextToken);
@@ -67,7 +67,7 @@ class MealPlanConnection {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is MealPlanConnection &&
+    return other is MealPlanList &&
       _activeMealPlan == other._activeMealPlan &&
       DeepCollectionEquality().equals(_items, other._items) &&
       _nextToken == other._nextToken;
@@ -80,8 +80,8 @@ class MealPlanConnection {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("MealPlanConnection {");
-    buffer.write("activeMealPlan=" + (_activeMealPlan != null ? _activeMealPlan!.toString() : "null") + ", ");
+    buffer.write("MealPlanList {");
+    buffer.write("activeMealPlan=" + "$_activeMealPlan" + ", ");
     buffer.write("items=" + (_items != null ? _items!.toString() : "null") + ", ");
     buffer.write("nextToken=" + "$_nextToken");
     buffer.write("}");
@@ -89,31 +89,27 @@ class MealPlanConnection {
     return buffer.toString();
   }
   
-  MealPlanConnection copyWith({MealPlan? activeMealPlan, List<MealPlan>? items, String? nextToken}) {
-    return MealPlanConnection._internal(
+  MealPlanList copyWith({String? activeMealPlan, List<MealPlan>? items, String? nextToken}) {
+    return MealPlanList._internal(
       activeMealPlan: activeMealPlan ?? this.activeMealPlan,
       items: items ?? this.items,
       nextToken: nextToken ?? this.nextToken);
   }
   
-  MealPlanConnection copyWithModelFieldValues({
-    ModelFieldValue<MealPlan?>? activeMealPlan,
+  MealPlanList copyWithModelFieldValues({
+    ModelFieldValue<String?>? activeMealPlan,
     ModelFieldValue<List<MealPlan>>? items,
     ModelFieldValue<String?>? nextToken
   }) {
-    return MealPlanConnection._internal(
+    return MealPlanList._internal(
       activeMealPlan: activeMealPlan == null ? this.activeMealPlan : activeMealPlan.value,
       items: items == null ? this.items : items.value,
       nextToken: nextToken == null ? this.nextToken : nextToken.value
     );
   }
   
-  MealPlanConnection.fromJson(Map<String, dynamic> json)  
-    : _activeMealPlan = json['activeMealPlan'] != null
-        ? json['activeMealPlan']['serializedData'] != null
-          ? MealPlan.fromJson(new Map<String, dynamic>.from(json['activeMealPlan']['serializedData']))
-          : MealPlan.fromJson(new Map<String, dynamic>.from(json['activeMealPlan']))
-        : null,
+  MealPlanList.fromJson(Map<String, dynamic> json)  
+    : _activeMealPlan = json['activeMealPlan'],
       _items = json['items']  is Map
         ? (json['items']['items'] is List
           ? (json['items']['items'] as List)
@@ -130,7 +126,7 @@ class MealPlanConnection {
       _nextToken = json['nextToken'];
   
   Map<String, dynamic> toJson() => {
-    'activeMealPlan': _activeMealPlan?.toJson(), 'items': _items?.map((MealPlan? e) => e?.toJson()).toList(), 'nextToken': _nextToken
+    'activeMealPlan': _activeMealPlan, 'items': _items?.map((MealPlan? e) => e?.toJson()).toList(), 'nextToken': _nextToken
   };
   
   Map<String, Object?> toMap() => {
@@ -140,8 +136,8 @@ class MealPlanConnection {
   };
 
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "MealPlanConnection";
-    modelSchemaDefinition.pluralName = "MealPlanConnections";
+    modelSchemaDefinition.name = "MealPlanList";
+    modelSchemaDefinition.pluralName = "MealPlanLists";
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
       fieldName: 'activeMealPlan',

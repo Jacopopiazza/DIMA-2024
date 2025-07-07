@@ -2,14 +2,16 @@ import 'dart:convert';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/models/MealPlanList/meal_plan_list.dart'
+    show LightMealPlanList;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:isar/isar.dart';
 
 class MealPlansService {
-  final Isar isar;
+  final Isar? isar;
   // static const Duration _cacheValidityDuration = Duration(hours: 24);
 
-  MealPlansService({required this.isar});
+  MealPlansService({this.isar});
 
   Future<List<MealPlan>> getMealPlans() async {
     throw UnimplementedError();
@@ -293,9 +295,9 @@ class MealPlansService {
     }
   }
 
-  Future<List<MealPlan>> listMyMealPlans({int limit = 10}) async {
+  Future<LightMealPlanList> listMyMealPlans({int limit = 10}) async {
     try {
-      final request = GraphQLRequest<MealPlanConnection>(
+      final request = GraphQLRequest(
         document: '''
           query ListMyMealPlans {
             listMyMealPlans(limit: $limit) {
@@ -307,23 +309,37 @@ class MealPlansService {
                 status
               }
               nextToken
+              activeMealPlan
             }
           }
         ''',
         decodePath: 'listMyMealPlans',
-        modelType: ModelProvider.instance
-            .getModelTypeByModelName('MealPlanConnection'),
       );
       final response = await Amplify.API.query(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
-        return [];
+        return LightMealPlanList(
+            items: [], nextToken: null, activeMealPlan: null);
       }
-      return response.data?.items ?? [];
+
+      Map<String, dynamic> jsonData;
+      if (response.data is String) {
+        jsonData = json.decode(response.data);
+      } else if (response.data is Map<String, dynamic>) {
+        jsonData = response.data;
+      } else {
+        safePrint(
+            '[MealPlansService] Unexpected response data type: \\${response.data.runtimeType}');
+        return LightMealPlanList(
+            items: [], nextToken: null, activeMealPlan: null);
+      }
+      var tmp = LightMealPlanList.fromJson(jsonData);
+      return tmp;
     } catch (e) {
       safePrint(
           '[MealPlansService] Error fetching meal plans: \\${e.toString()}');
-      return [];
+      return LightMealPlanList(
+          items: [], nextToken: null, activeMealPlan: null);
     }
   }
 }

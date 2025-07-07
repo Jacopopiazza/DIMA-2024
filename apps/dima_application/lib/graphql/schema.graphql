@@ -97,6 +97,7 @@ type MealPlan @model {
 
 #   Pagination Helper Types
 type MealPlanConnection {
+  activeMealPlan: MealPlan
   items: [MealPlan!]!
   nextToken: String
 }
@@ -106,6 +107,12 @@ type MealPlanGenerationStatus {
   #  Populated if status is COMPLETED
   message: String
   status: MealPlanGenerationStatusValue!
+}
+
+type MealPlanList {
+  activeMealPlan: ID
+  items: [MealPlan!]!
+  nextToken: String
 }
 
 type MealPlanResponse {
@@ -177,7 +184,7 @@ type Query {
   getUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS"])
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   listMyChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["USERS"])
-  listMyMealPlans(limit: Int, nextToken: String): MealPlanConnection @aws_auth(cognito_groups : ["USERS"])
+  listMyMealPlans(limit: Int, nextToken: String): MealPlanList @aws_auth(cognito_groups : ["USERS"])
   listNutritionists(filter: ListNutritionistsFilter, limit: Int, nextToken: String): NutritionistProfileConnection @aws_auth(cognito_groups : ["USERS"])
 }
 
