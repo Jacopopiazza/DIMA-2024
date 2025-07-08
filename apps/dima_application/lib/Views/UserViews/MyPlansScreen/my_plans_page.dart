@@ -2,98 +2,7 @@ import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// region: Dummy Dialog Widgets
-// These are placeholder dialogs to allow the UI to compile.
-// They should be replaced with the actual dialog widgets.
-
-// Dummy EditPlanNameDialog
-class EditPlanNameDialog extends StatefulWidget {
-  final String currentPlanName;
-  final Function(String) onSave;
-
-  const EditPlanNameDialog(
-      {super.key, required this.currentPlanName, required this.onSave});
-
-  @override
-  State<EditPlanNameDialog> createState() => _EditPlanNameDialogState();
-}
-
-class _EditPlanNameDialogState extends State<EditPlanNameDialog> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.currentPlanName);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Edit Plan Name'),
-      content: TextField(
-        controller: _controller,
-        autofocus: true,
-        decoration: const InputDecoration(hintText: 'Enter new plan name'),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            widget.onSave(_controller.text);
-            Navigator.of(context).pop();
-          },
-          child: const Text('Save'),
-        ),
-      ],
-    );
-  }
-}
-
-// Dummy DeleteConfirmationDialog
-class DeleteConfirmationDialog extends StatelessWidget {
-  final String title;
-  final String content;
-  final VoidCallback onConfirm;
-
-  const DeleteConfirmationDialog({
-    super.key,
-    required this.title,
-    required this.content,
-    required this.onConfirm,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            onConfirm();
-            Navigator.of(context).pop();
-          },
-          child: const Text('Delete', style: TextStyle(color: Colors.red)),
-        ),
-      ],
-    );
-  }
-}
-// endregion
+import 'delete_confirmation_dialog.dart';
 
 class MealPlanDetailsPage extends StatelessWidget {
   final String planId;
@@ -113,16 +22,27 @@ class MealPlanDetailsPage extends StatelessWidget {
   }
 }
 
-class MyPlansPage extends ConsumerWidget {
+class MyPlansPage extends ConsumerStatefulWidget {
   const MyPlansPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final plansAsync = ref.watch(mealPlansProvider);
+  ConsumerState<MyPlansPage> createState() => _MyPlansPageState();
+}
 
-    Future<void> loadPlans() async {
-      await ref.read(mealPlansProvider.notifier).listMyMealPlans();
-    }
+class _MyPlansPageState extends ConsumerState<MyPlansPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Load plans on initialization
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(mealPlansProvider.notifier).listMyMealPlans();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final plansAsync = ref.watch(mealPlansProvider);
+    print('[MyPlansPage] Building with state: ${plansAsync.toString()}');
 
     return Scaffold(
       appBar: AppBar(
@@ -130,7 +50,9 @@ class MyPlansPage extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: loadPlans,
+            onPressed: () {
+              ref.read(mealPlansProvider.notifier).listMyMealPlans();
+            },
             tooltip: 'Refresh Plans',
           )
         ],
@@ -138,13 +60,44 @@ class MyPlansPage extends ConsumerWidget {
       body: plansAsync.when(
         data: (plans) {
           if (plans.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'You haven\'t generated any meal plans yet.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.restaurant_menu,
+                      size: 64,
+                      color: Colors.grey[400],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No meal plans found',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'You haven\'t generated any meal plans yet, or all plans have been deleted.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Navigate to meal plan generation page
+                        Navigator.pushNamed(context,
+                            '/generate-meal-plan'); // TODO: Implement meal plan generation page
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text('Create New Meal Plan'),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -171,29 +124,45 @@ class MyPlansPage extends ConsumerWidget {
                         icon: const Icon(Icons.delete),
                         color: Theme.of(context).colorScheme.error,
                         tooltip: 'Delete plan',
-                        onPressed: () {
-                          showDialog(
+                        onPressed: () async {
+                          await showDialog<void>(
                             context: context,
                             builder: (BuildContext dialogContext) {
-                              return AlertDialog(
-                                title: const Text('Delete Meal Plan'),
-                                content: Text(
-                                    'Are you sure you want to delete the plan "${plan.planName ?? 'Unnamed Plan'}"?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(dialogContext).pop(),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      // TODO: Implement delete functionality
-                                      Navigator.of(dialogContext).pop();
-                                    },
-                                    child: const Text('Delete',
-                                        style: TextStyle(color: Colors.red)),
-                                  ),
-                                ],
+                              return DeleteConfirmationDialog(
+                                title: 'Delete Meal Plan',
+                                content:
+                                    'Are you sure you want to delete the plan "${plan.planName ?? 'Unnamed Plan'}"?',
+                                onConfirm: () async {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Deleting meal plan...'),
+                                      duration: Duration(seconds: 1),
+                                    ),
+                                  );
+                                  final success = await ref
+                                      .read(mealPlansProvider.notifier)
+                                      .deleteMealPlan(plan.mealPlanId);
+                                  if (!mounted) return;
+                                  if (success) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Meal plan deleted successfully'),
+                                        backgroundColor: Colors.green,
+                                        duration: Duration(seconds: 2),
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Failed to delete meal plan'),
+                                        backgroundColor: Colors.red,
+                                        duration: Duration(seconds: 3),
+                                      ),
+                                    );
+                                  }
+                                },
                               );
                             },
                           );

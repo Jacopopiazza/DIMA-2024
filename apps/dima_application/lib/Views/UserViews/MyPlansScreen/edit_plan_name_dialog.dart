@@ -11,61 +11,43 @@ class EditPlanNameDialog extends StatefulWidget {
   });
 
   @override
-  _EditPlanNameDialogState createState() => _EditPlanNameDialogState();
+  State<EditPlanNameDialog> createState() => _EditPlanNameDialogState();
 }
 
 class _EditPlanNameDialogState extends State<EditPlanNameDialog> {
-  late TextEditingController _textController;
-  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController(text: widget.currentPlanName);
+    _controller = TextEditingController(text: widget.currentPlanName);
   }
 
   @override
   void dispose() {
-    _textController.dispose();
+    _controller.dispose();
     super.dispose();
-  }
-
-  void _save() {
-    if (_formKey.currentState!.validate()) {
-      widget.onSave(_textController.text);
-      Navigator.of(context).pop();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Edit Plan Name'),
-      content: Form(
-        key: _formKey,
-        child: TextFormField(
-          controller: _textController,
-          autofocus: true,
-          decoration: const InputDecoration(
-            labelText: 'Plan Name',
-          ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Please enter a plan name';
-            }
-            return null;
-          },
-        ),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        decoration: const InputDecoration(hintText: 'Enter new plan name'),
       ),
-      actions: <Widget>[
+      actions: [
         TextButton(
+          onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
+        ),
+        TextButton(
           onPressed: () {
+            widget.onSave(_controller.text);
             Navigator.of(context).pop();
           },
-        ),
-        TextButton(
-          onPressed: _save,
           child: const Text('Save'),
         ),
       ],

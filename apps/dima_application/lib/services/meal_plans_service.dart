@@ -211,7 +211,7 @@ class MealPlansService {
 
   Future<MealPlanResponse?> deleteMealPlan(String mealPlanId) async {
     try {
-      final request = GraphQLRequest<MealPlanResponse>(
+      final request = GraphQLRequest<String>(
         document: '''
           mutation DeleteMealPlan(
             \$mealPlanId: ID!
@@ -225,15 +225,29 @@ class MealPlansService {
         ''',
         variables: {'mealPlanId': mealPlanId},
         decodePath: 'deleteMealPlan',
-        modelType:
-            ModelProvider.instance.getModelTypeByModelName('MealPlanResponse'),
       );
       final response = await Amplify.API.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
         return null;
       }
-      return response.data;
+      if (response.data == null) return null;
+
+      final Map<String, dynamic> deleteMealPlanData =
+          json.decode(response.data!);
+
+      final data = deleteMealPlanData['deleteMealPlan'];
+
+      // Safely extract values with null checks
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String?;
+      final responseMealPlanId = data['mealPlanId'] as String?;
+
+      return MealPlanResponse(
+        success: success,
+        message: message,
+        mealPlanId: responseMealPlanId,
+      );
     } catch (e) {
       safePrint(
           '[MealPlansService] Error deleting meal plan: \\${e.toString()}');
@@ -279,8 +293,6 @@ class MealPlansService {
         ''',
         variables: {'input': input},
         decodePath: 'createMealPlan',
-        modelType:
-            ModelProvider.instance.getModelTypeByModelName('MealPlanResponse'),
       );
       final response = await Amplify.API.mutate(request: request).response;
       if (response.hasErrors) {
@@ -333,8 +345,7 @@ class MealPlansService {
         return LightMealPlanList(
             items: [], nextToken: null, activeMealPlan: null);
       }
-      var tmp = LightMealPlanList.fromJson(jsonData);
-      return tmp;
+      return LightMealPlanList.fromJson(jsonData);
     } catch (e) {
       safePrint(
           '[MealPlansService] Error fetching meal plans: \\${e.toString()}');

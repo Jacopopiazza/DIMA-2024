@@ -36,16 +36,17 @@ export function request(ctx) {
     key: {
       PK: util.dynamodb.toDynamoDB(mealPlanPk),
       SK: util.dynamodb.toDynamoDB(mealPlanSk)
-    },
-    condition: {
-      expression: 'attribute_exists(PK) AND attribute_exists(SK)'
     }
+    // Removed condition to allow deletion even if item doesn't exist
   };
 }
 
 export function response(ctx) {
+  console.log('Response context:', JSON.stringify(ctx, null, 2));
+  
   // Check for errors in the context
   if (ctx.error) {
+    console.log('Error in response:', ctx.error);
     return {
       success: false,
       mealPlanId: ctx.stash?.mealPlanId || ctx.args?.mealPlanId || "",
@@ -54,6 +55,7 @@ export function response(ctx) {
   }
 
   // If the operation succeeded
+  console.log('Deletion successful');
   return {
     success: true,
     mealPlanId: ctx.stash?.mealPlanId || ctx.args?.mealPlanId || "",

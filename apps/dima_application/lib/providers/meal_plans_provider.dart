@@ -22,14 +22,51 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
   // Future<LightMealPlan?> fetchAndCachePlan(String mealPlanId) => throw UnimplementedError();
 
   Future<List<LightMealPlan>> listMyMealPlans() async {
-    final backendPlans = await _service.listMyMealPlans();
-    state = AsyncValue.data(backendPlans.items);
-    return backendPlans.items;
+    print('[MealPlansProvider] Starting listMyMealPlans...');
+    try {
+      final backendPlans = await _service.listMyMealPlans();
+      print(
+          '[MealPlansProvider] Backend returned ${backendPlans.items.length} plans');
+      state = AsyncValue.data(backendPlans.items);
+      print(
+          '[MealPlansProvider] State updated with ${state.value?.length} items');
+      return backendPlans.items;
+    } catch (e) {
+      print('[MealPlansProvider] Error in listMyMealPlans: $e');
+      state = AsyncValue.error(e, StackTrace.current);
+      return [];
+    }
   }
 
   // Optional: Expose activeMealPlanId
   Future<String?> get activeMealPlanId async =>
       (await _service.listMyMealPlans()).activeMealPlan;
+
+  Future<bool> deleteMealPlan(String mealPlanId) async {
+    print('[MealPlansProvider] Starting deletion of meal plan: $mealPlanId');
+
+    final response = await _service.deleteMealPlan(mealPlanId);
+    print('[MealPlansProvider] Service response: $response');
+
+    if (response == null) {
+      print('[MealPlansProvider] Response is null, returning false');
+      return false;
+    }
+
+    // Check if the deletion was successful based on the response
+    if (response.success == true) {
+      print('[MealPlansProvider] Deletion successful, refreshing list...');
+      // Refresh the list after successful deletion
+      await listMyMealPlans();
+      print(
+          '[MealPlansProvider] List refreshed, current state: ${state.value?.length} items');
+      return true;
+    } else {
+      print(
+          '[MealPlansProvider] Deletion failed, success: ${response.success}, message: ${response.message}');
+      return false;
+    }
+  }
 }
 
 final mealPlansProvider =

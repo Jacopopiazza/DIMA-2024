@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DeleteConfirmationDialog extends StatelessWidget {
   final String title;
   final String content;
-  final VoidCallback onConfirm;
+  final Future<void> Function() onConfirm;
 
   const DeleteConfirmationDialog({
     super.key,
@@ -19,20 +19,15 @@ class DeleteConfirmationDialog extends StatelessWidget {
       content: Text(content),
       actions: <Widget>[
         TextButton(
+          onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
-          onPressed: () {
-            Navigator.of(context).pop(); // Dismiss the dialog
-          },
         ),
         TextButton(
-          child: Text(
-            'Delete',
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
-          onPressed: () {
-            onConfirm();
-            Navigator.of(context).pop(); // Dismiss the dialog
+          onPressed: () async {
+            await onConfirm();
+            Navigator.of(context).pop();
           },
+          child: const Text('Delete', style: TextStyle(color: Colors.red)),
         ),
       ],
     );
