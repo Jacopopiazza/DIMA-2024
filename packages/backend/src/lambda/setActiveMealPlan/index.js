@@ -94,7 +94,7 @@ exports.handler = async (event) => {
         },
         UpdateExpression: 'SET #status = :inactive',
         ExpressionAttributeNames: { '#status': 'status' },
-        ExpressionAttributeValues: { ':inactive': 'INACTIVE' },
+        ExpressionAttributeValues: { ':inactive': 'GENERATED' },
       },
     });
   }
