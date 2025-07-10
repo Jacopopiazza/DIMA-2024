@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 
 interface DataStackProps extends cdk.StackProps {
@@ -9,6 +10,7 @@ interface DataStackProps extends cdk.StackProps {
 
 export class DataStack extends cdk.Stack {
   public readonly mealPlanningTable: dynamodb.TableV2;
+  public readonly setActiveMealPlanLambda: lambda.Function;
 
   constructor(scope: Construct, id: string, props: DataStackProps) {
     super(scope, id, props);

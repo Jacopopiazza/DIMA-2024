@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
@@ -203,16 +204,34 @@ export class AppSyncApiStack extends cdk.Stack {
     // ====================================================================
 
     // --- Resolver for Mutation.setActiveMealPlan ---
-    tableDS.createResolver('MutationSetActiveMealPlanResolver', {
-      typeName: 'Mutation',
-      fieldName: 'setActiveMealPlan',
-      requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/mutation.setActiveMealPlan-request.vtl',
-      ),
-      responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/mutation.setActiveMealPlan-response.vtl',
-      ),
-    });
+    // --- Lambda Data Source for setActiveMealPlan ---
+    const setActiveMealPlanLambda = new lambda.Function(
+      this,
+      'SetActiveMealPlanLambda',
+      {
+        runtime: lambda.Runtime.NODEJS_18_X,
+        handler: 'index.handler',
+        code: lambda.Code.fromAsset('src/lambda/setActiveMealPlan'),
+        environment: {
+          TABLE_NAME: props.mealPlanningTable.tableName,
+        },
+      },
+    );
+
+    props.mealPlanningTable.grantReadWriteData(setActiveMealPlanLambda);
+
+    const setActiveMealPlanLambdaDS = api.addLambdaDataSource(
+      'SetActiveMealPlanLambdaDS',
+      setActiveMealPlanLambda,
+    );
+
+    setActiveMealPlanLambdaDS.createResolver(
+      'MutationSetActiveMealPlanResolver',
+      {
+        typeName: 'Mutation',
+        fieldName: 'setActiveMealPlan',
+      },
+    );
 
     tableDS.createResolver('MutationMarkMealAsCompletedResolver', {
       typeName: 'Mutation',

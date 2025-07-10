@@ -26,11 +26,12 @@ export function request(ctx) {
     'thursday',
     'friday',
     'saturday',
-    'sunday'
+    'sunday',
   ];
   const dailyPlan = {};
   for (const day of weekDays) {
-    const meals = (input.dailyPlan && input.dailyPlan[day]) ? input.dailyPlan[day] : [];
+    const meals =
+      input.dailyPlan && input.dailyPlan[day] ? input.dailyPlan[day] : [];
     dailyPlan[day] = meals;
   }
 
@@ -46,7 +47,7 @@ export function request(ctx) {
     entityType: 'MEAL_PLAN',
     createdAt: now,
     updatedAt: now,
-    status: 'ACTIVE'
+    status: 'GENERATED',
   };
 
   return {
@@ -54,8 +55,8 @@ export function request(ctx) {
     key: util.dynamodb.toMapValues({ PK: pk, SK: sk }),
     attributeValues: util.dynamodb.toMapValues(itemData),
     condition: {
-      expression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)'
-    }
+      expression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)',
+    },
   };
 }
 
@@ -68,10 +69,10 @@ export function response(ctx) {
   if (ctx.error) {
     util.error(ctx.error.message, ctx.error.type);
   }
-  
+
   return {
     success: true,
     message: 'Meal plan created successfully.',
-    mealPlanId: ctx.result.mealPlanId
+    mealPlanId: ctx.result.mealPlanId,
   };
 }

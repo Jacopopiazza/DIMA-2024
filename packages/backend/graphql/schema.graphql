@@ -584,7 +584,7 @@ type Mutation {
   """
   Sets a specific meal plan as the active one for the user.
   """
-  setActiveMealPlan(mealPlanId: ID!): UserDetails
+  setActiveMealPlan(mealPlanId: ID!): MealPlanResponse
     @aws_auth(cognito_groups: ["USERS"])
 
   """
