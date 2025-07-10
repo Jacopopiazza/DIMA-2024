@@ -109,6 +109,28 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
       return false;
     }
   }
+
+  Future<bool> modifyMealPlan(String mealPlanId, String mealPlanName) async {
+    print(
+        '[MealPlansProvider] Modifying meal plan: $mealPlanId with name: $mealPlanName');
+    final response = await _service.modifyMealPlan(mealPlanId, mealPlanName);
+    print('[MealPlansProvider] modifyMealPlan response: $response');
+    if (response == null) {
+      print(
+          '[MealPlansProvider] modifyMealPlan response is null, returning false');
+      return false;
+    }
+    if (response.success == true) {
+      print(
+          '[MealPlansProvider] Meal plan modified successfully, refreshing list...');
+      await listMyMealPlans();
+      return true;
+    } else {
+      print(
+          '[MealPlansProvider] Failed to modify meal plan, message: ${response.message}');
+      return false;
+    }
+  }
 }
 
 final mealPlansProvider =

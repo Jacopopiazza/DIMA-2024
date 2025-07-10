@@ -523,4 +523,54 @@ class MealPlansService {
           items: [], nextToken: null, activeMealPlan: null);
     }
   }
+
+  /// Modifies the name of a meal plan.
+  Future<MealPlanResponse?> modifyMealPlan(
+      String mealPlanId, String mealPlanName) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          mutation ModifyMealPlan(
+            \$mealPlanId: ID!
+            \$mealPlanName: String!
+          ) {
+            modifyMealPlan(mealPlanId: \$mealPlanId, mealPlanName: \$mealPlanName) {
+              success
+              message
+              mealPlanId
+            }
+          }
+        ''',
+        variables: {
+          'mealPlanId': mealPlanId,
+          'mealPlanName': mealPlanName,
+        },
+        decodePath: 'modifyMealPlan',
+      );
+      final response = await Amplify.API.mutate(request: request).response;
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
+        return null;
+      }
+      if (response.data == null) return null;
+
+      final Map<String, dynamic> modifyMealPlanData =
+          json.decode(response.data!);
+      final data = modifyMealPlanData['modifyMealPlan'];
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String?;
+      final responseMealPlanId = data['mealPlanId'] as String?;
+
+      return MealPlanResponse(
+        success: success,
+        message: message,
+        mealPlanId: responseMealPlanId,
+      );
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error modifying meal plan: \\${e.toString()}');
+      return null;
+    }
+  }
 }

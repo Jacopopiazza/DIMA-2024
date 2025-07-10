@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../generate_meal_plan_page.dart';
 import 'delete_confirmation_dialog.dart';
+import 'modify_plan_name_dialog.dart';
 
 class MealPlanDetailsPage extends StatelessWidget {
   final String planId;
@@ -236,6 +237,58 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
                                 },
                               ),
                             ),
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            color: Theme.of(context).colorScheme.secondary,
+                            tooltip: 'Edit plan name',
+                            onPressed: () async {
+                              await showDialog<void>(
+                                context: context,
+                                builder: (BuildContext dialogContext) {
+                                  return ModifyPlanNameDialog(
+                                    currentPlanName:
+                                        plan.planName ?? 'Unnamed Plan',
+                                    mealPlanId: plan.mealPlanId,
+                                    onSave: (mealPlanId, newName) async {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content:
+                                              Text('Updating plan name...'),
+                                          duration: Duration(seconds: 1),
+                                        ),
+                                      );
+                                      final success = await ref
+                                          .read(mealPlansProvider.notifier)
+                                          .modifyMealPlan(mealPlanId, newName);
+                                      if (!mounted) return;
+                                      if (success) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Plan name updated successfully!'),
+                                            backgroundColor: Colors.green,
+                                            duration: Duration(seconds: 2),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Failed to update plan name'),
+                                            backgroundColor: Colors.red,
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
                           IconButton(
                             icon: const Icon(Icons.delete),
                             color: Theme.of(context).colorScheme.error,
