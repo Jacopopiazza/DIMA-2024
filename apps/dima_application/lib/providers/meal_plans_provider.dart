@@ -11,8 +11,8 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
   @override
   FutureOr<List<LightMealPlan>> build() async {
     _service = MealPlansService();
-    // No local cache, just return empty or fetch from backend if needed
-    return [];
+    // Automatically load plans on initialization
+    return await listMyMealPlans();
   }
 
   // No local cache, so this is not implemented
@@ -64,6 +64,48 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
     } else {
       print(
           '[MealPlansProvider] Deletion failed, success: ${response.success}, message: ${response.message}');
+      return false;
+    }
+  }
+
+  Future<bool> setActiveMealPlan(String mealPlanId) async {
+    print('[MealPlansProvider] Setting active meal plan: $mealPlanId');
+    final response = await _service.setActiveMealPlan(mealPlanId);
+    print('[MealPlansProvider] setActiveMealPlan response: $response');
+    if (response == null) {
+      print(
+          '[MealPlansProvider] setActiveMealPlan response is null, returning false');
+      return false;
+    }
+    if (response.success == true) {
+      print(
+          '[MealPlansProvider] Active plan set successfully, refreshing list...');
+      await listMyMealPlans();
+      return true;
+    } else {
+      print(
+          '[MealPlansProvider] Failed to set active plan, message: ${response.message}');
+      return false;
+    }
+  }
+
+  Future<bool> createRandomMealPlan() async {
+    print('[MealPlansProvider] Creating random meal plan...');
+    final response = await _service.createRandomMealPlan();
+    print('[MealPlansProvider] createRandomMealPlan response: $response');
+    if (response == null) {
+      print(
+          '[MealPlansProvider] createRandomMealPlan response is null, returning false');
+      return false;
+    }
+    if (response.success == true) {
+      print(
+          '[MealPlansProvider] Random meal plan created successfully, refreshing list...');
+      await listMyMealPlans();
+      return true;
+    } else {
+      print(
+          '[MealPlansProvider] Failed to create random meal plan, message: ${response.message}');
       return false;
     }
   }

@@ -279,9 +279,120 @@ class MealPlansService {
     }
   }
 
+  /// Creates a meal plan with random data for testing purposes
+  Future<MealPlanResponse?> createRandomMealPlan() async {
+    try {
+      // Generate random meal plan data
+      final random = DateTime.now().millisecondsSinceEpoch;
+      final planNames = [
+        'Balanced Weekly Plan',
+        'High Protein Diet',
+        'Vegetarian Delights',
+        'Mediterranean Style',
+        'Quick & Healthy',
+        'Athlete\'s Fuel',
+        'Family Friendly',
+        'Weight Loss Plan'
+      ];
+
+      final meals = [
+        'Chicken',
+        'Salmon',
+        'Quinoa',
+        'Salad',
+        'Sandwich',
+        'Pasta',
+        'Beef',
+        'Soup',
+        'Tuna',
+        'Caesar'
+      ];
+
+      // Helper to generate a recipe map
+      Map<String, dynamic> recipeFor(int offset) => {
+            'name': [
+              'BREAKFAST',
+              'LUNCH',
+              'DINNER',
+              'SNACK_MORNING',
+              'SNACK_AFTERNOON',
+              'SNACK_EVENING'
+            ][offset % 6],
+            'recipeName': meals[(random + offset) % meals.length]
+                .replaceAll("'", "")
+                .replaceAll('"', ''),
+            'ingredients': [
+              {
+                'name': 'Ingredient A',
+                'amount': 100 + offset * 10,
+                'unit': 'g',
+                'macros': {
+                  'proteins': 10 + offset,
+                  'carbohydrates': 20 + offset,
+                  'fats': 5 + offset,
+                  'calories': 150 + offset * 10
+                }
+              },
+              {
+                'name': 'Ingredient B',
+                'amount': 50 + offset * 5,
+                'unit': 'g',
+                'macros': {
+                  'proteins': 2 + offset,
+                  'carbohydrates': 10 + offset,
+                  'fats': 1 + offset,
+                  'calories': 50 + offset * 5
+                }
+              }
+            ],
+            'totalMacros': {
+              'proteins': 12 + offset,
+              'carbohydrates': 30 + offset,
+              'fats': 6 + offset,
+              'calories': 200 + offset * 10
+            },
+            'recipe':
+                'Sample recipe instructions for ${meals[(random + offset) % meals.length].replaceAll("'", "").replaceAll('"', '')}.'
+          };
+
+      // Generate a week of meals, each day as a list of recipes
+      final dailyPlan = {
+        'monday': [recipeFor(0)],
+        'tuesday': [recipeFor(1)],
+        'wednesday': [recipeFor(2)],
+        'thursday': [recipeFor(3)],
+        'friday': [recipeFor(4)],
+        'saturday': [recipeFor(5)],
+        'sunday': [recipeFor(6)],
+      };
+
+      // Calculate start and end dates (next week)
+      final now = DateTime.now();
+      final startDate = DateTime(now.year, now.month, now.day + 1);
+      final endDate = DateTime(now.year, now.month, now.day + 7);
+
+      // Build the input for the mutation
+      final input = {
+        'dailyPlan': dailyPlan,
+        'planName': planNames[random % planNames.length],
+        'startDate':
+            '${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}',
+        'endDate':
+            '${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}',
+        'status': 'ACTIVE',
+      };
+
+      return await createMealPlan(input);
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error creating random meal plan: \\${e.toString()}');
+      return null;
+    }
+  }
+
   Future<MealPlanResponse?> createMealPlan(Map<String, dynamic> input) async {
     try {
-      final request = GraphQLRequest<MealPlanResponse>(
+      final request = GraphQLRequest<String>(
         document: '''
           mutation CreateMealPlan(\$input: CreateMealPlanInput!) {
             createMealPlan(input: \$input) {
@@ -299,10 +410,69 @@ class MealPlansService {
         safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
         return null;
       }
-      return response.data;
+      if (response.data == null) return null;
+
+      final Map<String, dynamic> createMealPlanData =
+          json.decode(response.data!);
+      final data = createMealPlanData['createMealPlan'];
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String?;
+      final responseMealPlanId = data['mealPlanId'] as String?;
+
+      return MealPlanResponse(
+        success: success,
+        message: message,
+        mealPlanId: responseMealPlanId,
+      );
     } catch (e) {
       safePrint(
           '[MealPlansService] Error creating meal plan: \\${e.toString()}');
+      return null;
+    }
+  }
+
+  /// Sets the given meal plan as the active plan for the user.
+  Future<MealPlanResponse?> setActiveMealPlan(String mealPlanId) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          mutation SetActiveMealPlan(
+            \$mealPlanId: ID!
+          ) {
+            setActiveMealPlan(mealPlanId: \$mealPlanId) {
+              success
+              message
+              mealPlanId
+            }
+          }
+        ''',
+        variables: {'mealPlanId': mealPlanId},
+        decodePath: 'setActiveMealPlan',
+      );
+      final response = await Amplify.API.mutate(request: request).response;
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
+        return null;
+      }
+      if (response.data == null) return null;
+
+      final Map<String, dynamic> setActiveMealPlanData =
+          json.decode(response.data!);
+      final data = setActiveMealPlanData['setActiveMealPlan'];
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String?;
+      final responseMealPlanId = data['mealPlanId'] as String?;
+
+      return MealPlanResponse(
+        success: success,
+        message: message,
+        mealPlanId: responseMealPlanId,
+      );
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error setting active meal plan: \\${e.toString()}');
       return null;
     }
   }

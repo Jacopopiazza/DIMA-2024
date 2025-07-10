@@ -2,6 +2,7 @@ import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../generate_meal_plan_page.dart';
 import 'delete_confirmation_dialog.dart';
 
 class MealPlanDetailsPage extends StatelessWidget {
@@ -33,21 +34,31 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
   @override
   void initState() {
     super.initState();
-    // Load plans on initialization
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(mealPlansProvider.notifier).listMyMealPlans();
-    });
+    // Plans are now automatically loaded by the provider on initialization
   }
 
   @override
   Widget build(BuildContext context) {
     final plansAsync = ref.watch(mealPlansProvider);
+    final activePlanIdAsync = ref.watch(activeMealPlanIdProvider);
     print('[MyPlansPage] Building with state: ${plansAsync.toString()}');
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Meal Plans'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const GenerateMealPlanPage(),
+                ),
+              );
+            },
+            tooltip: 'Create New Meal Plan',
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
@@ -102,77 +113,190 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
               ),
             );
           }
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            itemCount: plans.length,
-            itemBuilder: (context, index) {
-              final plan = plans[index];
-              return Card(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
-                elevation: 2.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: ListTile(
-                  title: Text(plan.planName ?? 'Unnamed Plan'),
-                  subtitle: Text('ID: ${plan.mealPlanId}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        color: Theme.of(context).colorScheme.error,
-                        tooltip: 'Delete plan',
-                        onPressed: () async {
-                          await showDialog<void>(
-                            context: context,
-                            builder: (BuildContext dialogContext) {
-                              return DeleteConfirmationDialog(
-                                title: 'Delete Meal Plan',
-                                content:
-                                    'Are you sure you want to delete the plan "${plan.planName ?? 'Unnamed Plan'}"?',
-                                onConfirm: () async {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Deleting meal plan...'),
-                                      duration: Duration(seconds: 1),
-                                    ),
-                                  );
-                                  final success = await ref
-                                      .read(mealPlansProvider.notifier)
-                                      .deleteMealPlan(plan.mealPlanId);
-                                  if (!mounted) return;
-                                  if (success) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+          return activePlanIdAsync.when(
+            data: (activePlanId) {
+              // Fallback logic: if activePlanId is null, use the plan with status ACTIVE, else fallback to first plan
+              String? resolvedActivePlanId = activePlanId;
+              if (resolvedActivePlanId == null && plans.isNotEmpty) {
+                final activeByStatus = plans.firstWhere(
+                  (p) => p.status?.name == 'ACTIVE',
+                  orElse: () => plans.first,
+                );
+                resolvedActivePlanId = activeByStatus.mealPlanId;
+              }
+              return ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                itemCount: plans.length,
+                itemBuilder: (context, index) {
+                  final plan = plans[index];
+                  final isActive = plan.mealPlanId == resolvedActivePlanId;
+                  return Card(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 6.0),
+                    elevation: isActive ? 6.0 : 2.0,
+                    color: isActive
+                        ? Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.12)
+                        : null,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      side: isActive
+                          ? BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2)
+                          : BorderSide.none,
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        plan.planName ?? 'Unnamed Plan',
+                        style: isActive
+                            ? TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              )
+                            : null,
+                      ),
+                      subtitle: Text('ID: ${plan.mealPlanId}'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          if (isActive)
+                            Tooltip(
+                              message: 'Active plan',
+                              child: Icon(Icons.check_circle,
+                                  color: Theme.of(context).colorScheme.primary),
+                            )
+                          else
+                            Tooltip(
+                              message: 'Make this plan active',
+                              child: IconButton(
+                                icon: Icon(Icons.radio_button_unchecked),
+                                color: Theme.of(context).colorScheme.primary,
+                                onPressed: () async {
+                                  final confirmed = await showDialog<bool>(
+                                    context: context,
+                                    builder: (BuildContext dialogContext) {
+                                      return AlertDialog(
+                                        title: const Text('Set Active Plan'),
                                         content: Text(
-                                            'Meal plan deleted successfully'),
-                                        backgroundColor: Colors.green,
-                                        duration: Duration(seconds: 2),
-                                      ),
-                                    );
-                                  } else {
+                                            'Do you want to make "${plan.planName ?? 'Unnamed Plan'}" your active meal plan?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(dialogContext)
+                                                    .pop(false),
+                                            child: const Text('Cancel'),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () =>
+                                                Navigator.of(dialogContext)
+                                                    .pop(true),
+                                            child: const Text('Set Active'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  if (confirmed == true) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content:
-                                            Text('Failed to delete meal plan'),
-                                        backgroundColor: Colors.red,
-                                        duration: Duration(seconds: 3),
+                                            Text('Setting active meal plan...'),
+                                        duration: Duration(seconds: 1),
                                       ),
                                     );
+                                    final success = await ref
+                                        .read(mealPlansProvider.notifier)
+                                        .setActiveMealPlan(plan.mealPlanId);
+                                    if (!mounted) return;
+                                    if (success) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content:
+                                              Text('Active meal plan updated!'),
+                                          backgroundColor: Colors.green,
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Failed to set active meal plan'),
+                                          backgroundColor: Colors.red,
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    }
                                   }
+                                },
+                              ),
+                            ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            color: Theme.of(context).colorScheme.error,
+                            tooltip: 'Delete plan',
+                            onPressed: () async {
+                              await showDialog<void>(
+                                context: context,
+                                builder: (BuildContext dialogContext) {
+                                  return DeleteConfirmationDialog(
+                                    title: 'Delete Meal Plan',
+                                    content:
+                                        'Are you sure you want to delete the plan "${plan.planName ?? 'Unnamed Plan'}"?',
+                                    onConfirm: () async {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content:
+                                              Text('Deleting meal plan...'),
+                                          duration: Duration(seconds: 1),
+                                        ),
+                                      );
+                                      final success = await ref
+                                          .read(mealPlansProvider.notifier)
+                                          .deleteMealPlan(plan.mealPlanId);
+                                      if (!mounted) return;
+                                      if (success) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Meal plan deleted successfully'),
+                                            backgroundColor: Colors.green,
+                                            duration: Duration(seconds: 2),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Failed to delete meal plan'),
+                                            backgroundColor: Colors.red,
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  );
                                 },
                               );
                             },
-                          );
-                        },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, st) => Center(child: Text('Error: $e')),
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
