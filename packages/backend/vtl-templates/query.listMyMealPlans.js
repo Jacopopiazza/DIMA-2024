@@ -14,25 +14,17 @@ export function request(ctx) {
 }
 
 export function response(ctx) {
-  // Debug log for ctx.result
-  console.log('ctx.result:', JSON.stringify(ctx.result));
-
   const items = ctx.result && ctx.result.items ? ctx.result.items : [];
   const nextToken =
     ctx.result && ctx.result.nextToken ? ctx.result.nextToken : null;
 
-  // If the user's activeMealPlanId is available in the user's details, use it
-  // This example assumes it is available in ctx.stash.activeMealPlanId
-  // You may need to adjust this based on your pipeline setup
-  const activeMealPlanId = ctx.stash.activeMealPlanId;
-  let activeMealPlan = null;
-  if (activeMealPlanId) {
-    activeMealPlan = items.find((plan) => plan.mealPlanId === activeMealPlanId);
-  }
+  // Find the active meal plan by status
+  const activeMealPlan = items.find(plan => plan.status === 'ACTIVE');
+  const activeMealPlanId = activeMealPlan ? activeMealPlan.mealPlanId : null;
 
   return {
     items,
     nextToken,
-    activeMealPlan,
+    activeMealPlan: activeMealPlanId,
   };
 }
