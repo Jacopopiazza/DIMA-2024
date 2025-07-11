@@ -106,10 +106,14 @@ enum MealPlanGenerationStatusValue {
 
 enum PlanStatus {
   GENERATED
-  REVIEW_REQUESTED
-  UNDER_REVIEW
   ACTIVE
   ARCHIVED
+}
+
+enum MealPlanValidationStatus {
+  NOT_VALIDATED
+  VALIDATED
+  PENDING_REVIEW
 }
 
 enum SenderType {
@@ -225,6 +229,7 @@ type MealPlan @model {
   endDate: AWSDate
   generatedAt: AWSDateTime
   status: PlanStatus
+  validationStatus: MealPlanValidationStatus
   assignedNutritionistId: ID
   chatId: ID
   dailyPlan: DailyPlanData # The core plan structure using Map<Weekday, List<MealObject>>
