@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dima_application/generated/flutter-models/NutritionistProfile.dart';
 import 'package:dima_application/models/MealPlanList/meal_plan_list.dart'
     show LightMealPlan;
 import 'package:dima_application/services/meal_plans_service.dart';
@@ -128,6 +129,46 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
     } else {
       print(
           '[MealPlansProvider] Failed to modify meal plan, message: ${response.message}');
+      return false;
+    }
+  }
+
+  /// Lists available nutritionists for assignment to meal plans.
+  Future<List<NutritionistProfile>> listNutritionists(
+      {bool? isAvailable}) async {
+    print('[MealPlansProvider] Listing nutritionists...');
+    try {
+      final nutritionists =
+          await _service.listNutritionists(isAvailable: isAvailable);
+      print('[MealPlansProvider] Found ${nutritionists.length} nutritionists');
+      return nutritionists;
+    } catch (e) {
+      print('[MealPlansProvider] Error listing nutritionists: $e');
+      return [];
+    }
+  }
+
+  /// Assigns a nutritionist to a meal plan for validation.
+  Future<bool> assignNutritionistToPlan(
+      String mealPlanId, String nutritionistId) async {
+    print(
+        '[MealPlansProvider] Assigning nutritionist $nutritionistId to meal plan $mealPlanId');
+    final response =
+        await _service.assignNutritionistToPlan(mealPlanId, nutritionistId);
+    print('[MealPlansProvider] assignNutritionistToPlan response: $response');
+    if (response == null) {
+      print(
+          '[MealPlansProvider] assignNutritionistToPlan response is null, returning false');
+      return false;
+    }
+    if (response.success == true) {
+      print(
+          '[MealPlansProvider] Nutritionist assigned successfully, refreshing list...');
+      await listMyMealPlans();
+      return true;
+    } else {
+      print(
+          '[MealPlansProvider] Failed to assign nutritionist, message: ${response.message}');
       return false;
     }
   }

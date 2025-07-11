@@ -573,4 +573,93 @@ class MealPlansService {
       return null;
     }
   }
+
+  /// Lists available nutritionists for assignment to meal plans.
+  Future<List<NutritionistProfile>> listNutritionists(
+      {bool? isAvailable}) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          query ListNutritionists(\$filter: ListNutritionistsFilter) {
+            listNutritionists(filter: \$filter) {
+              items {
+                nutritionistId
+                givenName
+                familyName
+                specialization
+                bio
+                profilePictureUrl
+                isAvailable
+              }
+              nextToken
+            }
+          }
+        ''',
+        variables: {
+          if (isAvailable != null) 'filter': {'isAvailable': isAvailable},
+        },
+        decodePath: 'listNutritionists',
+      );
+      final response = await Amplify.API.query(request: request).response;
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
+        return [];
+      }
+      if (response.data == null) return [];
+
+      final Map<String, dynamic> jsonData = json.decode(response.data!);
+      final items = jsonData['listNutritionists']['items'] as List<dynamic>;
+
+      return items.map((item) => NutritionistProfile.fromJson(item)).toList();
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error listing nutritionists: ${e.toString()}');
+      return [];
+    }
+  }
+
+  /// Assigns a nutritionist to a meal plan for validation.
+  Future<MealPlanResponse?> assignNutritionistToPlan(
+      String mealPlanId, String nutritionistId) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          mutation AssignNutritionistToPlan(\$input: AssignNutritionistInput!) {
+            assignNutritionistToPlan(input: \$input) {
+              mealPlanId
+              planName
+              assignedNutritionistId
+              validationStatus
+            }
+          }
+        ''',
+        variables: {
+          'input': {
+            'mealPlanId': mealPlanId,
+            'nutritionistId': nutritionistId,
+          },
+        },
+        decodePath: 'assignNutritionistToPlan',
+      );
+      final response = await Amplify.API.mutate(request: request).response;
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
+        return null;
+      }
+      if (response.data == null) return null;
+
+      final Map<String, dynamic> assignData = json.decode(response.data!);
+      final data = assignData['assignNutritionistToPlan'];
+
+      return MealPlanResponse(
+        success: true,
+        message: 'Nutritionist assigned successfully',
+        mealPlanId: data['mealPlanId'] as String?,
+      );
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error assigning nutritionist: ${e.toString()}');
+      return null;
+    }
+  }
 }
