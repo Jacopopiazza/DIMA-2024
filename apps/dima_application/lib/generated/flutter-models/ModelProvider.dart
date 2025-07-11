@@ -57,6 +57,7 @@ export 'MealPlanGenerationStatus.dart';
 export 'MealPlanGenerationStatusValue.dart';
 export 'MealPlanList.dart';
 export 'MealPlanResponse.dart';
+export 'MealPlanValidationStatus.dart';
 export 'MealWithStatus.dart';
 export 'NutritionistProfile.dart';
 export 'NutritionistProfileConnection.dart';
@@ -69,7 +70,7 @@ export 'WeekdayEnum.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "0742296fd61f0fbcb18437def41ddeb4";
+  String version = "67c92461891762338da4440e26644d28";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [ChatMessage.schema, ChatMetadata.schema, MealPlan.schema, NutritionistProfile.schema, PlanDayCompletion.schema, UserDetails.schema];
   @override

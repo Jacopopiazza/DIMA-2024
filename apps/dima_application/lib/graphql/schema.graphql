@@ -93,6 +93,7 @@ type MealPlan @model {
   status: PlanStatus
   #  Extracted from SK
   userId: ID!
+  validationStatus: MealPlanValidationStatus
 }
 
 #   Pagination Helper Types
@@ -135,9 +136,10 @@ type Mutation {
   deleteMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
+  modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanGenerationStatus @aws_auth(cognito_groups : ["USERS"])
   sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
-  setActiveMealPlan(mealPlanId: ID!): UserDetails @aws_auth(cognito_groups : ["USERS"])
+  setActiveMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   setPlanDayCompletion(input: SetPlanDayCompletionInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   updateUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["USERS"])
@@ -262,12 +264,16 @@ enum MealPlanGenerationStatusValue {
   PENDING
 }
 
+enum MealPlanValidationStatus {
+  NOT_VALIDATED
+  PENDING_REVIEW
+  VALIDATED
+}
+
 enum PlanStatus {
   ACTIVE
   ARCHIVED
   GENERATED
-  REVIEW_REQUESTED
-  UNDER_REVIEW
 }
 
 enum SenderType {

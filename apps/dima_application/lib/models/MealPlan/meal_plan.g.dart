@@ -229,15 +229,11 @@ const _MealPlanCachestatusEnumValueMap = {
   'ACTIVE': 0,
   'ARCHIVED': 1,
   'GENERATED': 2,
-  'REVIEW_REQUESTED': 3,
-  'UNDER_REVIEW': 4,
 };
 const _MealPlanCachestatusValueEnumMap = {
   0: PlanStatus.ACTIVE,
   1: PlanStatus.ARCHIVED,
   2: PlanStatus.GENERATED,
-  3: PlanStatus.REVIEW_REQUESTED,
-  4: PlanStatus.UNDER_REVIEW,
 };
 
 Id _mealPlanCacheGetId(MealPlanCache object) {
