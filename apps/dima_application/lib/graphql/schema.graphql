@@ -131,27 +131,41 @@ type MealWithStatus {
 #      MUTATIONS
 # ===================
 type Mutation {
-  assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan @aws_auth(cognito_groups : ["USERS"])
-  createMealPlan(input: CreateMealPlanInput!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
-  deleteMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
-  getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
-  markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
-  modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
-  requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanGenerationStatus @aws_auth(cognito_groups : ["USERS"])
-  sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
-  setActiveMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
-  setPlanDayCompletion(input: SetPlanDayCompletionInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
-  unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
-  updateUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["USERS"])
+  assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan
+    @aws_auth(cognito_groups: ["USERS"])
+  createMealPlan(input: CreateMealPlanInput!): MealPlanResponse
+    @aws_auth(cognito_groups: ["USERS"])
+  deleteMealPlan(mealPlanId: ID!): MealPlanResponse
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+  getMealPlanById(mealPlanId: ID!): MealPlan
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+  markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion
+    @aws_auth(cognito_groups: ["USERS"])
+  modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+  requestNewMealPlan(
+    prefsOverride: PlanRequestPreferencesInput
+  ): MealPlanGenerationStatus @aws_auth(cognito_groups: ["USERS"])
+  sendChatMessage(input: SendMessageInput!): ChatMessage
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+  setActiveMealPlan(mealPlanId: ID!): MealPlanResponse
+    @aws_auth(cognito_groups: ["USERS"])
+  setPlanDayCompletion(input: SetPlanDayCompletionInput!): PlanDayCompletion
+    @aws_auth(cognito_groups: ["USERS"])
+  unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion
+    @aws_auth(cognito_groups: ["USERS"])
+  updateUserDetails(input: UpdateUserDetailsInput!): UserDetails
+    @aws_auth(cognito_groups: ["USERS"])
 }
 
 type NutritionistProfile @model {
   bio: String
   familyName: String
   givenName: String
+  #  Nullable, TODO: revert to AWSURL
   isAvailable: Boolean
   nutritionistId: ID!
-  profilePictureUrl: AWSURL
+  profilePictureUrl: String
   #  email: AWSEmail # Consider privacy if showing email directly to users
   specialization: String
 }
@@ -178,16 +192,29 @@ type PlanDayCompletion @model {
 #       QUERIES
 # ===================
 type Query {
-  getActiveMealPlan: MealPlan @aws_auth(cognito_groups : ["USERS"])
-  getChatMessages(chatId: ID!, limit: Int, nextToken: String): ChatMessageConnection @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
-  getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS"])
-  getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
-  getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["USERS"])
-  getUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS"])
-  listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["NUTRITIONISTS"])
-  listMyChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["USERS"])
-  listMyMealPlans(limit: Int, nextToken: String): MealPlanList @aws_auth(cognito_groups : ["USERS"])
-  listNutritionists(filter: ListNutritionistsFilter, limit: Int, nextToken: String): NutritionistProfileConnection @aws_auth(cognito_groups : ["USERS"])
+  getActiveMealPlan: MealPlan @aws_auth(cognito_groups: ["USERS"])
+  getChatMessages(
+    chatId: ID!
+    limit: Int
+    nextToken: String
+  ): ChatMessageConnection @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+  getMealPlanById(mealPlanId: ID!): MealPlan
+    @aws_auth(cognito_groups: ["USERS"])
+  getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion
+    @aws_auth(cognito_groups: ["USERS"])
+  getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups: ["USERS"])
+  getUserDetails: UserDetails @aws_auth(cognito_groups: ["USERS"])
+  listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
+  listMyChats(limit: Int, nextToken: String): ChatMetadataConnection
+    @aws_auth(cognito_groups: ["USERS"])
+  listMyMealPlans(limit: Int, nextToken: String): MealPlanList
+    @aws_auth(cognito_groups: ["USERS"])
+  listNutritionists(
+    filter: ListNutritionistsFilter
+    limit: Int
+    nextToken: String
+  ): NutritionistProfileConnection @aws_auth(cognito_groups: ["USERS"])
 }
 
 type TodaysPlan {

@@ -80,7 +80,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
           Navigator.of(context).pop(true);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Nutritionist assigned successfully!'),
+              content: Text('Validation request sent successfully!'),
               backgroundColor: Colors.green,
               duration: Duration(seconds: 2),
             ),
@@ -88,7 +88,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Failed to assign nutritionist'),
+              content: Text('Failed to send validation request'),
               backgroundColor: Colors.red,
               duration: Duration(seconds: 3),
             ),
@@ -99,7 +99,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error assigning nutritionist: $e'),
+            content: Text('Error sending validation request: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -111,6 +111,188 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
         });
       }
     }
+  }
+
+  Widget _buildProfileImage(String? imageUrl, {double size = 60}) {
+    if (imageUrl == null || imageUrl.isEmpty) {
+      // Fallback to a default avatar icon
+      return Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.person,
+          size: size * 0.5,
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
+      );
+    }
+
+    return ClipOval(
+      child: Image.network(
+        imageUrl,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          // Fallback to default avatar on error
+          return Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.errorContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.person,
+              size: size * 0.5,
+              color: Theme.of(context).colorScheme.onErrorContainer,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildNutritionistCard(NutritionistProfile nutritionist) {
+    final isSelected = _selectedNutritionistId == nutritionist.nutritionistId;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      color: isSelected
+          ? colorScheme.primary.withOpacity(0.1)
+          : colorScheme.surface,
+      elevation: isSelected ? 2 : 1,
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _selectedNutritionistId = nutritionist.nutritionistId;
+          });
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              // Profile Image
+              _buildProfileImage(nutritionist.profilePictureUrl),
+              const SizedBox(width: 16),
+
+              // Nutritionist Details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Name
+                    Text(
+                      '${nutritionist.givenName ?? ''} ${nutritionist.familyName ?? ''}'
+                          .trim(),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.w600,
+                        color: isSelected
+                            ? colorScheme.primary
+                            : colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+
+                    // Specialization/Role
+                    if (nutritionist.specialization != null &&
+                        nutritionist.specialization!.isNotEmpty)
+                      Text(
+                        nutritionist.specialization!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+
+                    // Bio (truncated)
+                    if (nutritionist.bio != null &&
+                        nutritionist.bio!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          nutritionist.bio!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                    // Availability Status
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Row(
+                        children: [
+                          Icon(
+                            nutritionist.isAvailable == true
+                                ? Icons.check_circle
+                                : Icons.cancel,
+                            size: 16,
+                            color: nutritionist.isAvailable == true
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            nutritionist.isAvailable == true
+                                ? 'Available'
+                                : 'Unavailable',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: nutritionist.isAvailable == true
+                                  ? Colors.green
+                                  : Colors.red,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Selection Indicator
+              if (isSelected)
+                Icon(
+                  Icons.check_circle,
+                  color: colorScheme.primary,
+                  size: 24,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -129,12 +311,33 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
             ),
             const SizedBox(height: 16),
             if (_isLoading)
-              const Center(child: CircularProgressIndicator())
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.0),
+                  child: CircularProgressIndicator(),
+                ),
+              )
             else if (_nutritionists.isEmpty)
               const Center(
-                child: Text(
-                  'No nutritionists available at the moment.',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                child: Padding(
+                  padding: EdgeInsets.all(32.0),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.people_outline,
+                        size: 48,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'No nutritionists available at the moment.',
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             else
@@ -144,80 +347,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                   itemCount: _nutritionists.length,
                   itemBuilder: (context, index) {
                     final nutritionist = _nutritionists[index];
-                    final isSelected =
-                        _selectedNutritionistId == nutritionist.nutritionistId;
-
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      color: isSelected
-                          ? Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.1)
-                          : null,
-                      child: RadioListTile<String>(
-                        value: nutritionist.nutritionistId,
-                        groupValue: _selectedNutritionistId,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedNutritionistId = value;
-                          });
-                        },
-                        title: Text(
-                          '${nutritionist.givenName ?? ''} ${nutritionist.familyName ?? ''}'
-                              .trim(),
-                          style: TextStyle(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (nutritionist.specialization != null)
-                              Text(
-                                nutritionist.specialization!,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            if (nutritionist.bio != null)
-                              Text(
-                                nutritionist.bio!,
-                                style: Theme.of(context).textTheme.bodySmall,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            Row(
-                              children: [
-                                Icon(
-                                  nutritionist.isAvailable == true
-                                      ? Icons.check_circle
-                                      : Icons.cancel,
-                                  size: 16,
-                                  color: nutritionist.isAvailable == true
-                                      ? Colors.green
-                                      : Colors.red,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  nutritionist.isAvailable == true
-                                      ? 'Available'
-                                      : 'Unavailable',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        color: nutritionist.isAvailable == true
-                                            ? Colors.green
-                                            : Colors.red,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                    return _buildNutritionistCard(nutritionist);
                   },
                 ),
               ),

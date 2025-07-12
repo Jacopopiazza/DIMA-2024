@@ -576,12 +576,12 @@ class MealPlansService {
 
   /// Lists available nutritionists for assignment to meal plans.
   Future<List<NutritionistProfile>> listNutritionists(
-      {bool? isAvailable}) async {
+      {bool? isAvailable, int? limit, String? nextToken}) async {
     try {
       final request = GraphQLRequest<String>(
         document: '''
-          query ListNutritionists(\$filter: ListNutritionistsFilter) {
-            listNutritionists(filter: \$filter) {
+          query ListAllNutritionists(\$limit: Int, \$nextToken: String) {
+            listNutritionists(limit: \$limit, nextToken: \$nextToken) {
               items {
                 nutritionistId
                 givenName
@@ -596,7 +596,8 @@ class MealPlansService {
           }
         ''',
         variables: {
-          if (isAvailable != null) 'filter': {'isAvailable': isAvailable},
+          'limit': limit ?? 10,
+          'nextToken': nextToken,
         },
         decodePath: 'listNutritionists',
       );
@@ -610,7 +611,15 @@ class MealPlansService {
       final Map<String, dynamic> jsonData = json.decode(response.data!);
       final items = jsonData['listNutritionists']['items'] as List<dynamic>;
 
-      return items.map((item) => NutritionistProfile.fromJson(item)).toList();
+      return items.map((item) {
+        if (item is Map<String, dynamic>) {
+          // Map nutritionistId to id for the generated model
+          final processedItem = Map<String, dynamic>.from(item);
+          processedItem['id'] = processedItem['nutritionistId'];
+          return NutritionistProfile.fromJson(processedItem);
+        }
+        return NutritionistProfile.fromJson(item);
+      }).toList();
     } catch (e) {
       safePrint(
           '[MealPlansService] Error listing nutritionists: ${e.toString()}');
@@ -659,6 +668,95 @@ class MealPlansService {
     } catch (e) {
       safePrint(
           '[MealPlansService] Error assigning nutritionist: ${e.toString()}');
+      return null;
+    }
+  }
+
+  /// Requests validation of a meal plan by a nutritionist.
+  Future<MealPlanResponse?> requestValidation(
+      String mealPlanId, String nutritionistId) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          mutation RequestValidation(\$input: RequestValidationInput!) {
+            requestValidation(input: \$input) {
+              success
+              message
+              mealPlanId
+            }
+          }
+        ''',
+        variables: {
+          'input': {
+            'mealPlanId': mealPlanId,
+            'nutritionistId': nutritionistId,
+          },
+        },
+        decodePath: 'requestValidation',
+      );
+      final response = await Amplify.API.mutate(request: request).response;
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
+        return null;
+      }
+      if (response.data == null) return null;
+
+      final Map<String, dynamic> requestData = json.decode(response.data!);
+      final data = requestData['requestValidation'];
+
+      return MealPlanResponse(
+        success: data['success'] as bool? ?? false,
+        message: data['message'] as String?,
+        mealPlanId: data['mealPlanId'] as String?,
+      );
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error requesting validation: ${e.toString()}');
+      return null;
+    }
+  }
+
+  /// Validates a meal plan by a nutritionist, updating the validation status.
+  Future<MealPlanResponse?> validateMealPlan(
+      String mealPlanId, String nutritionistId, String validationStatus) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          mutation ValidateMealPlan(\$input: ValidateMealPlanInput!) {
+            validateMealPlan(input: \$input) {
+              success
+              message
+              mealPlanId
+            }
+          }
+        ''',
+        variables: {
+          'input': {
+            'mealPlanId': mealPlanId,
+            'nutritionistId': nutritionistId,
+            'validationStatus': validationStatus,
+          },
+        },
+        decodePath: 'validateMealPlan',
+      );
+      final response = await Amplify.API.mutate(request: request).response;
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
+        return null;
+      }
+      if (response.data == null) return null;
+
+      final Map<String, dynamic> validateData = json.decode(response.data!);
+      final data = validateData['validateMealPlan'];
+
+      return MealPlanResponse(
+        success: data['success'] as bool? ?? false,
+        message: data['message'] as String?,
+        mealPlanId: data['mealPlanId'] as String?,
+      );
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error validating meal plan: ${e.toString()}');
       return null;
     }
   }

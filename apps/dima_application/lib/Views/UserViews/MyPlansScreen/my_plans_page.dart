@@ -105,7 +105,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
                       onPressed: () {
                         // Navigate to meal plan generation page
                         Navigator.pushNamed(context,
-                            '/generate-meal-plan'); // TODO: Implement meal plan generation page
+                            '/generate_meal_plan'); // TODO: Implement meal plan generation page
                       },
                       icon: const Icon(Icons.add),
                       label: const Text('Create New Meal Plan'),
@@ -284,7 +284,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
                                             (mealPlanId, nutritionistId) => ref
                                                 .read(
                                                     mealPlansProvider.notifier)
-                                                .assignNutritionistToPlan(
+                                                .requestValidation(
                                                     mealPlanId, nutritionistId),
                                       );
                                     },

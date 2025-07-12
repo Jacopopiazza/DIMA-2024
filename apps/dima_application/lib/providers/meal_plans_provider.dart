@@ -172,6 +172,56 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
       return false;
     }
   }
+
+  /// Requests validation of a meal plan by a nutritionist.
+  Future<bool> requestValidation(
+      String mealPlanId, String nutritionistId) async {
+    print(
+        '[MealPlansProvider] Requesting validation for meal plan $mealPlanId by nutritionist $nutritionistId');
+    final response =
+        await _service.requestValidation(mealPlanId, nutritionistId);
+    print('[MealPlansProvider] requestValidation response: $response');
+    if (response == null) {
+      print(
+          '[MealPlansProvider] requestValidation response is null, returning false');
+      return false;
+    }
+    if (response.success == true) {
+      print(
+          '[MealPlansProvider] Validation request successful, refreshing list...');
+      await listMyMealPlans();
+      return true;
+    } else {
+      print(
+          '[MealPlansProvider] Failed to request validation, message: ${response.message}');
+      return false;
+    }
+  }
+
+  /// Validates a meal plan by a nutritionist, updating the validation status.
+  Future<bool> validateMealPlan(
+      String mealPlanId, String nutritionistId, String validationStatus) async {
+    print(
+        '[MealPlansProvider] Validating meal plan $mealPlanId by nutritionist $nutritionistId with status: $validationStatus');
+    final response = await _service.validateMealPlan(
+        mealPlanId, nutritionistId, validationStatus);
+    print('[MealPlansProvider] validateMealPlan response: $response');
+    if (response == null) {
+      print(
+          '[MealPlansProvider] validateMealPlan response is null, returning false');
+      return false;
+    }
+    if (response.success == true) {
+      print(
+          '[MealPlansProvider] Meal plan validation successful, refreshing list...');
+      await listMyMealPlans();
+      return true;
+    } else {
+      print(
+          '[MealPlansProvider] Failed to validate meal plan, message: ${response.message}');
+      return false;
+    }
+  }
 }
 
 final mealPlansProvider =
