@@ -269,7 +269,7 @@ type NutritionistProfile @model {
   # email: AWSEmail # Consider privacy if showing email directly to users
   specialization: String
   bio: String
-  profilePictureUrl: AWSURL
+  profilePictureUrl: String # Nullable, TODO: revert to AWSURL
   isAvailable: Boolean
 }
 
@@ -325,6 +325,23 @@ type UserDetails @model {
 Input for assigning a nutritionist to a specific meal plan.
 """
 input AssignNutritionistInput {
+  mealPlanId: ID!
+  nutritionistId: ID!
+}
+
+"""
+Input for validating a meal plan by a nutritionist.
+"""
+input ValidateMealPlanInput {
+  mealPlanId: ID!
+  nutritionistId: ID!
+  validationStatus: MealPlanValidationStatus!
+}
+
+"""
+Input for requesting validation of a meal plan by a user.
+"""
+input RequestValidationInput {
   mealPlanId: ID!
   nutritionistId: ID!
 }
@@ -547,6 +564,18 @@ type Mutation {
   """
   assignNutritionistToPlan(input: AssignNutritionistInput!): MealPlan
     @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Requests validation of a meal plan by a nutritionist.
+  """
+  requestValidation(input: RequestValidationInput!): MealPlanResponse
+    @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Validates a meal plan by a nutritionist, updating the validation status.
+  """
+  validateMealPlan(input: ValidateMealPlanInput!): MealPlanResponse
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 
   """
   Directly creates a new meal plan.

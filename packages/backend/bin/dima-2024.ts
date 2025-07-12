@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
+import { AppSyncApiStack } from '../lib/appsync-stack';
 import { AuthStack } from '../lib/auth-stack';
 import { DataStack } from '../lib/data-stack';
-import { AppSyncApiStack } from '../lib/appsync-stack';
 
 const app = new cdk.App();
 

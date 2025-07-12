@@ -301,6 +301,30 @@ export class AppSyncApiStack extends cdk.Stack {
       ),
     });
 
+    // --- Resolver for Query.listNutritionists ---
+    tableDS.createResolver('QueryListNutritionistsResolverNew', {
+      typeName: 'Query',
+      fieldName: 'listNutritionists',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('vtl-templates/query.listNutritionists.js'),
+    });
+
+    // --- Resolver for Mutation.requestValidation ---
+    tableDS.createResolver('MutationRequestValidationResolver', {
+      typeName: 'Mutation',
+      fieldName: 'requestValidation',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('vtl-templates/mutation.requestValidation.js'),
+    });
+
+    // --- Resolver for Mutation.validateMealPlan ---
+    tableDS.createResolver('MutationValidateMealPlanResolver', {
+      typeName: 'Mutation',
+      fieldName: 'validateMealPlan',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('vtl-templates/mutation.validateMealPlan.js'),
+    });
+
     // --------------------------------------------------------------------
     // OTHER RESOLVERS WILL BE ADDED LATER
     // --------------------------------------------------------------------

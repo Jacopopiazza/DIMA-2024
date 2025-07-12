@@ -124,5 +124,11 @@ export class DataStack extends cdk.Stack {
       value: this.mealPlanningTable.tableName,
       exportName: 'MealPlanningTable',
     });
+
+    // Export the table name for cross-stack references
+    new cdk.CfnOutput(this, 'MealPlanningTableName', {
+      value: this.mealPlanningTable.tableName,
+      exportName: 'MealPlanningTableName',
+    });
   }
 }

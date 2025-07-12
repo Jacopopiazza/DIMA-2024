@@ -1,11 +1,11 @@
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cognito_identity from 'aws-cdk-lib/aws-cognito';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
+import { Construct } from 'constructs';
 
 export class AuthStack extends cdk.Stack {
   public readonly userPool: cognito.UserPool;
@@ -46,6 +46,9 @@ export class AuthStack extends cdk.Stack {
           bundleAwsSDK: false,
           minify: false, // Minify the code
           sourceMap: true, // Generate source maps
+        },
+        environment: {
+          TABLE_NAME: 'MealPlanningTable',
         },
       },
     );
@@ -127,6 +130,18 @@ export class AuthStack extends cdk.Stack {
           'cognito-idp:AdminListGroupsForUser',
         ],
         resources: ['*'],
+      }),
+    );
+
+    // Add DynamoDB permissions for creating nutritionist profiles
+    postConfirmation.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: [
+          'dynamodb:PutItem',
+          'dynamodb:GetItem',
+          'dynamodb:UpdateItem',
+        ],
+        resources: ['*'], // In production, specify the exact table ARN
       }),
     );
 

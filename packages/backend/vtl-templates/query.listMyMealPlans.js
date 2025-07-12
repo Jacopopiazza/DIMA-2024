@@ -19,7 +19,7 @@ export function response(ctx) {
     ctx.result && ctx.result.nextToken ? ctx.result.nextToken : null;
 
   // Find the active meal plan by status
-  const activeMealPlan = items.find(plan => plan.status === 'ACTIVE');
+  const activeMealPlan = items.find((plan) => plan.status === 'ACTIVE');
   const activeMealPlanId = activeMealPlan ? activeMealPlan.mealPlanId : null;
 
   return {

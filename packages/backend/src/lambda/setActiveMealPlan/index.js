@@ -5,9 +5,10 @@ const TABLE_NAME = process.env.TABLE_NAME || 'MealPlanningTable';
 
 exports.handler = async (event) => {
   console.log('Full event received:', JSON.stringify(event, null, 2));
-  
+
   const userId = event.identity && event.identity.sub;
-  const planId = event.arguments && (event.arguments.planId || event.arguments.mealPlanId);
+  const planId =
+    event.arguments && (event.arguments.planId || event.arguments.mealPlanId);
 
   console.log('Extracted userId:', userId);
   console.log('Extracted planId:', planId);
@@ -25,8 +26,11 @@ exports.handler = async (event) => {
 
   try {
     const currentPlan = await ddb.get(checkCurrentPlanParams).promise();
-    console.log('Current plan from DB:', JSON.stringify(currentPlan.Item, null, 2));
-    
+    console.log(
+      'Current plan from DB:',
+      JSON.stringify(currentPlan.Item, null, 2),
+    );
+
     if (currentPlan.Item && currentPlan.Item.status === 'ACTIVE') {
       console.log('Plan is already active, no changes needed');
       return {
