@@ -760,4 +760,59 @@ class MealPlansService {
       return null;
     }
   }
+
+  /// Lists meal plans assigned to the authenticated nutritionist for validation.
+  Future<List<MealPlan>> listMyAssignedMealPlans({int limit = 10}) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          query ListMyAssignedMealPlans(\$limit: Int) {
+            listMyAssignedMealPlans(limit: \$limit) {
+              items {
+                mealPlanId
+                planName
+                startDate
+                endDate
+                status
+                validationStatus
+                assignedNutritionistId
+                userId
+              }
+              nextToken
+            }
+          }
+        ''',
+        variables: {
+          'limit': limit,
+        },
+        decodePath: 'listMyAssignedMealPlans',
+      );
+      final response = await Amplify.API.query(request: request).response;
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
+        return [];
+      }
+      if (response.data == null) return [];
+
+      final Map<String, dynamic> jsonData = json.decode(response.data!);
+      final items =
+          jsonData['listMyAssignedMealPlans']['items'] as List<dynamic>;
+
+      //TODO: Remove id field from the items and put it in the schema
+
+      return items.map((item) {
+        if (item is Map<String, dynamic>) {
+          item['id'] = item['mealPlanId']; // Add id field for compatibility
+          return MealPlan.fromJson(item);
+        }
+        final mapItem = Map<String, dynamic>.from(item);
+        mapItem['id'] = mapItem['mealPlanId']; // Add id field for compatibility
+        return MealPlan.fromJson(mapItem);
+      }).toList();
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error listing assigned meal plans: ${e.toString()}');
+      return [];
+    }
+  }
 }

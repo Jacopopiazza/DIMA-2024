@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/generated/flutter-models/NutritionistProfile.dart';
 import 'package:dima_application/models/MealPlanList/meal_plan_list.dart'
     show LightMealPlan;
@@ -220,6 +221,19 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
       print(
           '[MealPlansProvider] Failed to validate meal plan, message: ${response.message}');
       return false;
+    }
+  }
+
+  /// Lists meal plans assigned to the authenticated nutritionist for validation.
+  Future<List<MealPlan>> listMyAssignedMealPlans({int limit = 10}) async {
+    print('[MealPlansProvider] Listing assigned meal plans...');
+    try {
+      final plans = await _service.listMyAssignedMealPlans(limit: limit);
+      print('[MealPlansProvider] Found ${plans.length} assigned meal plans');
+      return plans;
+    } catch (e) {
+      print('[MealPlansProvider] Error listing assigned meal plans: $e');
+      return [];
     }
   }
 }
