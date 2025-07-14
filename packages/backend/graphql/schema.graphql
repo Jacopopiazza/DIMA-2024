@@ -330,15 +330,6 @@ input AssignNutritionistInput {
 }
 
 """
-Input for validating a meal plan by a nutritionist.
-"""
-input ValidateMealPlanInput {
-  mealPlanId: ID!
-  nutritionistId: ID!
-  validationStatus: MealPlanValidationStatus!
-}
-
-"""
 Input for requesting validation of a meal plan by a user.
 """
 input RequestValidationInput {
@@ -553,6 +544,12 @@ type Query {
   Get the meal plan currently active for the user.
   """
   getActiveMealPlan: MealPlan @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Lists meal plans assigned to the authenticated nutritionist. Only meal plans with PENDING_REVIEW status are returned. Supports pagination.
+  """
+  listMyAssignedMealPlans(limit: Int, nextToken: String): MealPlanList
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 }
 
 # ===================
@@ -570,12 +567,6 @@ type Mutation {
   """
   requestValidation(input: RequestValidationInput!): MealPlanResponse
     @aws_auth(cognito_groups: ["USERS"])
-
-  """
-  Validates a meal plan by a nutritionist, updating the validation status.
-  """
-  validateMealPlan(input: ValidateMealPlanInput!): MealPlanResponse
-    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 
   """
   Directly creates a new meal plan.

@@ -100,6 +100,29 @@ export class DataStack extends cdk.Stack {
       ],
     });
 
+    // GSI4 - For retrieving meal plans assigned to a nutritionist (listMyAssignedMealPlans query)
+    // MealPlan items will have:
+    // GSI4PK = "NUTR#{NutritionistID}"
+    // GSI4SK = "PLAN#{MealPlanID}"
+    this.mealPlanningTable.addGlobalSecondaryIndex({
+      indexName: 'GSI4_NutritionistMealPlans',
+      partitionKey: { name: 'GSI4PK', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'GSI4SK', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.INCLUDE,
+      nonKeyAttributes: [
+        // Attributes from MealPlan needed for the list
+        'PlanName',
+        'StartDate',
+        'EndDate',
+        'Status',
+        'ValidationStatus',
+        'AssignedNutritionistId',
+        'UserId',
+        'GeneratedAt',
+        // Add 'CreatedAt' if you ever want to sort by creation time as a fallback
+      ],
+    });
+
     // GSI4 - For retrieving a User's PlanDayCompletion records, sorted by date across plans (listPlanCompletions query or general history)
     // PlanDayCompletion items will have:
     // GSI4PK = "USER#{UserID}"
@@ -117,6 +140,17 @@ export class DataStack extends cdk.Stack {
         'UpdatedAt',
         // Ensure the main table items for PlanDayCompletion also store UserID and the GSI keys
       ],
+    });
+
+    // GSI_AssignedNutritionistId - For retrieving meal plans assigned to a nutritionist by assignedNutritionistId
+    // MealPlan items will have:
+    // assignedNutritionistId = <nutritionistId>
+    // mealPlanId = <mealPlanId>
+    this.mealPlanningTable.addGlobalSecondaryIndex({
+      indexName: 'GSI_AssignedNutritionistId',
+      partitionKey: { name: 'assignedNutritionistId', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'mealPlanId', type: dynamodb.AttributeType.STRING }, // Optional, for sorting
+      projectionType: dynamodb.ProjectionType.ALL,
     });
 
     // Export the table name for cross-stack references

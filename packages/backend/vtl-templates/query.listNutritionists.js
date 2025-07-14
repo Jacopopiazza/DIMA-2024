@@ -38,6 +38,7 @@ export function response(ctx) {
 
   // Transform DynamoDB items to match NutritionistProfile type
   const transformedItems = items.map((item) => ({
+    id: item.NutritionistID, // Add id for codegen compatibility
     nutritionistId: item.NutritionistID,
     givenName: item.GivenName,
     familyName: item.FamilyName,

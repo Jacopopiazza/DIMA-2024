@@ -317,12 +317,12 @@ export class AppSyncApiStack extends cdk.Stack {
       code: appsync.Code.fromAsset('vtl-templates/mutation.requestValidation.js'),
     });
 
-    // --- Resolver for Mutation.validateMealPlan ---
-    tableDS.createResolver('MutationValidateMealPlanResolver', {
-      typeName: 'Mutation',
-      fieldName: 'validateMealPlan',
+    // --- Resolver for Query.listMyAssignedMealPlans ---
+    tableDS.createResolver('QueryListMyAssignedMealPlansResolver', {
+      typeName: 'Query',
+      fieldName: 'listMyAssignedMealPlans',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/mutation.validateMealPlan.js'),
+      code: appsync.Code.fromAsset('vtl-templates/query.listMyAssignedMealPlans.js'),
     });
 
     // --------------------------------------------------------------------
