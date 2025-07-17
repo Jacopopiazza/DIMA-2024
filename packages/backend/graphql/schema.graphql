@@ -461,6 +461,14 @@ input UpdateUserDetailsInput {
 }
 
 """
+Input for validating a meal plan.
+"""
+input ValidateMealPlanInput {
+  mealPlanId: ID!
+  validationStatus: MealPlanValidationStatus!
+}
+
+"""
 The response after creating a meal plan.
 """
 type MealPlanResponse {
@@ -636,4 +644,10 @@ type Mutation {
   """
   updateUserDetails(input: UpdateUserDetailsInput!): UserDetails
     @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Validates a meal plan.
+  """
+  validateMealPlan(input: ValidateMealPlanInput!): MealPlanResponse
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 }

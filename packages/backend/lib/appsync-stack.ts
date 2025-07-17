@@ -281,6 +281,41 @@ export class AppSyncApiStack extends cdk.Stack {
       code: appsync.Code.fromAsset('vtl-templates/mutation.modifyMealPlan.js'),
     });
 
+    // --- Pipeline Functions for validateMealPlan ---
+    const getMealPlanKeysByMealPlanIdFunc = new appsync.AppsyncFunction(
+      this,
+      'GetMealPlanKeysByMealPlanIdFunc',
+      {
+        name: 'getMealPlanKeysByMealPlanIdFunc',
+        api: api,
+        dataSource: tableDS,
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset('vtl-templates/getMealPlanKeysByMealPlanId.js'),
+      },
+    );
+
+    const updateMealPlanValidationStatusFunc = new appsync.AppsyncFunction(
+      this,
+      'UpdateMealPlanValidationStatusFunc',
+      {
+        name: 'updateMealPlanValidationStatusFunc',
+        api: api,
+        dataSource: tableDS,
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset('vtl-templates/updateMealPlanValidationStatus.js'),
+      },
+    );
+
+    // --- Pipeline Resolver for Mutation.validateMealPlan ---
+    new appsync.Resolver(this, 'PipelineValidateMealPlanResolver', {
+      api: api,
+      typeName: 'Mutation',
+      fieldName: 'validateMealPlan',
+      pipelineConfig: [getMealPlanKeysByMealPlanIdFunc, updateMealPlanValidationStatusFunc],
+      requestMappingTemplate: appsync.MappingTemplate.fromString('{}'),
+      responseMappingTemplate: appsync.MappingTemplate.fromString('$util.toJson($ctx.prev.result)'),
+    });
+
     // --- Resolver for Query.listMyMealPlans ---
     tableDS.createResolver('QueryListMyMealPlansResolver', {
       typeName: 'Query',

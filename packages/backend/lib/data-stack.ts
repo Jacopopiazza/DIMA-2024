@@ -153,6 +153,15 @@ export class DataStack extends cdk.Stack {
       projectionType: dynamodb.ProjectionType.ALL,
     });
 
+    // GSI_MealPlanId - For retrieving meal plans by mealPlanId
+    // MealPlan items will have:
+    // mealPlanId = <mealPlanId>
+    this.mealPlanningTable.addGlobalSecondaryIndex({
+      indexName: 'GSI_MealPlanId',
+      partitionKey: { name: 'mealPlanId', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
     // Export the table name for cross-stack references
     new cdk.CfnOutput(this, 'MealPlanningTableId', {
       value: this.mealPlanningTable.tableName,
