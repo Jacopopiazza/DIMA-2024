@@ -733,7 +733,6 @@ class MealPlansService {
         variables: {
           'input': {
             'mealPlanId': mealPlanId,
-            'nutritionistId': nutritionistId,
             'validationStatus': validationStatus,
           },
         },
