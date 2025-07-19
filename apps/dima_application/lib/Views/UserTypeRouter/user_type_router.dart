@@ -2,6 +2,8 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Utils/user_type_enum.dart';
 import 'package:dima_application/Views/UserViews/home_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/nutritionist_home_screen.dart';
+import 'package:dima_application/Views/NutritionistViews/enter_nutritionist_profile.dart';
+import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,7 +44,7 @@ class UserTypeRouter extends StatelessWidget {
           if (role == 'USER') {
             return UserHomeScreen();
           } else if (role == 'NUTRITIONIST') {
-            return NutritionistHomeScreen();
+            return _NutritionistRouter();
           } else {
             return Center(
               child: Text('Unknown role'),
@@ -109,5 +111,58 @@ class UserTypeRouter extends StatelessWidget {
     await prefs.setString(roleKey, role.value);
 
     return role.value;
+  }
+}
+
+class _NutritionistRouter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _checkNutritionistProfile(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Error checking profile: ${snapshot.error}'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await Amplify.Auth.signOut();
+                    } catch (e) {
+                      safePrint('Error during logout: $e');
+                    }
+                  },
+                  child: Text('Logout'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          final hasValidProfile = snapshot.data as bool;
+          if (hasValidProfile) {
+            return NutritionistHomeScreen();
+          } else {
+            return EnterNutritionistProfile();
+          }
+        }
+      },
+    );
+  }
+
+  Future<bool> _checkNutritionistProfile() async {
+    try {
+      final service = NutritionistProfileService();
+      return await service.hasValidProfile();
+    } catch (e) {
+      safePrint('Error checking nutritionist profile: $e');
+      return false;
+    }
   }
 }

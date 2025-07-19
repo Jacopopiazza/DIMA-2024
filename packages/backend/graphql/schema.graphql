@@ -461,6 +461,18 @@ input UpdateUserDetailsInput {
 }
 
 """
+Input for updating nutritionist profile.
+"""
+input UpdateNutritionistProfileInput {
+  givenName: String
+  familyName: String
+  specialization: String
+  bio: String
+  profilePictureUrl: String
+  isAvailable: Boolean
+}
+
+"""
 Input for validating a meal plan.
 """
 input ValidateMealPlanInput {
@@ -522,6 +534,11 @@ type Query {
   getUserDetails: UserDetails @aws_auth(cognito_groups: ["USERS"])
 
   """
+  Fetches the NutritionistProfile for the authenticated nutritionist.
+  """
+  getMyNutritionistProfile: NutritionistProfile @aws_auth(cognito_groups: ["NUTRITIONISTS"])
+
+  """
   Lists chat sessions assigned to the authenticated nutritionist. Supports pagination.
   """
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection
@@ -575,6 +592,12 @@ type Mutation {
   """
   requestValidation(input: RequestValidationInput!): MealPlanResponse
     @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Creates or updates the nutritionist profile for the authenticated nutritionist.
+  """
+  updateMyNutritionistProfile(input: UpdateNutritionistProfileInput!): NutritionistProfile
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 
   """
   Directly creates a new meal plan.

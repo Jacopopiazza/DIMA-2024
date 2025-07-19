@@ -154,6 +154,8 @@ type Mutation {
     @aws_auth(cognito_groups: ["USERS"])
   unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion
     @aws_auth(cognito_groups: ["USERS"])
+  updateMyNutritionistProfile(input: UpdateNutritionistProfileInput!): NutritionistProfile
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
   updateUserDetails(input: UpdateUserDetailsInput!): UserDetails
     @aws_auth(cognito_groups: ["USERS"])
 }
@@ -200,6 +202,7 @@ type Query {
   ): ChatMessageConnection @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
   getMealPlanById(mealPlanId: ID!): MealPlan
     @aws_auth(cognito_groups: ["USERS"])
+  getMyNutritionistProfile: NutritionistProfile @aws_auth(cognito_groups: ["NUTRITIONISTS"])
   getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion
     @aws_auth(cognito_groups: ["USERS"])
   getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups: ["USERS"])
@@ -406,6 +409,15 @@ input UnmarkMealCompletedInput {
   date: AWSDate
   mealName: MealNameEnum!
   mealPlanId: ID!
+}
+
+input UpdateNutritionistProfileInput {
+  bio: String
+  familyName: String
+  givenName: String
+  isAvailable: Boolean
+  profilePictureUrl: String
+  specialization: String
 }
 
 input UpdateUserDetailsInput {

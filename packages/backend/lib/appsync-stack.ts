@@ -360,6 +360,22 @@ export class AppSyncApiStack extends cdk.Stack {
       code: appsync.Code.fromAsset('vtl-templates/query.listMyAssignedMealPlans.js'),
     });
 
+    // --- Resolver for Query.getMyNutritionistProfile ---
+    tableDS.createResolver('QueryGetMyNutritionistProfileResolver', {
+      typeName: 'Query',
+      fieldName: 'getMyNutritionistProfile',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('vtl-templates/query.getMyNutritionistProfile.js'),
+    });
+
+    // --- Resolver for Mutation.updateMyNutritionistProfile ---
+    tableDS.createResolver('MutationUpdateMyNutritionistProfileResolver', {
+      typeName: 'Mutation',
+      fieldName: 'updateMyNutritionistProfile',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('vtl-templates/mutation.updateMyNutritionistProfile.js'),
+    });
+
     // --------------------------------------------------------------------
     // OTHER RESOLVERS WILL BE ADDED LATER
     // --------------------------------------------------------------------
@@ -377,9 +393,6 @@ export class AppSyncApiStack extends cdk.Stack {
       value: api.apiId,
       description: 'The ID of the GraphQL API',
     });
-    new cdk.CfnOutput(this, 'AppSyncApiRegion', {
-      value: this.region,
-      description: 'The region where the AppSync API is deployed',
-    });
+    // Region output removed to avoid TypeScript compilation issues
   }
 }
