@@ -1,7 +1,7 @@
 {
-    "@@locale": "en",
+    "@@locale": "it",
     "@@context": "amplify_authenticator:inputs",
-    "username": "Username",
+    "username": "Nome utente",
     "@username": {
         "description": "User's chosen username."
     },
@@ -9,7 +9,7 @@
     "@password": {
         "description": "User's chosen password."
     },
-    "newPassword": "New Password",
+    "newPassword": "Nuova Password",
     "@newPassword": {
         "description": "User's chosen new password."
     },
@@ -18,39 +18,39 @@
         "description": "User's preferred e-mail address.",
         "example": "john.doe@example.com"
     },
-    "phoneNumber": "Phone Number",
+    "phoneNumber": "Numero di Telefono",
     "@phoneNumber": {
         "description": "User's preferred telephone number.",
         "example": "+1 (888) 555-1234"
     },
-    "verificationCode": "Verification Code",
+    "verificationCode": "Codice di Verifica",
     "@verificationCode": {
         "description": "The code sent to the user's phone number or email address for verification.",
         "example": "123456"
     },
-    "address": "Address",
+    "address": "Indirizzo",
     "@address": {
         "description": "User's preferred postal address."
     },
-    "birthdate": "Birthdate",
+    "birthdate": "Data di Nascita",
     "@birthdate": {
         "description": "User's birthday, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.",
         "example": "1990-01-01"
     },
-    "familyName": "Family Name",
+    "familyName": "Cognome",
     "@familyName": {
         "description": "Surname(s) or last name(s) of the user."
     },
-    "middleName": "Middle Name",
+    "middleName": "Secondo Nome",
     "@middleName": {
         "description": "Middle name(s) of the user."
     },
-    "gender": "Gender",
+    "gender": "Genere",
     "@gender": {
         "description": "User's gender.",
         "example": "male"
     },
-    "genders": "{gender, select, male{male} female{female} other{other}}",
+    "genders": "{gender, select, male{maschio} female{femmina} other{altro}}",
     "@genders": {
         "placeholders": {
             "gender": {
@@ -60,19 +60,19 @@
             }
         }
     },
-    "givenName": "Given Name",
+    "givenName": "Nome",
     "@givenName": {
         "description": "Given name(s) or first name(s) of the user."
     },
-    "name": "Name",
+    "name": "Nome",
     "@name": {
         "description": "User's full name in displayable form including all name parts, possibly including titles and suffixes, ordered according to the user's locale and preferences."
     },
-    "nickname": "Nickname",
+    "nickname": "Soprannome",
     "@nickname": {
         "description": "Casual name of the user that may or may not be the same as their given name."
     },
-    "or": "{a} or {b}",
+    "or": "{a} o {b}",
     "@or": {
         "description": "One or the other",
         "placeholders": {
@@ -88,11 +88,11 @@
             }
         }
     },
-    "preferredUsername": "Preferred Username",
+    "preferredUsername": "Nome Utente Preferito",
     "@preferredUsername": {
         "description": "Shorthand name by which the user wishes to be referred to."
     },
-    "warnEmpty": "{attribute} field must not be blank.",
+    "warnEmpty": "Il campo {attribute} non può essere vuoto.",
     "@warnEmpty": {
         "description": "Warning for a required field was left empty, displayed as an error to the user.",
         "placeholders": {
@@ -103,7 +103,7 @@
             }
         }
     },
-    "warnInvalidFormat": "Invalid {attributeType} format.",
+    "warnInvalidFormat": "Formato {attributeType} non valido.",
     "@warnInvalidFormat": {
         "description": "Warning for field that has failed format validation.",
         "placeholders": {
@@ -114,7 +114,7 @@
             }
         }
     },
-    "promptFill": "Enter your {attribute}",
+    "promptFill": "Inserisci il tuo {attribute}",
     "@promptFill": {
         "description": "Prompt to fill an optional or required input field, used as the placeholder for text fields.",
         "placeholders": {
@@ -125,7 +125,7 @@
             }
         }
     },
-    "promptRefill": "Re-enter your {attribute}",
+    "promptRefill": "Re-inserisci il tuo {attribute}",
     "@promptRefill": {
         "description": "Prompt to refill an optional or required input field, used as the placeholder for text fields.",
         "placeholders": {
@@ -136,7 +136,7 @@
             }
         }
     },
-    "confirmAttribute": "Confirm {attribute}",
+    "confirmAttribute": "Conferma {attribute}",
     "@confirmAttribute": {
         "description": "Title to re-enter an optional or required input field, used as the label for text fields.",
         "placeholders": {
@@ -147,15 +147,15 @@
             }
         }
     },    
-    "usernameRequirements": "Username must only contain alphanumeric characters and symbols.",
+    "usernameRequirements": "Il nome utente deve contenere solo caratteri alfanumerici e simboli.",
     "@usernameRequirements": {
         "description": "Warning for when username requirements are not met."
     },
-    "passwordRequirementsPreamble": "Password must include:",
+    "passwordRequirementsPreamble": "La password deve includere:",
     "@passwordRequirementsPreamble": {
         "description": "Preamble to list of unment password requirements."
     },
-    "passwordRequirementsCharacterType": " {characterType, select, requiresUppercase{uppercase} requiresLowercase{lowercase} requiresNumbers{number} requiresSymbols{symbol} other{}}",
+    "passwordRequirementsCharacterType": " {characterType, select, requiresUppercase{maiuscole} requiresLowercase{minuscole} requiresNumbers{numeri} requiresSymbols{simboli} other{}}",
     "@passwordRequirementsCharacterType": {
         "description": "Character(s) in a password.",
         "placeholders": {
@@ -165,7 +165,7 @@
             }
         }
     },
-    "passwordRequirementsAtLeast": "at least {numCharacters, plural, =1{1{characterType} character} other{{numCharacters}{characterType} characters}}",
+    "passwordRequirementsAtLeast": "almeno {numCharacters, plural, =1{1 carattere {characterType}} other{{numCharacters} caratteri {characterType}}}",
     "@passwordRequirementsAtLeast": {
         "description": "Password uppercase character requirement, displayed as a bullet point in list of unmet requirements.",
         "placeholders": {
@@ -179,19 +179,19 @@
             }
         }
     },
-    "passwordsDoNotMatch": "Passwords do not match.",
+    "passwordsDoNotMatch": "Le password non corrispondono.",
     "@passwordsDoNotMatch": {
         "description": "Message for conflicting password and confirm password fields."
     },
-    "rememberDevice": "Remember Device?",
+    "rememberDevice": "Ricorda Dispositivo?",
     "@rememberDevice": {
         "description": "Label for the checkbox to remember the user's device in Cognito."
     },
-    "usernameType": "Log in using:",
+    "usernameType": "Accedi usando:",
     "@usernameType": {
         "description": "Label for the toggle buttons to select email or phone number as username when both are available."
     },
-    "optional": "{fieldTitle} (optional)",
+    "optional": "{fieldTitle} (opzionale)",
     "@optional": {
         "description": "Indicator for a field which is not required to be filled",
         "placeholders": {
@@ -202,20 +202,20 @@
             }
         }
     },
-    "customChallenge": "Confirmation Code",
+    "customChallenge": "Codice di Conferma",
     "@customChallenge": {
         "description": "The answer to the custom auth challenge",
         "example": "123456"
     },
-    "selectSms": "Text Message (SMS)",
+    "selectSms": "Messaggio di Testo (SMS)",
     "@selectSms": {
         "description": "Label for the radio button to select SMS as the user's chosen MFA method.."
     },
-    "selectTotp": "Authenticator App (TOTP)",
+    "selectTotp": "App Autenticatore (TOTP)",
     "@selectTotp": {
         "description": "Label for the radio button to select TOTP as the user's chosen MFA method."
     },
-    "totpCodePrompt": "Please enter the code from your registered Authenticator app",
+    "totpCodePrompt": "Inserisci il codice dalla tua app Autenticatore registrata",
     "@totpCodePrompt": {
         "description":  "The instructional text for submitting a TOTP pass code"
     },
@@ -223,4 +223,4 @@
     "@selectEmail": {
         "description": "Label for the radio button to select email as the user's chosen MFA method."
     }
-}
+} 

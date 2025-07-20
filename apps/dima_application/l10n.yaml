@@ -6,3 +6,4 @@ output-localization-file: app_localizations.dart
 preferred-supported-locales:
   - en
   - it
+untranslated-messages-file: untranslated_messages.txt

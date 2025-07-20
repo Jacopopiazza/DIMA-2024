@@ -70,6 +70,7 @@
         "description": "Label of button to return to the previous step",
         "placeholders": {
             "previousStep": {
+                "type": "String",
                 "example": "signIn",
                 "description": "The title of the previous step."
             }
@@ -80,6 +81,7 @@
         "description": "Label of button to sign in with a social provider",
         "placeholders": {
             "provider": {
+                "type": "String",
                 "example": "google",
                 "description": "The social sign-in provider"
             }

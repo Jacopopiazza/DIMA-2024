@@ -3,7 +3,6 @@
     "settingsTitle": "Settings",
     "changePreferences": "Change Preferences",
     "clearCache": "Clear Cache",
-    "signOut": "Sign Out",
     "deleteAccount": "Delete Account",
     "confirmClearCacheTitle": "Confirm Clear Cache",
     "confirmClearCacheMessage": "Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.",

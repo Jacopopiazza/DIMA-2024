@@ -1,0 +1,28 @@
+{
+    "@@locale": "it",
+    "@@context": "amplify_authenticator:instructions",
+    "totpStep1Title": "Passo 1: Scarica un'app Autenticatore",
+    "@totpStep1Title": {
+        "description": "The title for the first step of TOTP setup"
+    },
+    "totpStep2Title": "Passo 2: Scansiona il codice QR",
+    "@totpStep2Title": {
+        "description": "The title for the second step of TOTP setup"
+    },
+    "totpStep3Title": "Passo 3: Verifica il tuo codice",
+    "@totpStep3Title": {
+        "description": "The title for the third step of TOTP setup"
+    },
+    "totpStep1Body": "Le app autenticatore generano codici monouso che possono essere utilizzati per verificare la tua identità",
+    "@totpStep1Body": {
+        "description": "The body text for step one of TOTP setup"
+    },
+    "totpStep2Body": "Apri l'app Autenticatore e scansiona il codice QR o inserisci la chiave per ottenere il tuo codice di verifica",
+    "@totpStep2Body": {
+        "description": "The body text for step two of TOTP setup"
+    },
+    "totpStep3Body": "Inserisci il codice a 6 cifre dalla tua app Autenticatore",
+    "@totpStep3Body": {
+        "description":  "The body text for step three of TOTP setup"
+    }
+} 

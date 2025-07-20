@@ -3,7 +3,6 @@
     "settingsTitle": "Impostazioni",
     "changePreferences": "Modifica Preferenze",
     "clearCache": "Svuota Cache",
-    "signOut": "Esci",
     "deleteAccount": "Elimina Account",
     "confirmClearCacheTitle": "Conferma Svuotamento Cache",
     "confirmClearCacheMessage": "Sei sicuro di voler eliminare tutti i dati memorizzati localmente nella cache? Potrebbe essere necessario scaricare nuovamente i piani alimentari e altre informazioni.",

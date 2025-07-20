@@ -95,6 +95,84 @@ abstract class AppLocalizations {
     Locale('it')
   ];
 
+  /// The conventional newborn programmer greeting
+  ///
+  /// In en, this message translates to:
+  /// **'Hello World!'**
+  String get helloWorld;
+
+  /// Logged in message
+  ///
+  /// In en, this message translates to:
+  /// **'Logged in!'**
+  String get signedIn;
+
+  /// UserTypeEnum DisplayValue for User
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get userRole;
+
+  /// UserTypeEnum DisplayValue for Nutritionist
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritionist'**
+  String get nutritionistRole;
+
+  /// Sign Up Dropdown Description for user role selection
+  ///
+  /// In en, this message translates to:
+  /// **'Register as'**
+  String get signUpDropdownText;
+
+  /// Notice for users signing up with social accounts
+  ///
+  /// In en, this message translates to:
+  /// **'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.'**
+  String get socialSignUpNotice;
+
+  /// Energy label
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get energy;
+
+  /// Ingredients label
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients'**
+  String get ingredients;
+
+  /// Recipe label
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe'**
+  String get recipe;
+
+  /// No recipe placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'No recipe available'**
+  String get noRecipe;
+
+  /// label for Completed meal in meal screen
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get mealCompleted;
+
+  /// label for Already completed meal in meal screen
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Done'**
+  String get mealToBeCompleted;
+
+  /// back button label
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:
@@ -112,12 +190,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear Cache'**
   String get clearCache;
-
-  /// Label of button to sign out the user
-  ///
-  /// In en, this message translates to:
-  /// **'Sign Out'**
-  String get signOut;
 
   /// No description provided for @deleteAccount.
   ///
@@ -479,84 +551,6 @@ abstract class AppLocalizations {
   /// **'Twice a week'**
   String get exerciseFrequencyTWICE_A_WEEK;
 
-  /// Energy label
-  ///
-  /// In en, this message translates to:
-  /// **'Energy'**
-  String get energy;
-
-  /// Ingredients label
-  ///
-  /// In en, this message translates to:
-  /// **'Ingredients'**
-  String get ingredients;
-
-  /// Recipe label
-  ///
-  /// In en, this message translates to:
-  /// **'Recipe'**
-  String get recipe;
-
-  /// No recipe placeholder
-  ///
-  /// In en, this message translates to:
-  /// **'No recipe available'**
-  String get noRecipe;
-
-  /// label for Completed meal in meal screen
-  ///
-  /// In en, this message translates to:
-  /// **'Completed'**
-  String get mealCompleted;
-
-  /// label for Already completed meal in meal screen
-  ///
-  /// In en, this message translates to:
-  /// **'Mark as Done'**
-  String get mealToBeCompleted;
-
-  /// back button label
-  ///
-  /// In en, this message translates to:
-  /// **'Back'**
-  String get back;
-
-  /// The conventional newborn programmer greeting
-  ///
-  /// In en, this message translates to:
-  /// **'Hello World!'**
-  String get helloWorld;
-
-  /// Logged in message
-  ///
-  /// In en, this message translates to:
-  /// **'Logged in!'**
-  String get signedIn;
-
-  /// UserTypeEnum DisplayValue for User
-  ///
-  /// In en, this message translates to:
-  /// **'User'**
-  String get userRole;
-
-  /// UserTypeEnum DisplayValue for Nutritionist
-  ///
-  /// In en, this message translates to:
-  /// **'Nutritionist'**
-  String get nutritionistRole;
-
-  /// Sign Up Dropdown Description for user role selection
-  ///
-  /// In en, this message translates to:
-  /// **'Register as'**
-  String get signUpDropdownText;
-
-  /// Notice for users signing up with social accounts
-  ///
-  /// In en, this message translates to:
-  /// **'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.'**
-  String get socialSignUpNotice;
-
   /// Breakfast meal display name
   ///
   /// In en, this message translates to:
@@ -718,6 +712,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy Key'**
   String get copyKey;
+
+  /// Label of button to sign out the user
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get signOut;
 
   /// Label of button to return to the previous step
   ///
@@ -2417,30 +2417,6 @@ abstract class AppLocalizations {
   /// **'Email'**
   String get selectEmail;
 
-  /// The message that is displayed after a new confirmation code is sent via Email/SMS.
-  ///
-  /// In en, this message translates to:
-  /// **'A confirmation code has been sent to {destination}.'**
-  String codeSent(String destination);
-
-  /// The message that is displayed after a new confirmation code is sent via an unknown delivery medium
-  ///
-  /// In en, this message translates to:
-  /// **'A confirmation code has been sent.'**
-  String get codeSentUnknown;
-
-  /// The message that is displayed after a value was copied to the clipboard
-  ///
-  /// In en, this message translates to:
-  /// **'Copied to clipboard!'**
-  String get copySucceeded;
-
-  /// The message that is displayed after a value failed to copy to the clipboard
-  ///
-  /// In en, this message translates to:
-  /// **'Copy to clipboard failed.'**
-  String get copyFailed;
-
   /// The title for the first step of TOTP setup
   ///
   /// In en, this message translates to:
@@ -2476,6 +2452,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter the 6 digit code from your Authenticator app'**
   String get totpStep3Body;
+
+  /// The message that is displayed after a new confirmation code is sent via Email/SMS.
+  ///
+  /// In en, this message translates to:
+  /// **'A confirmation code has been sent to {destination}.'**
+  String codeSent(String destination);
+
+  /// The message that is displayed after a new confirmation code is sent via an unknown delivery medium
+  ///
+  /// In en, this message translates to:
+  /// **'A confirmation code has been sent.'**
+  String get codeSentUnknown;
+
+  /// The message that is displayed after a value was copied to the clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard!'**
+  String get copySucceeded;
+
+  /// The message that is displayed after a value failed to copy to the clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to clipboard failed.'**
+  String get copyFailed;
 
   /// Title of the Confirm Sign Up step and form
   ///
@@ -2530,66 +2530,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account recovery requires verified contact information'**
   String get verifyUser;
-
-  /// No description provided for @editMeal.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit meal'**
-  String get editMeal;
-
-  /// No description provided for @shareMeal.
-  ///
-  /// In en, this message translates to:
-  /// **'Share meal'**
-  String get shareMeal;
-
-  /// No description provided for @switchMealPlan.
-  ///
-  /// In en, this message translates to:
-  /// **'Switch Meal Plan'**
-  String get switchMealPlan;
-
-  /// No description provided for @noOtherMealPlans.
-  ///
-  /// In en, this message translates to:
-  /// **'No other meal plans available.'**
-  String get noOtherMealPlans;
-
-  /// No description provided for @unnamedPlan.
-  ///
-  /// In en, this message translates to:
-  /// **'Unnamed Plan'**
-  String get unnamedPlan;
-
-  /// No description provided for @switchingPlan.
-  ///
-  /// In en, this message translates to:
-  /// **'Switching plan...'**
-  String get switchingPlan;
-
-  /// No description provided for @switchedToPlan.
-  ///
-  /// In en, this message translates to:
-  /// **'Switched to plan'**
-  String get switchedToPlan;
-
-  /// No description provided for @failedToSwitchPlan.
-  ///
-  /// In en, this message translates to:
-  /// **'Failed to switch plan'**
-  String get failedToSwitchPlan;
-
-  /// No description provided for @errorLoadingPlans.
-  ///
-  /// In en, this message translates to:
-  /// **'Error loading plans'**
-  String get errorLoadingPlans;
-
-  /// No description provided for @moreOptions.
-  ///
-  /// In en, this message translates to:
-  /// **'More options'**
-  String get moreOptions;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

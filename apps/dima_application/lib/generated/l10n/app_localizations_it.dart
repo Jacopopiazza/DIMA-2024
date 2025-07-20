@@ -9,6 +9,45 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
+  String get helloWorld => 'Ciao Mondo!';
+
+  @override
+  String get signedIn => 'Loggato!';
+
+  @override
+  String get userRole => 'Utente';
+
+  @override
+  String get nutritionistRole => 'Nutrizionista';
+
+  @override
+  String get signUpDropdownText => 'Registrati come';
+
+  @override
+  String get socialSignUpNotice => 'La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l\'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente.';
+
+  @override
+  String get energy => 'Energia';
+
+  @override
+  String get ingredients => 'Ingredienti';
+
+  @override
+  String get recipe => 'Ricetta';
+
+  @override
+  String get noRecipe => 'Ricetta non disponibile';
+
+  @override
+  String get mealCompleted => 'Già mangiato';
+
+  @override
+  String get mealToBeCompleted => 'Segna come mangiato';
+
+  @override
+  String get back => 'Indietro';
+
+  @override
   String get settingsTitle => 'Impostazioni';
 
   @override
@@ -16,9 +55,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get clearCache => 'Svuota Cache';
-
-  @override
-  String get signOut => 'Esci';
 
   @override
   String get deleteAccount => 'Elimina Account';
@@ -201,45 +237,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exerciseFrequencyTWICE_A_WEEK => 'Due volte a settimana';
 
   @override
-  String get energy => 'Energia';
-
-  @override
-  String get ingredients => 'Ingredienti';
-
-  @override
-  String get recipe => 'Ricetta';
-
-  @override
-  String get noRecipe => 'Ricetta non disponibile';
-
-  @override
-  String get mealCompleted => 'Già mangiato';
-
-  @override
-  String get mealToBeCompleted => 'Segna come mangiato';
-
-  @override
-  String get back => 'Indietro';
-
-  @override
-  String get helloWorld => 'Ciao Mondo!';
-
-  @override
-  String get signedIn => 'Loggato!';
-
-  @override
-  String get userRole => 'Utente';
-
-  @override
-  String get nutritionistRole => 'Nutrizionista';
-
-  @override
-  String get signUpDropdownText => 'Registrati come';
-
-  @override
-  String get socialSignUpNotice => 'La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l\'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente.';
-
-  @override
   String get mealNameBREAKFAST => 'Colazione';
 
   @override
@@ -321,6 +318,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get copyKey => 'Copia chiave';
 
   @override
+  String get signOut => 'Esci';
+
+  @override
   String backTo(String previousStep) {
     String _temp0 = intl.Intl.selectLogic(
       previousStep,
@@ -356,16 +356,16 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get selectDialCode => 'Select your country dial code';
+  String get selectDialCode => 'Seleziona il prefisso telefonico del tuo paese';
 
   @override
-  String get noDialCodeSearchResults => 'No search results match your criteria';
+  String get noDialCodeSearchResults => 'Nessun risultato di ricerca corrisponde ai tuoi criteri';
 
   @override
   String get af => 'Afghanistan';
 
   @override
-  String get ax => 'Aland Islands';
+  String get ax => 'Isole Åland';
 
   @override
   String get al => 'Albania';
@@ -374,7 +374,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dz => 'Algeria';
 
   @override
-  String get as1 => 'American Samoa';
+  String get as1 => 'Samoa Americane';
 
   @override
   String get ad => 'Andorra';
@@ -386,10 +386,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ai => 'Anguilla';
 
   @override
-  String get aq => 'Antarctica';
+  String get aq => 'Antartide';
 
   @override
-  String get ag => 'Antigua and Barbuda';
+  String get ag => 'Antigua e Barbuda';
 
   @override
   String get ar => 'Argentina';
@@ -407,7 +407,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get at => 'Austria';
 
   @override
-  String get az => 'Azerbaijan';
+  String get az => 'Azerbaigian';
 
   @override
   String get bs => 'Bahamas';
@@ -422,10 +422,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get bb => 'Barbados';
 
   @override
-  String get by => 'Belarus';
+  String get by => 'Bielorussia';
 
   @override
-  String get be => 'Belgium';
+  String get be => 'Belgio';
 
   @override
   String get bz => 'Belize';
@@ -440,22 +440,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String get bt => 'Bhutan';
 
   @override
-  String get bo => 'Bolivia (Plurinational State of)';
+  String get bo => 'Bolivia (Stato Plurinazionale di)';
 
   @override
-  String get bq => 'Bonaire, Sint Eustatius and Saba';
+  String get bq => 'Bonaire, Sint Eustatius e Saba';
 
   @override
-  String get ba => 'Bosnia and Herzegovina';
+  String get ba => 'Bosnia ed Erzegovina';
 
   @override
   String get bw => 'Botswana';
 
   @override
-  String get br => 'Brazil';
+  String get br => 'Brasile';
 
   @override
-  String get io => 'British Indian Ocean Territory';
+  String get io => 'Territorio Britannico dell\'Oceano Indiano';
 
   @override
   String get bn => 'Brunei';
@@ -470,94 +470,94 @@ class AppLocalizationsIt extends AppLocalizations {
   String get bi => 'Burundi';
 
   @override
-  String get kh => 'Cambodia';
+  String get kh => 'Cambogia';
 
   @override
-  String get cm => 'Cameroon';
+  String get cm => 'Camerun';
 
   @override
   String get ca => 'Canada';
 
   @override
-  String get cv => 'Cape Verde';
+  String get cv => 'Capo Verde';
 
   @override
-  String get ky => 'Cayman Islands';
+  String get ky => 'Isole Cayman';
 
   @override
-  String get cf => 'Central African Republic';
+  String get cf => 'Repubblica Centrafricana';
 
   @override
-  String get td => 'Chad';
+  String get td => 'Ciad';
 
   @override
-  String get cl => 'Chile';
+  String get cl => 'Cile';
 
   @override
-  String get cn => 'China';
+  String get cn => 'Cina';
 
   @override
-  String get cx => 'Christmas Island';
+  String get cx => 'Isola di Natale';
 
   @override
-  String get cc => 'Cocos (Keeling) Islands';
+  String get cc => 'Isole Cocos (Keeling)';
 
   @override
   String get co => 'Colombia';
 
   @override
-  String get km => 'Comoros';
+  String get km => 'Comore';
 
   @override
-  String get cg => 'Congo (Republic of)';
+  String get cg => 'Congo';
 
   @override
-  String get cd => 'Congo (Democratic Republic of)';
+  String get cd => 'Repubblica Democratica del Congo';
 
   @override
-  String get ck => 'Cook Islands';
+  String get ck => 'Isole Cook';
 
   @override
   String get cr => 'Costa Rica';
 
   @override
-  String get ci => 'Côte d\'Ivoire';
+  String get ci => 'Costa d\'Avorio';
 
   @override
-  String get hr => 'Croatia';
+  String get hr => 'Croazia';
 
   @override
   String get cu => 'Cuba';
 
   @override
-  String get cy => 'Cyprus';
+  String get cy => 'Cipro';
 
   @override
-  String get cz => 'Czech Republic';
+  String get cz => 'Repubblica Ceca';
 
   @override
-  String get dk => 'Denmark';
+  String get dk => 'Danimarca';
 
   @override
-  String get dj => 'Djibouti';
+  String get dj => 'Gibuti';
 
   @override
   String get dm => 'Dominica';
 
   @override
-  String get do1 => 'Dominican Republic';
+  String get do1 => 'Repubblica Dominicana';
 
   @override
   String get ec => 'Ecuador';
 
   @override
-  String get eg => 'Egypt';
+  String get eg => 'Egitto';
 
   @override
   String get sv => 'El Salvador';
 
   @override
-  String get gq => 'Equatorial Guinea';
+  String get gq => 'Guinea Equatoriale';
 
   @override
   String get er => 'Eritrea';
@@ -569,28 +569,28 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sz => 'Eswatini';
 
   @override
-  String get et => 'Ethiopia';
+  String get et => 'Etiopia';
 
   @override
-  String get fk => 'Falkland Islands (Malvinas)';
+  String get fk => 'Isole Falkland (Malvine)';
 
   @override
-  String get fo => 'Faroe Islands';
+  String get fo => 'Isole Fær Øer';
 
   @override
   String get fj => 'Fiji';
 
   @override
-  String get fi => 'Finland';
+  String get fi => 'Finlandia';
 
   @override
-  String get fr => 'France';
+  String get fr => 'Francia';
 
   @override
-  String get gf => 'French Guiana';
+  String get gf => 'Guyana Francese';
 
   @override
-  String get pf => 'French Polynesia';
+  String get pf => 'Polinesia Francese';
 
   @override
   String get ga => 'Gabon';
@@ -602,25 +602,25 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ge => 'Georgia';
 
   @override
-  String get de => 'Germany';
+  String get de => 'Germania';
 
   @override
   String get gh => 'Ghana';
 
   @override
-  String get gi => 'Gibraltar';
+  String get gi => 'Gibilterra';
 
   @override
-  String get gr => 'Greece';
+  String get gr => 'Grecia';
 
   @override
-  String get gl => 'Greenland';
+  String get gl => 'Groenlandia';
 
   @override
   String get gd => 'Grenada';
 
   @override
-  String get gp => 'Guadeloupe';
+  String get gp => 'Guadalupa';
 
   @override
   String get gu => 'Guam';
@@ -644,7 +644,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ht => 'Haiti';
 
   @override
-  String get va => 'Holy See (Vatican City State)';
+  String get va => 'Città del Vaticano';
 
   @override
   String get hn => 'Honduras';
@@ -653,10 +653,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get hk => 'Hong Kong';
 
   @override
-  String get hu => 'Hungary';
+  String get hu => 'Ungheria';
 
   @override
-  String get is1 => 'Iceland';
+  String get is1 => 'Islanda';
 
   @override
   String get in1 => 'India';
@@ -665,37 +665,37 @@ class AppLocalizationsIt extends AppLocalizations {
   String get id => 'Indonesia';
 
   @override
-  String get ir => 'Iran (Islamic Republic of)';
+  String get ir => 'Iran';
 
   @override
   String get iq => 'Iraq';
 
   @override
-  String get ie => 'Ireland';
+  String get ie => 'Irlanda';
 
   @override
-  String get im => 'Isle of Man';
+  String get im => 'Isola di Man';
 
   @override
-  String get il => 'Israel';
+  String get il => 'Israele';
 
   @override
-  String get it => 'Italy';
+  String get it => 'Italia';
 
   @override
-  String get jm => 'Jamaica';
+  String get jm => 'Giamaica';
 
   @override
-  String get jp => 'Japan';
+  String get jp => 'Giappone';
 
   @override
   String get je => 'Jersey';
 
   @override
-  String get jo => 'Jordan';
+  String get jo => 'Giordania';
 
   @override
-  String get kz => 'Kazakhstan';
+  String get kz => 'Kazakistan';
 
   @override
   String get ke => 'Kenya';
@@ -704,10 +704,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ki => 'Kiribati';
 
   @override
-  String get kp => 'Korea (Democratic People\'s Republic of)';
+  String get kp => 'Corea del Nord';
 
   @override
-  String get kr => 'Korea (Republic of)';
+  String get kr => 'Corea del Sud';
 
   @override
   String get xk => 'Kosovo';
@@ -716,16 +716,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get kw => 'Kuwait';
 
   @override
-  String get kg => 'Kyrgyzstan';
+  String get kg => 'Kirghizistan';
 
   @override
   String get la => 'Laos';
 
   @override
-  String get lv => 'Latvia';
+  String get lv => 'Lettonia';
 
   @override
-  String get lb => 'Lebanon';
+  String get lb => 'Libano';
 
   @override
   String get ls => 'Lesotho';
@@ -734,22 +734,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String get lr => 'Liberia';
 
   @override
-  String get ly => 'Libya';
+  String get ly => 'Libia';
 
   @override
   String get li => 'Liechtenstein';
 
   @override
-  String get lt => 'Lithuania';
+  String get lt => 'Lituania';
 
   @override
-  String get lu => 'Luxembourg';
+  String get lu => 'Lussemburgo';
 
   @override
   String get mo => 'Macao';
 
   @override
-  String get mk => 'Macedonia';
+  String get mk => 'Macedonia del Nord';
 
   @override
   String get mg => 'Madagascar';
@@ -761,7 +761,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get my => 'Malaysia';
 
   @override
-  String get mv => 'Maldives';
+  String get mv => 'Maldive';
 
   @override
   String get ml => 'Mali';
@@ -770,10 +770,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get mt => 'Malta';
 
   @override
-  String get mh => 'Marshall Islands';
+  String get mh => 'Isole Marshall';
 
   @override
-  String get mq => 'Martinique';
+  String get mq => 'Martinica';
 
   @override
   String get mr => 'Mauritania';
@@ -785,13 +785,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get yt => 'Mayotte';
 
   @override
-  String get mx => 'Mexico';
+  String get mx => 'Messico';
 
   @override
-  String get fm => 'Micronesia (Federated States of)';
+  String get fm => 'Micronesia';
 
   @override
-  String get md => 'Moldova';
+  String get md => 'Moldavia';
 
   @override
   String get mc => 'Monaco';
@@ -806,10 +806,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ms => 'Montserrat';
 
   @override
-  String get ma => 'Morocco';
+  String get ma => 'Marocco';
 
   @override
-  String get mz => 'Mozambique';
+  String get mz => 'Mozambico';
 
   @override
   String get mm => 'Myanmar';
@@ -824,13 +824,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get np => 'Nepal';
 
   @override
-  String get nl => 'Netherlands';
+  String get nl => 'Paesi Bassi';
 
   @override
-  String get nc => 'New Caledonia';
+  String get nc => 'Nuova Caledonia';
 
   @override
-  String get nz => 'New Zealand';
+  String get nz => 'Nuova Zelanda';
 
   @override
   String get ni => 'Nicaragua';
@@ -845,13 +845,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get nu => 'Niue';
 
   @override
-  String get nf => 'Norfolk Island';
+  String get nf => 'Isola Norfolk';
 
   @override
-  String get mp => 'Northern Mariana Islands';
+  String get mp => 'Isole Marianne Settentrionali';
 
   @override
-  String get no => 'Norway';
+  String get no => 'Norvegia';
 
   @override
   String get om => 'Oman';
@@ -863,40 +863,40 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pw => 'Palau';
 
   @override
-  String get ps => 'Palestine (State of)';
+  String get ps => 'Palestina';
 
   @override
   String get pa => 'Panama';
 
   @override
-  String get pg => 'Papua New Guinea';
+  String get pg => 'Papua Nuova Guinea';
 
   @override
   String get py => 'Paraguay';
 
   @override
-  String get pe => 'Peru';
+  String get pe => 'Perù';
 
   @override
-  String get ph => 'Philippines';
+  String get ph => 'Filippine';
 
   @override
   String get pn => 'Pitcairn';
 
   @override
-  String get pl => 'Poland';
+  String get pl => 'Polonia';
 
   @override
-  String get pt => 'Portugal';
+  String get pt => 'Portogallo';
 
   @override
-  String get pr => 'Puerto Rico';
+  String get pr => 'Porto Rico';
 
   @override
   String get qa => 'Qatar';
 
   @override
-  String get re => 'Reunion';
+  String get re => 'Riunione';
 
   @override
   String get ro => 'Romania';
@@ -905,28 +905,28 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ru => 'Russia';
 
   @override
-  String get rw => 'Rwanda';
+  String get rw => 'Ruanda';
 
   @override
-  String get bl => 'Saint Barthelemy';
+  String get bl => 'Saint Barthélemy';
 
   @override
-  String get sh => 'Saint Helena, Ascension and Tristan Da Cunha';
+  String get sh => 'Sant\'Elena, Ascensione e Tristan da Cunha';
 
   @override
-  String get kn => 'Saint Kitts and Nevis';
+  String get kn => 'Saint Kitts e Nevis';
 
   @override
   String get lc => 'Saint Lucia';
 
   @override
-  String get mf => 'Saint Martin';
+  String get mf => 'Saint Martin (parte francese)';
 
   @override
-  String get pm => 'Saint Pierre and Miquelon';
+  String get pm => 'Saint Pierre e Miquelon';
 
   @override
-  String get vc => 'Saint Vincent and the Grenadines';
+  String get vc => 'Saint Vincent e Grenadine';
 
   @override
   String get ws => 'Samoa';
@@ -935,10 +935,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sm => 'San Marino';
 
   @override
-  String get st => 'Sao Tome and Principe';
+  String get st => 'São Tomé e Príncipe';
 
   @override
-  String get sa => 'Saudi Arabia';
+  String get sa => 'Arabia Saudita';
 
   @override
   String get sn => 'Senegal';
@@ -956,28 +956,28 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sg => 'Singapore';
 
   @override
-  String get sk => 'Slovakia';
+  String get sk => 'Slovacchia';
 
   @override
   String get si => 'Slovenia';
 
   @override
-  String get sb => 'Solomon Islands';
+  String get sb => 'Isole Salomone';
 
   @override
   String get so => 'Somalia';
 
   @override
-  String get za => 'South Africa';
+  String get za => 'Sudafrica';
 
   @override
-  String get gs => 'South Georgia and the South Sandwich Islands';
+  String get gs => 'Georgia del Sud e Isole Sandwich Meridionali';
 
   @override
-  String get ss => 'South Sudan';
+  String get ss => 'Sudan del Sud';
 
   @override
-  String get es => 'Spain';
+  String get es => 'Spagna';
 
   @override
   String get lk => 'Sri Lanka';
@@ -989,31 +989,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sr => 'Suriname';
 
   @override
-  String get sj => 'Svalbard and Jan Mayen';
+  String get sj => 'Svalbard e Jan Mayen';
 
   @override
-  String get se => 'Sweden';
+  String get se => 'Svezia';
 
   @override
-  String get ch => 'Switzerland';
+  String get ch => 'Svizzera';
 
   @override
-  String get sy => 'Syrian Arab Republic';
+  String get sy => 'Siria';
 
   @override
   String get tw => 'Taiwan';
 
   @override
-  String get tj => 'Tajikistan';
+  String get tj => 'Tagikistan';
 
   @override
-  String get tz => 'Tanzania (United Republic of)';
+  String get tz => 'Tanzania';
 
   @override
-  String get th => 'Thailand';
+  String get th => 'Thailandia';
 
   @override
-  String get tl => 'Timor-Leste (East Timor)';
+  String get tl => 'Timor-Leste';
 
   @override
   String get tg => 'Togo';
@@ -1025,19 +1025,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get to => 'Tonga';
 
   @override
-  String get tt => 'Trinidad and Tobago';
+  String get tt => 'Trinidad e Tobago';
 
   @override
   String get tn => 'Tunisia';
 
   @override
-  String get tr => 'Turkey';
+  String get tr => 'Turchia';
 
   @override
   String get tm => 'Turkmenistan';
 
   @override
-  String get tc => 'Turks and Caicos Islands';
+  String get tc => 'Isole Turks e Caicos';
 
   @override
   String get tv => 'Tuvalu';
@@ -1046,19 +1046,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ug => 'Uganda';
 
   @override
-  String get ua => 'Ukraine';
+  String get ua => 'Ucraina';
 
   @override
-  String get ae => 'United Arab Emirates';
+  String get ae => 'Emirati Arabi Uniti';
 
   @override
-  String get gb => 'United Kingdom';
+  String get gb => 'Regno Unito';
 
   @override
-  String get um => 'United States Minor Outlying Islands';
+  String get um => 'Isole Minori degli Stati Uniti';
 
   @override
-  String get us => 'United States';
+  String get us => 'Stati Uniti';
 
   @override
   String get uy => 'Uruguay';
@@ -1070,19 +1070,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get vu => 'Vanuatu';
 
   @override
-  String get ve => 'Venezuela (Bolivarian Republic of)';
+  String get ve => 'Venezuela';
 
   @override
   String get vn => 'Vietnam';
 
   @override
-  String get vg => 'Virgin Islands (British)';
+  String get vg => 'Isole Vergini Britanniche';
 
   @override
-  String get vi => 'Virgin Islands (US)';
+  String get vi => 'Isole Vergini Americane';
 
   @override
-  String get wf => 'Wallis and Futuna';
+  String get wf => 'Wallis e Futuna';
 
   @override
   String get ye => 'Yemen';
@@ -1094,108 +1094,108 @@ class AppLocalizationsIt extends AppLocalizations {
   String get zw => 'Zimbabwe';
 
   @override
-  String get username => 'Username';
+  String get username => 'Nome utente';
 
   @override
   String get password => 'Password';
 
   @override
-  String get newPassword => 'New Password';
+  String get newPassword => 'Nuova Password';
 
   @override
   String get email => 'Email';
 
   @override
-  String get phoneNumber => 'Phone Number';
+  String get phoneNumber => 'Numero di Telefono';
 
   @override
-  String get verificationCode => 'Verification Code';
+  String get verificationCode => 'Codice di Verifica';
 
   @override
-  String get address => 'Address';
+  String get address => 'Indirizzo';
 
   @override
-  String get birthdate => 'Birthdate';
+  String get birthdate => 'Data di Nascita';
 
   @override
-  String get familyName => 'Family Name';
+  String get familyName => 'Cognome';
 
   @override
-  String get middleName => 'Middle Name';
+  String get middleName => 'Secondo Nome';
 
   @override
-  String get gender => 'Gender';
+  String get gender => 'Genere';
 
   @override
   String genders(String gender) {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'male',
-        'female': 'female',
-        'other': 'other',
+        'male': 'maschio',
+        'female': 'femmina',
+        'other': 'altro',
       },
     );
     return '$_temp0';
   }
 
   @override
-  String get givenName => 'Given Name';
+  String get givenName => 'Nome';
 
   @override
-  String get name => 'Name';
+  String get name => 'Nome';
 
   @override
-  String get nickname => 'Nickname';
+  String get nickname => 'Soprannome';
 
   @override
   String or(String a, String b) {
-    return '$a or $b';
+    return '$a o $b';
   }
 
   @override
-  String get preferredUsername => 'Preferred Username';
+  String get preferredUsername => 'Nome Utente Preferito';
 
   @override
   String warnEmpty(String attribute) {
-    return '$attribute field must not be blank.';
+    return 'Il campo $attribute non può essere vuoto.';
   }
 
   @override
   String warnInvalidFormat(String attributeType) {
-    return 'Invalid $attributeType format.';
+    return 'Formato $attributeType non valido.';
   }
 
   @override
   String promptFill(String attribute) {
-    return 'Enter your $attribute';
+    return 'Inserisci il tuo $attribute';
   }
 
   @override
   String promptRefill(String attribute) {
-    return 'Re-enter your $attribute';
+    return 'Re-inserisci il tuo $attribute';
   }
 
   @override
   String confirmAttribute(String attribute) {
-    return 'Confirm $attribute';
+    return 'Conferma $attribute';
   }
 
   @override
-  String get usernameRequirements => 'Username must only contain alphanumeric characters and symbols.';
+  String get usernameRequirements => 'Il nome utente deve contenere solo caratteri alfanumerici e simboli.';
 
   @override
-  String get passwordRequirementsPreamble => 'Password must include:';
+  String get passwordRequirementsPreamble => 'La password deve includere:';
 
   @override
   String passwordRequirementsCharacterType(String characterType) {
     String _temp0 = intl.Intl.selectLogic(
       characterType,
       {
-        'requiresUppercase': 'uppercase',
-        'requiresLowercase': 'lowercase',
-        'requiresNumbers': 'number',
-        'requiresSymbols': 'symbol',
+        'requiresUppercase': 'maiuscole',
+        'requiresLowercase': 'minuscole',
+        'requiresNumbers': 'numeri',
+        'requiresSymbols': 'simboli',
         'other': '',
       },
     );
@@ -1207,127 +1207,97 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       numCharacters,
       locale: localeName,
-      other: '$numCharacters$characterType characters',
-      one: '1$characterType character',
+      other: '$numCharacters caratteri $characterType',
+      one: '1 carattere $characterType',
     );
-    return 'at least $_temp0';
+    return 'almeno $_temp0';
   }
 
   @override
-  String get passwordsDoNotMatch => 'Passwords do not match.';
+  String get passwordsDoNotMatch => 'Le password non corrispondono.';
 
   @override
-  String get rememberDevice => 'Remember Device?';
+  String get rememberDevice => 'Ricorda Dispositivo?';
 
   @override
-  String get usernameType => 'Log in using:';
+  String get usernameType => 'Accedi usando:';
 
   @override
   String optional(String fieldTitle) {
-    return '$fieldTitle (optional)';
+    return '$fieldTitle (opzionale)';
   }
 
   @override
-  String get customChallenge => 'Confirmation Code';
+  String get customChallenge => 'Codice di Conferma';
 
   @override
-  String get selectSms => 'Text Message (SMS)';
+  String get selectSms => 'Messaggio di Testo (SMS)';
 
   @override
-  String get selectTotp => 'Authenticator App (TOTP)';
+  String get selectTotp => 'App Autenticatore (TOTP)';
 
   @override
-  String get totpCodePrompt => 'Please enter the code from your registered Authenticator app';
+  String get totpCodePrompt => 'Inserisci il codice dalla tua app Autenticatore registrata';
 
   @override
   String get selectEmail => 'Email';
 
   @override
+  String get totpStep1Title => 'Passo 1: Scarica un\'app Autenticatore';
+
+  @override
+  String get totpStep2Title => 'Passo 2: Scansiona il codice QR';
+
+  @override
+  String get totpStep3Title => 'Passo 3: Verifica il tuo codice';
+
+  @override
+  String get totpStep1Body => 'Le app autenticatore generano codici monouso che possono essere utilizzati per verificare la tua identità';
+
+  @override
+  String get totpStep2Body => 'Apri l\'app Autenticatore e scansiona il codice QR o inserisci la chiave per ottenere il tuo codice di verifica';
+
+  @override
+  String get totpStep3Body => 'Inserisci il codice a 6 cifre dalla tua app Autenticatore';
+
+  @override
   String codeSent(String destination) {
-    return 'A confirmation code has been sent to $destination.';
+    return 'Un codice di conferma è stato inviato a $destination.';
   }
 
   @override
-  String get codeSentUnknown => 'A confirmation code has been sent.';
+  String get codeSentUnknown => 'Un codice di conferma è stato inviato.';
 
   @override
-  String get copySucceeded => 'Copied to clipboard!';
+  String get copySucceeded => 'Copiato negli appunti!';
 
   @override
-  String get copyFailed => 'Copy to clipboard failed.';
+  String get copyFailed => 'Copia negli appunti fallita.';
 
   @override
-  String get totpStep1Title => 'Step 1: Download an Authenticator app';
+  String get confirmSignUp => 'Inserisci il tuo codice di conferma';
 
   @override
-  String get totpStep2Title => 'Step 2: Scan the QR code';
+  String get confirmSignInMfa => 'Inserisci il tuo codice di accesso';
 
   @override
-  String get totpStep3Title => 'Step 3: Verify your code';
+  String get confirmSignInCustomAuth => 'Inserisci il tuo codice di accesso';
 
   @override
-  String get totpStep1Body => 'Authenticator apps generate one-time codes that can be used to verify your identity';
+  String get confirmSignInNewPassword => 'Cambia la tua password per accedere';
 
   @override
-  String get totpStep2Body => 'Open then Authenticator app and scan the QR code or enter the key to get your verification code';
+  String get continueSignInWithMfaSelection => 'Seleziona il tuo metodo di Autenticazione a Due Fattori preferito';
 
   @override
-  String get totpStep3Body => 'Enter the 6 digit code from your Authenticator app';
+  String get continueSignInWithTotpSetup => 'Abilita Autenticazione a Due Fattori';
 
   @override
-  String get confirmSignUp => 'Enter your confirmation code';
+  String get confirmSignInWithTotpMfaCode => 'Inserisci il tuo codice monouso';
 
   @override
-  String get confirmSignInMfa => 'Enter your sign in code';
+  String get resetPassword => 'Invia Codice';
 
   @override
-  String get confirmSignInCustomAuth => 'Enter your sign in code';
-
-  @override
-  String get confirmSignInNewPassword => 'Change your password to sign in';
-
-  @override
-  String get continueSignInWithMfaSelection => 'Select your preferred Two-Factor Auth method';
-
-  @override
-  String get continueSignInWithTotpSetup => 'Enable Two-Factor Auth';
-
-  @override
-  String get confirmSignInWithTotpMfaCode => 'Enter your one-time passcode';
-
-  @override
-  String get resetPassword => 'Send Code';
-
-  @override
-  String get verifyUser => 'Account recovery requires verified contact information';
-
-  @override
-  String get editMeal => 'Edit meal';
-
-  @override
-  String get shareMeal => 'Share meal';
-
-  @override
-  String get switchMealPlan => 'Switch Meal Plan';
-
-  @override
-  String get noOtherMealPlans => 'No other meal plans available.';
-
-  @override
-  String get unnamedPlan => 'Unnamed Plan';
-
-  @override
-  String get switchingPlan => 'Switching plan...';
-
-  @override
-  String get switchedToPlan => 'Switched to plan';
-
-  @override
-  String get failedToSwitchPlan => 'Failed to switch plan';
-
-  @override
-  String get errorLoadingPlans => 'Error loading plans';
-
-  @override
-  String get moreOptions => 'More options';
+  String get verifyUser => 'Il recupero dell\'account richiede informazioni di contatto verificate';
 }
