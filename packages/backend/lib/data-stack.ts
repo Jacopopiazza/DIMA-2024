@@ -2,6 +2,8 @@ import * as cdk from 'aws-cdk-lib';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 interface DataStackProps extends cdk.StackProps {
@@ -11,9 +13,67 @@ interface DataStackProps extends cdk.StackProps {
 export class DataStack extends cdk.Stack {
   public readonly mealPlanningTable: dynamodb.TableV2;
   public readonly setActiveMealPlanLambda: lambda.Function;
+  public readonly assetsBucket: s3.Bucket;
 
   constructor(scope: Construct, id: string, props: DataStackProps) {
     super(scope, id, props);
+
+    // Create S3 bucket for assets (images, documents, etc.)
+    this.assetsBucket = new s3.Bucket(this, 'AssetsBucket', {
+      bucketName: `dima-assets-${this.account}-${this.region}`,
+      versioned: true,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: cdk.RemovalPolicy.DESTROY, // TODO: Change to RETAIN for prod
+      cors: [
+        {
+          allowedMethods: [
+            s3.HttpMethods.GET,
+            s3.HttpMethods.PUT,
+            s3.HttpMethods.POST,
+            s3.HttpMethods.DELETE,
+          ],
+          allowedOrigins: ['*'], // TODO: Restrict to your app domains in production
+          allowedHeaders: ['*'],
+          maxAge: 3000,
+        },
+      ],
+    });
+
+    // Create IAM policy for authenticated users to upload assets
+    const uploadPolicy = new iam.PolicyDocument({
+      statements: [
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            's3:PutObject',
+            's3:PutObjectAcl',
+            's3:GetObject',
+            's3:DeleteObject',
+          ],
+          resources: [
+            this.assetsBucket.bucketArn,
+            `${this.assetsBucket.bucketArn}/*`,
+          ],
+          conditions: {
+            StringEquals: {
+              'cognito-identity.amazonaws.com:aud': props.userPool.userPoolId,
+            },
+          },
+        }),
+      ],
+    });
+
+    // Export the bucket name for cross-stack references
+    new cdk.CfnOutput(this, 'AssetsBucketName', {
+      value: this.assetsBucket.bucketName,
+      exportName: 'AssetsBucketName',
+    });
+
+    new cdk.CfnOutput(this, 'AssetsBucketArn', {
+      value: this.assetsBucket.bucketArn,
+      exportName: 'AssetsBucketArn',
+    });
 
     const mealPlanningTableProps: dynamodb.TablePropsV2 = {
       billing: dynamodb.Billing.onDemand(),
