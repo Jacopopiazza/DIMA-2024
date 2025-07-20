@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 
@@ -10,6 +11,7 @@ class NutritionistProfileService {
         document: '''
           query GetMyNutritionistProfile {
             getMyNutritionistProfile {
+              id
               nutritionistId
               givenName
               familyName
@@ -24,7 +26,7 @@ class NutritionistProfileService {
       );
 
       final response = await Amplify.API.query(request: request).response;
-      
+
       if (response.hasErrors) {
         safePrint('Error loading nutritionist profile: ${response.errors}');
         return null;
@@ -34,14 +36,10 @@ class NutritionistProfileService {
         return null;
       }
 
-      final Map<String, dynamic> profileData = 
-          Map<String, dynamic>.from(json.decode(response.data!));
-      
-      // Map nutritionistId to id for the generated model
-      final processedData = Map<String, dynamic>.from(profileData);
-      processedData['id'] = processedData['nutritionistId'];
-      
-      return NutritionistProfile.fromJson(processedData);
+      final Map<String, dynamic> profileData = Map<String, dynamic>.from(
+          json.decode(response.data!))['getMyNutritionistProfile'];
+
+      return NutritionistProfile.fromJson(profileData);
     } catch (e) {
       safePrint('Error loading nutritionist profile: $e');
       return null;
@@ -62,6 +60,7 @@ class NutritionistProfileService {
         document: '''
           mutation UpdateMyNutritionistProfile(\$input: UpdateNutritionistProfileInput!) {
             updateMyNutritionistProfile(input: \$input) {
+              id
               nutritionistId
               givenName
               familyName
@@ -96,14 +95,14 @@ class NutritionistProfileService {
         return null;
       }
 
-      final Map<String, dynamic> profileData = 
-          Map<String, dynamic>.from(json.decode(response.data!));
-      
-      // Map nutritionistId to id for the generated model
-      final processedData = Map<String, dynamic>.from(profileData);
-      processedData['id'] = processedData['nutritionistId'];
-      
-      return NutritionistProfile.fromJson(processedData);
+      final decoded = json.decode(response.data!);
+      final profileData = decoded['updateMyNutritionistProfile'];
+      if (profileData == null) {
+        safePrint('Error: updateMyNutritionistProfile returned null');
+        return null;
+      }
+      return NutritionistProfile.fromJson(
+          Map<String, dynamic>.from(profileData));
     } catch (e) {
       safePrint('Error updating nutritionist profile: $e');
       return null;
@@ -116,15 +115,15 @@ class NutritionistProfileService {
     if (profile == null) {
       return false;
     }
-    
+
     // Check if required fields are filled
-    return profile.givenName != null && 
-           profile.givenName!.isNotEmpty &&
-           profile.familyName != null && 
-           profile.familyName!.isNotEmpty &&
-           profile.specialization != null && 
-           profile.specialization!.isNotEmpty &&
-           profile.bio != null && 
-           profile.bio!.isNotEmpty;
+    return profile.givenName != null &&
+        profile.givenName!.isNotEmpty &&
+        profile.familyName != null &&
+        profile.familyName!.isNotEmpty &&
+        profile.specialization != null &&
+        profile.specialization!.isNotEmpty &&
+        profile.bio != null &&
+        profile.bio!.isNotEmpty;
   }
-} 
+}

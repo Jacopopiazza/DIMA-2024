@@ -27,8 +27,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmClearCacheTitle => 'Confirm Clear Cache';
 
   @override
-  String get confirmClearCacheMessage =>
-      'Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.';
+  String get confirmClearCacheMessage => 'Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.';
 
   @override
   String get clear => 'Clear';
@@ -52,19 +51,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmDeleteAccountTitle => 'Confirm Account Deletion';
 
   @override
-  String get confirmDeleteAccountMessage =>
-      'WARNING: This action is irreversible and will permanently delete your account and all associated data. Are you absolutely sure you want to proceed?';
+  String get confirmDeleteAccountMessage => 'WARNING: This action is irreversible and will permanently delete your account and all associated data. Are you absolutely sure you want to proceed?';
 
   @override
   String get accountDeletedSuccessfully => 'Account deleted successfully.';
 
   @override
-  String get errorDeletingAccount =>
-      'Error deleting account. Please try again.';
+  String get errorDeletingAccount => 'Error deleting account. Please try again.';
 
   @override
-  String get errorDeleteAccountRequiresRecentLogin =>
-      'Account deletion requires a recent sign-in. Please sign out and sign back in.';
+  String get errorDeleteAccountRequiresRecentLogin => 'Account deletion requires a recent sign-in. Please sign out and sign back in.';
 
   @override
   String get saveChanges => 'Save Changes';
@@ -241,8 +237,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signUpDropdownText => 'Register as';
 
   @override
-  String get socialSignUpNotice =>
-      'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.';
+  String get socialSignUpNotice => 'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.';
 
   @override
   String get mealNameBREAKFAST => 'Breakfast';
@@ -1187,8 +1182,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get usernameRequirements =>
-      'Username must only contain alphanumeric characters and symbols.';
+  String get usernameRequirements => 'Username must only contain alphanumeric characters and symbols.';
 
   @override
   String get passwordRequirementsPreamble => 'Password must include:';
@@ -1243,8 +1237,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectTotp => 'Authenticator App (TOTP)';
 
   @override
-  String get totpCodePrompt =>
-      'Please enter the code from your registered Authenticator app';
+  String get totpCodePrompt => 'Please enter the code from your registered Authenticator app';
 
   @override
   String get selectEmail => 'Email';
@@ -1273,16 +1266,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totpStep3Title => 'Step 3: Verify your code';
 
   @override
-  String get totpStep1Body =>
-      'Authenticator apps generate one-time codes that can be used to verify your identity';
+  String get totpStep1Body => 'Authenticator apps generate one-time codes that can be used to verify your identity';
 
   @override
-  String get totpStep2Body =>
-      'Open then Authenticator app and scan the QR code or enter the key to get your verification code';
+  String get totpStep2Body => 'Open then Authenticator app and scan the QR code or enter the key to get your verification code';
 
   @override
-  String get totpStep3Body =>
-      'Enter the 6 digit code from your Authenticator app';
+  String get totpStep3Body => 'Enter the 6 digit code from your Authenticator app';
 
   @override
   String get confirmSignUp => 'Enter your confirmation code';
@@ -1297,8 +1287,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmSignInNewPassword => 'Change your password to sign in';
 
   @override
-  String get continueSignInWithMfaSelection =>
-      'Select your preferred Two-Factor Auth method';
+  String get continueSignInWithMfaSelection => 'Select your preferred Two-Factor Auth method';
 
   @override
   String get continueSignInWithTotpSetup => 'Enable Two-Factor Auth';
@@ -1310,8 +1299,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetPassword => 'Send Code';
 
   @override
-  String get verifyUser =>
-      'Account recovery requires verified contact information';
+  String get verifyUser => 'Account recovery requires verified contact information';
 
   @override
   String get editMeal => 'Edit meal';

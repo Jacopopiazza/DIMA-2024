@@ -2,6 +2,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 
+import 'nutritionist_settings_page.dart';
 import 'validate_plans_page.dart';
 
 class NutritionistHomeScreen extends StatefulWidget {
@@ -37,6 +38,7 @@ class _NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     _DashboardPage(), // Index 0
     ValidatePlansPage(), // Index 1
+    NutritionistSettingsPage(), // Index 2
   ];
 
   // Callback function when a bottom navigation item is tapped
@@ -73,6 +75,11 @@ class _NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
           icon: Icon(Icons.assignment_outlined),
           activeIcon: Icon(Icons.assignment),
           label: 'Validate Plans',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings_outlined),
+          activeIcon: Icon(Icons.settings),
+          label: 'Settings',
         ),
       ],
       currentIndex: _selectedIndex, // Highlights the current tab

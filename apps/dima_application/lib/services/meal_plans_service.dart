@@ -583,6 +583,7 @@ class MealPlansService {
           query ListAllNutritionists(\$limit: Int, \$nextToken: String) {
             listNutritionists(limit: \$limit, nextToken: \$nextToken) {
               items {
+                id
                 nutritionistId
                 givenName
                 familyName
@@ -613,10 +614,7 @@ class MealPlansService {
 
       return items.map((item) {
         if (item is Map<String, dynamic>) {
-          // Map nutritionistId to id for the generated model
-          final processedItem = Map<String, dynamic>.from(item);
-          processedItem['id'] = processedItem['nutritionistId'];
-          return NutritionistProfile.fromJson(processedItem);
+          return NutritionistProfile.fromJson(item);
         }
         return NutritionistProfile.fromJson(item);
       }).toList();

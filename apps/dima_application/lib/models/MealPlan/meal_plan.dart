@@ -1,11 +1,10 @@
 // lib/models/meal_plan_models.dart (adjust filename as needed)
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
-import 'package:dima_application/models/MealPlan/meal.dart';
 import 'package:dima_application/models/MealPlan/daily_plan.dart';
 import 'package:dima_application/models/MealPlan/ingredient.dart';
 import 'package:dima_application/models/MealPlan/macros.dart';
-
+import 'package:dima_application/models/MealPlan/meal.dart';
 import 'package:isar/isar.dart';
 
 part 'meal_plan.g.dart';
@@ -36,9 +35,11 @@ class MealPlanCache {
   late String lastFetchedTimestamp;
 
   @ignore
-  TemporalDateTime get generatedAt => TemporalDateTime.fromString(generatedAtTimestamp);
+  TemporalDateTime get generatedAt =>
+      TemporalDateTime.fromString(generatedAtTimestamp);
   @ignore
-  TemporalDateTime get lastFetched => TemporalDateTime.fromString(lastFetchedTimestamp);
+  TemporalDateTime get lastFetched =>
+      TemporalDateTime.fromString(lastFetchedTimestamp);
 
   // Default constructor needed by Isar
   MealPlanCache(); // Default constructor needed by Isar
@@ -64,7 +65,8 @@ class MealPlanCache {
       ..planName = planName
       ..status = status
       ..userId = userId
-      ..lastFetchedTimestamp = lastFetched?.format() ?? TemporalDateTime.now().format();
+      ..lastFetchedTimestamp =
+          lastFetched?.format() ?? TemporalDateTime.now().format();
   }
 
   // Optional: Factory constructor from Amplify model
