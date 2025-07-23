@@ -17,10 +17,11 @@ export function request(ctx) {
 
 export function response(ctx) {
   const items = ctx.result && ctx.result.items ? ctx.result.items : [];
-  const nextToken = ctx.result && ctx.result.nextToken ? ctx.result.nextToken : null;
+  const nextToken =
+    ctx.result && ctx.result.nextToken ? ctx.result.nextToken : null;
 
   // Map only the fields defined in the MealPlan GraphQL type
-  const mappedItems = items.map(plan => {
+  const mappedItems = items.map((plan) => {
     let userId = plan.userId;
     if (!userId && plan.PK && plan.PK.startsWith('USER#')) {
       userId = plan.PK.replace('USER#', '');
@@ -42,7 +43,9 @@ export function response(ctx) {
   });
 
   // Filter to only include meal plans that need validation (PENDING_REVIEW status)
-  const pendingPlans = mappedItems.filter(plan => plan.validationStatus === 'PENDING_REVIEW');
+  const pendingPlans = mappedItems.filter(
+    (plan) => plan.validationStatus === 'PENDING_REVIEW',
+  );
 
   return {
     items: pendingPlans,

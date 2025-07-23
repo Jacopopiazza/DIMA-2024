@@ -2,7 +2,7 @@ import { util } from '@aws-appsync/utils';
 
 export function request(ctx) {
   const { mealPlanId, nutritionistId } = ctx.args.input;
-  
+
   if (!ctx.identity || !ctx.identity.sub) {
     util.unauthorized();
   }
@@ -21,14 +21,15 @@ export function request(ctx) {
   const pk = `USER#${userId}`;
   const sk = `PLAN#${mealPlanId}`;
   const now = util.time.nowISO8601();
-  
+
   // Perform the update directly
 
   return {
     operation: 'UpdateItem',
     key: util.dynamodb.toMapValues({ PK: pk, SK: sk }),
     update: {
-      expression: 'SET assignedNutritionistId = :nutritionistId, validationStatus = :validationStatus, updatedAt = :updatedAt, GSI4PK = :gsi4pk, GSI4SK = :gsi4sk',
+      expression:
+        'SET assignedNutritionistId = :nutritionistId, validationStatus = :validationStatus, updatedAt = :updatedAt, GSI4PK = :gsi4pk, GSI4SK = :gsi4sk',
       expressionValues: util.dynamodb.toMapValues({
         ':nutritionistId': nutritionistId,
         ':validationStatus': 'PENDING_REVIEW',
@@ -52,11 +53,11 @@ export function response(ctx) {
       mealPlanId: null,
     };
   }
-  
+
   // Return MealPlanResponse format
   return {
     success: true,
     message: 'Validation request sent successfully',
-    mealPlanId: ctx.args.input.mealPlanId
+    mealPlanId: ctx.args.input.mealPlanId,
   };
-} 
+}

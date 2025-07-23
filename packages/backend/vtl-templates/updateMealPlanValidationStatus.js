@@ -11,7 +11,7 @@ export function request(ctx) {
   if (!validationStatus) {
     util.error('validationStatus is required');
   }
-  if (!["VALIDATED", "NOT_VALIDATED"].includes(validationStatus)) {
+  if (!['VALIDATED', 'NOT_VALIDATED'].includes(validationStatus)) {
     util.error('validationStatus must be VALIDATED or NOT_VALIDATED');
   }
 
@@ -19,7 +19,8 @@ export function request(ctx) {
     operation: 'UpdateItem',
     key: util.dynamodb.toMapValues({ PK: pk, SK: sk }),
     update: {
-      expression: 'SET validationStatus = :validationStatus, updatedAt = :updatedAt',
+      expression:
+        'SET validationStatus = :validationStatus, updatedAt = :updatedAt',
       expressionValues: util.dynamodb.toMapValues({
         ':validationStatus': validationStatus,
         ':updatedAt': util.time.nowISO8601(),
@@ -44,4 +45,4 @@ export function response(ctx) {
     message: 'Meal plan validation status updated successfully.',
     mealPlanId: ctx.args.input.mealPlanId,
   };
-} 
+}

@@ -5,6 +5,8 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
+import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 
 interface AppSyncApiStackProps extends cdk.StackProps {
   userPool: cognito.UserPool;
@@ -29,6 +31,12 @@ export class AppSyncApiStack extends cdk.Stack {
             userPool: props.userPool,
           },
         },
+        // IMPORTANT: Add IAM as an additional authorization mode
+        additionalAuthorizationModes: [
+          {
+            authorizationType: appsync.AuthorizationType.IAM,
+          },
+        ],
       },
       logConfig: {
         fieldLogLevel: appsync.FieldLogLevel.ALL,
@@ -290,7 +298,9 @@ export class AppSyncApiStack extends cdk.Stack {
         api: api,
         dataSource: tableDS,
         runtime: appsync.FunctionRuntime.JS_1_0_0,
-        code: appsync.Code.fromAsset('vtl-templates/getMealPlanKeysByMealPlanId.js'),
+        code: appsync.Code.fromAsset(
+          'vtl-templates/getMealPlanKeysByMealPlanId.js',
+        ),
       },
     );
 
@@ -302,7 +312,9 @@ export class AppSyncApiStack extends cdk.Stack {
         api: api,
         dataSource: tableDS,
         runtime: appsync.FunctionRuntime.JS_1_0_0,
-        code: appsync.Code.fromAsset('vtl-templates/updateMealPlanValidationStatus.js'),
+        code: appsync.Code.fromAsset(
+          'vtl-templates/updateMealPlanValidationStatus.js',
+        ),
       },
     );
 
@@ -311,9 +323,14 @@ export class AppSyncApiStack extends cdk.Stack {
       api: api,
       typeName: 'Mutation',
       fieldName: 'validateMealPlan',
-      pipelineConfig: [getMealPlanKeysByMealPlanIdFunc, updateMealPlanValidationStatusFunc],
+      pipelineConfig: [
+        getMealPlanKeysByMealPlanIdFunc,
+        updateMealPlanValidationStatusFunc,
+      ],
       requestMappingTemplate: appsync.MappingTemplate.fromString('{}'),
-      responseMappingTemplate: appsync.MappingTemplate.fromString('$util.toJson($ctx.prev.result)'),
+      responseMappingTemplate: appsync.MappingTemplate.fromString(
+        '$util.toJson($ctx.prev.result)',
+      ),
     });
 
     // --- Resolver for Query.listMyMealPlans ---
@@ -349,7 +366,9 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'requestValidation',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/mutation.requestValidation.js'),
+      code: appsync.Code.fromAsset(
+        'vtl-templates/mutation.requestValidation.js',
+      ),
     });
 
     // --- Resolver for Query.listMyAssignedMealPlans ---
@@ -357,7 +376,9 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Query',
       fieldName: 'listMyAssignedMealPlans',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/query.listMyAssignedMealPlans.js'),
+      code: appsync.Code.fromAsset(
+        'vtl-templates/query.listMyAssignedMealPlans.js',
+      ),
     });
 
     // --- Resolver for Query.getMyNutritionistProfile ---
@@ -365,7 +386,9 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Query',
       fieldName: 'getMyNutritionistProfile',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/query.getMyNutritionistProfile.js'),
+      code: appsync.Code.fromAsset(
+        'vtl-templates/query.getMyNutritionistProfile.js',
+      ),
     });
 
     // --- Resolver for Mutation.updateMyNutritionistProfile ---
@@ -373,8 +396,102 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'updateMyNutritionistProfile',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/mutation.updateMyNutritionistProfile.js'),
+      code: appsync.Code.fromAsset(
+        'vtl-templates/mutation.updateMyNutritionistProfile.js',
+      ),
     });
+
+    // ====================================================================
+    // ====================================================================
+    //                  MEAL PLAN GENERATION (NEW SECTION)
+    // ====================================================================
+    // ====================================================================
+
+    // --- 1. Reference the Secret for the Gemini API Key ---
+    // IMPORTANT: Replace 'your/gemini/secret/arn' with the actual ARN of your secret in Secrets Manager
+    const geminiApiSecret = secretsmanager.Secret.fromSecretCompleteArn(
+      this,
+      'GeminiApiSecret',
+      'arn:aws:secretsmanager:us-west-2:537124974525:secret:GeminiApiSecret-FoYZ9f',
+    );
+
+    // --- 2. Define the Asynchronous Generator Lambda ---
+    const generatorLambda = new NodejsFunction(this, 'GeneratorHandler', {
+      functionName: 'meal-plan-generator-handler',
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'handler',
+      entry: 'src/lambda/meal-generator-generation-handler/index.ts',
+      timeout: cdk.Duration.minutes(5),
+      memorySize: 512,
+      bundling: {
+        format: OutputFormat.CJS,
+        bundleAwsSDK: false,
+        minify: false, // Minify the code
+        sourceMap: true, // Generate source maps
+        externalModules: [
+          '@aws-sdk/client-secrets-manager',
+          '@aws-sdk/signature-v4',
+          '@aws-sdk/protocol-http',
+        ],
+      },
+      environment: {
+        APPSYNC_ENDPOINT_URL: api.graphqlUrl,
+        GEMINI_SECRET_ARN: geminiApiSecret.secretArn,
+      },
+      tracing: lambda.Tracing.ACTIVE,
+      logRetention: logs.RetentionDays.ONE_WEEK,
+    });
+
+    // Grant the generator lambda permission to read the secret
+    geminiApiSecret.grantRead(generatorLambda);
+
+    // Grant the generator lambda permission to call the specific AppSync mutation
+    api.grantMutation(generatorLambda, 'updateGeneratedMealPlan');
+
+    // --- 3. Define the Synchronous Request Handler Lambda ---
+    const requestLambda = new NodejsFunction(this, 'RequestHandler', {
+      functionName: 'meal-plan-request-handler',
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'handler',
+      entry: 'src/lambda/meal-generation-request-handler/index.ts', // Adjust path as needed
+      timeout: cdk.Duration.seconds(30),
+      environment: {
+        MEALPLANS_TABLE_NAME: props.mealPlanningTable.tableName,
+        GENERATOR_FUNCTION_NAME: generatorLambda.functionName,
+      },
+      bundling: {
+        format: OutputFormat.ESM,
+        bundleAwsSDK: false,
+        minify: false, // Minify the code
+        sourceMap: true, // Generate source maps
+        externalModules: [
+          '@aws-sdk/client-dynamodb',
+          '@aws-sdk/lib-dynamodb',
+          '@aws-sdk/client-lambda',
+        ],
+      },
+    });
+
+    // Grant the request lambda permission to write to the DynamoDB table
+    props.mealPlanningTable.grantReadWriteData(requestLambda);
+
+    // Grant the request lambda permission to invoke the generator lambda
+    generatorLambda.grantInvoke(requestLambda);
+
+    // --- 4. Create the AppSync Data Source and Resolver ---
+    // Create a Lambda Data Source for the request handler
+    const requestLambdaDS = api.addLambdaDataSource(
+      'RequestLambdaDataSource',
+      requestLambda,
+    );
+
+    // Create the resolver for the `requestNewMealPlan` mutation
+    requestLambdaDS.createResolver('RequestNewMealPlanResolver', {
+      typeName: 'Mutation',
+      fieldName: 'requestNewMealPlan',
+    });
+
+    // --- End of Meal Plan Generation Section ---
 
     // --------------------------------------------------------------------
     // OTHER RESOLVERS WILL BE ADDED LATER

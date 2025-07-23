@@ -105,9 +105,12 @@ enum MealPlanGenerationStatusValue {
 }
 
 enum PlanStatus {
+  PENDING
+  IN_PROGRESS
   GENERATED
   ACTIVE
   ARCHIVED
+  FAILED
 }
 
 enum MealPlanValidationStatus {
@@ -225,8 +228,6 @@ type MealPlan @model {
   mealPlanId: ID! # Extracted from SK
   userId: ID! # From PK
   planName: String
-  startDate: AWSDate
-  endDate: AWSDate
   generatedAt: AWSDateTime
   status: PlanStatus
   validationStatus: MealPlanValidationStatus
@@ -311,9 +312,8 @@ type UserDetails @model {
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
-  dietaryRestrictions: [String!]
+  dietaryRestrictions: String
   openTextPreferences: String
-  targetCalories: Float
   activeMealPlanId: ID # ID of the currently active MealPlan
   updatedAt: AWSDateTime # Timestamp of the last update for this record
   createdAt: AWSDateTime # Timestamp of when the user was created
@@ -413,12 +413,12 @@ input PlanRequestPreferencesInput {
   # Include fields from UserDetails that can be overridden for this specific plan request
   weightKg: Float
   heightCm: Float
+  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
-  dietaryRestrictions: [String!]
+  dietaryRestrictions: String
   openTextPreferences: String
-  targetCalories: Float
 }
 
 """
@@ -453,12 +453,12 @@ Input for updating user preferences/details.
 input UpdateUserDetailsInput {
   weightKg: Float
   heightCm: Float
+  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
-  dietaryRestrictions: [String!]
+  dietaryRestrictions: String
   openTextPreferences: String
-  targetCalories: Float
 }
 
 """
@@ -676,4 +676,25 @@ type Mutation {
   """
   validateMealPlan(input: ValidateMealPlanInput!): MealPlanResponse
     @aws_auth(cognito_groups: ["NUTRITIONISTS"])
+
+  # The Plan generation Lambda function calls this internally.
+  # This updates the plan with the data from Gemini. This mutation
+  # will trigger the subscription.
+  # You should secure this so only the Lambda's IAM Role can call it.
+  updateGeneratedMealPlan(
+    mealPlanId: ID!
+    dailyPlan: DailyPlanDataInput!
+    status: PlanStatus!
+  ): MealPlan
+}
+
+# ---------------------------------------------------
+# 4. REQUIRED SUBSCRIPTION
+# How the Flutter app listens for the final result.
+# ---------------------------------------------------
+type Subscription {
+  # The Flutter app subscribes to this using the current user's ID
+  # right after `requestNewMealPlan` returns.
+  onPlanUpdated(userId: ID!): MealPlan
+    @aws_subscribe(mutations: ["updateGeneratedMealPlan"])
 }

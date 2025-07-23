@@ -1,8 +1,15 @@
 export function request(ctx) {
-  const { givenName, familyName, specialization, bio, profilePictureUrl, isAvailable } = ctx.args.input;
+  const {
+    givenName,
+    familyName,
+    specialization,
+    bio,
+    profilePictureUrl,
+    isAvailable,
+  } = ctx.args.input;
   const userId = ctx.identity.sub;
   const now = util.time.nowISO8601();
-  
+
   // Prepare the item data for create/update
   const itemData = {
     PK: `NUTR#${userId}`,
@@ -20,24 +27,24 @@ export function request(ctx) {
     GSI1PK: 'NUTR_PROFILES_ALL',
     GSI1SK: `NUTRID#${userId}`,
   };
-  
+
   return {
     operation: 'PutItem',
     key: util.dynamodb.toMapValues({
       PK: `NUTR#${userId}`,
-      SK: 'NUTR_DETAILS'
+      SK: 'NUTR_DETAILS',
     }),
-    attributeValues: util.dynamodb.toMapValues(itemData)
+    attributeValues: util.dynamodb.toMapValues(itemData),
   };
 }
 
 export function response(ctx) {
   const item = ctx.result;
-  
+
   if (!item) {
     return null;
   }
-  
+
   // Transform DynamoDB item to match NutritionistProfile type
   return {
     id: item.NutritionistID, // Add id for codegen compatibility
@@ -46,9 +53,10 @@ export function response(ctx) {
     familyName: item.FamilyName,
     specialization: item.Specialization,
     bio: item.Bio,
-    profilePictureUrl: item.ProfilePictureURL && item.ProfilePictureURL.trim() !== '' 
-      ? item.ProfilePictureURL
-      : null,
-    isAvailable: item.IsAvailable
+    profilePictureUrl:
+      item.ProfilePictureURL && item.ProfilePictureURL.trim() !== ''
+        ? item.ProfilePictureURL
+        : null,
+    isAvailable: item.IsAvailable,
   };
-} 
+}

@@ -73,6 +73,13 @@ This project provides several NPM scripts to streamline development tasks:
 
 - **`synth`**  
   Emits the synthesized CloudFormation template.
+
   ```bash
   npm run synth
+  ```
+
+- **`codegen`**  
+  Generates ts classes for lambdas from GraphQL Schema
+  ```bash
+  npm run codegen
   ```

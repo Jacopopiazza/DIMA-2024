@@ -27,4 +27,4 @@ export function response(ctx) {
   ctx.stash.pk = item.PK;
   ctx.stash.sk = item.SK;
   return ctx.prev.result;
-} 
+}

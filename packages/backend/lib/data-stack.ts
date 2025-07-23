@@ -208,7 +208,10 @@ export class DataStack extends cdk.Stack {
     // mealPlanId = <mealPlanId>
     this.mealPlanningTable.addGlobalSecondaryIndex({
       indexName: 'GSI_AssignedNutritionistId',
-      partitionKey: { name: 'assignedNutritionistId', type: dynamodb.AttributeType.STRING },
+      partitionKey: {
+        name: 'assignedNutritionistId',
+        type: dynamodb.AttributeType.STRING,
+      },
       sortKey: { name: 'mealPlanId', type: dynamodb.AttributeType.STRING }, // Optional, for sorting
       projectionType: dynamodb.ProjectionType.ALL,
     });

@@ -1,0 +1,52 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug TypeScript File",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/ts-node/dist/bin.js",
+            "args": ["${file}"],
+            "cwd": "${workspaceFolder}/packages/backend",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "console": "integratedTerminal",
+            "sourceMaps": true,
+            "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeArgs": ["--nolazy"],
+            "outputCapture": "std"
+        },
+        {
+            "name": "Debug test.ts",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/packages/backend/node_modules/ts-node/dist/bin.js",
+            "args": ["${workspaceFolder}/packages/backend/src/lambda/meal-generator/test.ts"],
+            "cwd": "${workspaceFolder}/packages/backend",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "console": "integratedTerminal",
+            "sourceMaps": true,
+            "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeArgs": ["--nolazy"],
+            "outputCapture": "std"
+        },
+        {
+            "name": "Debug Jest Tests",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/packages/backend/node_modules/jest/bin/jest.js",
+            "args": ["--runInBand", "--no-cache"],
+            "cwd": "${workspaceFolder}/packages/backend",
+            "env": {
+                "NODE_ENV": "test"
+            },
+            "console": "integratedTerminal",
+            "sourceMaps": true
+        }
+    ]
+}
