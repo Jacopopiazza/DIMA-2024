@@ -323,7 +323,7 @@ type UserDetails @model {
 """
 The response after creating a meal plan.
 """
-type MealPlanResponse @aws_iam {
+type MealPlanResponse @aws_iam @aws_cognito_user_pools {
   success: Boolean!
   message: String
   mealPlanId: ID!

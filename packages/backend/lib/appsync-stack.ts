@@ -215,15 +215,27 @@ export class AppSyncApiStack extends cdk.Stack {
 
     // --- Resolver for Mutation.setActiveMealPlan ---
     // --- Lambda Data Source for setActiveMealPlan ---
-    const setActiveMealPlanLambda = new lambda.Function(
+    const setActiveMealPlanLambda = new NodejsFunction(
       this,
       'SetActiveMealPlanLambda',
       {
+        functionName: 'SetActiveMealPlanLambdaHandler',
         runtime: lambda.Runtime.NODEJS_22_X,
-        handler: 'index.handler',
-        code: lambda.Code.fromAsset('src/lambda/setActiveMealPlan'),
+        handler: 'handler',
+        entry: 'src/lambda/setActiveMealPlan/index.ts', // Adjust path as needed
+        timeout: cdk.Duration.seconds(30),
         environment: {
           TABLE_NAME: props.mealPlanningTable.tableName,
+        },
+        bundling: {
+          format: OutputFormat.ESM,
+          bundleAwsSDK: false,
+          minify: false, // Minify the code
+          sourceMap: true, // Generate source maps
+          externalModules: [
+            '@aws-sdk/client-dynamodb',
+            '@aws-sdk/lib-dynamodb',
+          ],
         },
       },
     );
