@@ -50,7 +50,6 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
   void _initializeControllers() {
     _weightController = TextEditingController(text: widget.userDetails.weightKg?.toString() ?? '');
     _heightController = TextEditingController(text: widget.userDetails.heightCm?.toString() ?? '');
-    _targetCaloriesController = TextEditingController(text: widget.userDetails.targetCalories?.toString() ?? '');
     _preferencesController = TextEditingController(text: widget.userDetails.openTextPreferences ?? '');
     _dailyMealsPreference = widget.userDetails.dailyMealsPreference ?? 3;
     _exerciseFrequency = widget.userDetails.exerciseFrequency;
@@ -96,7 +95,6 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
       userId: widget.userDetails.userId,
       weightKg: double.tryParse(_weightController.text),
       heightCm: double.tryParse(_heightController.text),
-      targetCalories: double.tryParse(_targetCaloriesController.text),
       openTextPreferences: _preferencesController.text,
       activeMealPlanId: widget.userDetails.activeMealPlanId,
       allergies: _selectedAllergies,

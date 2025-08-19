@@ -24,7 +24,6 @@ class UserDetailsService {
                 exerciseFrequency
                 heightCm
                 openTextPreferences
-                targetCalories
                 updatedAt
                 userId
                 weightKg
@@ -88,8 +87,6 @@ class UserDetailsService {
       if (userDetails.heightCm != null) 'heightCm': userDetails.heightCm,
       if (userDetails.openTextPreferences != null)
         'openTextPreferences': userDetails.openTextPreferences,
-      if (userDetails.targetCalories != null)
-        'targetCalories': userDetails.targetCalories,
       if (userDetails.weightKg != null) 'weightKg': userDetails.weightKg,
     };
 
@@ -104,7 +101,6 @@ class UserDetailsService {
             exerciseFrequency
             heightCm
             openTextPreferences
-            targetCalories
             updatedAt
             userId
             weightKg

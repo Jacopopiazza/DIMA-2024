@@ -23,12 +23,12 @@ class GenerateMealPlanPage extends ConsumerWidget {
               );
               final success = await ref
                   .read(mealPlansProvider.notifier)
-                  .createRandomMealPlan();
+                  .createMealPlan();
               if (!context.mounted) return;
               if (success) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Random meal plan created successfully!'),
+                    content: Text('Meal plan created successfully!'),
                     backgroundColor: Colors.green,
                     duration: Duration(seconds: 2),
                   ),

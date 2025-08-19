@@ -29,8 +29,17 @@ class MealPlanResponse {
   final String? _message;
   final bool? _success;
 
-  String? get mealPlanId {
-    return _mealPlanId;
+  String get mealPlanId {
+    try {
+      return _mealPlanId!;
+    } catch(e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   String? get message {
@@ -50,9 +59,9 @@ class MealPlanResponse {
     }
   }
   
-  const MealPlanResponse._internal({mealPlanId, message, required success}): _mealPlanId = mealPlanId, _message = message, _success = success;
+  const MealPlanResponse._internal({required mealPlanId, message, required success}): _mealPlanId = mealPlanId, _message = message, _success = success;
   
-  factory MealPlanResponse({String? mealPlanId, String? message, required bool success}) {
+  factory MealPlanResponse({required String mealPlanId, String? message, required bool success}) {
     return MealPlanResponse._internal(
       mealPlanId: mealPlanId,
       message: message,
@@ -96,7 +105,7 @@ class MealPlanResponse {
   }
   
   MealPlanResponse copyWithModelFieldValues({
-    ModelFieldValue<String?>? mealPlanId,
+    ModelFieldValue<String>? mealPlanId,
     ModelFieldValue<String?>? message,
     ModelFieldValue<bool>? success
   }) {
@@ -128,7 +137,7 @@ class MealPlanResponse {
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
       fieldName: 'mealPlanId',
-      isRequired: false,
+      isRequired: true,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
     ));
     

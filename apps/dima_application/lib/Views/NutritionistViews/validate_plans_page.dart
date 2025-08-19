@@ -131,15 +131,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
                 ),
                 _buildValidationStatusChip(plan.validationStatus),
               ],
-            ),
-            const SizedBox(height: 8),
-            if (plan.startDate != null && plan.endDate != null)
-              Text(
-                '${plan.startDate!.toString().split(' ')[0]} - ${plan.endDate!.toString().split(' ')[0]}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-              ),
+            ),  
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -19,14 +19,6 @@ class MealPlanList {
             return MealPlan(
               mealPlanId: itemMap['mealPlanId'] as String,
               planName: itemMap['planName'] as String?,
-              startDate: itemMap['startDate'] != null
-                  ? amplify_core.TemporalDate.fromString(
-                      itemMap['startDate'] as String)
-                  : null,
-              endDate: itemMap['endDate'] != null
-                  ? amplify_core.TemporalDate.fromString(
-                      itemMap['endDate'] as String)
-                  : null,
               status: itemMap['status'] != null
                   ? amplify_core.enumFromString<PlanStatus>(
                       itemMap['status'] as String, PlanStatus.values)

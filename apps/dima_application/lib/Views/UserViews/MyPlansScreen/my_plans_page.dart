@@ -1,3 +1,4 @@
+import 'package:dima_application/Views/UserViews/MyPlansScreen/subscription_test_page.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,7 +68,19 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
               ref.read(mealPlansProvider.notifier).listMyMealPlans();
             },
             tooltip: 'Refresh Plans',
-          )
+          ),
+          IconButton(
+            icon: const Icon(Icons.repartition),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SubscriptionTestPage(),
+                ),
+              );
+            },
+            tooltip: 'Test Subscription',
+          ),
         ],
       ),
       body: plansAsync.when(

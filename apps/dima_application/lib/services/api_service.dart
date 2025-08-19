@@ -117,7 +117,6 @@ class ApiService {
         dailyMealsPreference: updateUserDetailsInput.dailyMealsPreference,
         allergies: updateUserDetailsInput.allergies,
         openTextPreferences: updateUserDetailsInput.openTextPreferences,
-        targetCalories: updateUserDetailsInput.targetCalories,
         updatedAt: TemporalDateTime.now(),
         // createdAt should be set on creation or fetched
       );

@@ -22,5 +22,8 @@
 enum PlanStatus {
   ACTIVE,
   ARCHIVED,
-  GENERATED
+  FAILED,
+  GENERATED,
+  IN_PROGRESS,
+  PENDING
 }
