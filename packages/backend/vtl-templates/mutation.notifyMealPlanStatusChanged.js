@@ -8,33 +8,17 @@ export function request(ctx) {
   // Valida l'input
   const { input } = ctx.args;
 
-  if (
-    !input ||
-    !input.userId ||
-    !input.mealPlanId ||
-    !input.status ||
-    !input.timestamp
-  ) {
+  if (!input || !input.mealPlanId || !input.success) {
     util.error(
       'Missing required fields in notification input',
       'ValidationException',
     );
   }
 
-  // Valida che lo status sia uno dei valori attesi
-  const validStatuses = ['PENDING', 'IN_PROGRESS', 'GENERATED', 'FAILED'];
-  if (!validStatuses.includes(input.status)) {
-    util.error(
-      `Invalid status: ${input.status}. Must be one of: ${validStatuses.join(', ')}`,
-      'ValidationException',
-    );
-  }
-
   console.log('Processing meal plan notification:', {
-    userId: input.userId,
     mealPlanId: input.mealPlanId,
-    status: input.status,
-    timestamp: input.timestamp,
+    success: input.success,
+    message: input.message,
   });
 
   // Non esegue nessuna operazione su database - è solo per triggerare la subscription
@@ -56,11 +40,9 @@ export function response(ctx) {
 
   // Costruisce la risposta MealPlanNotification
   const notification = {
-    userId: input.userId,
     mealPlanId: input.mealPlanId,
-    status: input.status,
-    timestamp: input.timestamp,
-    error: input.error || null,
+    success: input.success,
+    message: input.message,
   };
 
   console.log('Returning meal plan notification:', notification);

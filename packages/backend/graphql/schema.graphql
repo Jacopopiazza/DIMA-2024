@@ -321,23 +321,12 @@ type UserDetails @model {
 }
 
 """
-Represents the notification for a meal plan update.
-"""
-type MealPlanNotification @aws_iam {
-  userId: ID!
-  mealPlanId: ID!
-  status: String!
-  timestamp: AWSDateTime!
-  error: String
-}
-
-"""
 The response after creating a meal plan.
 """
-type MealPlanResponse {
+type MealPlanResponse @aws_iam {
   success: Boolean!
   message: String
-  mealPlanId: ID
+  mealPlanId: ID!
 }
 
 """
@@ -512,14 +501,12 @@ input ValidateMealPlanInput {
 }
 
 """
-Represents the input for a notification for a meal plan update.
+Input for the response of a meal plan operation.
 """
-input MealPlanNotificationInput {
-  userId: ID!
+input MealPlanResponseInput {
+  success: Boolean!
+  message: String
   mealPlanId: ID!
-  status: String!
-  timestamp: AWSDateTime!
-  error: String
 }
 # ===================
 #       QUERIES
@@ -660,7 +647,7 @@ type Mutation {
   """
   requestNewMealPlan(
     prefsOverride: PlanRequestPreferencesInput
-  ): MealPlanGenerationStatus @aws_auth(cognito_groups: ["USERS"])
+  ): MealPlanResponse @aws_auth(cognito_groups: ["USERS"])
 
   """
   Sends a message within a specific chat session. Resolver must check participation.
@@ -702,9 +689,8 @@ type Mutation {
   """
   Mutations solo per le notifiche (chiamate dalla notification lambda)
   """
-  notifyMealPlanStatusChanged(
-    input: MealPlanNotificationInput!
-  ): MealPlanNotification @aws_iam
+  notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponse
+    @aws_iam
 }
 
 # ---------------------------------------------------
@@ -715,7 +701,7 @@ type Subscription {
   """
   Subscription notifica
   """
-  onMealPlanStatusChanged: MealPlanNotification
+  onMealPlanStatusChanged: MealPlanResponse
     @aws_subscribe(mutations: ["notifyMealPlanStatusChanged"])
     @aws_auth(cognito_groups: ["USERS"])
 }

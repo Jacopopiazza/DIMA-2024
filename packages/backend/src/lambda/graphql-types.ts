@@ -271,31 +271,19 @@ export type MealPlanList = {
   nextToken?: Maybe<Scalars['String']['output']>;
 };
 
-/** Represents the notification for a meal plan update. */
-export type MealPlanNotification = {
-  __typename?: 'MealPlanNotification';
-  error?: Maybe<Scalars['String']['output']>;
-  mealPlanId: Scalars['ID']['output'];
-  status: Scalars['String']['output'];
-  timestamp: Scalars['AWSDateTime']['output'];
-  userId: Scalars['ID']['output'];
-};
-
-/** Represents the input for a notification for a meal plan update. */
-export type MealPlanNotificationInput = {
-  error?: InputMaybe<Scalars['String']['input']>;
-  mealPlanId: Scalars['ID']['input'];
-  status: Scalars['String']['input'];
-  timestamp: Scalars['AWSDateTime']['input'];
-  userId: Scalars['ID']['input'];
-};
-
 /** The response after creating a meal plan. */
 export type MealPlanResponse = {
   __typename?: 'MealPlanResponse';
-  mealPlanId?: Maybe<Scalars['ID']['output']>;
+  mealPlanId: Scalars['ID']['output'];
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
+};
+
+/** Input for the response of a meal plan operation. */
+export type MealPlanResponseInput = {
+  mealPlanId: Scalars['ID']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  success: Scalars['Boolean']['input'];
 };
 
 export enum MealPlanValidationStatus {
@@ -329,9 +317,9 @@ export type Mutation = {
   /** Modifies a meal plan. */
   modifyMealPlan?: Maybe<MealPlanResponse>;
   /** Mutations solo per le notifiche (chiamate dalla notification lambda) */
-  notifyMealPlanStatusChanged?: Maybe<MealPlanNotification>;
+  notifyMealPlanStatusChanged?: Maybe<MealPlanResponse>;
   /** Initiates the generation of a new meal plan, potentially overriding default preferences. Can be async. */
-  requestNewMealPlan?: Maybe<MealPlanGenerationStatus>;
+  requestNewMealPlan?: Maybe<MealPlanResponse>;
   /** Requests validation of a meal plan by a nutritionist. */
   requestValidation?: Maybe<MealPlanResponse>;
   /** Sends a message within a specific chat session. Resolver must check participation. */
@@ -379,7 +367,7 @@ export type MutationModifyMealPlanArgs = {
 };
 
 export type MutationNotifyMealPlanStatusChangedArgs = {
-  input: MealPlanNotificationInput;
+  input: MealPlanResponseInput;
 };
 
 export type MutationRequestNewMealPlanArgs = {
@@ -564,7 +552,7 @@ export type SetPlanDayCompletionInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   /** Subscription notifica */
-  onMealPlanStatusChanged?: Maybe<MealPlanNotification>;
+  onMealPlanStatusChanged?: Maybe<MealPlanResponse>;
 };
 
 /** Combined type for the Today page query result. */

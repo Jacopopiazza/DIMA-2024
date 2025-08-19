@@ -1,13 +1,13 @@
 // packages/backend/vtl-templates/query.ListMyMealPlans.js
 
 export function request(ctx) {
-  // Query meal plans for the current user from DynamoDB
   return {
     operation: 'Query',
     query: {
-      expression: 'PK = :pk',
+      expression: 'PK = :pk AND begins_with(SK, :sk)',
       expressionValues: {
         ':pk': { S: `USER#${ctx.identity.sub}` },
+        ':sk': { S: 'PLAN#' }, // Assuming your SK pattern
       },
     },
   };

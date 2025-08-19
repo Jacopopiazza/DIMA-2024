@@ -31,6 +31,7 @@ import {
   PlanRequestPreferencesInput,
   PlanStatus,
   MealPlanValidationStatus,
+  MealPlanResponse,
 } from '../graphql-types';
 
 // Initialize AWS clients outside the handler for reuse
@@ -142,5 +143,12 @@ export const handler = async (
     'Returning initial meal plan object to AppSync:',
     JSON.stringify(mealPlanItem),
   );
-  return mealPlanItem;
+
+  const response: MealPlanResponse = {
+    success: true,
+    message: 'Meal plan creation request successfully.',
+    mealPlanId,
+  };
+
+  return response;
 };

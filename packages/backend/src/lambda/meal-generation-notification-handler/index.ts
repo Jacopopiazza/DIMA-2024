@@ -6,6 +6,7 @@ import { SignatureV4 } from '@aws-sdk/signature-v4';
 import { Sha256 } from '@aws-crypto/sha256-js';
 import { HttpRequest } from '@aws-sdk/protocol-http';
 import fetch from 'node-fetch';
+import { MealPlanResponse } from '../graphql-types';
 
 // Variabili ambiente
 const { APPSYNC_API_URL, AWS_REGION } = process.env;
@@ -214,16 +215,27 @@ export const handler: SNSHandler = async (event: SNSEvent) => {
       console.log('Parsed SNS message:', JSON.stringify(snsMessage));
 
       // Determina lo status basato sul tipo di messaggio SNS
+      let notification: MealPlanResponse;
       let status: string;
       let error: string | null = null;
 
       switch (snsMessage.type) {
         case 'MEAL_PLAN_GENERATED':
           status = 'GENERATED';
+          notification = {
+            success: true,
+            message: 'Meal plan created successfully.',
+            mealPlanId: snsMessage.mealPlanId,
+          };
           break;
         case 'MEAL_PLAN_FAILED':
           status = 'FAILED';
           error = snsMessage.details?.error || 'Unknown error occurred';
+          notification = {
+            success: false,
+            message: error,
+            mealPlanId: snsMessage.mealPlanId,
+          };
           break;
         default:
           console.warn('Unknown notification type:', snsMessage.type);
@@ -238,24 +250,16 @@ export const handler: SNSHandler = async (event: SNSEvent) => {
       // UNA SOLA MUTATION PER TUTTI I TIPI
       const subscriptionMutation: AppSyncNotificationMutation = {
         mutation: `
-          mutation NotifyMealPlanStatusChanged($input: MealPlanNotificationInput!) {
+          mutation NotifyMealPlanStatusChanged($input: MealPlanResponseInput!) {
             notifyMealPlanStatusChanged(input: $input) {
-              userId
+              success
+              message
               mealPlanId
-              status
-              timestamp
-              error
             }
           }
         `,
         variables: {
-          input: {
-            userId: snsMessage.userId,
-            mealPlanId: snsMessage.mealPlanId,
-            status: status,
-            timestamp: snsMessage.timestamp,
-            error: error,
-          },
+          input: notification,
         },
       };
 
