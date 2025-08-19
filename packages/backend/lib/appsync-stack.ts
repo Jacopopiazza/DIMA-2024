@@ -4,6 +4,10 @@ import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
+import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as sns from 'aws-cdk-lib/aws-sns';
+import * as snsSubscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
@@ -166,11 +170,9 @@ export class AppSyncApiStack extends cdk.Stack {
         api,
         name: 'UpdateUserDetailsFunctionForUserDetails',
         dataSource: tableDS,
-        requestMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.updateUserDetails.UpdateUserDetailsFunction-request.vtl',
-        ),
-        responseMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.updateUserDetails.UpdateUserDetailsFunction-response.vtl',
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset(
+          'vtl-templates/pipeline.updateUserDetails.UpdateUserDetails.js',
         ),
       },
     );
@@ -407,6 +409,15 @@ export class AppSyncApiStack extends cdk.Stack {
     // ====================================================================
     // ====================================================================
 
+    // Crea SNS Topic per le notifiche
+    const mealPlanNotificationTopic = new sns.Topic(
+      this,
+      'MealPlanNotificationTopic',
+      {
+        topicName: 'meal-plan-notifications',
+      },
+    );
+
     // --- 1. Reference the Secret for the Gemini API Key ---
     // IMPORTANT: Replace 'your/gemini/secret/arn' with the actual ARN of your secret in Secrets Manager
     const geminiApiSecret = secretsmanager.Secret.fromSecretCompleteArn(
@@ -435,8 +446,9 @@ export class AppSyncApiStack extends cdk.Stack {
         ],
       },
       environment: {
-        APPSYNC_ENDPOINT_URL: api.graphqlUrl,
+        TABLE_NAME: props.mealPlanningTable.tableName,
         GEMINI_SECRET_ARN: geminiApiSecret.secretArn,
+        SNS_TOPIC_ARN: mealPlanNotificationTopic.topicArn,
       },
       tracing: lambda.Tracing.ACTIVE,
       logRetention: logs.RetentionDays.ONE_WEEK,
@@ -445,8 +457,11 @@ export class AppSyncApiStack extends cdk.Stack {
     // Grant the generator lambda permission to read the secret
     geminiApiSecret.grantRead(generatorLambda);
 
-    // Grant the generator lambda permission to call the specific AppSync mutation
-    api.grantMutation(generatorLambda, 'updateGeneratedMealPlan');
+    // Grant the permission to publish to the SNS topic
+    mealPlanNotificationTopic.grantPublish(generatorLambda);
+
+    // Grant the generator lambda permission to write to the DynamoDB table
+    props.mealPlanningTable.grantReadWriteData(generatorLambda);
 
     // --- 3. Define the Synchronous Request Handler Lambda ---
     const requestLambda = new NodejsFunction(this, 'RequestHandler', {
@@ -489,6 +504,72 @@ export class AppSyncApiStack extends cdk.Stack {
     requestLambdaDS.createResolver('RequestNewMealPlanResolver', {
       typeName: 'Mutation',
       fieldName: 'requestNewMealPlan',
+    });
+
+    // --- 5.
+    // Crea lambda per gestire le notifiche
+    const notificationLambda = new NodejsFunction(this, 'NotificationHandler', {
+      functionName: 'meal-plan-notification-handler',
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'handler',
+      entry: 'src/lambda/meal-generation-notification-handler/index.ts',
+      environment: {
+        APPSYNC_API_URL: api.graphqlUrl,
+      },
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 256, // ← Memoria sufficiente
+      bundling: {
+        format: OutputFormat.CJS,
+        bundleAwsSDK: false,
+        minify: false, // Minify the code
+        sourceMap: true, // Generate source maps
+        externalModules: [
+          '@aws-sdk/credential-providers',
+          '@aws-sdk/signature-v4',
+          '@aws-sdk/protocol-http',
+        ],
+      },
+      logRetention: logs.RetentionDays.ONE_WEEK, // ← Log retention
+    });
+
+    // Concedi permessi AppSync alla notification lambda
+    notificationLambda.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['appsync:GraphQL'],
+        resources: [api.arn + '/*'],
+      }),
+    );
+
+    // Collega SNS alla notification lambda
+    mealPlanNotificationTopic.addSubscription(
+      new snsSubscriptions.LambdaSubscription(notificationLambda, {
+        deadLetterQueue: new sqs.Queue(this, 'NotificationDLQ', {
+          queueName: 'meal-plan-notification-dlq',
+        }),
+      }),
+    );
+
+    // Crea un data source "None" per le notification mutations (se non esiste già)
+    const noneDS = api.addNoneDataSource('NotificationDataSource');
+
+    noneDS.createResolver('OnMealPlanStatusChangedSubscriptionResolver', {
+      typeName: 'Subscription',
+      fieldName: 'onMealPlanStatusChanged',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset(
+        'vtl-templates/subscription.onMealPlanStatusChanged.js',
+      ),
+    });
+
+    // Resolver per la notification mutation unificata
+    noneDS.createResolver('NotifyMealPlanStatusChangedResolver', {
+      typeName: 'Mutation',
+      fieldName: 'notifyMealPlanStatusChanged',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset(
+        'vtl-templates/mutation.notifyMealPlanStatusChanged.js',
+      ),
     });
 
     // --- End of Meal Plan Generation Section ---
