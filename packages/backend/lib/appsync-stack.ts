@@ -2,15 +2,15 @@ import * as cdk from 'aws-cdk-lib';
 import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as logs from 'aws-cdk-lib/aws-logs';
-import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as snsSubscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
-import * as iam from 'aws-cdk-lib/aws-iam';
+import * as sqs from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';
-import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 
 interface AppSyncApiStackProps extends cdk.StackProps {
   userPool: cognito.UserPool;
@@ -301,6 +301,14 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'modifyMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset('vtl-templates/mutation.modifyMealPlan.js'),
+    });
+
+    // --- Resolver for Mutation.modifyAssignedMealPlan ---
+    tableDS.createResolver('MutationModifyAssignedMealPlanResolver', {
+      typeName: 'Mutation',
+      fieldName: 'modifyAssignedMealPlan',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('vtl-templates/mutation.modifyAssignedMealPlan.js'),
     });
 
     // --- Pipeline Functions for validateMealPlan ---

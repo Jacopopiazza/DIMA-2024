@@ -629,7 +629,16 @@ type Mutation {
   Modifies a meal plan.
   """
   modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse
-    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+    @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Modifies a meal plan assigned to the nutritionist.
+  """
+  modifyAssignedMealPlan(
+    mealPlanId: ID!
+    userId: ID!
+    mealPlanName: String!
+  ): MealPlanResponse @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 
   """
   Gets a meal plan by its ID.
