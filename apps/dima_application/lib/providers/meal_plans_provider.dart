@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
-import 'package:dima_application/generated/flutter-models/NutritionistProfile.dart';
 import 'package:dima_application/models/MealPlanList/meal_plan_list.dart'
     show LightMealPlan;
 import 'package:dima_application/services/meal_plans_service.dart';
@@ -112,7 +111,7 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
     }
   }
 
-   Future<bool> createMealPlan() async {
+  Future<bool> createMealPlan() async {
     print('[MealPlansProvider] Creating meal plan with gemini...');
     final response = await _service.createMealPlan({});
     print('[MealPlansProvider] createMealPlan response: $response');
@@ -151,6 +150,32 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
     } else {
       print(
           '[MealPlansProvider] Failed to modify meal plan, message: ${response.message}');
+      return false;
+    }
+  }
+
+  /// Modifies a meal plan assigned to the nutritionist (nutritionist-specific operation).
+  /// Requires the userId since nutritionists modify plans belonging to other users.
+  Future<bool> modifyAssignedMealPlan(
+      String mealPlanId, String userId, String mealPlanName) async {
+    print(
+        '[MealPlansProvider] Modifying assigned meal plan: $mealPlanId for user: $userId with name: $mealPlanName');
+    final response =
+        await _service.modifyAssignedMealPlan(mealPlanId, userId, mealPlanName);
+    print('[MealPlansProvider] modifyAssignedMealPlan response: $response');
+    if (response == null) {
+      print(
+          '[MealPlansProvider] modifyAssignedMealPlan response is null, returning false');
+      return false;
+    }
+    if (response.success == true) {
+      print(
+          '[MealPlansProvider] Assigned meal plan modified successfully, refreshing list...');
+      await listMyAssignedMealPlans();
+      return true;
+    } else {
+      print(
+          '[MealPlansProvider] Failed to modify assigned meal plan, message: ${response.message}');
       return false;
     }
   }

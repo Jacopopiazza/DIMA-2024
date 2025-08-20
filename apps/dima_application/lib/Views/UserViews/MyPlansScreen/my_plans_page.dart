@@ -34,6 +34,15 @@ class MyPlansPage extends ConsumerStatefulWidget {
 }
 
 class _MyPlansPageState extends ConsumerState<MyPlansPage> {
+  void _openGenerateMealPlan(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const GenerateMealPlanPage(),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -53,12 +62,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const GenerateMealPlanPage(),
-                ),
-              );
+              _openGenerateMealPlan(context);
             },
             tooltip: 'Create New Meal Plan',
           ),
@@ -116,12 +120,10 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
                       onPressed: () {
-                        // Navigate to meal plan generation page
-                        Navigator.pushNamed(context,
-                            '/generate_meal_plan'); // TODO: Implement meal plan generation page
+                        _openGenerateMealPlan(context);
                       },
                       icon: const Icon(Icons.add),
-                      label: const Text('Create New Meal Plan'),
+                      label: const Text('Generate New Meal Plan'),
                     ),
                   ],
                 ),

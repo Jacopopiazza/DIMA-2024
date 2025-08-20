@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
 
-import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/models/MealPlanList/meal_plan_list.dart'
@@ -735,6 +733,79 @@ class MealPlansService {
     }
   }
 
+  /// Modifies a meal plan assigned to the nutritionist (nutritionist-specific operation).
+  Future<MealPlanResponse?> modifyAssignedMealPlan(
+      String mealPlanId, String userId, String mealPlanName) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          mutation ModifyAssignedMealPlan(
+            \$mealPlanId: ID!
+            \$userId: ID!
+            \$mealPlanName: String!
+          ) {
+            modifyAssignedMealPlan(
+              mealPlanId: \$mealPlanId, 
+              userId: \$userId, 
+              mealPlanName: \$mealPlanName
+            ) {
+              success
+              message
+              mealPlanId
+            }
+          }
+        ''',
+        variables: {
+          'mealPlanId': mealPlanId,
+          'userId': userId,
+          'mealPlanName': mealPlanName,
+        },
+        decodePath: 'modifyAssignedMealPlan',
+      );
+      final response = await Amplify.API.mutate(request: request).response;
+
+      // Enhanced debugging
+      safePrint(
+          '[MealPlansService] modifyAssignedMealPlan - Full response: ${response.toString()}');
+      safePrint(
+          '[MealPlansService] modifyAssignedMealPlan - Response data: ${response.data}');
+      safePrint(
+          '[MealPlansService] modifyAssignedMealPlan - Response errors: ${response.errors}');
+
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
+        return null;
+      }
+
+      if (response.data == null) {
+        safePrint('[MealPlansService] Response data is null');
+        return null;
+      }
+
+      final Map<String, dynamic> modifyAssignedMealPlanData =
+          json.decode(response.data!);
+      safePrint(
+          '[MealPlansService] Parsed response data: $modifyAssignedMealPlanData');
+
+      final data = modifyAssignedMealPlanData['modifyAssignedMealPlan'];
+      safePrint('[MealPlansService] Extracted mutation data: $data');
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String?;
+      final responseMealPlanId = data['mealPlanId'];
+
+      return MealPlanResponse(
+        success: success,
+        message: message,
+        mealPlanId: responseMealPlanId,
+      );
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error modifying assigned meal plan: ${e.toString()}');
+      return null;
+    }
+  }
+
   /// Lists available nutritionists for assignment to meal plans.
   Future<List<NutritionistProfile>> listNutritionists(
       {bool? isAvailable, int? limit, String? nextToken}) async {
@@ -929,8 +1000,6 @@ class MealPlansService {
               items {
                 mealPlanId
                 planName
-                startDate
-                endDate
                 status
                 validationStatus
                 assignedNutritionistId
