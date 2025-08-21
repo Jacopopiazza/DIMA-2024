@@ -13,7 +13,6 @@ class SettingsScreenRiverpod extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userIdAsync = ref.watch(userIdProvider);
     final userDetailsAsync = ref.watch(userDetailsProvider);
-    final theme = Theme.of(context);
 
     return Scaffold(
       body: SafeArea(
@@ -36,7 +35,10 @@ class SettingsScreenRiverpod extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                     ElevatedButton.icon(
-                      onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
+                      onPressed: () {
+                        // This should not be needed since the user should already be signed out
+                        // The Amplify Authenticator will handle showing the sign-in screen
+                      },
                       icon: const Icon(Icons.login),
                       label: const Text('Sign In'),
                     ),

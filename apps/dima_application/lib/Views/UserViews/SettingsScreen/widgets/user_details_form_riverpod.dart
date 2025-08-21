@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../generated/flutter-models/UserDetails.dart';
-import '../../../../generated/flutter-models/ExerciseFrequency.dart';
-import '../../../../generated/flutter-models/AllergenEnum.dart';
+
 import '../../../../Utils/localization_helpers.dart';
+import '../../../../generated/flutter-models/AllergenEnum.dart';
+import '../../../../generated/flutter-models/ExerciseFrequency.dart';
+import '../../../../generated/flutter-models/UserDetails.dart';
 
 class UserDetailsFormRiverpod extends ConsumerStatefulWidget {
   final UserDetails userDetails;
@@ -16,13 +17,14 @@ class UserDetailsFormRiverpod extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<UserDetailsFormRiverpod> createState() => _UserDetailsFormRiverpodState();
+  ConsumerState<UserDetailsFormRiverpod> createState() =>
+      _UserDetailsFormRiverpodState();
 }
 
-class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpod> {
+class _UserDetailsFormRiverpodState
+    extends ConsumerState<UserDetailsFormRiverpod> {
   late TextEditingController _weightController;
   late TextEditingController _heightController;
-  late TextEditingController _targetCaloriesController;
   late TextEditingController _preferencesController;
   late int _dailyMealsPreference;
   late ExerciseFrequency? _exerciseFrequency;
@@ -48,9 +50,12 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
   }
 
   void _initializeControllers() {
-    _weightController = TextEditingController(text: widget.userDetails.weightKg?.toString() ?? '');
-    _heightController = TextEditingController(text: widget.userDetails.heightCm?.toString() ?? '');
-    _preferencesController = TextEditingController(text: widget.userDetails.openTextPreferences ?? '');
+    _weightController = TextEditingController(
+        text: widget.userDetails.weightKg?.toString() ?? '');
+    _heightController = TextEditingController(
+        text: widget.userDetails.heightCm?.toString() ?? '');
+    _preferencesController = TextEditingController(
+        text: widget.userDetails.openTextPreferences ?? '');
     _dailyMealsPreference = widget.userDetails.dailyMealsPreference ?? 3;
     _exerciseFrequency = widget.userDetails.exerciseFrequency;
     _selectedAllergies = widget.userDetails.allergies?.toList() ?? [];
@@ -60,7 +65,6 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
   void dispose() {
     _weightController.dispose();
     _heightController.dispose();
-    _targetCaloriesController.dispose();
     _preferencesController.dispose();
     super.dispose();
   }
@@ -104,7 +108,7 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
 
     // The onUpdate function now returns a boolean indicating success.
     final success = await widget.onUpdate(updatedDetails);
-    
+
     if (mounted) {
       if (success) {
         setState(() {
@@ -134,9 +138,9 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark 
-          ? theme.colorScheme.secondary.withOpacity(0.1)
-          : theme.colorScheme.primary.withOpacity(0.05),
+        color: isDark
+            ? theme.colorScheme.secondary.withOpacity(0.1)
+            : theme.colorScheme.primary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: theme.colorScheme.primary.withOpacity(isDark ? 0.3 : 0.2),
@@ -187,17 +191,6 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _targetCaloriesController,
-              decoration: const InputDecoration(
-                labelText: 'Target Daily Calories',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.local_fire_department),
-              ),
-              keyboardType: TextInputType.number,
-              onChanged: (_) => _onFieldChanged(),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<int>(
@@ -291,7 +284,8 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
                 icon: const Icon(Icons.save),
                 label: const Text('Save Changes'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
               ),
             ),
@@ -300,4 +294,4 @@ class _UserDetailsFormRiverpodState extends ConsumerState<UserDetailsFormRiverpo
       ),
     );
   }
-} 
+}

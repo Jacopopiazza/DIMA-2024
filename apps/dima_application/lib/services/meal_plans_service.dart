@@ -1004,6 +1004,164 @@ class MealPlansService {
                 validationStatus
                 assignedNutritionistId
                 userId
+                chatId
+                generatedAt
+                dailyPlan {
+                  monday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  tuesday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  wednesday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  thursday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  friday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  saturday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  sunday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                }
               }
               nextToken
             }
