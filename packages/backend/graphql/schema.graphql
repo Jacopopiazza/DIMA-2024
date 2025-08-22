@@ -433,7 +433,7 @@ input PlanRequestPreferencesInput {
   # Include fields from UserDetails that can be overridden for this specific plan request
   weightKg: Float
   heightCm: Float
-  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations
+  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations (TODO: if not provided, the server will use the user's date of birth)
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
@@ -508,6 +508,14 @@ input MealPlanResponseInput {
   success: Boolean!
   message: String
   mealPlanId: ID!
+}
+
+"""
+Input for modifying a meal plan assigned to a nutritionist.
+"""
+input ModifyAssignedMealPlanInput {
+  planName: String
+  dailyPlan: DailyPlanDataInput
 }
 # ===================
 #       QUERIES
@@ -637,7 +645,7 @@ type Mutation {
   modifyAssignedMealPlan(
     mealPlanId: ID!
     userId: ID!
-    mealPlanName: String!
+    input: ModifyAssignedMealPlanInput!
   ): MealPlanResponse @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 
   """

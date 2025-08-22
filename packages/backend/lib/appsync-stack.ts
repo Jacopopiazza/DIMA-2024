@@ -65,10 +65,10 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Query',
       fieldName: 'getUserDetails',
       requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/getUserDetails-request.vtl',
+        'templates/getUserDetails-request.vtl',
       ),
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/getUserDetails-response.vtl',
+        'templates/getUserDetails-response.vtl',
       ),
     });
 
@@ -85,10 +85,10 @@ export class AppSyncApiStack extends cdk.Stack {
         api: api,
         dataSource: tableDS,
         requestMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.getTodaysPlanAndStatus.func1-getUserDetails-request.vtl',
+          'templates/pipeline.getTodaysPlanAndStatus.func1-getUserDetails-request.vtl',
         ),
         responseMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.getTodaysPlanAndStatus.func1-getUserDetails-response.vtl',
+          'templates/pipeline.getTodaysPlanAndStatus.func1-getUserDetails-response.vtl',
         ),
       },
     );
@@ -102,10 +102,10 @@ export class AppSyncApiStack extends cdk.Stack {
         api: api,
         dataSource: tableDS,
         requestMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.getTodaysPlanAndStatus.func2-getMealPlan-request.vtl',
+          'templates/pipeline.getTodaysPlanAndStatus.func2-getMealPlan-request.vtl',
         ),
         responseMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.getTodaysPlanAndStatus.func2-getMealPlan-response.vtl',
+          'templates/pipeline.getTodaysPlanAndStatus.func2-getMealPlan-response.vtl',
         ),
       },
     );
@@ -119,10 +119,10 @@ export class AppSyncApiStack extends cdk.Stack {
         api: api,
         dataSource: tableDS,
         requestMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.getTodaysPlanAndStatus.func3-getCompletedLog-request.vtl',
+          'templates/pipeline.getTodaysPlanAndStatus.func3-getCompletedLog-request.vtl',
         ),
         responseMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.getTodaysPlanAndStatus.func3-getCompletedLog-response.vtl',
+          'templates/pipeline.getTodaysPlanAndStatus.func3-getCompletedLog-response.vtl',
         ),
       },
     );
@@ -142,7 +142,7 @@ export class AppSyncApiStack extends cdk.Stack {
       requestMappingTemplate: appsync.MappingTemplate.fromString('{}'),
       // Response mapping template - combines results from the functions
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/pipeline.getTodaysPlanAndStatus-response.vtl',
+        'templates/pipeline.getTodaysPlanAndStatus-response.vtl',
       ),
     });
 
@@ -156,7 +156,7 @@ export class AppSyncApiStack extends cdk.Stack {
       pipelineConfig: [getUserDetailsFunc, getActiveMealPlanFunc],
       requestMappingTemplate: appsync.MappingTemplate.fromString('{}'),
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/pipeline.getActiveMealPlan-response.vtl',
+        'templates/pipeline.getActiveMealPlan-response.vtl',
       ),
     });
 
@@ -172,7 +172,7 @@ export class AppSyncApiStack extends cdk.Stack {
         dataSource: tableDS,
         runtime: appsync.FunctionRuntime.JS_1_0_0,
         code: appsync.Code.fromAsset(
-          'vtl-templates/pipeline.updateUserDetails.UpdateUserDetails.js',
+          'templates/pipeline.updateUserDetails.UpdateUserDetails.js',
         ),
       },
     );
@@ -185,10 +185,10 @@ export class AppSyncApiStack extends cdk.Stack {
         name: 'GetUserDetailsFunction',
         dataSource: tableDS,
         requestMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/getUserDetails-request.vtl',
+          'templates/getUserDetails-request.vtl',
         ),
         responseMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/getUserDetails-response.vtl',
+          'templates/getUserDetails-response.vtl',
         ),
       },
     );
@@ -204,7 +204,7 @@ export class AppSyncApiStack extends cdk.Stack {
         requestMappingTemplate:
           appsync.MappingTemplate.fromString('$util.toJson({})'), // <-- ADD THIS
         responseMappingTemplate: appsync.MappingTemplate.fromFile(
-          'vtl-templates/pipeline.updateUserDetails-response.vtl',
+          'templates/pipeline.updateUserDetails-response.vtl',
         ),
       },
     );
@@ -259,10 +259,10 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'markMealAsCompleted',
       requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/mutation.markMealAsCompleted-request.vtl',
+        'templates/mutation.markMealAsCompleted-request.vtl',
       ), // Ensure this file exists and has the Set logic
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/mutation.markMealAsCompleted-response.vtl',
+        'templates/mutation.markMealAsCompleted-response.vtl',
       ),
     });
 
@@ -272,10 +272,10 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'unmarkMealAsCompleted', // New field name from updated schema
       requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/mutation.unmarkMealAsCompleted-request.vtl',
+        'templates/mutation.unmarkMealAsCompleted-request.vtl',
       ), // New VTL file
       responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/mutation.unmarkMealAsCompleted-response.vtl',
+        'templates/mutation.unmarkMealAsCompleted-response.vtl',
       ), // New VTL file
     });
 
@@ -284,7 +284,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'createMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/mutation.createMealPlan.js'),
+      code: appsync.Code.fromAsset('templates/mutation.createMealPlan.js'),
     });
 
     // --- Resolver for Mutation.deleteMealPlan ---
@@ -292,7 +292,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'deleteMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/mutation.deleteMealPlan.js'),
+      code: appsync.Code.fromAsset('templates/mutation.deleteMealPlan.js'),
     });
 
     // --- Resolver for Mutation.modifyMealPlan ---
@@ -300,7 +300,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'modifyMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/mutation.modifyMealPlan.js'),
+      code: appsync.Code.fromAsset('templates/mutation.modifyMealPlan.js'),
     });
 
     // --- Resolver for Mutation.modifyAssignedMealPlan ---
@@ -308,7 +308,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'modifyAssignedMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/mutation.modifyAssignedMealPlan.js'),
+      code: appsync.Code.fromAsset('templates/mutation.modifyAssignedMealPlan.js'),
     });
 
     // --- Pipeline Functions for validateMealPlan ---
@@ -321,7 +321,7 @@ export class AppSyncApiStack extends cdk.Stack {
         dataSource: tableDS,
         runtime: appsync.FunctionRuntime.JS_1_0_0,
         code: appsync.Code.fromAsset(
-          'vtl-templates/getMealPlanKeysByMealPlanId.js',
+          'templates/getMealPlanKeysByMealPlanId.js',
         ),
       },
     );
@@ -335,7 +335,7 @@ export class AppSyncApiStack extends cdk.Stack {
         dataSource: tableDS,
         runtime: appsync.FunctionRuntime.JS_1_0_0,
         code: appsync.Code.fromAsset(
-          'vtl-templates/updateMealPlanValidationStatus.js',
+          'templates/updateMealPlanValidationStatus.js',
         ),
       },
     );
@@ -360,19 +360,15 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Query',
       fieldName: 'listMyMealPlans',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/query.listMyMealPlans.js'),
+      code: appsync.Code.fromAsset('templates/query.listMyMealPlans.js'),
     });
 
-    // --- Resolver for Query.getMealPlanById ---
+    // --- Resolver for Query.getMealPlanById (JavaScript Runtime) ---
     tableDS.createResolver('QueryGetMealPlanByIdResolver', {
       typeName: 'Query',
       fieldName: 'getMealPlanById',
-      requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/query.getMealPlanById-request.vtl',
-      ),
-      responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'vtl-templates/query.getMealPlanById-response.vtl',
-      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('lib/resolvers/getMealPlanById.js'),
     });
 
     // --- Resolver for Query.listNutritionists ---
@@ -380,7 +376,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Query',
       fieldName: 'listNutritionists',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('vtl-templates/query.listNutritionists.js'),
+      code: appsync.Code.fromAsset('templates/query.listNutritionists.js'),
     });
 
     // --- Resolver for Mutation.requestValidation ---
@@ -389,7 +385,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'requestValidation',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'vtl-templates/mutation.requestValidation.js',
+        'templates/mutation.requestValidation.js',
       ),
     });
 
@@ -399,7 +395,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'listMyAssignedMealPlans',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'vtl-templates/query.listMyAssignedMealPlans.js',
+        'templates/query.listMyAssignedMealPlans.js',
       ),
     });
 
@@ -409,7 +405,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'getMyNutritionistProfile',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'vtl-templates/query.getMyNutritionistProfile.js',
+        'templates/query.getMyNutritionistProfile.js',
       ),
     });
 
@@ -419,7 +415,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'updateMyNutritionistProfile',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'vtl-templates/mutation.updateMyNutritionistProfile.js',
+        'templates/mutation.updateMyNutritionistProfile.js',
       ),
     });
 
@@ -578,7 +574,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'onMealPlanStatusChanged',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'vtl-templates/subscription.onMealPlanStatusChanged.js',
+        'templates/subscription.onMealPlanStatusChanged.js',
       ),
     });
 
@@ -588,7 +584,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'notifyMealPlanStatusChanged',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'vtl-templates/mutation.notifyMealPlanStatusChanged.js',
+        'templates/mutation.notifyMealPlanStatusChanged.js',
       ),
     });
 

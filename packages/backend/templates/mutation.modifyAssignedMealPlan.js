@@ -1,7 +1,8 @@
 import { util } from '@aws-appsync/utils';
 
 /**
- * Modifies a meal plan name assigned to the nutritionist with authorization check.
+ * Modifies a meal plan assigned to the nutritionist with authorization check.
+ * Can modify the plan name and/or the daily plan meals.
  * @param {import('@aws-appsync/utils').Context} ctx the context
  * @returns {import('@aws-appsync/utils').DynamoDBUpdateItemRequest} the request
  */
@@ -11,7 +12,7 @@ export function request(ctx) {
   }
 
   const nutritionistId = ctx.identity.sub;
-  const { mealPlanId, userId, mealPlanName } = ctx.args;
+  const { mealPlanId, userId, input } = ctx.args;
 
   // Validate input
   if (!mealPlanId) {
@@ -22,25 +23,40 @@ export function request(ctx) {
     util.error('userId is required');
   }
 
-  if (!mealPlanName) {
-    util.error('mealPlanName is required');
+  if (!input || (!input.planName && !input.dailyPlan)) {
+    util.error('At least one of planName or dailyPlan must be provided in input');
   }
 
   const pk = `USER#${userId}`;
   const sk = `PLAN#${mealPlanId}`;
   const now = util.time.nowISO8601();
 
+  // Build the update expression dynamically
+  let updateExpression = 'SET updatedAt = :updatedAt, validationStatus = :validationStatus';
+  const expressionValues = {
+    ':updatedAt': now,
+    ':validationStatus': 'PENDING_REVIEW',
+    ':nutritionistId': nutritionistId,
+  };
+
+  // Add planName if provided
+  if (input.planName) {
+    updateExpression += ', planName = :planName';
+    expressionValues[':planName'] = input.planName;
+  }
+
+  // Add dailyPlan if provided
+  if (input.dailyPlan) {
+    updateExpression += ', dailyPlan = :dailyPlan';
+    expressionValues[':dailyPlan'] = input.dailyPlan;
+  }
+
   return {
     operation: 'UpdateItem',
     key: util.dynamodb.toMapValues({ PK: pk, SK: sk }),
     update: {
-      expression: 'SET planName = :planName, updatedAt = :updatedAt, validationStatus = :validationStatus',
-      expressionValues: util.dynamodb.toMapValues({
-        ':planName': mealPlanName,
-        ':updatedAt': now,
-        ':validationStatus': 'PENDING_REVIEW',
-        ':nutritionistId': nutritionistId,
-      }),
+      expression: updateExpression,
+      expressionValues: util.dynamodb.toMapValues(expressionValues),
     },
     condition: {
       expression: 'attribute_exists(PK) AND attribute_exists(SK) AND assignedNutritionistId = :nutritionistId',
@@ -63,7 +79,7 @@ export function response(ctx) {
         mealPlanId: null,
       };
     }
-    
+
     return {
       success: false,
       message: ctx.error.message,
