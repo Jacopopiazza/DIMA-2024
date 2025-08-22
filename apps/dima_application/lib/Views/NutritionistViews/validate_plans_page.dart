@@ -1,7 +1,10 @@
+import 'package:dima_application/Views/NutritionistViews/modify_plan_name_dialog.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// TODO: Fix NutritionistView file structure and move this to the correct folder
 
 class ValidatePlansPage extends ConsumerStatefulWidget {
   const ValidatePlansPage({super.key});
@@ -79,6 +82,99 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     }
   }
 
+  Future<void> _showModifyPlanDialog(MealPlan plan) async {
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return ModifyMealPlanDialog(
+          mealPlan: plan,
+          onSave: (mealPlanId, changes) async {
+            await _modifyMealPlan(plan, changes);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _modifyMealPlan(
+      MealPlan plan, Map<String, dynamic> changes) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Modifying meal plan...')),
+    );
+
+    try {
+      bool success = false;
+      String changesDescription = '';
+
+      // Build the input object for the API
+      Map<String, dynamic> input = {};
+
+      // Handle plan name changes
+      if (changes.containsKey('planName')) {
+        final newName = changes['planName'] as String;
+        input['planName'] = newName;
+        changesDescription = 'Plan name changed to "$newName"';
+      }
+
+      // Handle meal plan changes (dailyPlan)
+      if (changes.containsKey('dailyPlan')) {
+        input['dailyPlan'] = changes['dailyPlan'];
+        changesDescription += changesDescription.isEmpty
+            ? 'Meal plan updated'
+            : '\nMeal plan updated';
+      }
+
+      // Only make API call if there are actual changes to apply
+      if (input.isNotEmpty) {
+        success = await ref
+            .read(mealPlansProvider.notifier)
+            .modifyAssignedMealPlan(plan.mealPlanId, plan.userId, input);
+      }
+
+      // Note: Status changes would require additional API endpoints
+      if (changes.containsKey('status')) {
+        changesDescription += changesDescription.isEmpty
+            ? 'Status modification attempted (not yet supported by API)'
+            : '\nNote: Status modification is not yet supported by the API';
+      }
+
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  'Meal plan modified successfully!\n$changesDescription\nValidation status reset to pending review.'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+
+          // Reload the list to reflect changes
+          await _loadAssignedMealPlans();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Failed to modify meal plan. You may not be authorized to modify this plan.'),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error modifying meal plan: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
   Widget _buildValidationStatusChip(MealPlanValidationStatus? status) {
     Color color;
     String text;
@@ -132,17 +228,8 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
                 _buildValidationStatusChip(plan.validationStatus),
               ],
             ),
-            const SizedBox(height: 8),
-            if (plan.startDate != null && plan.endDate != null)
-              Text(
-                '${plan.startDate!.toString().split(' ')[0]} - ${plan.endDate!.toString().split(' ')[0]}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-              ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
@@ -150,13 +237,9 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
                             MealPlanValidationStatus.PENDING_REVIEW
                         ? () => _validateMealPlan(plan, 'VALIDATED')
                         : null,
-                    icon: const Icon(Icons.check, color: Colors.white),
-                    label: const Text('Validate',
-                        style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      disabledBackgroundColor: Colors.grey,
-                    ),
+                    icon: const Icon(Icons.check),
+                    label: const Text('Validate'),
+                    style: ElevatedButton.styleFrom(),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -164,15 +247,11 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
                   child: ElevatedButton.icon(
                     onPressed: plan.validationStatus ==
                             MealPlanValidationStatus.PENDING_REVIEW
-                        ? () => _validateMealPlan(plan, 'NOT_VALIDATED')
+                        ? () => _showModifyPlanDialog(plan)
                         : null,
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    label: const Text('Reject',
-                        style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      disabledBackgroundColor: Colors.grey,
-                    ),
+                    icon: const Icon(Icons.edit_note),
+                    label: const Text('Modify'),
+                    style: ElevatedButton.styleFrom(),
                   ),
                 ),
               ],

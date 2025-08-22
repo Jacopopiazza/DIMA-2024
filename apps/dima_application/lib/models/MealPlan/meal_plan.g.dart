@@ -228,12 +228,18 @@ P _mealPlanCacheDeserializeProp<P>(
 const _MealPlanCachestatusEnumValueMap = {
   'ACTIVE': 0,
   'ARCHIVED': 1,
-  'GENERATED': 2,
+  'FAILED': 2,
+  'GENERATED': 3,
+  'IN_PROGRESS': 4,
+  'PENDING': 5,
 };
 const _MealPlanCachestatusValueEnumMap = {
   0: PlanStatus.ACTIVE,
   1: PlanStatus.ARCHIVED,
-  2: PlanStatus.GENERATED,
+  2: PlanStatus.FAILED,
+  3: PlanStatus.GENERATED,
+  4: PlanStatus.IN_PROGRESS,
+  5: PlanStatus.PENDING,
 };
 
 Id _mealPlanCacheGetId(MealPlanCache object) {

@@ -19,14 +19,6 @@ class MealPlanList {
             return MealPlan(
               mealPlanId: itemMap['mealPlanId'] as String,
               planName: itemMap['planName'] as String?,
-              startDate: itemMap['startDate'] != null
-                  ? amplify_core.TemporalDate.fromString(
-                      itemMap['startDate'] as String)
-                  : null,
-              endDate: itemMap['endDate'] != null
-                  ? amplify_core.TemporalDate.fromString(
-                      itemMap['endDate'] as String)
-                  : null,
               status: itemMap['status'] != null
                   ? amplify_core.enumFromString<PlanStatus>(
                       itemMap['status'] as String, PlanStatus.values)
@@ -189,6 +181,7 @@ class LightMealPlan {
   final DateTime? startDate;
   final DateTime? endDate;
   final PlanStatus? status;
+  final MealPlanValidationStatus? validationStatus;
 
   LightMealPlan({
     required this.mealPlanId,
@@ -196,6 +189,7 @@ class LightMealPlan {
     this.startDate,
     this.endDate,
     this.status,
+    this.validationStatus,
   });
 
   factory LightMealPlan.fromJson(Map<String, dynamic> json) {
@@ -209,6 +203,11 @@ class LightMealPlan {
           ? amplify_core.enumFromString<PlanStatus>(
               json['status'] as String, PlanStatus.values)
           : null,
+      validationStatus: json['validationStatus'] != null
+          ? amplify_core.enumFromString<MealPlanValidationStatus>(
+              json['validationStatus'] as String,
+              MealPlanValidationStatus.values)
+          : null,
     );
   }
 
@@ -219,6 +218,7 @@ class LightMealPlan {
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
       'status': status?.name,
+      'validationStatus': validationStatus?.name,
     };
   }
 }
@@ -231,7 +231,9 @@ class LightMealPlanList {
   LightMealPlanList({required this.items, this.nextToken, this.activeMealPlan});
 
   factory LightMealPlanList.fromJson(Map<String, dynamic> json) {
-    final rawItems = json['listMyMealPlans']['items'] as List<dynamic>? ?? [];
+    final listMyMealPlans =
+        json['listMyMealPlans'] as Map<String, dynamic>? ?? {};
+    final rawItems = listMyMealPlans['items'] as List<dynamic>? ?? [];
     final items = rawItems
         .where((item) => item != null)
         .map((item) => LightMealPlan.fromJson(Map<String, dynamic>.from(item)))
@@ -239,8 +241,8 @@ class LightMealPlanList {
 
     return LightMealPlanList(
       items: items,
-      nextToken: json['nextToken'] as String?,
-      activeMealPlan: json['activeMealPlan'] as String?,
+      nextToken: listMyMealPlans['nextToken'] as String?,
+      activeMealPlan: listMyMealPlans['activeMealPlan'] as String?,
     );
   }
 

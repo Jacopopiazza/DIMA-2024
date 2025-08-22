@@ -9,7 +9,7 @@ class UserDetails {
   final int? exerciseFrequency;
   final int? dailyMealsPreference;
   final List<String> allergies;
-  final List<String> dietaryRestrictions;
+  final String dietaryRestrictions;
   final String? openTextPreferences;
   final int? targetCalories;
   final String? activeMealPlanId;
@@ -41,9 +41,8 @@ class UserDetails {
       dailyMealsPreference: amplifyDetails.dailyMealsPreference,
       allergies: List<String>.from(amplifyDetails.allergies ?? []),
       dietaryRestrictions:
-          List<String>.from(amplifyDetails.dietaryRestrictions ?? []),
+          amplifyDetails.dietaryRestrictions ?? "",
       openTextPreferences: amplifyDetails.openTextPreferences,
-      targetCalories: amplifyDetails.targetCalories?.round(),
       activeMealPlanId: amplifyDetails.activeMealPlanId,
       updatedAt: amplifyDetails.updatedAt,
       createdAt: amplifyDetails.createdAt,

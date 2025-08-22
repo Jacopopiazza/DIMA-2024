@@ -1,6 +1,7 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 #  ===================
@@ -84,12 +85,10 @@ type MealPlan @model {
   assignedNutritionistId: ID
   chatId: ID
   dailyPlan: DailyPlanData
-  endDate: AWSDate
   generatedAt: AWSDateTime
   mealPlanId: ID!
   #  From PK
   planName: String
-  startDate: AWSDate
   status: PlanStatus
   #  Extracted from SK
   userId: ID!
@@ -116,8 +115,8 @@ type MealPlanList {
   nextToken: String
 }
 
-type MealPlanResponse {
-  mealPlanId: ID
+type MealPlanResponse @aws_cognito_user_pools @aws_iam {
+  mealPlanId: ID!
   message: String
   success: Boolean!
 }
@@ -137,7 +136,8 @@ type Mutation {
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
-  requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanGenerationStatus @aws_auth(cognito_groups : ["USERS"])
+  notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponse @aws_iam
+  requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   requestValidation(input: RequestValidationInput!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   setActiveMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
@@ -197,6 +197,14 @@ type Query {
   listNutritionists(filter: ListNutritionistsFilter, limit: Int, nextToken: String): NutritionistProfileConnection @aws_auth(cognito_groups : ["USERS"])
 }
 
+#  ---------------------------------------------------
+# 4. REQUIRED SUBSCRIPTION
+# How the Flutter app listens for the final result.
+# ---------------------------------------------------
+type Subscription {
+  onMealPlanStatusChanged: MealPlanResponse @aws_auth(cognito_groups : ["USERS"]) @aws_subscribe(mutations : ["notifyMealPlanStatusChanged"])
+}
+
 type TodaysPlan {
   activePlanDetails: MealPlan
   mealsForToday: [MealWithStatus!]
@@ -209,11 +217,12 @@ type UserDetails @model {
   #  Timestamp of the last update for this record
   createdAt: AWSDateTime
   dailyMealsPreference: Int
-  dietaryRestrictions: [String!]
+  dateOfBirth: AWSDate
+  dietaryRestrictions: String
+  #  Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
   openTextPreferences: String
-  targetCalories: Float
   #  ID of the currently active MealPlan
   updatedAt: AWSDateTime
   #  Attributes stored in DynamoDB UserDetails item
@@ -280,7 +289,10 @@ enum MealPlanValidationStatus {
 enum PlanStatus {
   ACTIVE
   ARCHIVED
+  FAILED
   GENERATED
+  IN_PROGRESS
+  PENDING
 }
 
 enum SenderType {
@@ -356,14 +368,21 @@ input MealInput {
   totalMacros: MacrosInput!
 }
 
+input MealPlanResponseInput {
+  mealPlanId: ID!
+  message: String
+  success: Boolean!
+}
+
 input PlanRequestPreferencesInput {
   allergies: [AllergenEnum!]
   dailyMealsPreference: Int
-  dietaryRestrictions: [String!]
+  dateOfBirth: AWSDate
+  dietaryRestrictions: String
+  #  Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
   openTextPreferences: String
-  targetCalories: Float
   #  Include fields from UserDetails that can be overridden for this specific plan request
   weightKg: Float
 }
@@ -403,11 +422,12 @@ input UpdateNutritionistProfileInput {
 input UpdateUserDetailsInput {
   allergies: [AllergenEnum!]
   dailyMealsPreference: Int
-  dietaryRestrictions: [String!]
+  dateOfBirth: AWSDate
+  dietaryRestrictions: String
+  #  Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
   openTextPreferences: String
-  targetCalories: Float
   weightKg: Float
 }
 

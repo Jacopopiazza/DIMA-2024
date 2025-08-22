@@ -1,6 +1,7 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 # ===================
@@ -105,9 +106,12 @@ enum MealPlanGenerationStatusValue {
 }
 
 enum PlanStatus {
+  PENDING
+  IN_PROGRESS
   GENERATED
   ACTIVE
   ARCHIVED
+  FAILED
 }
 
 enum MealPlanValidationStatus {
@@ -225,8 +229,6 @@ type MealPlan @model {
   mealPlanId: ID! # Extracted from SK
   userId: ID! # From PK
   planName: String
-  startDate: AWSDate
-  endDate: AWSDate
   generatedAt: AWSDateTime
   status: PlanStatus
   validationStatus: MealPlanValidationStatus
@@ -308,15 +310,33 @@ type UserDetails @model {
   userId: ID! @primaryKey # Typically the Cognito Sub
   weightKg: Float
   heightCm: Float
+  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
-  dietaryRestrictions: [String!]
+  dietaryRestrictions: String
   openTextPreferences: String
-  targetCalories: Float
   activeMealPlanId: ID # ID of the currently active MealPlan
   updatedAt: AWSDateTime # Timestamp of the last update for this record
   createdAt: AWSDateTime # Timestamp of when the user was created
+}
+
+"""
+The response after creating a meal plan.
+"""
+type MealPlanResponse @aws_iam @aws_cognito_user_pools {
+  success: Boolean!
+  message: String
+  mealPlanId: ID!
+}
+
+"""
+Represents a list of meal plans for the authenticated user.
+"""
+type MealPlanList {
+  items: [MealPlan!]!
+  nextToken: String
+  activeMealPlan: ID
 }
 
 # ===================
@@ -413,12 +433,12 @@ input PlanRequestPreferencesInput {
   # Include fields from UserDetails that can be overridden for this specific plan request
   weightKg: Float
   heightCm: Float
+  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations (TODO: if not provided, the server will use the user's date of birth)
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
-  dietaryRestrictions: [String!]
+  dietaryRestrictions: String
   openTextPreferences: String
-  targetCalories: Float
 }
 
 """
@@ -453,12 +473,12 @@ Input for updating user preferences/details.
 input UpdateUserDetailsInput {
   weightKg: Float
   heightCm: Float
+  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
-  dietaryRestrictions: [String!]
+  dietaryRestrictions: String
   openTextPreferences: String
-  targetCalories: Float
 }
 
 """
@@ -482,23 +502,21 @@ input ValidateMealPlanInput {
 }
 
 """
-The response after creating a meal plan.
+Input for the response of a meal plan operation.
 """
-type MealPlanResponse {
+input MealPlanResponseInput {
   success: Boolean!
   message: String
-  mealPlanId: ID
+  mealPlanId: ID!
 }
 
 """
-Represents a list of meal plans for the authenticated user.
+Input for modifying a meal plan assigned to a nutritionist.
 """
-type MealPlanList {
-  items: [MealPlan!]!
-  nextToken: String
-  activeMealPlan: ID
+input ModifyAssignedMealPlanInput {
+  planName: String
+  dailyPlan: DailyPlanDataInput
 }
-
 # ===================
 #       QUERIES
 # ===================
@@ -619,7 +637,16 @@ type Mutation {
   Modifies a meal plan.
   """
   modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse
-    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+    @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Modifies a meal plan assigned to the nutritionist.
+  """
+  modifyAssignedMealPlan(
+    mealPlanId: ID!
+    userId: ID!
+    input: ModifyAssignedMealPlanInput!
+  ): MealPlanResponse @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 
   """
   Gets a meal plan by its ID.
@@ -638,7 +665,7 @@ type Mutation {
   """
   requestNewMealPlan(
     prefsOverride: PlanRequestPreferencesInput
-  ): MealPlanGenerationStatus @aws_auth(cognito_groups: ["USERS"])
+  ): MealPlanResponse @aws_auth(cognito_groups: ["USERS"])
 
   """
   Sends a message within a specific chat session. Resolver must check participation.
@@ -676,4 +703,23 @@ type Mutation {
   """
   validateMealPlan(input: ValidateMealPlanInput!): MealPlanResponse
     @aws_auth(cognito_groups: ["NUTRITIONISTS"])
+
+  """
+  Mutations solo per le notifiche (chiamate dalla notification lambda)
+  """
+  notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponse
+    @aws_iam
+}
+
+# ---------------------------------------------------
+# 4. REQUIRED SUBSCRIPTION
+# How the Flutter app listens for the final result.
+# ---------------------------------------------------
+type Subscription {
+  """
+  Subscription notifica
+  """
+  onMealPlanStatusChanged: MealPlanResponse
+    @aws_subscribe(mutations: ["notifyMealPlanStatusChanged"])
+    @aws_auth(cognito_groups: ["USERS"])
 }

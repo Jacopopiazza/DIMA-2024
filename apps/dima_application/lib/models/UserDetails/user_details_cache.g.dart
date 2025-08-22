@@ -52,23 +52,18 @@ const UserDetailsCacheSchema = CollectionSchema(
       name: r'openTextPreferences',
       type: IsarType.string,
     ),
-    r'targetCalories': PropertySchema(
-      id: 7,
-      name: r'targetCalories',
-      type: IsarType.double,
-    ),
     r'updatedAtString': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'updatedAtString',
       type: IsarType.string,
     ),
     r'userId': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'userId',
       type: IsarType.string,
     ),
     r'weightKg': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'weightKg',
       type: IsarType.double,
     )
@@ -160,10 +155,9 @@ void _userDetailsCacheSerialize(
   writer.writeDouble(offsets[4], object.heightCm);
   writer.writeDateTime(offsets[5], object.lastFetched);
   writer.writeString(offsets[6], object.openTextPreferences);
-  writer.writeDouble(offsets[7], object.targetCalories);
-  writer.writeString(offsets[8], object.updatedAtString);
-  writer.writeString(offsets[9], object.userId);
-  writer.writeDouble(offsets[10], object.weightKg);
+  writer.writeString(offsets[7], object.updatedAtString);
+  writer.writeString(offsets[8], object.userId);
+  writer.writeDouble(offsets[9], object.weightKg);
 }
 
 UserDetailsCache _userDetailsCacheDeserialize(
@@ -181,10 +175,9 @@ UserDetailsCache _userDetailsCacheDeserialize(
   object.id = id;
   object.lastFetched = reader.readDateTime(offsets[5]);
   object.openTextPreferences = reader.readStringOrNull(offsets[6]);
-  object.targetCalories = reader.readDoubleOrNull(offsets[7]);
-  object.updatedAtString = reader.readStringOrNull(offsets[8]);
-  object.userId = reader.readString(offsets[9]);
-  object.weightKg = reader.readDoubleOrNull(offsets[10]);
+  object.updatedAtString = reader.readStringOrNull(offsets[7]);
+  object.userId = reader.readString(offsets[8]);
+  object.weightKg = reader.readDoubleOrNull(offsets[9]);
   return object;
 }
 
@@ -210,12 +203,10 @@ P _userDetailsCacheDeserializeProp<P>(
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 8:
       return (reader.readStringOrNull(offset)) as P;
-    case 9:
+    case 8:
       return (reader.readString(offset)) as P;
-    case 10:
+    case 9:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1394,90 +1385,6 @@ extension UserDetailsCacheQueryFilter
   }
 
   QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
-      targetCaloriesIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'targetCalories',
-      ));
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
-      targetCaloriesIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'targetCalories',
-      ));
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
-      targetCaloriesEqualTo(
-    double? value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'targetCalories',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
-      targetCaloriesGreaterThan(
-    double? value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'targetCalories',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
-      targetCaloriesLessThan(
-    double? value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'targetCalories',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
-      targetCaloriesBetween(
-    double? lower,
-    double? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'targetCalories',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
       updatedAtStringIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1945,20 +1852,6 @@ extension UserDetailsCacheQuerySortBy
   }
 
   QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
-      sortByTargetCalories() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'targetCalories', Sort.asc);
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
-      sortByTargetCaloriesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'targetCalories', Sort.desc);
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
       sortByUpdatedAtString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAtString', Sort.asc);
@@ -2101,20 +1994,6 @@ extension UserDetailsCacheQuerySortThenBy
   }
 
   QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
-      thenByTargetCalories() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'targetCalories', Sort.asc);
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
-      thenByTargetCaloriesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'targetCalories', Sort.desc);
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
       thenByUpdatedAtString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'updatedAtString', Sort.asc);
@@ -2212,13 +2091,6 @@ extension UserDetailsCacheQueryWhereDistinct
   }
 
   QueryBuilder<UserDetailsCache, UserDetailsCache, QDistinct>
-      distinctByTargetCalories() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'targetCalories');
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, UserDetailsCache, QDistinct>
       distinctByUpdatedAtString({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'updatedAtString',
@@ -2294,13 +2166,6 @@ extension UserDetailsCacheQueryProperty
       openTextPreferencesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'openTextPreferences');
-    });
-  }
-
-  QueryBuilder<UserDetailsCache, double?, QQueryOperations>
-      targetCaloriesProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'targetCalories');
     });
   }
 

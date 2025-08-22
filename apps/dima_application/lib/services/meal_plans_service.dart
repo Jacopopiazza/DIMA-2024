@@ -19,7 +19,8 @@ class MealPlansService {
 
   Future<MealPlan?> getMealPlanById(String mealPlanId) async {
     try {
-      final request = GraphQLRequest<MealPlan>(
+      safePrint('[MealPlansService] Fetching meal plan by ID: $mealPlanId');
+      final request = GraphQLRequest<String>(
         document: '''
           query GetMealPlanById(
             \$mealPlanId: ID!
@@ -27,10 +28,9 @@ class MealPlansService {
             getMealPlanById(mealPlanId: \$mealPlanId) {
               mealPlanId
               planName
-              startDate
-              endDate
               generatedAt
               status
+              validationStatus
               assignedNutritionistId
               chatId
               dailyPlan {
@@ -193,18 +193,84 @@ class MealPlansService {
           }
         ''',
         variables: {'mealPlanId': mealPlanId},
-        decodePath: 'getMealPlanById',
-        modelType: ModelProvider.instance.getModelTypeByModelName('MealPlan'),
       );
       final response = await Amplify.API.query(request: request).response;
+      safePrint(
+          '[MealPlansService] GraphQL response received. Has errors: ${response.hasErrors}');
+
       if (response.hasErrors) {
-        safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
+        safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
+        for (var error in response.errors) {
+          safePrint(
+              '[MealPlansService] Error details: ${error.message} - ${error.locations} - ${error.extensions}');
+        }
         return null;
       }
-      return response.data;
+
+      if (response.data == null) {
+        safePrint('[MealPlansService] Response data is null');
+        return null;
+      }
+
+      safePrint(
+          '[MealPlansService] Raw response data type: ${response.data.runtimeType}');
+      safePrint('[MealPlansService] Raw response data: ${response.data}');
+
+      // Parse the JSON response manually like the working queries
+      Map<String, dynamic> jsonData;
+      if (response.data is String) {
+        safePrint('[MealPlansService] Response is String, decoding JSON...');
+        jsonData = json.decode(response.data!);
+      } else if (response.data is Map<String, dynamic>) {
+        safePrint('[MealPlansService] Response is already Map...');
+        jsonData = response.data as Map<String, dynamic>;
+      } else {
+        safePrint(
+            '[MealPlansService] Unexpected response data type: ${response.data.runtimeType}');
+        return null;
+      }
+
+      safePrint(
+          '[MealPlansService] Parsed JSON keys: ${jsonData.keys.toList()}');
+
+      // Extract the meal plan data - handle both cases
+      Map<String, dynamic>? mealPlanData;
+
+      if (jsonData.containsKey('getMealPlanById')) {
+        // Standard GraphQL response structure
+        mealPlanData = jsonData['getMealPlanById'] as Map<String, dynamic>?;
+        safePrint('[MealPlansService] Found getMealPlanById in response');
+      } else if (jsonData.containsKey('mealPlanId')) {
+        // Response is already the meal plan data (due to decodePath)
+        mealPlanData = jsonData;
+        safePrint(
+            '[MealPlansService] Response appears to be direct meal plan data');
+      } else {
+        safePrint(
+            '[MealPlansService] Could not find meal plan data in response');
+        safePrint(
+            '[MealPlansService] Available keys: ${jsonData.keys.toList()}');
+        return null;
+      }
+
+      if (mealPlanData == null) {
+        safePrint('[MealPlansService] Meal plan data is null');
+        return null;
+      }
+
+      safePrint(
+          '[MealPlansService] Found meal plan data with keys: ${mealPlanData.keys.toList()}');
+
+      safePrint('[MealPlansService] Creating MealPlan from JSON...');
+      // Add id field for compatibility - MealPlan model expects 'id' field
+      mealPlanData['id'] = mealPlanData['mealPlanId'];
+
+      // Create MealPlan from JSON data manually
+      return MealPlan.fromJson(mealPlanData);
     } catch (e) {
       safePrint(
-          '[MealPlansService] Error fetching meal plan by ID: \\${e.toString()}');
+          '[MealPlansService] Error fetching meal plan by ID: ${e.toString()}');
+      safePrint('[MealPlansService] Error stack trace: ${StackTrace.current}');
       return null;
     }
   }
@@ -241,7 +307,7 @@ class MealPlansService {
       // Safely extract values with null checks
       final success = data['success'] as bool? ?? false;
       final message = data['message'] as String?;
-      final responseMealPlanId = data['mealPlanId'] as String?;
+      final responseMealPlanId = data['mealPlanId'];
 
       return MealPlanResponse(
         success: success,
@@ -394,16 +460,16 @@ class MealPlansService {
     try {
       final request = GraphQLRequest<String>(
         document: '''
-          mutation CreateMealPlan(\$input: CreateMealPlanInput!) {
-            createMealPlan(input: \$input) {
-              success
-              message
+          mutation CreateMealPlan(\$prefsOverride: PlanRequestPreferencesInput) {
+            requestNewMealPlan(prefsOverride: \$prefsOverride) {
               mealPlanId
+              message
+              success
             }
           }
         ''',
-        variables: {'input': input},
-        decodePath: 'createMealPlan',
+        variables: {'prefsOverride': input},
+        decodePath: 'requestNewMealPlan',
       );
       final response = await Amplify.API.mutate(request: request).response;
       if (response.hasErrors) {
@@ -418,7 +484,7 @@ class MealPlansService {
 
       final success = data['success'] as bool? ?? false;
       final message = data['message'] as String?;
-      final responseMealPlanId = data['mealPlanId'] as String?;
+      final responseMealPlanId = data['mealPlanId'];
 
       return MealPlanResponse(
         success: success,
@@ -463,7 +529,7 @@ class MealPlansService {
 
       final success = data['success'] as bool? ?? false;
       final message = data['message'] as String?;
-      final responseMealPlanId = data['mealPlanId'] as String?;
+      final responseMealPlanId = data['mealPlanId'];
 
       return MealPlanResponse(
         success: success,
@@ -481,19 +547,177 @@ class MealPlansService {
     try {
       final request = GraphQLRequest(
         document: '''
-          query ListMyMealPlans {
-            listMyMealPlans(limit: $limit) {
-              items {
-                mealPlanId
-                planName
-                startDate
-                endDate
-                status
-              }
-              nextToken
-              activeMealPlan
+          query MyQuery {
+  listMyMealPlans(limit: 5) {
+    activeMealPlan
+    items {
+      mealPlanId
+      generatedAt
+      planName
+      status
+      userId
+      validationStatus
+      chatId
+      assignedNutritionistId
+      dailyPlan {
+        monday {
+          name
+          recipe
+          recipeName
+          ingredients {
+            amount
+            macros {
+              calories
+              carbohydrates
+              fats
+              proteins
             }
+            name
+            unit
           }
+          totalMacros {
+            calories
+            carbohydrates
+            fats
+            proteins
+          }
+        }
+        tuesday {
+          name
+          recipe
+          recipeName
+          ingredients {
+            amount
+            macros {
+              calories
+              carbohydrates
+              fats
+              proteins
+            }
+            name
+            unit
+          }
+          totalMacros {
+            calories
+            carbohydrates
+            fats
+            proteins
+          }
+        }
+        wednesday {
+          name
+          recipe
+          recipeName
+          ingredients {
+            amount
+            macros {
+              calories
+              carbohydrates
+              fats
+              proteins
+            }
+            name
+            unit
+          }
+          totalMacros {
+            calories
+            carbohydrates
+            fats
+            proteins
+          }
+        }
+        thursday {
+          name
+          recipe
+          recipeName
+          ingredients {
+            amount
+            macros {
+              calories
+              carbohydrates
+              fats
+              proteins
+            }
+            name
+            unit
+          }
+          totalMacros {
+            calories
+            carbohydrates
+            fats
+            proteins
+          }
+        }
+        friday {
+          name
+          recipe
+          recipeName
+          ingredients {
+            amount
+            macros {
+              calories
+              carbohydrates
+              fats
+              proteins
+            }
+            name
+            unit
+          }
+          totalMacros {
+            calories
+            carbohydrates
+            fats
+            proteins
+          }
+        }
+        saturday {
+          name
+          recipe
+          recipeName
+          ingredients {
+            amount
+            macros {
+              calories
+              carbohydrates
+              fats
+              proteins
+            }
+            name
+            unit
+          }
+          totalMacros {
+            calories
+            carbohydrates
+            fats
+            proteins
+          }
+        }
+        sunday {
+          name
+          recipe
+          recipeName
+          ingredients {
+            amount
+            macros {
+              calories
+              carbohydrates
+              fats
+              proteins
+            }
+            name
+            unit
+          }
+          totalMacros {
+            calories
+            carbohydrates
+            fats
+            proteins
+          }
+        }
+      }
+    }
+  }
+}
         ''',
         decodePath: 'listMyMealPlans',
       );
@@ -560,7 +784,7 @@ class MealPlansService {
 
       final success = data['success'] as bool? ?? false;
       final message = data['message'] as String?;
-      final responseMealPlanId = data['mealPlanId'] as String?;
+      final responseMealPlanId = data['mealPlanId'];
 
       return MealPlanResponse(
         success: success,
@@ -570,6 +794,80 @@ class MealPlansService {
     } catch (e) {
       safePrint(
           '[MealPlansService] Error modifying meal plan: \\${e.toString()}');
+      return null;
+    }
+  }
+
+  /// Modifies a meal plan assigned to the nutritionist (nutritionist-specific operation).
+  /// Can modify the plan name and/or the daily plan meals.
+  Future<MealPlanResponse?> modifyAssignedMealPlan(
+      String mealPlanId, String userId, Map<String, dynamic> input) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          mutation ModifyAssignedMealPlan(
+            \$mealPlanId: ID!
+            \$userId: ID!
+            \$input: ModifyAssignedMealPlanInput!
+          ) {
+            modifyAssignedMealPlan(
+              mealPlanId: \$mealPlanId, 
+              userId: \$userId, 
+              input: \$input
+            ) {
+              success
+              message
+              mealPlanId
+            }
+          }
+        ''',
+        variables: {
+          'mealPlanId': mealPlanId,
+          'userId': userId,
+          'input': input,
+        },
+        decodePath: 'modifyAssignedMealPlan',
+      );
+      final response = await Amplify.API.mutate(request: request).response;
+
+      // Enhanced debugging
+      safePrint(
+          '[MealPlansService] modifyAssignedMealPlan - Full response: ${response.toString()}');
+      safePrint(
+          '[MealPlansService] modifyAssignedMealPlan - Response data: ${response.data}');
+      safePrint(
+          '[MealPlansService] modifyAssignedMealPlan - Response errors: ${response.errors}');
+
+      if (response.hasErrors) {
+        safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
+        return null;
+      }
+
+      if (response.data == null) {
+        safePrint('[MealPlansService] Response data is null');
+        return null;
+      }
+
+      final Map<String, dynamic> modifyAssignedMealPlanData =
+          json.decode(response.data!);
+      safePrint(
+          '[MealPlansService] Parsed response data: $modifyAssignedMealPlanData');
+
+      final data = modifyAssignedMealPlanData['modifyAssignedMealPlan'];
+      safePrint('[MealPlansService] Extracted mutation data: $data');
+
+      final success = data['success'] as bool? ?? false;
+      final message = data['message'] as String?;
+      final responseMealPlanId = data['mealPlanId'];
+
+      return MealPlanResponse(
+        success: success,
+        message: message,
+        mealPlanId: responseMealPlanId,
+      );
+    } catch (e) {
+      safePrint(
+          '[MealPlansService] Error modifying assigned meal plan: ${e.toString()}');
       return null;
     }
   }
@@ -661,7 +959,7 @@ class MealPlansService {
       return MealPlanResponse(
         success: true,
         message: 'Nutritionist assigned successfully',
-        mealPlanId: data['mealPlanId'] as String?,
+        mealPlanId: data['mealPlanId'],
       );
     } catch (e) {
       safePrint(
@@ -705,7 +1003,7 @@ class MealPlansService {
       return MealPlanResponse(
         success: data['success'] as bool? ?? false,
         message: data['message'] as String?,
-        mealPlanId: data['mealPlanId'] as String?,
+        mealPlanId: data['mealPlanId'],
       );
     } catch (e) {
       safePrint(
@@ -749,7 +1047,7 @@ class MealPlansService {
       return MealPlanResponse(
         success: data['success'] as bool? ?? false,
         message: data['message'] as String?,
-        mealPlanId: data['mealPlanId'] as String?,
+        mealPlanId: data['mealPlanId'],
       );
     } catch (e) {
       safePrint(
@@ -768,12 +1066,168 @@ class MealPlansService {
               items {
                 mealPlanId
                 planName
-                startDate
-                endDate
                 status
                 validationStatus
                 assignedNutritionistId
                 userId
+                chatId
+                generatedAt
+                dailyPlan {
+                  monday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  tuesday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  wednesday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  thursday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  friday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  saturday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                  sunday {
+                    name
+                    recipe
+                    recipeName
+                    ingredients {
+                      amount
+                      macros {
+                        calories
+                        carbohydrates
+                        fats
+                        proteins
+                      }
+                      name
+                      unit
+                    }
+                    totalMacros {
+                      calories
+                      carbohydrates
+                      fats
+                      proteins
+                    }
+                  }
+                }
               }
               nextToken
             }

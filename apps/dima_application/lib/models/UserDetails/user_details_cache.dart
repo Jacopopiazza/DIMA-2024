@@ -28,7 +28,6 @@ class UserDetailsCache {
   String? exerciseFrequencyString; // Store as String since we can't store enums directly
   double? heightCm;
   String? openTextPreferences;
-  double? targetCalories;
   String? updatedAtString; // Store as String since we can't store TemporalDateTime
   double? weightKg;
 
@@ -43,7 +42,6 @@ class UserDetailsCache {
       ..exerciseFrequencyString = details.exerciseFrequency?.name
       ..heightCm = details.heightCm
       ..openTextPreferences = details.openTextPreferences
-      ..targetCalories = details.targetCalories
       ..updatedAtString = details.updatedAt?.toString()
       ..weightKg = details.weightKg;
   }
@@ -64,7 +62,6 @@ class UserDetailsCache {
           : null,
       heightCm: heightCm,
       openTextPreferences: openTextPreferences,
-      targetCalories: targetCalories,
       updatedAt: updatedAtString != null
           ? TemporalDateTime.fromString(updatedAtString!)
           : null,

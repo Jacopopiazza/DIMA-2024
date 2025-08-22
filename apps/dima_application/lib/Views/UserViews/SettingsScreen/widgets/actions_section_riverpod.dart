@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../providers/user_details_provider.dart';
 
 class ActionsSectionRiverpod extends ConsumerWidget {
@@ -17,9 +18,9 @@ class ActionsSectionRiverpod extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark 
-          ? theme.colorScheme.secondary.withOpacity(0.1)
-          : theme.colorScheme.primary.withOpacity(0.05),
+        color: isDark
+            ? theme.colorScheme.secondary.withOpacity(0.1)
+            : theme.colorScheme.primary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: theme.colorScheme.primary.withOpacity(isDark ? 0.3 : 0.2),
@@ -49,7 +50,8 @@ class ActionsSectionRiverpod extends ConsumerWidget {
     );
   }
 
-  Widget _buildActionsList(BuildContext context, WidgetRef ref, ThemeData theme) {
+  Widget _buildActionsList(
+      BuildContext context, WidgetRef ref, ThemeData theme) {
     return Material(
       color: Colors.transparent,
       child: Column(
@@ -79,7 +81,7 @@ class ActionsSectionRiverpod extends ConsumerWidget {
 
               if (confirmed == true && context.mounted) {
                 await ref.read(userDetailsProvider.notifier).signOut(userId);
-                Navigator.of(context).pushReplacementNamed('/login');
+                // No need to navigate - Amplify Auth will handle the UI transition
               }
             },
             shape: RoundedRectangleBorder(
@@ -109,4 +111,4 @@ class ActionsSectionRiverpod extends ConsumerWidget {
       ),
     );
   }
-} 
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../providers/user_details_provider.dart';
 
 class DangerZoneSectionRiverpod extends ConsumerWidget {
@@ -10,7 +11,8 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
     required this.userId,
   }) : super(key: key);
 
-  Future<void> _showDeleteConfirmation(BuildContext context, WidgetRef ref) async {
+  Future<void> _showDeleteConfirmation(
+      BuildContext context, WidgetRef ref) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -41,14 +43,15 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      final success = await ref.read(userDetailsProvider.notifier).deleteAccount(userId);
-      
+      final success =
+          await ref.read(userDetailsProvider.notifier).deleteAccount(userId);
+
       if (context.mounted) {
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Account deleted successfully')),
           );
-          Navigator.of(context).pushReplacementNamed('/login');
+          // No need to navigate - Amplify Auth will handle the UI transition
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -65,12 +68,12 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Container(
       decoration: BoxDecoration(
-        color: isDark 
-          ? theme.colorScheme.errorContainer.withOpacity(0.3)
-          : theme.colorScheme.error.withOpacity(0.05),
+        color: isDark
+            ? theme.colorScheme.errorContainer.withOpacity(0.3)
+            : theme.colorScheme.error.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: theme.colorScheme.error.withOpacity(isDark ? 0.5 : 0.3),
@@ -111,11 +114,12 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: isDark
-                  ? theme.colorScheme.error.withOpacity(0.1)
-                  : theme.colorScheme.error.withOpacity(0.08),
+                    ? theme.colorScheme.error.withOpacity(0.1)
+                    : theme.colorScheme.error.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: theme.colorScheme.error.withOpacity(isDark ? 0.2 : 0.1),
+                  color:
+                      theme.colorScheme.error.withOpacity(isDark ? 0.2 : 0.1),
                   width: 1,
                 ),
               ),
@@ -139,7 +143,8 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.error,
                   foregroundColor: theme.colorScheme.onError,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   elevation: 2,
                   iconColor: theme.colorScheme.onError,
                 ),
@@ -150,4 +155,4 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
       ),
     );
   }
-} 
+}
