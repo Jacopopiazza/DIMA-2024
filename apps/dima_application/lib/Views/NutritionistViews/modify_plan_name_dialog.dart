@@ -2,88 +2,121 @@ import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ModifyPlanNameDialog extends StatefulWidget {
+class ModifyMealPlanDialog extends StatefulWidget {
   final MealPlan mealPlan;
   final Function(String, Map<String, dynamic>) onSave;
 
-  const ModifyPlanNameDialog({
+  const ModifyMealPlanDialog({
     super.key,
     required this.mealPlan,
     required this.onSave,
   });
 
   @override
-  State<ModifyPlanNameDialog> createState() => _ModifyPlanNameDialogState();
+  State<ModifyMealPlanDialog> createState() => _ModifyMealPlanDialogState();
 }
 
-class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
-  late TextEditingController _planNameController;
-  late PlanStatus? _selectedStatus;
+class _ModifyMealPlanDialogState extends State<ModifyMealPlanDialog> {
   bool _isLoading = false;
-  bool _isBasicInfoExpanded = true;
-  bool _isDailyPlanExpanded = false;
+  bool _isDailyPlanExpanded = true;
   bool _isMetadataExpanded = false;
+  Map<String, List<Meal>> _editedMeals = {};
 
   @override
   void initState() {
     super.initState();
-    _planNameController =
-        TextEditingController(text: widget.mealPlan.planName ?? 'Unnamed Plan');
-    _selectedStatus = widget.mealPlan.status;
+    _initializeEditedMeals();
+  }
+
+  void _initializeEditedMeals() {
+    final dailyPlan = widget.mealPlan.dailyPlan;
+    if (dailyPlan != null) {
+      _editedMeals = {
+        'monday': List<Meal>.from(dailyPlan.monday ?? []),
+        'tuesday': List<Meal>.from(dailyPlan.tuesday ?? []),
+        'wednesday': List<Meal>.from(dailyPlan.wednesday ?? []),
+        'thursday': List<Meal>.from(dailyPlan.thursday ?? []),
+        'friday': List<Meal>.from(dailyPlan.friday ?? []),
+        'saturday': List<Meal>.from(dailyPlan.saturday ?? []),
+        'sunday': List<Meal>.from(dailyPlan.sunday ?? []),
+      };
+    }
   }
 
   @override
   void dispose() {
-    _planNameController.dispose();
     super.dispose();
   }
 
-  String? _validatePlanName(String value) {
+  String? _validateMealName(String value) {
     if (value.trim().isEmpty) {
-      return 'Plan name cannot be empty';
+      return 'Meal name cannot be empty';
     }
     if (value.trim().length < 2) {
-      return 'Plan name must be at least 2 characters long';
+      return 'Meal name must be at least 2 characters long';
     }
-    if (value.trim().length > 50) {
-      return 'Plan name must be less than 50 characters';
+    if (value.trim().length > 100) {
+      return 'Meal name must be less than 100 characters';
     }
     return null;
   }
 
   bool _hasChanges() {
-    return _planNameController.text.trim() !=
-            (widget.mealPlan.planName ?? 'Unnamed Plan') ||
-        _selectedStatus != widget.mealPlan.status;
+    final originalMeals = widget.mealPlan.dailyPlan;
+    if (originalMeals == null) return _editedMeals.isNotEmpty;
+
+    final originalMap = {
+      'monday': originalMeals.monday ?? [],
+      'tuesday': originalMeals.tuesday ?? [],
+      'wednesday': originalMeals.wednesday ?? [],
+      'thursday': originalMeals.thursday ?? [],
+      'friday': originalMeals.friday ?? [],
+      'saturday': originalMeals.saturday ?? [],
+      'sunday': originalMeals.sunday ?? [],
+    };
+
+    for (String day in _editedMeals.keys) {
+      final originalDayMeals = originalMap[day] ?? [];
+      final editedDayMeals = _editedMeals[day] ?? [];
+
+      if (originalDayMeals.length != editedDayMeals.length) return true;
+
+      for (int i = 0; i < originalDayMeals.length; i++) {
+        if (originalDayMeals[i].recipeName != editedDayMeals[i].recipeName ||
+            originalDayMeals[i].recipe != editedDayMeals[i].recipe) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   Map<String, dynamic> _getChangedFields() {
     Map<String, dynamic> changes = {};
 
-    final newName = _planNameController.text.trim();
-    if (newName != (widget.mealPlan.planName ?? 'Unnamed Plan')) {
-      changes['planName'] = newName;
-    }
-
-    if (_selectedStatus != widget.mealPlan.status) {
-      changes['status'] = _selectedStatus;
+    if (_hasChanges()) {
+      changes['dailyPlan'] = _editedMeals;
     }
 
     return changes;
   }
 
   Future<void> _handleSave() async {
-    final newName = _planNameController.text.trim();
-    final validationError = _validatePlanName(newName);
-
-    if (validationError != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(validationError),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
+    // Validate all meal names
+    for (String day in _editedMeals.keys) {
+      for (Meal meal in _editedMeals[day] ?? []) {
+        final validationError = _validateMealName(meal.recipeName ?? '');
+        if (validationError != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('$day: $validationError'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
+      }
     }
 
     if (!_hasChanges()) {
@@ -105,7 +138,7 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to modify plan: $e'),
+            content: Text('Failed to modify meal plan: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -119,68 +152,38 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
     }
   }
 
-  Widget _buildBasicInfoSection() {
+  Widget _buildPlanInfoSection() {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      child: ExpansionTile(
-        initiallyExpanded: _isBasicInfoExpanded,
-        onExpansionChanged: (expanded) =>
-            setState(() => _isBasicInfoExpanded = expanded),
-        leading: const Icon(Icons.edit),
-        title: const Text('Basic Information'),
-        subtitle: const Text('Editable fields'),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                TextField(
-                  controller: _planNameController,
-                  enabled: !_isLoading,
-                  decoration: const InputDecoration(
-                    labelText: 'Plan Name',
-                    hintText: 'Enter plan name',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) => setState(() {}),
-                ),
-                if (_planNameController.text.trim().isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      _validatePlanName(_planNameController.text.trim()) ??
-                          'Valid name',
-                      style: TextStyle(
-                        color: _validatePlanName(
-                                    _planNameController.text.trim()) !=
-                                null
-                            ? Colors.red
-                            : Colors.green,
-                        fontSize: 12,
+                const Icon(Icons.info, color: Colors.blue),
+                const SizedBox(width: 8),
+                Text(
+                  'Plan Information',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<PlanStatus>(
-                  value: _selectedStatus,
-                  decoration: const InputDecoration(
-                    labelText: 'Plan Status',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: PlanStatus.values.map((status) {
-                    return DropdownMenuItem(
-                      value: status,
-                      child: Text(_formatEnumValue(status.name)),
-                    );
-                  }).toList(),
-                  onChanged: (PlanStatus? newStatus) {
-                    setState(() => _selectedStatus = newStatus);
-                  },
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 12),
+            _buildInfoRow(
+                'Plan Name', widget.mealPlan.planName ?? 'Unnamed Plan'),
+            _buildInfoRow('Status',
+                _formatEnumValue(widget.mealPlan.status?.name ?? 'UNKNOWN')),
+            const Divider(),
+            const Text(
+              'Tip: You can modify the meals for each day below. Click on a meal to edit its recipe name and instructions.',
+              style: TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -215,19 +218,19 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
             setState(() => _isDailyPlanExpanded = expanded),
         leading: const Icon(Icons.restaurant_menu),
         title: const Text('Daily Plan'),
-        subtitle: const Text('7-day meal schedule (Read-only)'),
+        subtitle: const Text('7-day meal schedule (Editable)'),
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                _buildDayMeals('Monday', dailyPlan.monday),
-                _buildDayMeals('Tuesday', dailyPlan.tuesday),
-                _buildDayMeals('Wednesday', dailyPlan.wednesday),
-                _buildDayMeals('Thursday', dailyPlan.thursday),
-                _buildDayMeals('Friday', dailyPlan.friday),
-                _buildDayMeals('Saturday', dailyPlan.saturday),
-                _buildDayMeals('Sunday', dailyPlan.sunday),
+                _buildEditableDayMeals('Monday', 'monday'),
+                _buildEditableDayMeals('Tuesday', 'tuesday'),
+                _buildEditableDayMeals('Wednesday', 'wednesday'),
+                _buildEditableDayMeals('Thursday', 'thursday'),
+                _buildEditableDayMeals('Friday', 'friday'),
+                _buildEditableDayMeals('Saturday', 'saturday'),
+                _buildEditableDayMeals('Sunday', 'sunday'),
               ],
             ),
           ),
@@ -236,7 +239,9 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
     );
   }
 
-  Widget _buildDayMeals(String dayName, List<Meal>? meals) {
+  Widget _buildEditableDayMeals(String dayName, String dayKey) {
+    final meals = _editedMeals[dayKey] ?? [];
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -251,18 +256,151 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
             dayName,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          const SizedBox(height: 8),
-          if (meals == null || meals.isEmpty)
+          const SizedBox(height: 12),
+          if (meals.isEmpty)
             const Text('No meals planned', style: TextStyle(color: Colors.grey))
           else
-            ...meals.map((meal) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
-                  child: Text(
-                      '• ${meal.recipeName ?? 'Unnamed meal'} (${_formatEnumValue(meal.name.name)})'),
-                )),
+            ...meals.asMap().entries.map((entry) {
+              final index = entry.key;
+              final meal = entry.value;
+              return _buildEditableMeal(dayKey, index, meal);
+            }),
         ],
       ),
     );
+  }
+
+  Widget _buildEditableMeal(String dayKey, int mealIndex, Meal meal) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ExpansionTile(
+        leading: Icon(
+          _getMealIcon(meal.name),
+          color: Theme.of(context).primaryColor,
+        ),
+        title: Text(
+          meal.recipeName ?? 'Unnamed meal',
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
+        subtitle: Text(
+          _formatEnumValue(meal.name.name),
+          style: const TextStyle(color: Colors.grey),
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  initialValue: meal.recipeName ?? '',
+                  decoration: const InputDecoration(
+                    labelText: 'Recipe Name',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    _updateMealProperty(dayKey, mealIndex, 'recipeName', value);
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  initialValue: meal.recipe ?? '',
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    labelText: 'Recipe Instructions',
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter cooking instructions...',
+                  ),
+                  onChanged: (value) {
+                    _updateMealProperty(dayKey, mealIndex, 'recipe', value);
+                  },
+                ),
+                const SizedBox(height: 12),
+                ExpansionTile(
+                  title: const Text('Nutritional Information'),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          _buildMacroInfo('Calories',
+                              '${meal.totalMacros.calories.toStringAsFixed(0)} kcal'),
+                          _buildMacroInfo('Protein',
+                              '${meal.totalMacros.proteins.toStringAsFixed(1)}g'),
+                          _buildMacroInfo('Carbs',
+                              '${meal.totalMacros.carbohydrates.toStringAsFixed(1)}g'),
+                          _buildMacroInfo('Fat',
+                              '${meal.totalMacros.fats.toStringAsFixed(1)}g'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMacroInfo(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(value, style: const TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+
+  IconData _getMealIcon(MealNameEnum mealType) {
+    switch (mealType) {
+      case MealNameEnum.BREAKFAST:
+        return Icons.free_breakfast;
+      case MealNameEnum.LUNCH:
+        return Icons.lunch_dining;
+      case MealNameEnum.DINNER:
+        return Icons.dinner_dining;
+      case MealNameEnum.SNACK_MORNING:
+      case MealNameEnum.SNACK_AFTERNOON:
+      case MealNameEnum.SNACK_EVENING:
+        return Icons.local_cafe;
+    }
+  }
+
+  void _updateMealProperty(
+      String dayKey, int mealIndex, String property, String value) {
+    setState(() {
+      final meals = _editedMeals[dayKey]!;
+      final meal = meals[mealIndex];
+
+      Meal updatedMeal;
+      if (property == 'recipeName') {
+        updatedMeal = Meal(
+          name: meal.name,
+          recipeName: value,
+          recipe: meal.recipe,
+          ingredients: meal.ingredients,
+          totalMacros: meal.totalMacros,
+        );
+      } else if (property == 'recipe') {
+        updatedMeal = Meal(
+          name: meal.name,
+          recipeName: meal.recipeName,
+          recipe: value,
+          ingredients: meal.ingredients,
+          totalMacros: meal.totalMacros,
+        );
+      } else {
+        return;
+      }
+
+      meals[mealIndex] = updatedMeal;
+    });
   }
 
   Widget _buildMetadataSection() {
@@ -365,7 +503,7 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
                   const SizedBox(width: 8),
                   const Expanded(
                     child: Text(
-                      'Modify Meal Plan',
+                      'Edit Meal Plan',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -386,7 +524,7 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _buildBasicInfoSection(),
+                    _buildPlanInfoSection(),
                     _buildDailyPlanSection(),
                     _buildMetadataSection(),
                   ],

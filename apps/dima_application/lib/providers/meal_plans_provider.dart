@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
   late final MealPlansService _service;
+  String? _cachedActiveMealPlanId;
 
   @override
   FutureOr<List<LightMealPlan>> build() async {
@@ -15,6 +16,9 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
     // Automatically load plans on initialization
     return await listMyMealPlans();
   }
+
+  /// Get the cached active meal plan ID (from last listMyMealPlans call)
+  String? get cachedActiveMealPlanId => _cachedActiveMealPlanId;
 
   // No local cache, so this is not implemented
   // Stream<List<LightMealPlan>> watchAllPlans() => throw UnimplementedError();
@@ -28,6 +32,12 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
       final backendPlans = await _service.listMyMealPlans();
       print(
           '[MealPlansProvider] Backend returned ${backendPlans.items.length} plans');
+
+      // Cache the active meal plan ID from the response
+      _cachedActiveMealPlanId = backendPlans.activeMealPlan;
+      print(
+          '[MealPlansProvider] Cached active meal plan ID: $_cachedActiveMealPlanId');
+
       state = AsyncValue.data(backendPlans.items);
       print(
           '[MealPlansProvider] State updated with ${state.value?.length} items');
@@ -111,9 +121,9 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
     }
   }
 
-  Future<bool> createMealPlan() async {
+  Future<bool> createMealPlan({Map<String, dynamic>? prefsOverride}) async {
     print('[MealPlansProvider] Creating meal plan with gemini...');
-    final response = await _service.createMealPlan({});
+    final response = await _service.createMealPlan(prefsOverride ?? {});
     print('[MealPlansProvider] createMealPlan response: $response');
     if (response == null) {
       print(
@@ -156,12 +166,13 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
 
   /// Modifies a meal plan assigned to the nutritionist (nutritionist-specific operation).
   /// Requires the userId since nutritionists modify plans belonging to other users.
+  /// Can modify the plan name and/or the daily plan meals via the input parameter.
   Future<bool> modifyAssignedMealPlan(
-      String mealPlanId, String userId, String mealPlanName) async {
+      String mealPlanId, String userId, Map<String, dynamic> input) async {
     print(
-        '[MealPlansProvider] Modifying assigned meal plan: $mealPlanId for user: $userId with name: $mealPlanName');
+        '[MealPlansProvider] Modifying assigned meal plan: $mealPlanId for user: $userId with input: $input');
     final response =
-        await _service.modifyAssignedMealPlan(mealPlanId, userId, mealPlanName);
+        await _service.modifyAssignedMealPlan(mealPlanId, userId, input);
     print('[MealPlansProvider] modifyAssignedMealPlan response: $response');
     if (response == null) {
       print(
@@ -288,10 +299,19 @@ final mealPlansProvider =
     AsyncNotifierProvider<MealPlansNotifier, List<LightMealPlan>>(
         () => MealPlansNotifier());
 
-// Provider for the active meal plan ID (async)
-final activeMealPlanIdProvider = FutureProvider<String?>((ref) async {
-  final notifier = ref.read(mealPlansProvider.notifier);
-  return await notifier.activeMealPlanId;
+// Provider for the active meal plan ID (simplified)
+final activeMealPlanIdProvider = Provider<String?>((ref) {
+  final plansAsync = ref.watch(mealPlansProvider);
+
+  return plansAsync.when(
+    data: (plans) {
+      // Get the active meal plan ID from the cached service data
+      final notifier = ref.read(mealPlansProvider.notifier);
+      return notifier.cachedActiveMealPlanId;
+    },
+    loading: () => null,
+    error: (error, stack) => null,
+  );
 });
 
 // Provider for the active LightMealPlan (async) - not implemented

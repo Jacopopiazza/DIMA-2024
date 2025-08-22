@@ -77,10 +77,20 @@ class MealCard extends StatelessWidget {
               ),
             ),
           ),
-          // Title placeholder (a colored container simulating text block)
+          // Title and recipe name placeholders (colored containers simulating text blocks)
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: Container(width: 100, height: 20, color: skeletonColor),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Meal type placeholder
+                Container(width: 100, height: 22, color: skeletonColor),
+                const SizedBox(height: 4),
+                // Recipe name placeholder
+                Container(width: 140, height: 16, color: skeletonColor),
+              ],
+            ),
           ),
           // Completion status placeholder (a colored circle simulating the icon)
           Positioned(
@@ -138,7 +148,10 @@ class MealCard extends StatelessWidget {
           context,
           // Navigate to the MealDetailsDraggablePage when the card is tapped
           MaterialPageRoute(
-              builder: (context) => MealDetailsDraggablePage(meal: meal, mealPlanId: mealPlanId,)),
+              builder: (context) => MealDetailsDraggablePage(
+                    meal: meal,
+                    mealPlanId: mealPlanId,
+                  )),
         ),
         child: Ink(
           color: Colors
@@ -155,8 +168,8 @@ class MealCard extends StatelessWidget {
               // A gradient overlay on top of the image for better text readability
               _buildGradientOverlay(),
 
-              // The meal title text, positioned at the bottom left over the gradient
-              _buildMealTitle(context),
+              // The meal title text and recipe name, positioned at the bottom left over the gradient
+              _buildMealTitleAndRecipe(context),
 
               // The completion status indicator icon, positioned at the top right
               _buildCompletionStatus(
@@ -250,23 +263,54 @@ class MealCard extends StatelessWidget {
     );
   }
 
-  /// Builds the meal title text widget.
+  /// Builds the meal title and recipe name text widgets.
   ///
-  /// Displays the localized meal name with styling for visibility over the image.
-  Widget _buildMealTitle(BuildContext context) {
+  /// Displays the localized meal name and recipe name with styling for visibility over the image.
+  Widget _buildMealTitleAndRecipe(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0), // Padding around the title text
-      child: Text(
-        localizeMealName(context, meal.name), // Get the localized meal name
-        style: const TextStyle(
-            color: Colors.white, // White text color for contrast
-            fontSize: 22, // Font size for the title
-            fontWeight: FontWeight.bold, // Bold font weight
-            shadows: [
-              // Add a text shadow for better definition against the background
-              Shadow(
-                  blurRadius: 4.0, color: Colors.black87, offset: Offset(1, 1))
-            ]),
+      padding: const EdgeInsets.all(12.0), // Padding around the text
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Meal type (e.g., "Breakfast", "Lunch", etc.)
+          Text(
+            localizeMealName(context, meal.name), // Get the localized meal name
+            style: const TextStyle(
+                color: Colors.white, // White text color for contrast
+                fontSize: 22, // Font size for the title
+                fontWeight: FontWeight.bold, // Bold font weight
+                shadows: [
+                  // Add a text shadow for better definition against the background
+                  Shadow(
+                      blurRadius: 4.0,
+                      color: Colors.black87,
+                      offset: Offset(1, 1))
+                ]),
+          ),
+          // Recipe name (if available)
+          if (meal.recipeName != null && meal.recipeName!.isNotEmpty) ...[
+            const SizedBox(
+                height: 4), // Small space between meal type and recipe name
+            Text(
+              meal.recipeName!, // Recipe name
+              style: const TextStyle(
+                  color: Colors.white, // White text color for contrast
+                  fontSize: 16, // Slightly smaller font size for recipe name
+                  fontWeight: FontWeight.w500, // Medium font weight
+                  shadows: [
+                    // Add a text shadow for better definition against the background
+                    Shadow(
+                        blurRadius: 4.0,
+                        color: Colors.black87,
+                        offset: Offset(1, 1))
+                  ]),
+              maxLines: 2, // Limit to 2 lines to prevent overflow
+              overflow:
+                  TextOverflow.ellipsis, // Show ellipsis if text is too long
+            ),
+          ],
+        ],
       ),
     );
   }

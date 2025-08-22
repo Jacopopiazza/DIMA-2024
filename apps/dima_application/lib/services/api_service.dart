@@ -13,6 +13,8 @@ import 'package:dima_application/models/UserDetails/user_details_cache.dart'; //
 import 'package:dima_application/models/input/update_user_details_input.dart';
 // Import Isar provider
 import 'package:dima_application/providers/isar_provider.dart'; // Adjust path if needed
+// Import MealPlansService
+import 'package:dima_application/services/meal_plans_service.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -236,14 +238,12 @@ class ApiService {
   // --- Meal Plan Methods ---
 
   Future<String?> getChosenPlanId() async {
-    // (Keep the implementation from the previous version)
-    safePrint("[APIService] Getting chosen plan ID (via getMyUserDetails)...");
+    safePrint("[APIService] Getting chosen plan ID (via MealPlansService)...");
     try {
-      // MOCKED IMPLEMENTATION
-      return 'mock_plan_from_gemini_output';
-
-      final userDetails = await getMyUserDetails();
-      return userDetails.activeMealPlanId;
+      // Use MealPlansService to get the active meal plan ID from listMyMealPlans
+      final mealPlansService = MealPlansService(isar: _isar);
+      final mealPlansList = await mealPlansService.listMyMealPlans();
+      return mealPlansList.activeMealPlan;
     } catch (e, stackTrace) {
       safePrint("[APIService] Failed to get chosen plan ID: $e\n$stackTrace");
       return null;

@@ -1,9 +1,9 @@
 // subscription_test_page.dart (FIXED VERSION)
+import 'dart:async';
+
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/services/meal_plan_subscription_service.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'dart:convert'; // Aggiunto per JSON parsing
-import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 
 class SubscriptionTestPage extends StatefulWidget {
   const SubscriptionTestPage({super.key});
@@ -29,48 +29,56 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
   Future<void> _initializeSubscription() async {
     _addLog("🔧 Inizializzazione subscription service...");
     _subscriptionService = MealPlanSubscriptionService();
-    
+
     try {
       _addLog("🚀 Avviando subscription...");
-      
+
       // Avvia la subscription
       await _subscriptionService.startListening();
       _addLog("✅ Subscription avviata con successo!");
-      
+
       // Ascolta le notifiche
-      _notificationSubscription = _subscriptionService.notificationStream.listen(
+      _notificationSubscription =
+          _subscriptionService.notificationStream.listen(
         _onNotificationReceived,
         onError: _onSubscriptionError,
         onDone: () {
           _addLog("🏁 Stream completato");
-          setState(() {
-            _isListening = false;
-          });
+          if (mounted) {
+            setState(() {
+              _isListening = false;
+            });
+          }
         },
       );
-      
-      setState(() {
-        _isListening = true;
-      });
-      
+
+      if (mounted) {
+        setState(() {
+          _isListening = true;
+        });
+      }
+
       _addLog("👂 In ascolto per notifiche...");
-      
     } catch (e) {
       _addLog("❌ Errore nell'inizializzazione: $e");
-      setState(() {
-        _isListening = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isListening = false;
+        });
+      }
     }
   }
 
   void _onNotificationReceived(MealPlanResponse notification) {
+    if (!mounted) return;
+
     _notificationCount++;
-    
+
     _addLog("📨 NOTIFICA RICEVUTA #$_notificationCount:");
     _addLog("   ├─ Success: ${notification.success}");
     _addLog("   ├─ Message: ${notification.message ?? 'null'}");
     _addLog("   └─ MealPlanId: ${notification.mealPlanId}");
-    
+
     // Stampa anche nella console
     print("🔔 MEAL PLAN NOTIFICATION #$_notificationCount:");
     print("   Success: ${notification.success}");
@@ -78,60 +86,72 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
     print("   MealPlanId: ${notification.mealPlanId}");
     print("   Timestamp: ${DateTime.now()}");
     print("─" * 50);
-    
-    setState(() {});
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _onSubscriptionError(dynamic error) {
     _addLog("💥 ERRORE SUBSCRIPTION: $error");
     print("❌ SUBSCRIPTION ERROR: $error");
-    
-    setState(() {
-      _isListening = false;
-    });
+
+    if (mounted) {
+      setState(() {
+        _isListening = false;
+      });
+    }
   }
 
   void _addLog(String message) {
     final timestamp = DateTime.now().toString().substring(11, 19);
     final logMessage = "[$timestamp] $message";
-    
-    setState(() {
-      _logs.insert(0, logMessage);
-      // Mantieni solo gli ultimi 100 log
-      if (_logs.length > 100) {
-        _logs.removeLast();
-      }
-    });
-    
+
+    if (mounted) {
+      setState(() {
+        _logs.insert(0, logMessage);
+        // Mantieni solo gli ultimi 100 log
+        if (_logs.length > 100) {
+          _logs.removeLast();
+        }
+      });
+    }
+
     // Stampa anche nella console
     print(logMessage);
   }
 
   Future<void> _restartSubscription() async {
     _addLog("🔄 Riavvio subscription...");
-    
+
     await _subscriptionService.stopListening();
     await _notificationSubscription?.cancel();
-    
-    setState(() {
-      _isListening = false;
-      _notificationCount = 0;
-    });
-    
+
+    if (mounted) {
+      setState(() {
+        _isListening = false;
+        _notificationCount = 0;
+      });
+    }
+
     await _initializeSubscription();
   }
 
   void _clearLogs() {
-    setState(() {
-      _logs.clear();
-      _notificationCount = 0;
-    });
+    if (mounted) {
+      setState(() {
+        _logs.clear();
+        _notificationCount = 0;
+      });
+    }
     _addLog("🧹 Log puliti");
   }
 
   @override
   void dispose() {
-    _addLog("🛑 Disposing widget...");
+    // Note: Don't call _addLog here as it calls setState and we're disposing
+    print(
+        "[${DateTime.now().toString().substring(11, 19)}] 🛑 Disposing widget...");
     _notificationSubscription?.cancel();
     _subscriptionService.dispose();
     super.dispose();
@@ -179,7 +199,8 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: _isListening ? Colors.green.shade100 : Colors.red.shade100,
+                color:
+                    _isListening ? Colors.green.shade100 : Colors.red.shade100,
                 border: Border(
                   bottom: BorderSide(
                     color: _isListening ? Colors.green : Colors.red,
@@ -193,15 +214,21 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        _isListening ? Icons.radio_button_checked : Icons.radio_button_off,
+                        _isListening
+                            ? Icons.radio_button_checked
+                            : Icons.radio_button_off,
                         color: _isListening ? Colors.green : Colors.red,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        _isListening ? 'SUBSCRIPTION ATTIVA' : 'SUBSCRIPTION NON ATTIVA',
+                        _isListening
+                            ? 'SUBSCRIPTION ATTIVA'
+                            : 'SUBSCRIPTION NON ATTIVA',
                         style: TextStyle(
-                          color: _isListening ? Colors.green.shade800 : Colors.red.shade800,
+                          color: _isListening
+                              ? Colors.green.shade800
+                              : Colors.red.shade800,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -222,7 +249,7 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
                 ],
               ),
             ),
-            
+
             // Logs list
             Expanded(
               child: Container(
@@ -237,7 +264,7 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
                             Text(
                               'Nessun log ancora...',
                               style: TextStyle(
-                                fontSize: 16, 
+                                fontSize: 16,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -246,7 +273,7 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
                             Text(
                               'In attesa di notifiche dalla subscription',
                               style: TextStyle(
-                                fontSize: 14, 
+                                fontSize: 14,
                                 color: Colors.grey,
                               ),
                             ),
@@ -257,15 +284,19 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
                         itemCount: _logs.length,
                         itemBuilder: (context, index) {
                           final log = _logs[index];
-                          final isNotification = log.contains('NOTIFICA RICEVUTA') || 
-                                               log.contains('ERRORE SUBSCRIPTION');
-                          
+                          final isNotification =
+                              log.contains('NOTIFICA RICEVUTA') ||
+                                  log.contains('ERRORE SUBSCRIPTION');
+
                           return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: isNotification ? Colors.blue.shade50 : Colors.grey.shade50,
+                              color: isNotification
+                                  ? Colors.blue.shade50
+                                  : Colors.grey.shade50,
                               borderRadius: BorderRadius.circular(4),
-                              border: isNotification 
+                              border: isNotification
                                   ? Border.all(color: Colors.blue.shade200)
                                   : Border.all(color: Colors.grey.shade300),
                             ),
@@ -277,7 +308,9 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
                                 style: TextStyle(
                                   fontFamily: 'monospace',
                                   fontSize: 12,
-                                  fontWeight: isNotification ? FontWeight.bold : FontWeight.normal,
+                                  fontWeight: isNotification
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                   color: _getLogColor(log),
                                 ),
                               ),
@@ -316,7 +349,8 @@ class _SubscriptionTestPageState extends State<SubscriptionTestPage> {
 
   Icon _getLogIcon(String log) {
     if (log.contains('📨') || log.contains('NOTIFICA RICEVUTA')) {
-      return const Icon(Icons.notification_important, color: Colors.blue, size: 16);
+      return const Icon(Icons.notification_important,
+          color: Colors.blue, size: 16);
     } else if (log.contains('❌') || log.contains('💥')) {
       return const Icon(Icons.error, color: Colors.red, size: 16);
     } else if (log.contains('✅')) {

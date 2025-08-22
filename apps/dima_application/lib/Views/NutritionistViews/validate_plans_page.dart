@@ -86,7 +86,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     await showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
-        return ModifyPlanNameDialog(
+        return ModifyMealPlanDialog(
           mealPlan: plan,
           onSave: (mealPlanId, changes) async {
             await _modifyMealPlan(plan, changes);
@@ -106,14 +106,29 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
       bool success = false;
       String changesDescription = '';
 
-      // Currently, the API only supports modifying the plan name
-      // Other fields like status are not supported by the backend yet
+      // Build the input object for the API
+      Map<String, dynamic> input = {};
+
+      // Handle plan name changes
       if (changes.containsKey('planName')) {
         final newName = changes['planName'] as String;
+        input['planName'] = newName;
+        changesDescription = 'Plan name changed to "$newName"';
+      }
+
+      // Handle meal plan changes (dailyPlan)
+      if (changes.containsKey('dailyPlan')) {
+        input['dailyPlan'] = changes['dailyPlan'];
+        changesDescription += changesDescription.isEmpty
+            ? 'Meal plan updated'
+            : '\nMeal plan updated';
+      }
+
+      // Only make API call if there are actual changes to apply
+      if (input.isNotEmpty) {
         success = await ref
             .read(mealPlansProvider.notifier)
-            .modifyAssignedMealPlan(plan.mealPlanId, plan.userId, newName);
-        changesDescription = 'Plan name changed to "$newName"';
+            .modifyAssignedMealPlan(plan.mealPlanId, plan.userId, input);
       }
 
       // Note: Status changes would require additional API endpoints
@@ -215,7 +230,6 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
@@ -223,13 +237,9 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
                             MealPlanValidationStatus.PENDING_REVIEW
                         ? () => _validateMealPlan(plan, 'VALIDATED')
                         : null,
-                    icon: const Icon(Icons.check, color: Colors.white),
-                    label: const Text('Validate',
-                        style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      disabledBackgroundColor: Colors.grey,
-                    ),
+                    icon: const Icon(Icons.check),
+                    label: const Text('Validate'),
+                    style: ElevatedButton.styleFrom(),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -237,35 +247,14 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
                   child: ElevatedButton.icon(
                     onPressed: plan.validationStatus ==
                             MealPlanValidationStatus.PENDING_REVIEW
-                        ? () => _validateMealPlan(plan, 'NOT_VALIDATED')
+                        ? () => _showModifyPlanDialog(plan)
                         : null,
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    label: const Text('Reject',
-                        style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      disabledBackgroundColor: Colors.grey,
-                    ),
+                    icon: const Icon(Icons.edit_note),
+                    label: const Text('Modify'),
+                    style: ElevatedButton.styleFrom(),
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: plan.validationStatus ==
-                        MealPlanValidationStatus.PENDING_REVIEW
-                    ? () => _showModifyPlanDialog(plan)
-                    : null,
-                icon: const Icon(Icons.edit_note),
-                label: const Text('Modify Plan'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: Colors.grey,
-                ),
-              ),
             ),
           ],
         ),

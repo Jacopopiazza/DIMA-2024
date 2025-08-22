@@ -35,15 +35,17 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
   Future<void> _loadNutritionists() async {
     try {
       final nutritionists = await widget.onLoadNutritionists();
-      setState(() {
-        _nutritionists = nutritionists;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
       if (mounted) {
+        setState(() {
+          _nutritionists = nutritionists;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error loading nutritionists: $e'),
@@ -56,18 +58,22 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
 
   Future<void> _assignNutritionist() async {
     if (_selectedNutritionistId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a nutritionist'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select a nutritionist'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
       return;
     }
 
-    setState(() {
-      _isAssigning = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isAssigning = true;
+      });
+    }
 
     try {
       final success = await widget.onAssignNutritionist(
@@ -190,9 +196,11 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
       elevation: isSelected ? 2 : 1,
       child: InkWell(
         onTap: () {
-          setState(() {
-            _selectedNutritionistId = nutritionist.nutritionistId;
-          });
+          if (mounted) {
+            setState(() {
+              _selectedNutritionistId = nutritionist.nutritionistId;
+            });
+          }
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
