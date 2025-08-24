@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../generate_meal_plan_page.dart';
 import 'delete_confirmation_dialog.dart';
 import 'modify_plan_name_dialog.dart';
+import 'read_meal_plan_page.dart';
 import 'select_nutritionist_dialog.dart';
 
 class MealPlanDetailsPage extends StatelessWidget {
@@ -172,7 +173,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
                   ),
                   subtitle: Text('ID: ${plan.mealPlanId}'),
                   trailing: SizedBox(
-                    width: 200, // Fixed width to ensure consistent layout
+                    width:
+                        250, // Increased width to accommodate the new view button
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -330,6 +332,26 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
                                           },
                                         );
                                       },
+                              );
+                            },
+                          ),
+                        ),
+                        // View button
+                        SizedBox(
+                          width: 48,
+                          child: IconButton(
+                            icon: const Icon(Icons.visibility),
+                            color: Theme.of(context).colorScheme.primary,
+                            tooltip: 'View meal plan',
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ReadMealPlanPage(
+                                    mealPlanId: plan.mealPlanId,
+                                    initialPlanName: plan.planName,
+                                  ),
+                                ),
                               );
                             },
                           ),

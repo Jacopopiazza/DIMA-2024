@@ -1,4 +1,7 @@
 import 'package:dima_application/Views/NutritionistViews/modify_plan_name_dialog.dart';
+import 'package:dima_application/Views/NutritionistViews/widgets/validation_empty_state.dart';
+import 'package:dima_application/Views/NutritionistViews/widgets/validation_error_state.dart';
+import 'package:dima_application/Views/NutritionistViews/widgets/validation_meal_plan_card.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:flutter/material.dart';
@@ -45,40 +48,160 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     }
   }
 
-  Future<void> _validateMealPlan(MealPlan plan, String validationStatus) async {
+  Future<void> _validateMealPlan(MealPlan plan) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Validate Meal Plan'),
+          content: Text(
+            'Are you sure you want to validate "${plan.planName ?? 'Unnamed Plan'}"?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Validate'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true) return;
+
     try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Validating meal plan...'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+
       final success =
           await ref.read(mealPlansProvider.notifier).validateMealPlan(
                 plan.mealPlanId,
                 plan.assignedNutritionistId ?? '',
-                validationStatus,
+                'VALIDATED',
               );
 
-      if (success) {
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Meal plan validated successfully!'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          // Reload the list to reflect changes
+          await _loadAssignedMealPlans();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to validate meal plan'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Meal plan ${validationStatus.toLowerCase()} successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        // Reload the list to reflect changes
-        await _loadAssignedMealPlans();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to validate meal plan'),
+            content: Text('Error validating meal plan: $e'),
             backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
           ),
         );
       }
-    } catch (e) {
+    }
+  }
+
+  Future<void> _rejectMealPlan(MealPlan plan) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.warning, color: Theme.of(context).colorScheme.error),
+              const SizedBox(width: 8),
+              const Text('Reject Meal Plan'),
+            ],
+          ),
+          content: Text(
+            'Are you sure you want to reject "${plan.planName ?? 'Unnamed Plan'}"? This action will reset the plan to not validated status.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: const Text('Reject'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true) return;
+
+    try {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error validating meal plan: $e'),
-          backgroundColor: Colors.red,
+        const SnackBar(
+          content: Text('Rejecting meal plan...'),
+          duration: Duration(seconds: 1),
         ),
       );
+
+      final success =
+          await ref.read(mealPlansProvider.notifier).validateMealPlan(
+                plan.mealPlanId,
+                plan.assignedNutritionistId ?? '',
+                'NOT_VALIDATED',
+              );
+
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Meal plan rejected'),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          // Reload the list to reflect changes
+          await _loadAssignedMealPlans();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to reject meal plan'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error rejecting meal plan: $e'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
@@ -175,167 +298,50 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     }
   }
 
-  Widget _buildValidationStatusChip(MealPlanValidationStatus? status) {
-    Color color;
-    String text;
-
-    switch (status) {
-      case MealPlanValidationStatus.PENDING_REVIEW:
-        color = Colors.orange;
-        text = 'Pending Review';
-        break;
-      case MealPlanValidationStatus.VALIDATED:
-        color = Colors.green;
-        text = 'Validated';
-        break;
-      case MealPlanValidationStatus.NOT_VALIDATED:
-        color = Colors.grey;
-        text = 'Not Validated';
-        break;
-      default:
-        color = Colors.grey;
-        text = 'Unknown';
-    }
-
-    return Chip(
-      label: Text(
-        text,
-        style: TextStyle(color: Colors.white, fontSize: 12),
-      ),
-      backgroundColor: color,
-    );
-  }
-
-  Widget _buildMealPlanCard(MealPlan plan) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    plan.planName ?? 'Unnamed Plan',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-                _buildValidationStatusChip(plan.validationStatus),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: plan.validationStatus ==
-                            MealPlanValidationStatus.PENDING_REVIEW
-                        ? () => _validateMealPlan(plan, 'VALIDATED')
-                        : null,
-                    icon: const Icon(Icons.check),
-                    label: const Text('Validate'),
-                    style: ElevatedButton.styleFrom(),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: plan.validationStatus ==
-                            MealPlanValidationStatus.PENDING_REVIEW
-                        ? () => _showModifyPlanDialog(plan)
-                        : null,
-                    icon: const Icon(Icons.edit_note),
-                    label: const Text('Modify'),
-                    style: ElevatedButton.styleFrom(),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Validate Plans'),
+        title: const Text('Validate Meal Plans'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadAssignedMealPlans,
+            tooltip: 'Refresh Plans',
           ),
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: Colors.grey[400],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        _errorMessage!,
-                        style: TextStyle(color: Colors.grey[600]),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _loadAssignedMealPlans,
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
+              ? ValidationErrorState(
+                  errorMessage: _errorMessage!,
+                  onRetry: _loadAssignedMealPlans,
                 )
               : _assignedMealPlans.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.assignment_outlined,
-                            size: 64,
-                            color: Colors.grey[400],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'No meal plans assigned for validation',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Meal plans will appear here when users request validation',
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+                  ? ValidationEmptyState(
+                      onRefresh: _loadAssignedMealPlans,
                     )
                   : RefreshIndicator(
+                      displacement: 60.0,
+                      color: Theme.of(context).colorScheme.primary,
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
                       onRefresh: _loadAssignedMealPlans,
                       child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
                         itemCount: _assignedMealPlans.length,
                         itemBuilder: (context, index) {
-                          return _buildMealPlanCard(_assignedMealPlans[index]);
+                          final plan = _assignedMealPlans[index];
+                          return ValidationMealPlanCard(
+                            plan: plan,
+                            onValidate: () => _validateMealPlan(plan),
+                            onModify: () => _showModifyPlanDialog(plan),
+                            onReject: () => _rejectMealPlan(plan),
+                          );
                         },
                       ),
                     ),
