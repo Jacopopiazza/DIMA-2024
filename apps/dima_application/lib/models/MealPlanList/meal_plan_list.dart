@@ -4,6 +4,8 @@ import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/models/MealPlan/meal_plan.dart'; // For MealPlanCache
 import 'package:isar/isar.dart';
 
+part 'meal_plan_list.g.dart';
+
 class MealPlanList {
   final List<MealPlan> items;
   final String? nextToken;

@@ -1,6 +1,7 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:dima_application/Views/CustomAuthenticator/customized_authenticator.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/models/DailyCompletion/daily_completion.dart';
@@ -25,6 +26,7 @@ Future<void> _configureAmplify() async {
 
     await Amplify.addPlugin(AmplifyAuthCognito());
     await Amplify.addPlugin(api);
+    await Amplify.addPlugin(AmplifyStorageS3());
     await Amplify.configure(amplifyConfig);
     safePrint('Successfully configured');
   } on Exception catch (e) {

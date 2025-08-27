@@ -39,8 +39,7 @@ class NutritionistProfileSection extends StatelessWidget {
               radius: 50,
               backgroundImage: profile?.profilePictureUrl != null
                   ? NetworkImage(profile!.profilePictureUrl!)
-                  : const AssetImage('assets/profile_picture.jpeg')
-                      as ImageProvider,
+                  : null,
               child: profile?.profilePictureUrl == null
                   ? Icon(
                       Icons.person,

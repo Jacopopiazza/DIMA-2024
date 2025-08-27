@@ -1,4 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/Views/Common/image_picker_widget.dart';
 import 'package:dima_application/Views/NutritionistViews/nutritionist_home_screen.dart';
 import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
   final _specializationController = TextEditingController();
   final _bioController = TextEditingController();
   final _profilePictureUrlController = TextEditingController();
+  String? _profilePictureUrl;
   bool _isAvailable = true;
   bool _isLoading = false;
   final _profileService = NutritionistProfileService();
@@ -51,6 +53,7 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
           _specializationController.text = profile.specialization ?? '';
           _bioController.text = profile.bio ?? '';
           _profilePictureUrlController.text = profile.profilePictureUrl ?? '';
+          _profilePictureUrl = profile.profilePictureUrl;
           _isAvailable = profile.isAvailable ?? true;
         });
       }
@@ -74,9 +77,7 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
         familyName: _familyNameController.text.trim(),
         specialization: _specializationController.text.trim(),
         bio: _bioController.text.trim(),
-        profilePictureUrl: _profilePictureUrlController.text.trim().isEmpty
-            ? null
-            : _profilePictureUrlController.text.trim(),
+        profilePictureUrl: _profilePictureUrl,
         isAvailable: _isAvailable,
       );
 
@@ -266,17 +267,39 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Profile Picture URL
-                      TextFormField(
-                        controller: _profilePictureUrlController,
-                        decoration: const InputDecoration(
-                          labelText: 'Profile Picture URL (Optional)',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.image),
-                          hintText: 'https://example.com/photo.jpg',
+                      // Profile Picture Section
+                      Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              'Profile Picture',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ImagePickerWidget(
+                              initialImageUrl: _profilePictureUrl,
+                              onImageChanged: (url) {
+                                setState(() {
+                                  _profilePictureUrl = url;
+                                  _profilePictureUrlController.text = url ?? '';
+                                });
+                              },
+                              size: 120,
+                              enabled: !_isLoading,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Tap to upload a profile picture',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 24),
 
                       // Availability Toggle
                       SwitchListTile(

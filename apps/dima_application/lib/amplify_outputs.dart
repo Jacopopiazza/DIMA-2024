@@ -69,5 +69,9 @@ const amplifyConfig = r'''{
       ],
       "domain": "e2c748be1d135a2c6733.auth.us-west-2.amazoncognito.com"
     }
+  },
+  "storage": {
+    "aws_region": "us-west-2",
+    "bucket_name": "dima-assets-537124974525-us-west-2"
   }
 }''';

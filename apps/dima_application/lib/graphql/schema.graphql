@@ -135,7 +135,8 @@ type Mutation {
   deleteMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
-  modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
+  modifyAssignedMealPlan(input: ModifyAssignedMealPlanInput!, mealPlanId: ID!, userId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["NUTRITIONISTS"])
+  modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponse @aws_iam
   requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   requestValidation(input: RequestValidationInput!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
@@ -374,12 +375,17 @@ input MealPlanResponseInput {
   success: Boolean!
 }
 
+input ModifyAssignedMealPlanInput {
+  dailyPlan: DailyPlanDataInput
+  planName: String
+}
+
 input PlanRequestPreferencesInput {
   allergies: [AllergenEnum!]
   dailyMealsPreference: Int
   dateOfBirth: AWSDate
   dietaryRestrictions: String
-  #  Optional, if needed for age-based recommendations
+  #  Optional, if needed for age-based recommendations (TODO: if not provided, the server will use the user's date of birth)
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
   openTextPreferences: String
