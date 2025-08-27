@@ -9,6 +9,7 @@ import { Construct } from 'constructs';
 
 export class AuthStack extends cdk.Stack {
   public readonly userPool: cognito.UserPool;
+  public readonly authenticatedRole: iam.Role;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -235,7 +236,7 @@ export class AuthStack extends cdk.Stack {
     );
 
     // Create IAM Role for Authenticated Users
-    const authenticatedRole = new iam.Role(this, 'AuthenticatedRole', {
+    this.authenticatedRole = new iam.Role(this, 'AuthenticatedRole', {
       assumedBy: new iam.FederatedPrincipal(
         'cognito-identity.amazonaws.com',
         {
@@ -248,6 +249,14 @@ export class AuthStack extends cdk.Stack {
         },
         'sts:AssumeRoleWithWebIdentity',
       ),
+    });
+
+    // Attach the Identity Pool Role Attachment
+    new cognito_identity.CfnIdentityPoolRoleAttachment(this, 'IdentityPoolRoleAttachment', {
+      identityPoolId: identityPool.ref,
+      roles: {
+        authenticated: this.authenticatedRole.roleArn,
+      },
     });
 
     userPoolClient.node.addDependency(googleProvider);

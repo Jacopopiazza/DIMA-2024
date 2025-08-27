@@ -1,13 +1,14 @@
 import * as cdk from 'aws-cdk-lib';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
-import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 interface DataStackProps extends cdk.StackProps {
   userPool: cognito.UserPool;
+  authenticatedRole?: iam.Role;
 }
 
 export class DataStack extends cdk.Stack {
@@ -41,33 +42,35 @@ export class DataStack extends cdk.Stack {
     });
 
     // Create IAM policy for authenticated users to upload assets
-    const uploadPolicy = new iam.PolicyDocument({
-      statements: [
-        new iam.PolicyStatement({
-          effect: iam.Effect.ALLOW,
-          actions: [
-            's3:PutObject',
-            's3:PutObjectAcl',
-            's3:GetObject',
-            's3:DeleteObject',
-          ],
-          resources: [
-            this.assetsBucket.bucketArn,
-            `${this.assetsBucket.bucketArn}/*`,
-          ],
-          conditions: {
-            StringEquals: {
-              'cognito-identity.amazonaws.com:aud': props.userPool.userPoolId,
-            },
-          },
-        }),
+    const s3Policy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        's3:PutObject',
+        's3:PutObjectAcl',
+        's3:GetObject',
+        's3:DeleteObject',
+        's3:ListBucket',
+      ],
+      resources: [
+        this.assetsBucket.bucketArn,
+        `${this.assetsBucket.bucketArn}/*`,
       ],
     });
+
+    // If authenticated role is provided, attach the S3 policy
+    if (props.authenticatedRole) {
+      props.authenticatedRole.addToPolicy(s3Policy);
+    }
 
     // Export the bucket name for cross-stack references
     new cdk.CfnOutput(this, 'AssetsBucketName', {
       value: this.assetsBucket.bucketName,
       exportName: 'AssetsBucketName',
+    });
+
+    new cdk.CfnOutput(this, 'AssetsBucketRegion', {
+      value: this.region,
+      exportName: 'AssetsBucketRegion',
     });
 
     new cdk.CfnOutput(this, 'AssetsBucketArn', {

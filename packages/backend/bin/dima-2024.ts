@@ -25,6 +25,7 @@ const authStack = new AuthStack(app, 'AuthStack', {
 // Create the DataStack for your DynamoDB table.
 const dataStack = new DataStack(app, 'DataStack', {
   userPool: authStack.userPool,
+  authenticatedRole: authStack.authenticatedRole,
   env: { account: '537124974525', region: 'us-west-2' },
   // additional properties if needed
 });
