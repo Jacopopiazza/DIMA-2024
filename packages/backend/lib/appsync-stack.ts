@@ -172,7 +172,7 @@ export class AppSyncApiStack extends cdk.Stack {
         dataSource: tableDS,
         runtime: appsync.FunctionRuntime.JS_1_0_0,
         code: appsync.Code.fromAsset(
-          'templates/pipeline.updateUserDetails.UpdateUserDetails.js',
+          'resolvers/pipeline.updateUserDetails.UpdateUserDetails.js',
         ),
       },
     );
@@ -284,7 +284,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'createMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('templates/mutation.createMealPlan.js'),
+      code: appsync.Code.fromAsset('resolvers/mutation.createMealPlan.js'),
     });
 
     // --- Resolver for Mutation.deleteMealPlan ---
@@ -292,7 +292,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'deleteMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('templates/mutation.deleteMealPlan.js'),
+      code: appsync.Code.fromAsset('resolvers/mutation.deleteMealPlan.js'),
     });
 
     // --- Resolver for Mutation.modifyMealPlan ---
@@ -300,7 +300,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'modifyMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('templates/mutation.modifyMealPlan.js'),
+      code: appsync.Code.fromAsset('resolvers/mutation.modifyMealPlan.js'),
     });
 
     // --- Resolver for Mutation.modifyAssignedMealPlan ---
@@ -308,7 +308,9 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'modifyAssignedMealPlan',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('templates/mutation.modifyAssignedMealPlan.js'),
+      code: appsync.Code.fromAsset(
+        'resolvers/mutation.modifyAssignedMealPlan.js',
+      ),
     });
 
     // --- Pipeline Functions for validateMealPlan ---
@@ -321,7 +323,7 @@ export class AppSyncApiStack extends cdk.Stack {
         dataSource: tableDS,
         runtime: appsync.FunctionRuntime.JS_1_0_0,
         code: appsync.Code.fromAsset(
-          'templates/getMealPlanKeysByMealPlanId.js',
+          'resolvers/getMealPlanKeysByMealPlanId.js',
         ),
       },
     );
@@ -335,7 +337,7 @@ export class AppSyncApiStack extends cdk.Stack {
         dataSource: tableDS,
         runtime: appsync.FunctionRuntime.JS_1_0_0,
         code: appsync.Code.fromAsset(
-          'templates/updateMealPlanValidationStatus.js',
+          'resolvers/updateMealPlanValidationStatus.js',
         ),
       },
     );
@@ -360,7 +362,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Query',
       fieldName: 'listMyMealPlans',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('templates/query.listMyMealPlans.js'),
+      code: appsync.Code.fromAsset('resolvers/query.listMyMealPlans.js'),
     });
 
     // --- Resolver for Query.getMealPlanById (JavaScript Runtime) ---
@@ -368,7 +370,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Query',
       fieldName: 'getMealPlanById',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('lib/resolvers/getMealPlanById.js'),
+      code: appsync.Code.fromAsset('resolvers/getMealPlanById.js'),
     });
 
     // --- Resolver for Query.listNutritionists ---
@@ -376,7 +378,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Query',
       fieldName: 'listNutritionists',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset('templates/query.listNutritionists.js'),
+      code: appsync.Code.fromAsset('resolvers/query.listNutritionists.js'),
     });
 
     // --- Resolver for Mutation.requestValidation ---
@@ -385,7 +387,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'requestValidation',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'templates/mutation.requestValidation.js',
+        'resolvers/mutation.requestValidation.js',
       ),
     });
 
@@ -395,7 +397,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'listMyAssignedMealPlans',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'templates/query.listMyAssignedMealPlans.js',
+        'resolvers/query.listMyAssignedMealPlans.js',
       ),
     });
 
@@ -405,7 +407,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'getMyNutritionistProfile',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'templates/query.getMyNutritionistProfile.js',
+        'resolvers/query.getMyNutritionistProfile.js',
       ),
     });
 
@@ -415,7 +417,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'updateMyNutritionistProfile',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'templates/mutation.updateMyNutritionistProfile.js',
+        'resolvers/mutation.updateMyNutritionistProfile.js',
       ),
     });
 
@@ -574,7 +576,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'onMealPlanStatusChanged',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'templates/subscription.onMealPlanStatusChanged.js',
+        'resolvers/subscription.onMealPlanStatusChanged.js',
       ),
     });
 
@@ -584,7 +586,7 @@ export class AppSyncApiStack extends cdk.Stack {
       fieldName: 'notifyMealPlanStatusChanged',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
-        'templates/mutation.notifyMealPlanStatusChanged.js',
+        'resolvers/mutation.notifyMealPlanStatusChanged.js',
       ),
     });
 
