@@ -1,5 +1,6 @@
 import 'package:dima_application/Views/UserViews/MyPlansScreen/subscription_test_page.dart';
 import 'package:dima_application/generated/flutter-models/MealPlanValidationStatus.dart';
+import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,10 +52,44 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
     // Plans are now automatically loaded by the provider on initialization
   }
 
+  // Note: route tracking removed per request; navigation hint will be shown instead
+
   @override
   Widget build(BuildContext context) {
     final plansAsync = ref.watch(mealPlansProvider);
     print('[MyPlansPage] Building with state: ${plansAsync.toString()}');
+
+    // Listen for notifications and auto-refresh; show hint to navigate here
+    ref.listen<NotificationState>(mealPlanNotificationProvider,
+        (previous, current) {
+      if (current.hasUnreadNotifications && current.notifications.isNotEmpty) {
+        final latestNotification = current.notifications.last;
+        if (latestNotification.success) {
+          // Auto-refresh the meal plans list when a new plan is generated
+          ref.read(mealPlansProvider.notifier).listMyMealPlans();
+          // Mark notifications as read since we're handling them here
+          ref.read(mealPlanNotificationProvider.notifier).markAllAsRead();
+
+          // Show a brief snackbar to indicate the list was refreshed
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.refresh, color: Colors.white, size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text('New meal plan available! List refreshed.'),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(

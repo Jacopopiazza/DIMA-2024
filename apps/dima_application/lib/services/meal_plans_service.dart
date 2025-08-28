@@ -480,7 +480,7 @@ class MealPlansService {
 
       final Map<String, dynamic> createMealPlanData =
           json.decode(response.data!);
-      final data = createMealPlanData['createMealPlan'];
+      final data = createMealPlanData['requestNewMealPlan'];
 
       final success = data['success'] as bool? ?? false;
       final message = data['message'] as String?;

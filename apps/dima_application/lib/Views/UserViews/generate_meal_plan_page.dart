@@ -90,10 +90,15 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage> {
       prefs['dailyMealsPreference'] = userDetails.dailyMealsPreference;
     }
     if (userDetails.exerciseFrequency != null) {
-      prefs['exerciseFrequency'] = userDetails.exerciseFrequency;
+      final freq = userDetails.exerciseFrequency;
+      // Ensure enum is serialized as string
+      prefs['exerciseFrequency'] = freq is Enum ? freq.name : freq.toString();
     }
     if (userDetails.allergies != null && userDetails.allergies.isNotEmpty) {
-      prefs['allergies'] = userDetails.allergies;
+      final allergies = userDetails.allergies as List<dynamic>;
+      // Ensure enums are serialized as string list
+      prefs['allergies'] =
+          allergies.map((e) => e is Enum ? e.name : e.toString()).toList();
     }
     if (userDetails.dietaryRestrictions != null &&
         userDetails.dietaryRestrictions.isNotEmpty) {
@@ -214,16 +219,17 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage> {
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Meal plan created successfully!'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
+          content: Text(
+              'Meal plan generation started! You\'ll receive a notification when it\'s ready.'),
+          backgroundColor: Colors.blue,
+          duration: Duration(seconds: 4),
         ),
       );
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Failed to create meal plan'),
+          content: Text('Failed to start meal plan generation'),
           backgroundColor: Colors.red,
           duration: Duration(seconds: 3),
         ),

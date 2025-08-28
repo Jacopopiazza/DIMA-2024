@@ -133,6 +133,37 @@ class ImageUploadService {
     }
   }
 
+  /// Refresh an expired image URL by generating a new presigned URL
+  /// This is useful when S3 presigned URLs expire (default 15 minutes)
+  Future<String?> refreshImageUrl(String expiredUrl) async {
+    try {
+      // Extract S3 key from the expired URL
+      final s3Key = _extractS3KeyFromUrl(expiredUrl);
+      if (s3Key == null) {
+        throw Exception('Invalid image URL - cannot extract S3 key');
+      }
+
+      // Generate a new presigned URL
+      final urlResult = await Amplify.Storage.getUrl(
+        path: StoragePath.fromString(s3Key),
+        options: const StorageGetUrlOptions(
+          pluginOptions: S3GetUrlPluginOptions(
+            validateObjectExistence: true,
+            expiresIn: Duration(hours: 24), // Longer expiration
+          ),
+        ),
+      ).result;
+
+      return urlResult.url.toString();
+    } on StorageException catch (e) {
+      safePrint('Storage error refreshing URL: ${e.message}');
+      return null;
+    } catch (e) {
+      safePrint('Unexpected error refreshing image URL: $e');
+      return null;
+    }
+  }
+
   /// Show image source selection dialog
   Future<XFile?> pickImageFromSourceDialog(BuildContext context) async {
     return showModalBottomSheet<XFile?>(

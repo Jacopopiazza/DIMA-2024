@@ -27,7 +27,15 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     _loadAssignedMealPlans();
   }
 
+  @override
+  void dispose() {
+    // Cancel any ongoing operations here if needed
+    super.dispose();
+  }
+
   Future<void> _loadAssignedMealPlans() async {
+    if (!mounted) return;
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -36,19 +44,25 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     try {
       final plans =
           await ref.read(mealPlansProvider.notifier).listMyAssignedMealPlans();
-      setState(() {
-        _assignedMealPlans = plans;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _assignedMealPlans = plans;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Error loading assigned meal plans: $e';
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Error loading assigned meal plans: $e';
+          _isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> _validateMealPlan(MealPlan plan) async {
+    if (!mounted) return;
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -71,7 +85,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
       },
     );
 
-    if (confirmed != true) return;
+    if (confirmed != true || !mounted) return;
 
     try {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -123,6 +137,8 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
   }
 
   Future<void> _rejectMealPlan(MealPlan plan) async {
+    if (!mounted) return;
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -154,7 +170,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
       },
     );
 
-    if (confirmed != true) return;
+    if (confirmed != true || !mounted) return;
 
     try {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -206,6 +222,8 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
   }
 
   Future<void> _showModifyPlanDialog(MealPlan plan) async {
+    if (!mounted) return;
+
     await showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -221,6 +239,8 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
 
   Future<void> _modifyMealPlan(
       MealPlan plan, Map<String, dynamic> changes) async {
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Modifying meal plan...')),
     );

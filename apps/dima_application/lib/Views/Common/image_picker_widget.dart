@@ -4,6 +4,8 @@ import 'package:dima_application/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'network_image_with_retry.dart';
+
 /// A reusable widget for picking and displaying profile images
 class ImagePickerWidget extends StatefulWidget {
   final String? initialImageUrl;
@@ -456,40 +458,52 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       );
     }
 
-    // Show current network image
+    // Show current network image with auto-retry
     if (_currentImageUrl != null) {
-      return Image.network(
-        _currentImageUrl!,
+      return NetworkImageWithRetry(
+        imageUrl: _currentImageUrl!,
         width: widget.size,
         height: widget.size,
         fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            color: theme.colorScheme.surfaceContainerHighest,
-            child: Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
+        placeholder: Container(
+          color: theme.colorScheme.surfaceContainerHighest,
+          child: Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
             ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: theme.colorScheme.surfaceContainerHighest,
-            child: Center(
-              child: Icon(
-                Icons.add_a_photo,
-                size: widget.size * 0.3,
-                color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        errorWidget: Container(
+          color: theme.colorScheme.surfaceContainerHighest,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: widget.size * 0.25,
+                color: theme.colorScheme.error,
               ),
-            ),
-          );
-        },
+              const SizedBox(height: 4),
+              Text(
+                'Failed to load',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                  fontSize: 10,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'Tap to retry',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontSize: 8,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       );
     }
 

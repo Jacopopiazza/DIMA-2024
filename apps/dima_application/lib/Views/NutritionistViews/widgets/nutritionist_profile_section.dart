@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../generated/flutter-models/NutritionistProfile.dart';
+import '../../Common/network_image_with_retry.dart';
 
 class NutritionistProfileSection extends StatelessWidget {
   final NutritionistProfile? profile;
@@ -34,19 +35,53 @@ class NutritionistProfileSection extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            // Profile Picture
+            // Profile Picture with auto-retry for expired URLs
             CircleAvatar(
               radius: 50,
-              backgroundImage: profile?.profilePictureUrl != null
-                  ? NetworkImage(profile!.profilePictureUrl!)
-                  : null,
-              child: profile?.profilePictureUrl == null
-                  ? Icon(
+              backgroundColor: theme.colorScheme.primaryContainer,
+              child: profile?.profilePictureUrl != null
+                  ? ClipOval(
+                      child: NetworkImageWithRetry(
+                        imageUrl: profile!.profilePictureUrl!,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        placeholder: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primaryContainer,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                theme.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                        errorWidget: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primaryContainer,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.person,
+                            size: 50,
+                            color: theme.colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Icon(
                       Icons.person,
                       size: 50,
-                      color: theme.colorScheme.onPrimary,
-                    )
-                  : null,
+                      color: theme.colorScheme.onPrimaryContainer,
+                    ),
             ),
             const SizedBox(height: 16),
 

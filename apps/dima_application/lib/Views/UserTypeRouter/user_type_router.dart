@@ -1,17 +1,19 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Utils/user_type_enum.dart';
-import 'package:dima_application/Views/UserViews/home_screen.dart';
-import 'package:dima_application/Views/NutritionistViews/nutritionist_home_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/enter_nutritionist_profile.dart';
+import 'package:dima_application/Views/NutritionistViews/nutritionist_home_screen.dart';
+import 'package:dima_application/Views/UserViews/home_screen.dart';
+import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserTypeRouter extends StatelessWidget {
+class UserTypeRouter extends ConsumerWidget {
   const UserTypeRouter({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder(
       future: _checkUserRole(),
       builder: (context, snapshot) {
@@ -40,8 +42,10 @@ class UserTypeRouter extends StatelessWidget {
             ),
           );
         } else {
-          final role = snapshot.data as String?;
+          final role = snapshot.data;
           if (role == 'USER') {
+            // Initialize notification system for users
+            ref.read(mealPlanNotificationProvider);
             return UserHomeScreen();
           } else if (role == 'NUTRITIONIST') {
             return _NutritionistRouter();
@@ -63,7 +67,7 @@ class UserTypeRouter extends StatelessWidget {
 
     try {
       // First attempt to get role from Amplify
-      final user = await Amplify.Auth.getCurrentUser();
+      await Amplify.Auth.getCurrentUser();
       final attributes = await Amplify.Auth.fetchUserAttributes();
       final roleAttribute = attributes.firstWhere(
         (attr) =>
