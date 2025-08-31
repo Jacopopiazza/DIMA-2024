@@ -536,7 +536,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
         icon = Icons.pending_rounded;
         backgroundColor = Colors.orange.shade100;
         foregroundColor = Colors.orange.shade800;
-        label = 'Pending';
+        label = 'Pending Validation';
         break;
       case MealPlanValidationStatus.NOT_VALIDATED:
         icon = Icons.help_outline_rounded;
