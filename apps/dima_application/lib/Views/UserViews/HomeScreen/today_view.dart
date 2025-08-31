@@ -1,4 +1,5 @@
 import 'package:dima_application/Views/UserViews/HomeScreen/progress_card.dart';
+import 'package:dima_application/Views/UserViews/MyPlansScreen/my_plans_page.dart';
 // Ensure StaleDataIndicator is imported
 import 'package:dima_application/views/UserViews/HomeScreen/stale_data_indicator.dart';
 import 'package:dima_application/generated/flutter-models/Macros.dart';
@@ -30,32 +31,47 @@ class TodayPage extends ConsumerWidget {
     // Read the provider's notifier to access methods that can change the state.
     final notifier = ref.read(todayPageProvider.notifier);
 
-    // Use RefreshIndicator to enable pull-to-refresh functionality.
+    // Determina se il RefreshIndicator dovrebbe essere abilitato
+    final bool canRefresh = todayState.status != DataStatus.errorNoPlan && 
+                           todayState.status != DataStatus.errorInvalidPlanId;
+
+                           // Se non c'è piano, mostra direttamente il contenuto senza RefreshIndicator
+    if (!canRefresh) {
+      return Center(
+        child: ChoosePlanCard(
+          onChoosePlan: () async {
+            // Naviga alla pagina di selezione piano
+            await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MyPlansPage(),
+        ),
+      );
+            // Refresh solo dopo che l'utente torna dalla selezione
+            // e potenzialmente ha selezionato un piano
+            if (context.mounted) {
+              notifier.refreshData();
+            }
+          },
+        ),
+      );
+    }
+
+    // Altrimenti usa RefreshIndicator normalmente
     return RefreshIndicator(
-      displacement: 60.0, // Distance from the top the indicator appears
-      color: Theme.of(context).colorScheme.primary, // Color of the indicator spinner
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor, // Background color of the indicator area
-      onRefresh: () => notifier.refreshData(), // Callback function when the user pulls to refresh
+      displacement: 60.0,
+      color: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      onRefresh: () => notifier.refreshData(),
       child: LayoutBuilder(
-        // LayoutBuilder provides the constraints of the parent widget,
-        // useful for ensuring the content can fill the available space.
         builder: (context, constraints) {
-          // Use a ListView for vertical scrollability.
-          // ListView is necessary for RefreshIndicator to work correctly with scroll.
           return ListView(
-            // AlwaysScrollableScrollPhysics ensures that the RefreshIndicator
-            // works even if the content is not tall enough to require scrolling.
-            // BouncingScrollPhysics provides the iOS-style bouncing effect.
             physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics(),
             ),
             children: [
-              // Use ConstrainedBox to ensure the content inside the ListView
-              // takes at least the full height of the viewport. This helps
-              // center content vertically when it's shorter than the screen.
               ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                // Delegate the building of the main body content based on the state.
                 child: _buildBody(context, todayState, notifier),
               )
             ],
@@ -162,19 +178,6 @@ class TodayPage extends ConsumerWidget {
           showErrorView = true;
         }
         break;
-
-      case DataStatus.errorNoPlan:
-      case DataStatus
-            .errorInvalidPlanId: // Handle cases where no plan is selected or the plan ID is invalid.
-        // Show the ChoosePlanCard centered on the screen.
-        return Center(
-          child: ChoosePlanCard(
-            // message: state.errorMessage ?? "Please select a meal plan.", // Optional custom message
-            onChoosePlan: () => Navigator.pushNamed(context, '/choosePlan') // Navigate to choose plan screen
-                .then((_) => notifier.refreshData()), // Refresh data after returning from choose plan screen
-          ),
-        );
-
       case DataStatus.initial:
       default:
         // Default state, show a simple loading spinner.
