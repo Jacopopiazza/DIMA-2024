@@ -426,11 +426,16 @@ All fields must be filled. Do not leave any field blank or use placeholders. Do 
   let mealPlan: DailyPlanData;
   try {
     mealPlan = JSON.parse(response.text!);
-    console.log('Meal Plan parsed successfully:', JSON.stringify(mealPlan, null, 2));
+    console.log(
+      'Meal Plan parsed successfully:',
+      JSON.stringify(mealPlan, null, 2),
+    );
   } catch (parseError) {
     console.error('Failed to parse Gemini API response as JSON:', parseError);
     console.error('Raw response text was:', response.text);
-    throw new Error(`Invalid JSON response from Gemini API: ${parseError instanceof Error ? parseError.message : 'Unknown parse error'}`);
+    throw new Error(
+      `Invalid JSON response from Gemini API: ${parseError instanceof Error ? parseError.message : 'Unknown parse error'}`,
+    );
   }
 
   // Validate the parsed meal plan structure
@@ -439,9 +444,20 @@ All fields must be filled. Do not leave any field blank or use placeholders. Do 
   }
 
   // Check if all required days are present
-  const requiredDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+  const requiredDays = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+  ];
   for (const day of requiredDays) {
-    if (!(day in mealPlan) || !Array.isArray(mealPlan[day as keyof DailyPlanData])) {
+    if (
+      !(day in mealPlan) ||
+      !Array.isArray(mealPlan[day as keyof DailyPlanData])
+    ) {
       throw new Error(`Missing or invalid meals for ${day}`);
     }
   }
@@ -599,9 +615,11 @@ export const handler: Handler<GeneratorEvent> = async (event) => {
       console.error('Error details:', {
         name: error instanceof Error ? error.name : 'Unknown',
         message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined
+        stack: error instanceof Error ? error.stack : undefined,
       });
-      throw new Error(`Failed to generate meal plan from Gemini API: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to generate meal plan from Gemini API: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
 
     await updateMealPlanInDynamoDB(

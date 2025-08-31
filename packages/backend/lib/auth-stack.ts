@@ -252,12 +252,16 @@ export class AuthStack extends cdk.Stack {
     });
 
     // Attach the Identity Pool Role Attachment
-    new cognito_identity.CfnIdentityPoolRoleAttachment(this, 'IdentityPoolRoleAttachment', {
-      identityPoolId: identityPool.ref,
-      roles: {
-        authenticated: this.authenticatedRole.roleArn,
+    new cognito_identity.CfnIdentityPoolRoleAttachment(
+      this,
+      'IdentityPoolRoleAttachment',
+      {
+        identityPoolId: identityPool.ref,
+        roles: {
+          authenticated: this.authenticatedRole.roleArn,
+        },
       },
-    });
+    );
 
     userPoolClient.node.addDependency(googleProvider);
 

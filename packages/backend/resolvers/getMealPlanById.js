@@ -33,7 +33,7 @@ export function request(ctx) {
     operation: 'GetItem',
     key: util.dynamodb.toMapValues({
       PK: pk,
-      SK: sk
+      SK: sk,
     }),
   };
 }
@@ -49,7 +49,10 @@ export function response(ctx) {
 
   // Check if meal plan was found
   if (!ctx.result) {
-    util.error('Meal plan not found or you don\'t have access to it.', 'NotFound');
+    util.error(
+      "Meal plan not found or you don't have access to it.",
+      'NotFound',
+    );
   }
 
   const mealPlan = ctx.result;
@@ -65,7 +68,7 @@ export function response(ctx) {
       thursday: mealPlan.dailyPlan.thursday || [],
       friday: mealPlan.dailyPlan.friday || [],
       saturday: mealPlan.dailyPlan.saturday || [],
-      sunday: mealPlan.dailyPlan.sunday || []
+      sunday: mealPlan.dailyPlan.sunday || [],
     };
 
     // Update the meal plan with transformed daily plan

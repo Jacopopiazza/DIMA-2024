@@ -24,7 +24,9 @@ export function request(ctx) {
   }
 
   if (!input || (!input.planName && !input.dailyPlan)) {
-    util.error('At least one of planName or dailyPlan must be provided in input');
+    util.error(
+      'At least one of planName or dailyPlan must be provided in input',
+    );
   }
 
   const pk = `USER#${userId}`;
@@ -32,7 +34,8 @@ export function request(ctx) {
   const now = util.time.nowISO8601();
 
   // Build the update expression dynamically
-  let updateExpression = 'SET updatedAt = :updatedAt, validationStatus = :validationStatus';
+  let updateExpression =
+    'SET updatedAt = :updatedAt, validationStatus = :validationStatus';
   const expressionValues = {
     ':updatedAt': now,
     ':validationStatus': 'PENDING_REVIEW',
@@ -59,7 +62,8 @@ export function request(ctx) {
       expressionValues: util.dynamodb.toMapValues(expressionValues),
     },
     condition: {
-      expression: 'attribute_exists(PK) AND attribute_exists(SK) AND assignedNutritionistId = :nutritionistId',
+      expression:
+        'attribute_exists(PK) AND attribute_exists(SK) AND assignedNutritionistId = :nutritionistId',
     },
   };
 }
@@ -75,7 +79,8 @@ export function response(ctx) {
     if (ctx.error.type === 'DynamoDB:ConditionalCheckFailedException') {
       return {
         success: false,
-        message: 'You are not authorized to modify this meal plan or it does not exist',
+        message:
+          'You are not authorized to modify this meal plan or it does not exist',
         mealPlanId: null,
       };
     }
@@ -89,7 +94,8 @@ export function response(ctx) {
 
   return {
     success: true,
-    message: 'Meal plan modified successfully and validation status reset to pending review',
+    message:
+      'Meal plan modified successfully and validation status reset to pending review',
     mealPlanId: ctx.args.mealPlanId,
   };
 }

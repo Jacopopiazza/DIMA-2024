@@ -386,9 +386,7 @@ export class AppSyncApiStack extends cdk.Stack {
       typeName: 'Mutation',
       fieldName: 'requestValidation',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset(
-        'resolvers/mutation.requestValidation.js',
-      ),
+      code: appsync.Code.fromAsset('resolvers/mutation.requestValidation.js'),
     });
 
     // --- Resolver for Query.listMyAssignedMealPlans ---

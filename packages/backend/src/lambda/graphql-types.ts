@@ -299,6 +299,12 @@ export type MealWithStatus = {
   meal: Meal;
 };
 
+/** Input for modifying a meal plan assigned to a nutritionist. */
+export type ModifyAssignedMealPlanInput = {
+  dailyPlan?: InputMaybe<DailyPlanDataInput>;
+  planName?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Assigns a nutritionist to a meal plan, initiating the chat capability. (Pro feature) */
@@ -314,6 +320,8 @@ export type Mutation = {
   getMealPlanById?: Maybe<MealPlan>;
   /** Marks a meal as completed for today for the authenticated user. */
   markMealAsCompleted?: Maybe<PlanDayCompletion>;
+  /** Modifies a meal plan assigned to the nutritionist. */
+  modifyAssignedMealPlan?: Maybe<MealPlanResponse>;
   /** Modifies a meal plan. */
   modifyMealPlan?: Maybe<MealPlanResponse>;
   /** Mutations solo per le notifiche (chiamate dalla notification lambda) */
@@ -359,6 +367,12 @@ export type MutationGetMealPlanByIdArgs = {
 
 export type MutationMarkMealAsCompletedArgs = {
   input: MarkMealCompletedInput;
+};
+
+export type MutationModifyAssignedMealPlanArgs = {
+  input: ModifyAssignedMealPlanInput;
+  mealPlanId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
 };
 
 export type MutationModifyMealPlanArgs = {
