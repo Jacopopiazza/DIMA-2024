@@ -1,5 +1,6 @@
 import 'package:dima_application/Views/UserViews/MyPlansScreen/subscription_test_page.dart';
 import 'package:dima_application/generated/flutter-models/MealPlanValidationStatus.dart';
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,23 +12,6 @@ import 'modify_plan_name_dialog.dart';
 import 'read_meal_plan_page.dart';
 import 'select_nutritionist_dialog.dart';
 
-class MealPlanDetailsPage extends StatelessWidget {
-  final String planId;
-
-  const MealPlanDetailsPage({super.key, required this.planId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meal Plan Details'),
-      ),
-      body: Center(
-        child: Text('Details for plan: $planId\nTo be implemented'),
-      ),
-    );
-  }
-}
 
 class MyPlansPage extends ConsumerStatefulWidget {
   const MyPlansPage({super.key});
@@ -36,7 +20,33 @@ class MyPlansPage extends ConsumerStatefulWidget {
   ConsumerState<MyPlansPage> createState() => _MyPlansPageState();
 }
 
-class _MyPlansPageState extends ConsumerState<MyPlansPage> {
+class _MyPlansPageState extends ConsumerState<MyPlansPage> 
+    with SingleTickerProviderStateMixin {
+  late AnimationController _fabAnimationController;
+  late Animation<double> _fabScaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fabAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fabScaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.85,
+    ).animate(CurvedAnimation(
+      parent: _fabAnimationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _fabAnimationController.dispose();
+    super.dispose();
+  }
+
   void _openGenerateMealPlan(BuildContext context) {
     Navigator.push(
       context,
@@ -46,45 +56,52 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // Plans are now automatically loaded by the provider on initialization
+  Future<void> _refreshPlans() async {
+    final notifier = ref.read(mealPlansProvider.notifier);
+    await notifier.listMyMealPlans();
   }
-
-  // Note: route tracking removed per request; navigation hint will be shown instead
 
   @override
   Widget build(BuildContext context) {
     final plansAsync = ref.watch(mealPlansProvider);
-    print('[MyPlansPage] Building with state: ${plansAsync.toString()}');
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    // Listen for notifications and auto-refresh; show hint to navigate here
+    // Listen for notifications and auto-refresh
     ref.listen<NotificationState>(mealPlanNotificationProvider,
         (previous, current) {
       if (current.hasUnreadNotifications && current.notifications.isNotEmpty) {
         final latestNotification = current.notifications.last;
         if (latestNotification.success) {
           // Auto-refresh the meal plans list when a new plan is generated
-          ref.read(mealPlansProvider.notifier).listMyMealPlans();
+          _refreshPlans();
           // Mark notifications as read since we're handling them here
           ref.read(mealPlanNotificationProvider.notifier).markAllAsRead();
 
-          // Show a brief snackbar to indicate the list was refreshed
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
                 children: [
-                  Icon(Icons.refresh, color: Colors.white, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.refresh, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
                     child: Text('New meal plan available! List refreshed.'),
                   ),
                 ],
               ),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.green.shade600,
               behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
@@ -92,25 +109,31 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
     });
 
     return Scaffold(
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Your Meal Plans'),
+        elevation: 0,
+        backgroundColor: colorScheme.surface,
+        title: Text(
+          'Your Meal Plans',
+          style: theme.textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
+          ),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              _openGenerateMealPlan(context);
-            },
-            tooltip: 'Create New Meal Plan',
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              ref.read(mealPlansProvider.notifier).listMyMealPlans();
-            },
-            tooltip: 'Refresh Plans',
-          ),
-          IconButton(
-            icon: const Icon(Icons.repartition),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.science_outlined,
+                color: colorScheme.primary,
+                size: 20,
+              ),
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -121,398 +144,829 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage> {
             },
             tooltip: 'Test Subscription',
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: plansAsync.when(
         data: (plans) {
           if (plans.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.restaurant_menu,
-                      size: 64,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No meal plans found',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'You haven\'t generated any meal plans yet, or all plans have been deleted.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        _openGenerateMealPlan(context);
-                      },
-                      icon: const Icon(Icons.add),
-                      label: const Text('Generate New Meal Plan'),
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return _buildEmptyState(context, colorScheme);
           }
-          // Get the active plan ID directly (no longer async)
+          
           final activePlanId = ref.watch(activeMealPlanIdProvider);
           String? resolvedActivePlanId = activePlanId;
           if (resolvedActivePlanId == null && plans.isNotEmpty) {
-            // Only use a plan with ACTIVE status, don't fallback to first plan
             final activeByStatus =
-                plans.where((p) => p.status?.name == 'ACTIVE').firstOrNull;
+                plans.where((p) => p.status == PlanStatus.ACTIVE).firstOrNull;
             resolvedActivePlanId = activeByStatus?.mealPlanId;
           }
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            itemCount: plans.length,
-            itemBuilder: (context, index) {
-              final plan = plans[index];
-              final isActive = plan.mealPlanId == resolvedActivePlanId;
-              return Card(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
-                elevation: isActive ? 6.0 : 2.0,
-                color: isActive
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.12)
-                    : null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                  side: isActive
-                      ? BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 2)
-                      : BorderSide.none,
+
+          return RefreshIndicator(
+            onRefresh: _refreshPlans,
+            backgroundColor: colorScheme.surface,
+            color: colorScheme.primary,
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              itemCount: plans.length,
+              itemBuilder: (context, index) {
+                final plan = plans[index];
+                final isActive = plan.mealPlanId == resolvedActivePlanId;
+                return _buildMealPlanCard(context, plan, isActive, colorScheme, theme);
+              },
+            ),
+          );
+        },
+        loading: () => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withOpacity(0.1),
+                  shape: BoxShape.circle,
                 ),
-                child: ListTile(
-                  title: Text(
+                child: CircularProgressIndicator(
+                  color: colorScheme.primary,
+                  strokeWidth: 3,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Loading your meal plans...',
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        error: (e, st) => _buildErrorState(context, e.toString(), colorScheme, theme),
+      ),
+      floatingActionButton: ScaleTransition(
+        scale: _fabScaleAnimation,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            _fabAnimationController.forward().then((_) {
+              _fabAnimationController.reverse();
+            });
+            _openGenerateMealPlan(context);
+          },
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
+          elevation: 8,
+          icon: const Icon(Icons.add_rounded),
+          label: const Text(
+            'New Plan',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, ColorScheme colorScheme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.restaurant_menu_rounded,
+                size: 64,
+                color: colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              'No meal plans yet',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Create your first personalized meal plan\nto get started with healthy eating',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 32),
+            FilledButton.tonalIcon(
+              onPressed: () => _openGenerateMealPlan(context),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Create Meal Plan'),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, String error, ColorScheme colorScheme, ThemeData theme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                Icons.error_outline_rounded,
+                size: 48,
+                color: colorScheme.onErrorContainer,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Something went wrong',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Unable to load your meal plans',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: _refreshPlans,
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Try Again'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGeneratingCard(BuildContext context, plan, bool isActive, ColorScheme colorScheme, ThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            // Status indicator & icon
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: _getPlanStatusColor(plan.status, isActive, colorScheme),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                _getPlanStatusIcon(plan.status, isActive),
+                color: _getPlanStatusIconColor(plan.status, isActive, colorScheme),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            
+            // Plan info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     plan.planName ?? 'Unnamed Plan',
-                    style: isActive
-                        ? TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          )
-                        : null,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurface.withOpacity(0.7),
+                    ),
                   ),
-                  subtitle: Text('ID: ${plan.mealPlanId}'),
-                  trailing: SizedBox(
-                    width:
-                        250, // Increased width to accommodate the new view button
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        // Active/Inactive indicator - same size for both
-                        SizedBox(
-                          width: 48,
-                          child: isActive
-                              ? Tooltip(
-                                  message: 'Active plan',
-                                  child: Icon(Icons.check_circle,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                )
-                              : Tooltip(
-                                  message: 'Make this plan active',
-                                  child: IconButton(
-                                    icon: Icon(Icons.radio_button_unchecked),
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    onPressed: () async {
-                                      final confirmed = await showDialog<bool>(
-                                        context: context,
-                                        builder: (BuildContext dialogContext) {
-                                          return AlertDialog(
-                                            title:
-                                                const Text('Set Active Plan'),
-                                            content: Text(
-                                                'Do you want to make "${plan.planName ?? 'Unnamed Plan'}" your active meal plan?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.of(dialogContext)
-                                                        .pop(false),
-                                                child: const Text('Cancel'),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () =>
-                                                    Navigator.of(dialogContext)
-                                                        .pop(true),
-                                                child: const Text('Set Active'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                      if (confirmed == true) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Setting active meal plan...'),
-                                            duration: Duration(seconds: 1),
-                                          ),
-                                        );
-                                        final success = await ref
-                                            .read(mealPlansProvider.notifier)
-                                            .setActiveMealPlan(plan.mealPlanId);
-                                        if (!mounted) return;
-                                        if (success) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Active meal plan updated!'),
-                                              backgroundColor: Colors.green,
-                                              duration: Duration(seconds: 2),
-                                            ),
-                                          );
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Failed to set active meal plan'),
-                                              backgroundColor: Colors.red,
-                                              duration: Duration(seconds: 3),
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    },
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      _buildStatusChip(plan.status, colorScheme, theme),
+                      const Spacer(),
+                      Icon(
+                        Icons.hourglass_empty_rounded,
+                        color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMealPlanCard(BuildContext context, plan, bool isActive, ColorScheme colorScheme, ThemeData theme) {
+    
+    final bool isGenerating = plan.status == PlanStatus.PENDING || plan.status == PlanStatus.IN_PROGRESS;
+    
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: isGenerating 
+        ? _buildGeneratingCard(context, plan, isActive, colorScheme, theme)
+        : Dismissible(
+        key: Key(plan.mealPlanId),
+        background: _buildSwipeBackground(
+          colorScheme.primary,
+          Icons.radio_button_checked_rounded,
+          'Set Active',
+          Alignment.centerLeft,
+        ),
+        secondaryBackground: _buildSwipeBackground(
+          colorScheme.error,
+          Icons.delete_rounded,
+          'Delete',
+          Alignment.centerRight,
+        ),
+        confirmDismiss: (direction) => _handleSwipe(context, plan, direction, isActive),
+        child: InkWell(
+          onTap: () => _openPlanDetails(context, plan),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: isActive 
+                ? LinearGradient(
+                    colors: [
+                      colorScheme.primary.withOpacity(0.1),
+                      colorScheme.primary.withOpacity(0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : null,
+              color: isActive ? null : colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
+              border: isActive 
+                ? Border.all(color: colorScheme.primary.withOpacity(0.3), width: 1.5)
+                : null,
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.shadow.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  // Status indicator & icon
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: _getPlanStatusColor(plan.status, isActive, colorScheme),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      _getPlanStatusIcon(plan.status, isActive),
+                      color: _getPlanStatusIconColor(plan.status, isActive, colorScheme),
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  
+                  // Plan info
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                plan.planName ?? 'Unnamed Plan',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: isActive 
+                                    ? colorScheme.primary 
+                                    : colorScheme.onSurface,
+                                ),
+                              ),
+                            ),
+                            if (isActive)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  'ACTIVE',
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                              ),
+                          ],
                         ),
-                        // Validation button
-                        SizedBox(
-                          width: 48,
-                          child: Builder(
-                            builder: (context) {
-                              final validationStatus = plan.validationStatus;
-
-                              // Determine icon and color based on validation status
-                              IconData iconData;
-                              Color iconColor;
-                              String tooltipText;
-                              bool isValidated = false;
-
-                              switch (validationStatus) {
-                                case MealPlanValidationStatus.VALIDATED:
-                                  iconData = Icons
-                                      .person; // Man icon (validated - highlighted green)
-                                  iconColor = Colors.green;
-                                  tooltipText =
-                                      'Plan validated by nutritionist';
-                                  isValidated = true;
-                                  break;
-                                case MealPlanValidationStatus.PENDING_REVIEW:
-                                  iconData = Icons
-                                      .person_outline; // Man icon outline (pending)
-                                  iconColor = Colors.orange;
-                                  tooltipText = 'Validation in progress';
-                                  break;
-                                case MealPlanValidationStatus.NOT_VALIDATED:
-                                case null:
-                                  iconData = Icons
-                                      .person_add; // Man icon for request validation
-                                  iconColor =
-                                      Theme.of(context).colorScheme.tertiary;
-                                  tooltipText =
-                                      'Request nutritionist validation';
-                                  break;
-                              }
-
-                              return IconButton(
-                                icon: Icon(iconData),
-                                color: iconColor,
-                                tooltip: tooltipText,
-                                onPressed: isValidated
-                                    ? null
-                                    : () async {
-                                        // Only allow action if not validated
-                                        await showDialog<void>(
-                                          context: context,
-                                          builder:
-                                              (BuildContext dialogContext) {
-                                            return SelectNutritionistDialog(
-                                              mealPlanId: plan.mealPlanId,
-                                              planName: plan.planName ??
-                                                  'Unnamed Plan',
-                                              onLoadNutritionists: () => ref
-                                                  .read(mealPlansProvider
-                                                      .notifier)
-                                                  .listNutritionists(
-                                                      isAvailable: true),
-                                              onAssignNutritionist: (mealPlanId,
-                                                      nutritionistId) =>
-                                                  ref
-                                                      .read(mealPlansProvider
-                                                          .notifier)
-                                                      .requestValidation(
-                                                          mealPlanId,
-                                                          nutritionistId),
-                                            );
-                                          },
-                                        );
-                                      },
-                              );
-                            },
-                          ),
-                        ),
-                        // View button
-                        SizedBox(
-                          width: 48,
-                          child: IconButton(
-                            icon: const Icon(Icons.visibility),
-                            color: Theme.of(context).colorScheme.primary,
-                            tooltip: 'View meal plan',
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ReadMealPlanPage(
-                                    mealPlanId: plan.mealPlanId,
-                                    initialPlanName: plan.planName,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        // Edit button
-                        SizedBox(
-                          width: 48,
-                          child: IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Theme.of(context).colorScheme.secondary,
-                            tooltip: 'Edit plan name',
-                            onPressed: () async {
-                              await showDialog<void>(
-                                context: context,
-                                builder: (BuildContext dialogContext) {
-                                  return ModifyPlanNameDialog(
-                                    currentPlanName:
-                                        plan.planName ?? 'Unnamed Plan',
-                                    mealPlanId: plan.mealPlanId,
-                                    onSave: (mealPlanId, newName) async {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content:
-                                              Text('Updating plan name...'),
-                                          duration: Duration(seconds: 1),
-                                        ),
-                                      );
-                                      final success = await ref
-                                          .read(mealPlansProvider.notifier)
-                                          .modifyMealPlan(mealPlanId, newName);
-                                      if (!mounted) return;
-                                      if (success) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Plan name updated successfully!'),
-                                            backgroundColor: Colors.green,
-                                            duration: Duration(seconds: 2),
-                                          ),
-                                        );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Failed to update plan name'),
-                                            backgroundColor: Colors.red,
-                                            duration: Duration(seconds: 3),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        // Delete button
-                        SizedBox(
-                          width: 48,
-                          child: IconButton(
-                            icon: const Icon(Icons.delete),
-                            color: Theme.of(context).colorScheme.error,
-                            tooltip: 'Delete plan',
-                            onPressed: () async {
-                              await showDialog<void>(
-                                context: context,
-                                builder: (BuildContext dialogContext) {
-                                  return DeleteConfirmationDialog(
-                                    title: 'Delete Meal Plan',
-                                    content:
-                                        'Are you sure you want to delete the plan "${plan.planName ?? 'Unnamed Plan'}"?',
-                                    onConfirm: () async {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content:
-                                              Text('Deleting meal plan...'),
-                                          duration: Duration(seconds: 1),
-                                        ),
-                                      );
-                                      final success = await ref
-                                          .read(mealPlansProvider.notifier)
-                                          .deleteMealPlan(plan.mealPlanId);
-                                      if (!mounted) return;
-                                      if (success) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Meal plan deleted successfully'),
-                                            backgroundColor: Colors.green,
-                                            duration: Duration(seconds: 2),
-                                          ),
-                                        );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Failed to delete meal plan'),
-                                            backgroundColor: Colors.red,
-                                            duration: Duration(seconds: 3),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            _buildStatusChip(plan.status, colorScheme, theme),
+                            if (plan.status != PlanStatus.PENDING && plan.status != PlanStatus.IN_PROGRESS) _buildValidationChip(plan.validationStatus, colorScheme, theme),
+                            const Spacer(),
+                            Icon(
+                              Icons.chevron_right_rounded,
+                              color: colorScheme.onSurfaceVariant,
+                              size: 20,
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildValidationChip(MealPlanValidationStatus validationStatus, ColorScheme colorScheme, ThemeData theme) {
+    IconData icon;
+    Color backgroundColor;
+    Color foregroundColor;
+    String label;
+
+    switch (validationStatus) {
+      case MealPlanValidationStatus.VALIDATED:
+        icon = Icons.verified_rounded;
+        backgroundColor = Colors.green.shade100;
+        foregroundColor = Colors.green.shade800;
+        label = 'Validated';
+        break;
+      case MealPlanValidationStatus.PENDING_REVIEW:
+        icon = Icons.pending_rounded;
+        backgroundColor = Colors.orange.shade100;
+        foregroundColor = Colors.orange.shade800;
+        label = 'Pending';
+        break;
+      case MealPlanValidationStatus.NOT_VALIDATED:
+        icon = Icons.help_outline_rounded;
+        backgroundColor = colorScheme.surfaceContainerHigh;
+        foregroundColor = colorScheme.onSurfaceVariant;
+        label = 'Not validated';
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: foregroundColor),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: foregroundColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSwipeBackground(Color color, IconData icon, String label, Alignment alignment) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Align(
+        alignment: alignment,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 28),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
-              );
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(status, ColorScheme colorScheme, ThemeData theme) {
+    if (status == null) return const SizedBox.shrink();
+
+    IconData icon;
+    Color backgroundColor;
+    Color foregroundColor;
+    String label;
+
+    switch (status) {
+      case PlanStatus.IN_PROGRESS:
+      case PlanStatus.PENDING:
+        icon = Icons.autorenew_rounded;
+        backgroundColor = Colors.blue.shade100;
+        foregroundColor = Colors.blue.shade800;
+        label = 'Generating';
+        break;
+      default:
+        return const SizedBox.shrink(); // Hide other statuses
+    }
+
+    return Row(
+      children: [
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: foregroundColor),
+          const SizedBox(width: 4),
+          Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: foregroundColor,
+            fontWeight: FontWeight.w500,
+          ),
+          ),
+        ],
+        ),
+      ),
+      const SizedBox(width: 8),
+      ],
+    );
+    
+    }
+
+  Color _getPlanStatusColor(PlanStatus status, bool isActive, ColorScheme colorScheme) {
+    if (isActive) return colorScheme.primary;
+
+    if (status == PlanStatus.IN_PROGRESS) {
+      return Colors.blue.shade600;
+    } else if (status == PlanStatus.PENDING) {
+      return Colors.amber.shade600;
+    }
+    
+    return colorScheme.surfaceContainerHigh;
+  }
+
+  IconData _getPlanStatusIcon(PlanStatus status, bool isActive) {
+    if (isActive) return Icons.restaurant_rounded;
+
+    if (status == PlanStatus.IN_PROGRESS) {
+      return Icons.autorenew_rounded;
+    } else if (status == PlanStatus.PENDING) {
+      return Icons.schedule_rounded;
+    }
+    
+    return Icons.restaurant_menu_rounded;
+  }
+
+  Color _getPlanStatusIconColor(PlanStatus status, bool isActive, ColorScheme colorScheme) {
+    if (isActive) return colorScheme.onPrimary;
+
+    if (status == PlanStatus.IN_PROGRESS) {
+      return Colors.white;
+    } else if (status == PlanStatus.PENDING) {
+      return Colors.white;
+    }
+    
+    return colorScheme.onSurfaceVariant;
+  }
+
+  Future<bool> _handleSwipe(BuildContext context, plan, DismissDirection direction, bool isActive) async {
+    if (direction == DismissDirection.startToEnd && !isActive) {
+      // Set as active
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Text('Set Active Plan'),
+            content: Text('Make "${plan.planName ?? 'Unnamed Plan'}" your active meal plan?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: const Text('Set Active'),
+              ),
+            ],
+          );
+        },
+      );
+      
+      if (confirmed == true) {
+        final success = await ref
+            .read(mealPlansProvider.notifier)
+            .setActiveMealPlan(plan.mealPlanId);
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(success 
+                ? 'Active meal plan updated!' 
+                : 'Failed to set active meal plan'),
+              backgroundColor: success ? Colors.green.shade600 : Colors.red.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
+        }
+      }
+      return false;
+    } else if (direction == DismissDirection.endToStart) {
+      // Delete
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return DeleteConfirmationDialog(
+            title: 'Delete Meal Plan',
+            content: 'Are you sure you want to delete "${plan.planName ?? 'Unnamed Plan'}"?',
+            onConfirm: () async {
+              Navigator.of(dialogContext).pop();
+              final success = await ref
+                  .read(mealPlansProvider.notifier)
+                  .deleteMealPlan(plan.mealPlanId);
+              
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success 
+                      ? 'Meal plan deleted successfully' 
+                      : 'Failed to delete meal plan'),
+                    backgroundColor: success ? Colors.green.shade600 : Colors.red.shade600,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                );
+              }
             },
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) => Center(child: Text('Error: $e')),
+      );
+      return false;
+    }
+    return false;
+  }
+
+  void _openPlanDetails(BuildContext context, plan) {
+    // Show bottom sheet with quick actions
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _buildActionBottomSheet(context, plan),
+    );
+  }
+
+  Widget _buildActionBottomSheet(BuildContext context, plan) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.onSurfaceVariant.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            
+            // Plan title
+            Text(
+              plan.planName ?? 'Unnamed Plan',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Plan ID: ${plan.mealPlanId}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 24),
+            
+            // Action buttons
+            _buildActionButton(
+              context,
+              Icons.visibility_rounded,
+              'View Plan',
+              'See detailed meal plan',
+              colorScheme.primary,
+              () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReadMealPlanPage(
+                      mealPlanId: plan.mealPlanId,
+                      initialPlanName: plan.planName,
+                    ),
+                  ),
+                );
+              },
+            ),
+            _buildActionButton(
+              context,
+              Icons.edit_rounded,
+              'Edit Name',
+              'Change the plan name',
+              colorScheme.secondary,
+              () async {
+                Navigator.pop(context);
+                await showDialog<void>(
+                  context: context,
+                  builder: (BuildContext dialogContext) {
+                    return ModifyPlanNameDialog(
+                      currentPlanName: plan.planName ?? 'Unnamed Plan',
+                      mealPlanId: plan.mealPlanId,
+                      onSave: (mealPlanId, newName) async {
+                        final success = await ref
+                            .read(mealPlansProvider.notifier)
+                            .modifyMealPlan(mealPlanId, newName);
+                        
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(success 
+                                ? 'Plan name updated successfully!' 
+                                : 'Failed to update plan name'),
+                              backgroundColor: success ? Colors.green.shade600 : Colors.red.shade600,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+            if (plan.validationStatus != MealPlanValidationStatus.VALIDATED)
+              _buildActionButton(
+                context,
+                Icons.person_add_rounded,
+                'Request Validation',
+                'Get nutritionist approval',
+                Colors.orange,
+                () async {
+                  Navigator.pop(context);
+                  await showDialog<void>(
+                    context: context,
+                    builder: (BuildContext dialogContext) {
+                      return SelectNutritionistDialog(
+                        mealPlanId: plan.mealPlanId,
+                        planName: plan.planName ?? 'Unnamed Plan',
+                        onLoadNutritionists: () => ref
+                            .read(mealPlansProvider.notifier)
+                            .listNutritionists(isAvailable: true),
+                        onAssignNutritionist: (mealPlanId, nutritionistId) =>
+                            ref
+                                .read(mealPlansProvider.notifier)
+                                .requestValidation(mealPlanId, nutritionistId),
+                      );
+                    },
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+    Color color,
+    VoidCallback onPressed,
+  ) {
+    final theme = Theme.of(context);
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: color.withOpacity(0.2)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: color,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: color,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
