@@ -14,101 +14,212 @@ class ActionsSectionRiverpod extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark
-            ? theme.colorScheme.secondary.withOpacity(0.1)
-            : theme.colorScheme.primary.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.primary.withOpacity(isDark ? 0.3 : 0.2),
-          width: 1,
-        ),
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header
             Row(
               children: [
-                Icon(Icons.toc, color: theme.colorScheme.primary),
-                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.settings_rounded,
+                    color: colorScheme.onPrimary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
                 Text(
-                  'Actions',
-                  style: theme.textTheme.titleLarge,
+                  'Quick Actions',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            _buildActionsList(context, ref, theme),
+            const SizedBox(height: 20),
+            
+            // Actions List
+            Column(
+              children: [
+                _buildActionTile(
+                  context,
+                  ref,
+                  icon: Icons.refresh_rounded,
+                  title: 'Refresh Data',
+                  subtitle: 'Clear cache and reload your information',
+                  color: colorScheme.primary,
+                  onTap: () => _handleRefreshData(context, ref),
+                ),
+                const SizedBox(height: 12),
+                _buildActionTile(
+                  context,
+                  ref,
+                  icon: Icons.logout_rounded,
+                  title: 'Sign Out',
+                  subtitle: 'Sign out of your account',
+                  color: Colors.orange,
+                  onTap: () => _handleSignOut(context, ref),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildActionsList(
-      BuildContext context, WidgetRef ref, ThemeData theme) {
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Sign Out'),
-            onTap: () async {
-              // Show confirmation dialog
-              final confirmed = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Confirm Sign Out'),
-                  content: const Text('Are you sure you want to sign out?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: const Text('CANCEL'),
+  Widget _buildActionTile(
+    BuildContext context,
+    WidgetRef ref, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withOpacity(0.2)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: color,
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: const Text('SIGN OUT'),
+                  ),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
-                  ],
-                ),
-              );
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: color,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-              if (confirmed == true && context.mounted) {
-                await ref.read(userDetailsProvider.notifier).signOut(userId);
-                // No need to navigate - Amplify Auth will handle the UI transition
-              }
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+  void _handleRefreshData(BuildContext context, WidgetRef ref) {
+    ref.read(userDetailsProvider.notifier).loadUserDetails(userId);
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Icon(Icons.refresh_rounded, color: Colors.white, size: 16),
             ),
-            hoverColor: theme.colorScheme.primary.withOpacity(0.1),
+            const SizedBox(width: 12),
+            const Text('Data refreshed successfully'),
+          ],
+        ),
+        backgroundColor: Colors.green.shade600,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _handleSignOut(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(
+              Icons.logout_rounded,
+              color: Colors.orange,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            const Text('Sign Out'),
+          ],
+        ),
+        content: const Text('Are you sure you want to sign out of your account?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
           ),
-          const Divider(height: 1, indent: 16, endIndent: 16),
-          ListTile(
-            leading: const Icon(Icons.delete_sweep_outlined),
-            title: const Text('Clear Cache & Refresh'),
-            onTap: () {
-              ref.read(userDetailsProvider.notifier).loadUserDetails(userId);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Cache cleared and data refreshed.'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.orange,
             ),
-            hoverColor: theme.colorScheme.primary.withOpacity(0.1),
+            child: const Text('Sign Out'),
           ),
         ],
       ),
     );
+
+    if (confirmed == true && context.mounted) {
+      await ref.read(userDetailsProvider.notifier).signOut(userId);
+      // Amplify Auth will handle the UI transition
+    }
   }
 }
