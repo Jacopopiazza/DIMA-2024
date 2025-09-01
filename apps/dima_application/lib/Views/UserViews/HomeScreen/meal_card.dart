@@ -186,23 +186,18 @@ class MealCard extends StatelessWidget {
   /// Uses `Image.network` and provides `loadingBuilder` and `errorBuilder`
   /// to show appropriate widgets during image loading or on failure.
   Widget _buildMealImage(String url, ColorScheme colorScheme) {
-    return Image.network(
+    return Image.asset(
       url,
       height: 180, // Match the height of the card
       width: double.infinity, // Image takes the full width of its container
-      fit: BoxFit
-          .cover, // Scale the image to cover the available space without distortion
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null)
-          return child; // If loading is complete, show the image
-        // Show a loading indicator while the image is downloading
-        return _buildImageLoadingIndicator(colorScheme, loadingProgress);
-      },
       errorBuilder: (context, error, stackTrace) {
         // Show an error placeholder if the image fails to load
         return _buildImageErrorPlaceholder(colorScheme);
       },
+      fit: BoxFit
+          .cover, // Scale the image to cover the available space without distortion
     );
+
   }
 
   /// Builds a circular progress indicator displayed while the image is loading.
