@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../providers/user_details_provider.dart';
-import 'widgets/user_details_form_riverpod.dart';
-import 'widgets/password_change_form_riverpod.dart';
-import 'widgets/danger_zone_section_riverpod.dart';
 import 'widgets/actions_section_riverpod.dart';
+import 'widgets/danger_zone_section_riverpod.dart';
+import 'widgets/password_change_form_riverpod.dart';
+import 'widgets/pro_subscription_section_riverpod.dart';
+import 'widgets/user_details_form_riverpod.dart';
 
 class SettingsScreenRiverpod extends ConsumerWidget {
-  const SettingsScreenRiverpod({Key? key}) : super(key: key);
+  const SettingsScreenRiverpod({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,6 +17,11 @@ class SettingsScreenRiverpod extends ConsumerWidget {
     final userDetailsAsync = ref.watch(userDetailsProvider);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: userIdAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -27,7 +34,8 @@ class SettingsScreenRiverpod extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.account_circle_outlined, size: 48, color: Theme.of(context).colorScheme.primary),
+                    Icon(Icons.account_circle_outlined,
+                        size: 48, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(height: 16),
                     Text(
                       'Not signed in',
@@ -51,7 +59,9 @@ class SettingsScreenRiverpod extends ConsumerWidget {
               displacement: 60.0,
               color: Theme.of(context).colorScheme.primary,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              onRefresh: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
+              onRefresh: () => ref
+                  .read(userDetailsProvider.notifier)
+                  .loadUserDetails(userId),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return ListView(
@@ -60,7 +70,8 @@ class SettingsScreenRiverpod extends ConsumerWidget {
                     ),
                     children: [
                       ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                        constraints:
+                            BoxConstraints(minHeight: constraints.maxHeight),
                         child: Stack(
                           children: [
                             // Main content
@@ -72,41 +83,54 @@ class SettingsScreenRiverpod extends ConsumerWidget {
                                   userDetailsAsync.when(
                                     // By using `skipLoadingOnRefresh: true`, we keep the old data visible.
                                     skipLoadingOnRefresh: true,
-                                    loading: () => const Center(child: CircularProgressIndicator()),
-                                    error: (error, stackTrace) => Center(child: Text('Error: $error')),
+                                    loading: () => const Center(
+                                        child: CircularProgressIndicator()),
+                                    error: (error, stackTrace) =>
+                                        Center(child: Text('Error: $error')),
                                     data: (data) {
                                       final userDetails = data.$1;
                                       final uniqueId = data.$2;
 
                                       if (userDetails == null) {
-                                        return const Center(child: Text('No user details available.'));
+                                        return const Center(
+                                            child: Text(
+                                                'No user details available.'));
                                       }
 
                                       return Column(
                                         children: [
                                           UserDetailsFormRiverpod(
-                                            key: ValueKey(uniqueId), // Use the unique ID for the key
+                                            key: ValueKey(
+                                                uniqueId), // Use the unique ID for the key
                                             userDetails: userDetails,
                                             onUpdate: (updatedDetails) async {
                                               return await ref
-                                                  .read(userDetailsProvider.notifier)
-                                                  .updateUserDetails(updatedDetails);
+                                                  .read(userDetailsProvider
+                                                      .notifier)
+                                                  .updateUserDetails(
+                                                      updatedDetails);
                                             },
                                           ),
                                           const SizedBox(height: 24),
                                           PasswordChangeFormRiverpod(
-                                            onChangePassword: (oldPassword, newPassword) async {
+                                            onChangePassword: (oldPassword,
+                                                newPassword) async {
                                               return await ref
-                                                  .read(userDetailsProvider.notifier)
-                                                  .changePassword(oldPassword, newPassword);
+                                                  .read(userDetailsProvider
+                                                      .notifier)
+                                                  .changePassword(
+                                                      oldPassword, newPassword);
                                             },
                                           ),
                                           const SizedBox(height: 24),
-                                          ActionsSectionRiverpod(userId: userId),
+                                          ActionsSectionRiverpod(
+                                              userId: userId),
                                         ],
                                       );
                                     },
                                   ),
+                                  const SizedBox(height: 24),
+                                  const ProSubscriptionSectionRiverpod(),
                                   const SizedBox(height: 24),
                                   DangerZoneSectionRiverpod(userId: userId),
                                 ],
@@ -125,4 +149,4 @@ class SettingsScreenRiverpod extends ConsumerWidget {
       ),
     );
   }
-} 
+}

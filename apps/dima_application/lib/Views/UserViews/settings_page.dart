@@ -45,16 +45,17 @@ Future<void> _getData() async {
     }
     ''',
     decodePath: 'getMyUserDetails',
-    modelType:
-      ModelProvider.instance.getModelTypeByModelName('UserDetails'), // Make sure to update the model name
+    modelType: ModelProvider.instance.getModelTypeByModelName(
+        'UserDetails'), // Make sure to update the model name
   );
-  
+
   try {
     final response = await Amplify.API.query(request: request).response;
     final userDetails = response.data;
-    
+
     if (userDetails != null) {
-      safePrint("Utente mangia ${userDetails.dailyMealsPreference} pasti al giorno");
+      safePrint(
+          "Utente mangia ${userDetails.dailyMealsPreference} pasti al giorno");
     } else {
       safePrint("Nessun dettaglio utente trovato");
     }
@@ -62,7 +63,6 @@ Future<void> _getData() async {
     safePrint("Errore nel recupero dei dettagli utente: $e");
   }
 }
-
 
 Future<void> _deleteAccount(BuildContext context) async {
   try {
@@ -110,6 +110,127 @@ Future<void> _printUserInfo() async {
   }
 }
 
+Widget _buildFeatureItem(String text) {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 2),
+    child: Row(
+      children: [
+        Icon(
+          Icons.check_circle,
+          color: Colors.green.shade600,
+          size: 16,
+        ),
+        SizedBox(width: 8),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.purple.shade700,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+void _showProSubscriptionDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.star, color: Colors.amber),
+            SizedBox(width: 8),
+            Text("Upgrade to PRO"),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Choose your PRO plan:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            _buildPlanOption("Monthly", "\$9.99/month", "Best for trying out"),
+            _buildPlanOption("Yearly", "\$99/year", "Save 17% (2 months free)"),
+            _buildPlanOption("Lifetime", "\$299", "One-time payment"),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // TODO: Implement actual subscription logic
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Subscription feature coming soon!"),
+                  backgroundColor: Colors.purple.shade600,
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.purple.shade600,
+              foregroundColor: Colors.white,
+            ),
+            child: Text("Subscribe"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Widget _buildPlanOption(String title, String price, String description) {
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 8),
+    padding: EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey.shade300),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            Text(
+              price,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.purple.shade600,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 4),
+        Text(
+          description,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -147,6 +268,90 @@ class SettingsPage extends StatelessWidget {
                   return const Text("No data available");
                 }
               },
+            ),
+            SizedBox(height: 20),
+            Divider(),
+            // PRO Plan Subscription Section
+            Container(
+              padding: EdgeInsets.all(16),
+              margin: EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.purple.shade100, Colors.blue.shade100],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.purple.shade300, width: 1),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                        size: 24,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        "PRO Plan",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple.shade800,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    "Unlock premium features:",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.purple.shade700,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  _buildFeatureItem("Expert meal planning validation"),
+                  _buildFeatureItem("Personal nutritionist chat in-app"),
+                  SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // TODO: Implement PRO plan subscription logic
+                        _showProSubscriptionDialog(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple.shade600,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 2,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.upgrade, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            "Subscribe to PRO",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 20),
             Divider(),
