@@ -38,6 +38,7 @@ import 'MealPlanList.dart';
 import 'MealPlanResponse.dart';
 import 'MealWithStatus.dart';
 import 'NutritionistProfileConnection.dart';
+import 'PlanRequestPreferences.dart';
 import 'TodaysPlan.dart';
 
 export 'AllergenEnum.dart';
@@ -62,6 +63,7 @@ export 'MealWithStatus.dart';
 export 'NutritionistProfile.dart';
 export 'NutritionistProfileConnection.dart';
 export 'PlanDayCompletion.dart';
+export 'PlanRequestPreferences.dart';
 export 'PlanStatus.dart';
 export 'SenderType.dart';
 export 'TodaysPlan.dart';
@@ -70,11 +72,11 @@ export 'WeekdayEnum.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "c818e9df2728fb99ab67168dd801561a";
+  String version = "8da0fa0c2f48afc312a34e46c86ac19b";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [ChatMessage.schema, ChatMetadata.schema, MealPlan.schema, NutritionistProfile.schema, PlanDayCompletion.schema, UserDetails.schema];
   @override
-  List<amplify_core.ModelSchema> customTypeSchemas = [ChatMessageConnection.schema, ChatMetadataConnection.schema, DailyPlanData.schema, Ingredient.schema, Macros.schema, Meal.schema, MealPlanConnection.schema, MealPlanGenerationStatus.schema, MealPlanList.schema, MealPlanResponse.schema, MealWithStatus.schema, NutritionistProfileConnection.schema, TodaysPlan.schema];
+  List<amplify_core.ModelSchema> customTypeSchemas = [ChatMessageConnection.schema, ChatMetadataConnection.schema, DailyPlanData.schema, Ingredient.schema, Macros.schema, Meal.schema, MealPlanConnection.schema, MealPlanGenerationStatus.schema, MealPlanList.schema, MealPlanResponse.schema, MealWithStatus.schema, NutritionistProfileConnection.schema, PlanRequestPreferences.schema, TodaysPlan.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
