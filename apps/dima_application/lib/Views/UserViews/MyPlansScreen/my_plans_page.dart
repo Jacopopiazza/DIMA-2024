@@ -11,7 +11,6 @@ import 'modify_plan_name_dialog.dart';
 import 'read_meal_plan_page.dart';
 import 'select_nutritionist_dialog.dart';
 
-
 class MyPlansPage extends ConsumerStatefulWidget {
   const MyPlansPage({super.key});
 
@@ -19,7 +18,7 @@ class MyPlansPage extends ConsumerStatefulWidget {
   ConsumerState<MyPlansPage> createState() => _MyPlansPageState();
 }
 
-class _MyPlansPageState extends ConsumerState<MyPlansPage> 
+class _MyPlansPageState extends ConsumerState<MyPlansPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _fabAnimationController;
   late Animation<double> _fabScaleAnimation;
@@ -87,7 +86,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.refresh, color: Colors.white, size: 16),
+                    child: const Icon(Icons.refresh,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Expanded(
@@ -148,10 +148,6 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       ),
       body: plansAsync.when(
         data: (plans) {
-          if (plans.isEmpty) {
-            return _buildEmptyState(context, colorScheme);
-          }
-          
           final activePlanId = ref.watch(activeMealPlanIdProvider);
           String? resolvedActivePlanId = activePlanId;
           if (resolvedActivePlanId == null && plans.isNotEmpty) {
@@ -160,19 +156,24 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
             resolvedActivePlanId = activeByStatus?.mealPlanId;
           }
 
+          // Avvolgiamo TUTTO con RefreshIndicator, anche l'empty state
           return RefreshIndicator(
             onRefresh: _refreshPlans,
             backgroundColor: colorScheme.surface,
             color: colorScheme.primary,
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              itemCount: plans.length,
-              itemBuilder: (context, index) {
-                final plan = plans[index];
-                final isActive = plan.mealPlanId == resolvedActivePlanId;
-                return _buildMealPlanCard(context, plan, isActive, colorScheme, theme);
-              },
-            ),
+            child: plans.isEmpty
+                ? _buildEmptyState(context, colorScheme)
+                : ListView.builder(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    itemCount: plans.length,
+                    itemBuilder: (context, index) {
+                      final plan = plans[index];
+                      final isActive = plan.mealPlanId == resolvedActivePlanId;
+                      return _buildMealPlanCard(
+                          context, plan, isActive, colorScheme, theme);
+                    },
+                  ),
           );
         },
         loading: () => Center(
@@ -200,7 +201,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
             ],
           ),
         ),
-        error: (e, st) => _buildErrorState(context, e.toString(), colorScheme, theme),
+        error: (e, st) =>
+            _buildErrorState(context, e.toString(), colorScheme, theme),
       ),
       floatingActionButton: ScaleTransition(
         scale: _fabScaleAnimation,
@@ -225,57 +227,79 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   }
 
   Widget _buildEmptyState(BuildContext context, ColorScheme colorScheme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.restaurant_menu_rounded,
-                size: 64,
-                color: colorScheme.primary,
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: constraints.maxHeight,
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.restaurant_menu_rounded,
+                      size: 64,
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    'No meal plans yet',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Create your first personalized meal plan\nto get started with healthy eating',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Pull down to refresh',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  FilledButton.tonalIcon(
+                    onPressed: () => _openGenerateMealPlan(context),
+                    icon: const Icon(Icons.add_rounded),
+                    label: const Text('Create Meal Plan'),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 32),
-            Text(
-              'No meal plans yet',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Create your first personalized meal plan\nto get started with healthy eating',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                height: 1.4,
-              ),
-            ),
-            const SizedBox(height: 32),
-            FilledButton.tonalIcon(
-              onPressed: () => _openGenerateMealPlan(context),
-              icon: const Icon(Icons.add_rounded),
-              label: const Text('Create Meal Plan'),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
+}
 
-  Widget _buildErrorState(BuildContext context, String error, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildErrorState(BuildContext context, String error,
+      ColorScheme colorScheme, ThemeData theme) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -321,7 +345,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     );
   }
 
-  Widget _buildGeneratingCard(BuildContext context, plan, bool isActive, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildGeneratingCard(BuildContext context, plan, bool isActive,
+      ColorScheme colorScheme, ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withOpacity(0.7),
@@ -348,12 +373,13 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
               ),
               child: Icon(
                 _getPlanStatusIcon(plan.status, isActive),
-                color: _getPlanStatusIconColor(plan.status, isActive, colorScheme),
+                color:
+                    _getPlanStatusIconColor(plan.status, isActive, colorScheme),
                 size: 24,
               ),
             ),
             const SizedBox(width: 16),
-            
+
             // Plan info
             Expanded(
               child: Column(
@@ -387,138 +413,153 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     );
   }
 
-  Widget _buildMealPlanCard(BuildContext context, plan, bool isActive, ColorScheme colorScheme, ThemeData theme) {
-    
-    final bool isGenerating = plan.status == PlanStatus.PENDING || plan.status == PlanStatus.IN_PROGRESS;
-    
+  Widget _buildMealPlanCard(BuildContext context, plan, bool isActive,
+      ColorScheme colorScheme, ThemeData theme) {
+    final bool isGenerating = plan.status == PlanStatus.PENDING ||
+        plan.status == PlanStatus.IN_PROGRESS;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: isGenerating 
-        ? _buildGeneratingCard(context, plan, isActive, colorScheme, theme)
-        : Dismissible(
-        key: Key(plan.mealPlanId),
-        background: _buildSwipeBackground(
-          colorScheme.primary,
-          Icons.radio_button_checked_rounded,
-          'Set Active',
-          Alignment.centerLeft,
-        ),
-        secondaryBackground: _buildSwipeBackground(
-          colorScheme.error,
-          Icons.delete_rounded,
-          'Delete',
-          Alignment.centerRight,
-        ),
-        confirmDismiss: (direction) => _handleSwipe(context, plan, direction, isActive),
-        child: InkWell(
-          onTap: () => _openPlanDetails(context, plan),
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: isActive 
-                ? LinearGradient(
-                    colors: [
-                      colorScheme.primary.withOpacity(0.1),
-                      colorScheme.primary.withOpacity(0.05),
+      child: isGenerating
+          ? _buildGeneratingCard(context, plan, isActive, colorScheme, theme)
+          : Dismissible(
+              key: Key(plan.mealPlanId),
+              background: _buildSwipeBackground(
+                colorScheme.primary,
+                Icons.radio_button_checked_rounded,
+                'Set Active',
+                Alignment.centerLeft,
+              ),
+              secondaryBackground: _buildSwipeBackground(
+                colorScheme.error,
+                Icons.delete_rounded,
+                'Delete',
+                Alignment.centerRight,
+              ),
+              confirmDismiss: (direction) =>
+                  _handleSwipe(context, plan, direction, isActive),
+              child: InkWell(
+                onTap: () => _openPlanDetails(context, plan),
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: isActive
+                        ? LinearGradient(
+                            colors: [
+                              colorScheme.primary.withOpacity(0.1),
+                              colorScheme.primary.withOpacity(0.05),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          )
+                        : null,
+                    color:
+                        isActive ? null : colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(16),
+                    border: isActive
+                        ? Border.all(
+                            color: colorScheme.primary.withOpacity(0.3),
+                            width: 1.5)
+                        : null,
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.shadow.withOpacity(0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
                     ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                : null,
-              color: isActive ? null : colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(16),
-              border: isActive 
-                ? Border.all(color: colorScheme.primary.withOpacity(0.3), width: 1.5)
-                : null,
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.shadow.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  // Status indicator & icon
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: _getPlanStatusColor(plan.status, isActive, colorScheme),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      _getPlanStatusIcon(plan.status, isActive),
-                      color: _getPlanStatusIconColor(plan.status, isActive, colorScheme),
-                      size: 24,
-                    ),
                   ),
-                  const SizedBox(width: 16),
-                  
-                  // Plan info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                plan.planName ?? 'Unnamed Plan',
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: isActive 
-                                    ? colorScheme.primary 
-                                    : colorScheme.onSurface,
-                                ),
-                              ),
-                            ),
-                            if (isActive)
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Text(
-                                  'ACTIVE',
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    color: colorScheme.onPrimary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                          ],
+                        // Status indicator & icon
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: _getPlanStatusColor(
+                                plan.status, isActive, colorScheme),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            _getPlanStatusIcon(plan.status, isActive),
+                            color: _getPlanStatusIconColor(
+                                plan.status, isActive, colorScheme),
+                            size: 24,
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            _buildStatusChip(plan.status, colorScheme, theme),
-                            if (plan.status != PlanStatus.PENDING && plan.status != PlanStatus.IN_PROGRESS) _buildValidationChip(plan.validationStatus, colorScheme, theme),
-                            const Spacer(),
-                            Icon(
-                              Icons.chevron_right_rounded,
-                              color: colorScheme.onSurfaceVariant,
-                              size: 20,
-                            ),
-                          ],
+                        const SizedBox(width: 16),
+
+                        // Plan info
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      plan.planName ?? 'Unnamed Plan',
+                                      style:
+                                          theme.textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: isActive
+                                            ? colorScheme.primary
+                                            : colorScheme.onSurface,
+                                      ),
+                                    ),
+                                  ),
+                                  if (isActive)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.primary,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        'ACTIVE',
+                                        style: theme.textTheme.labelSmall
+                                            ?.copyWith(
+                                          color: colorScheme.onPrimary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  _buildStatusChip(
+                                      plan.status, colorScheme, theme),
+                                  if (plan.status != PlanStatus.PENDING &&
+                                      plan.status != PlanStatus.IN_PROGRESS)
+                                    _buildValidationChip(plan.validationStatus,
+                                        colorScheme, theme),
+                                  const Spacer(),
+                                  Icon(
+                                    Icons.chevron_right_rounded,
+                                    color: colorScheme.onSurfaceVariant,
+                                    size: 20,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
-  Widget _buildValidationChip(MealPlanValidationStatus validationStatus, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildValidationChip(MealPlanValidationStatus validationStatus,
+      ColorScheme colorScheme, ThemeData theme) {
     IconData icon;
     Color backgroundColor;
     Color foregroundColor;
@@ -568,7 +609,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     );
   }
 
-  Widget _buildSwipeBackground(Color color, IconData icon, String label, Alignment alignment) {
+  Widget _buildSwipeBackground(
+      Color color, IconData icon, String label, Alignment alignment) {
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -620,34 +662,34 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
 
     return Row(
       children: [
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(6),
-        ),
-        child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: foregroundColor),
-          const SizedBox(width: 4),
-          Text(
-          label,
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: foregroundColor,
-            fontWeight: FontWeight.w500,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(6),
           ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 14, color: foregroundColor),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: foregroundColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
-        ],
         ),
-      ),
-      const SizedBox(width: 8),
+        const SizedBox(width: 8),
       ],
     );
-    
-    }
+  }
 
-  Color _getPlanStatusColor(PlanStatus status, bool isActive, ColorScheme colorScheme) {
+  Color _getPlanStatusColor(
+      PlanStatus status, bool isActive, ColorScheme colorScheme) {
     if (isActive) return colorScheme.primary;
 
     if (status == PlanStatus.IN_PROGRESS) {
@@ -655,7 +697,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     } else if (status == PlanStatus.PENDING) {
       return Colors.amber.shade600;
     }
-    
+
     return colorScheme.surfaceContainerHigh;
   }
 
@@ -667,11 +709,12 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     } else if (status == PlanStatus.PENDING) {
       return Icons.schedule_rounded;
     }
-    
+
     return Icons.restaurant_menu_rounded;
   }
 
-  Color _getPlanStatusIconColor(PlanStatus status, bool isActive, ColorScheme colorScheme) {
+  Color _getPlanStatusIconColor(
+      PlanStatus status, bool isActive, ColorScheme colorScheme) {
     if (isActive) return colorScheme.onPrimary;
 
     if (status == PlanStatus.IN_PROGRESS) {
@@ -679,20 +722,23 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     } else if (status == PlanStatus.PENDING) {
       return Colors.white;
     }
-    
+
     return colorScheme.onSurfaceVariant;
   }
 
-  Future<bool> _handleSwipe(BuildContext context, plan, DismissDirection direction, bool isActive) async {
+  Future<bool> _handleSwipe(BuildContext context, plan,
+      DismissDirection direction, bool isActive) async {
     if (direction == DismissDirection.startToEnd && !isActive) {
       // Set as active
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (BuildContext dialogContext) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             title: const Text('Set Active Plan'),
-            content: Text('Make "${plan.planName ?? 'Unnamed Plan'}" your active meal plan?'),
+            content: Text(
+                'Make "${plan.planName ?? 'Unnamed Plan'}" your active meal plan?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -706,21 +752,23 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
           );
         },
       );
-      
+
       if (confirmed == true) {
         final success = await ref
             .read(mealPlansProvider.notifier)
             .setActiveMealPlan(plan.mealPlanId);
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(success 
-                ? 'Active meal plan updated!' 
-                : 'Failed to set active meal plan'),
-              backgroundColor: success ? Colors.green.shade600 : Colors.red.shade600,
+              content: Text(success
+                  ? 'Active meal plan updated!'
+                  : 'Failed to set active meal plan'),
+              backgroundColor:
+                  success ? Colors.green.shade600 : Colors.red.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         }
@@ -733,22 +781,25 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
         builder: (BuildContext dialogContext) {
           return DeleteConfirmationDialog(
             title: 'Delete Meal Plan',
-            content: 'Are you sure you want to delete "${plan.planName ?? 'Unnamed Plan'}"?',
+            content:
+                'Are you sure you want to delete "${plan.planName ?? 'Unnamed Plan'}"?',
             onConfirm: () async {
               Navigator.of(dialogContext).pop();
               final success = await ref
                   .read(mealPlansProvider.notifier)
                   .deleteMealPlan(plan.mealPlanId);
-              
+
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(success 
-                      ? 'Meal plan deleted successfully' 
-                      : 'Failed to delete meal plan'),
-                    backgroundColor: success ? Colors.green.shade600 : Colors.red.shade600,
+                    content: Text(success
+                        ? 'Meal plan deleted successfully'
+                        : 'Failed to delete meal plan'),
+                    backgroundColor:
+                        success ? Colors.green.shade600 : Colors.red.shade600,
                     behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                 );
               }
@@ -798,7 +849,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Plan title
             Text(
               plan.planName ?? 'Unnamed Plan',
@@ -815,7 +866,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Action buttons
             _buildActionButton(
               context,
@@ -854,10 +905,10 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                         final success = await ref
                             .read(mealPlansProvider.notifier)
                             .modifyMealPlan(mealPlanId, newName);
-                        
+
                         if (!success) {
-              throw Exception('Failed to update meal plan');
-            }
+                          throw Exception('Failed to update meal plan');
+                        }
                       },
                     );
                   },
@@ -906,7 +957,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     VoidCallback onPressed,
   ) {
     final theme = Theme.of(context);
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
