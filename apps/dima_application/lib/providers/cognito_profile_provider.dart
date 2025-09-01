@@ -11,11 +11,11 @@ final cognitoProfileServiceProvider = Provider<CognitoProfileService>((ref) {
 
 /// Model class to hold cognito profile data
 class CognitoProfileData {
-  final String? subscriptionStatus;
+  final String subscriptionStatus;
   final Map<String, String> userAttributes;
 
   const CognitoProfileData({
-    this.subscriptionStatus,
+    this.subscriptionStatus = '',
     this.userAttributes = const {},
   });
 
@@ -37,13 +37,13 @@ class CognitoProfileData {
 
 /// Provider for the cognito profile state. The String is a unique ID to force rebuilds.
 final cognitoProfileProvider = StateNotifierProvider<CognitoProfileNotifier,
-    AsyncValue<(CognitoProfileData?, String)>>((ref) {
+    AsyncValue<(CognitoProfileData, String)>>((ref) {
   return CognitoProfileNotifier(ref);
 });
 
 /// Notifier class to manage cognito profile state
 class CognitoProfileNotifier
-    extends StateNotifier<AsyncValue<(CognitoProfileData?, String)>> {
+    extends StateNotifier<AsyncValue<(CognitoProfileData, String)>> {
   final Ref ref;
 
   CognitoProfileNotifier(this.ref) : super(const AsyncValue.loading()) {
@@ -62,7 +62,7 @@ class CognitoProfileNotifier
     print('[CognitoProfileNotifier] Loading cognito profile...');
     final previousState = state;
     // Set state to loading, but `copyWithPrevious` will keep the old data and set isRefreshing to true.
-    state = AsyncValue<(CognitoProfileData?, String)>.loading()
+    state = AsyncValue<(CognitoProfileData, String)>.loading()
         .copyWithPrevious(previousState);
 
     try {
@@ -74,7 +74,7 @@ class CognitoProfileNotifier
         service.getUserProfileAttributes(),
       ]);
 
-      final subscriptionStatus = results[0] as String?;
+      final subscriptionStatus = results[0] as String;
       final userAttributes = results[1] as Map<String, String>;
 
       final profileData = CognitoProfileData(
@@ -89,7 +89,7 @@ class CognitoProfileNotifier
       print('[CognitoProfileNotifier] Error loading profile: $error');
       print('[CognitoProfileNotifier] Stack trace: $stackTrace');
       // On error, report the error but keep the previous data.
-      state = AsyncValue<(CognitoProfileData?, String)>.error(error, stackTrace)
+      state = AsyncValue<(CognitoProfileData, String)>.error(error, stackTrace)
           .copyWithPrevious(previousState);
     }
   }
@@ -111,7 +111,7 @@ class CognitoProfileNotifier
         
         // Optimistically update the subscription status
         if (previousTuple != null) {
-          final updatedProfileData = previousTuple.$1?.copyWith(subscriptionStatus: 'PRO');
+          final updatedProfileData = previousTuple.$1.copyWith(subscriptionStatus: 'PRO');
           state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
         }
         
@@ -127,7 +127,7 @@ class CognitoProfileNotifier
       print('[CognitoProfileNotifier] Stack trace: $stackTrace');
       
       // On error, keep the previous state
-      state = AsyncValue<(CognitoProfileData?, String)>.error(e, stackTrace)
+      state = AsyncValue<(CognitoProfileData, String)>.error(e, stackTrace)
           .copyWithPrevious(previousState);
       return false;
     }
@@ -150,7 +150,7 @@ class CognitoProfileNotifier
         
         // Optimistically update the subscription status
         if (previousTuple != null) {
-          final updatedProfileData = previousTuple.$1?.copyWith(subscriptionStatus: 'FREE');
+          final updatedProfileData = previousTuple.$1.copyWith(subscriptionStatus: 'FREE');
           state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
         }
         
@@ -166,7 +166,7 @@ class CognitoProfileNotifier
       print('[CognitoProfileNotifier] Stack trace: $stackTrace');
       
       // On error, keep the previous state
-      state = AsyncValue<(CognitoProfileData?, String)>.error(e, stackTrace)
+      state = AsyncValue<(CognitoProfileData, String)>.error(e, stackTrace)
           .copyWithPrevious(previousState);
       return false;
     }
@@ -188,7 +188,7 @@ class CognitoProfileNotifier
     }
 
     // Create optimistic update
-    final currentAttributes = previousTuple.$1?.userAttributes ?? <String, String>{};
+    final currentAttributes = previousTuple.$1.userAttributes;
     final updatedAttributes = Map<String, String>.from(currentAttributes);
     
     if (givenName != null) updatedAttributes['given_name'] = givenName;
@@ -197,7 +197,7 @@ class CognitoProfileNotifier
     if (birthdate != null) updatedAttributes['birthdate'] = birthdate;
 
     // Optimistically update the UI, but REUSE the existing unique ID to prevent rebuild
-    final updatedProfileData = previousTuple.$1?.copyWith(userAttributes: updatedAttributes);
+    final updatedProfileData = previousTuple.$1.copyWith(userAttributes: updatedAttributes);
     state = AsyncValue.data((updatedProfileData, previousTuple.$2));
 
     try {
@@ -227,7 +227,7 @@ class CognitoProfileNotifier
       print('[CognitoProfileNotifier] Stack trace: $stackTrace');
       
       // If update failed, revert to previous state and show error
-      state = AsyncValue<(CognitoProfileData?, String)>.error(e, stackTrace)
+      state = AsyncValue<(CognitoProfileData, String)>.error(e, stackTrace)
           .copyWithPrevious(previousState);
       return false;
     }
@@ -242,12 +242,12 @@ class CognitoProfileNotifier
 // Convenience providers for specific data access
 final subscriptionStatusProvider = Provider<String?>((ref) {
   final profileState = ref.watch(cognitoProfileProvider);
-  return profileState.value?.$1?.subscriptionStatus;
+  return profileState.value?.$1.subscriptionStatus;
 });
 
 final userProfileAttributesProvider = Provider<Map<String, String>>((ref) {
   final profileState = ref.watch(cognitoProfileProvider);
-  return profileState.value?.$1?.userAttributes ?? {};
+  return profileState.value?.$1.userAttributes ?? {};
 });
 
 // Provider to check if profile is loading/refreshing

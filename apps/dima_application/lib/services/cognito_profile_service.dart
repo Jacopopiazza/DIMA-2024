@@ -48,7 +48,7 @@ class CognitoProfileService {
   /// Get current subscription status
   /// Note: AWS Cognito normalizes custom attribute names to lowercase when retrieving them,
   /// even if they were set with mixed case (e.g., 'custom:subscriptionStatus' becomes 'custom:subscriptionstatus')
-  Future<String?> getSubscriptionStatus() async {
+  Future<String> getSubscriptionStatus() async {
     try {
       final attributes = await Amplify.Auth.fetchUserAttributes();
       safePrint(attributes
@@ -73,11 +73,11 @@ class CognitoProfileService {
     } on AuthException catch (e) {
       safePrint(
           '[CognitoProfileService] Auth error getting subscription status: ${e.message}');
-      return null;
+      throw e;
     } catch (e) {
       safePrint(
           '[CognitoProfileService] Unexpected error getting subscription status: $e');
-      return null;
+      throw e;
     }
   }
 
@@ -103,11 +103,11 @@ class CognitoProfileService {
     } on AuthException catch (e) {
       safePrint(
           '[CognitoProfileService] Auth error getting profile attributes: ${e.message}');
-      return {};
+      throw e;
     } catch (e) {
       safePrint(
           '[CognitoProfileService] Unexpected error getting profile attributes: $e');
-      return {};
+      throw e;
     }
   }
 

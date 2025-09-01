@@ -50,7 +50,8 @@ class UserDetailsService {
       return userDetails;
     } catch (e) {
       safePrint('[UserDetailsService] Error fetching user details: $e');
-      return await getCachedUserDetails(userId);
+      //return await getCachedUserDetails(userId);
+      throw e;
     }
   }
 

@@ -103,20 +103,10 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                       cognitoProfileAsync.when(
                         skipLoadingOnRefresh: true,
                         loading: () => _buildSectionLoadingState(colorScheme, 'Loading profile...'),
-                        error: (error, stackTrace) => _buildSectionErrorState(
-                          'Profile Error', 
-                          error.toString(), 
-                          colorScheme, 
-                          theme,
-                          onRetry: () => ref.read(cognitoProfileProvider.notifier).refresh(),
-                        ),
+                        error: (error, stackTrace) => _buildNoProfileState(colorScheme, theme),
                         data: (data) {
                           final profileData = data.$1;
                           final uniqueId = data.$2;
-
-                          if (profileData == null || profileData.subscriptionStatus == null || profileData.subscriptionStatus!.isEmpty || profileData.userAttributes == {} || profileData.userAttributes.isEmpty) {
-                            return _buildNoProfileState(colorScheme, theme);
-                          }
 
                           return Column(
                             children: [
@@ -168,20 +158,10 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                       userDetailsAsync.when(
                         skipLoadingOnRefresh: true,
                         loading: () => _buildSectionLoadingState(colorScheme, 'Loading preferences...'),
-                        error: (error, stackTrace) => _buildSectionErrorState(
-                          'Preferences Error',
-                          error.toString(), 
-                          colorScheme, 
-                          theme,
-                          onRetry: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
-                        ),
+                        error: (error, stackTrace) => _buildSectionErrorState(colorScheme, theme),
                         data: (data) {
                           final userDetails = data.$1;
                           final uniqueId = data.$2;
-
-                          if (userDetails == null) {
-                            return _buildNoDetailsState(colorScheme, theme);
-                          }
 
                           return Column(
                             children: [
@@ -427,53 +407,6 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
 
   }
 
-  Widget _buildSectionErrorState(String title, String error, ColorScheme colorScheme, ThemeData theme, {VoidCallback? onRetry}) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.error_outline_rounded,
-            size: 32,
-            color: colorScheme.onErrorContainer,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onErrorContainer,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            error,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onErrorContainer.withOpacity(0.8),
-            ),
-          ),
-          if (onRetry != null) ...[
-            const SizedBox(height: 16),
-            FilledButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Retry'),
-              style: FilledButton.styleFrom(
-                backgroundColor: colorScheme.onErrorContainer,
-                foregroundColor: colorScheme.errorContainer,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
   Widget _buildNoProfileState(ColorScheme colorScheme, ThemeData theme) {
     return Column(
       children: [
@@ -514,7 +447,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
     );
   }
 
-  Widget _buildNoDetailsState(ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildSectionErrorState(ColorScheme colorScheme, ThemeData theme) {
     return Column(children :[Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(

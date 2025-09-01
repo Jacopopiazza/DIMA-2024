@@ -7,12 +7,12 @@ import '../../../../generated/flutter-models/ExerciseFrequency.dart';
 import '../../../../generated/flutter-models/UserDetails.dart';
 
 class UserDetailsFormRiverpod extends ConsumerStatefulWidget {
-  final UserDetails userDetails;
+  final UserDetails? userDetails;
   final Future<bool> Function(UserDetails) onUpdate;
 
   const UserDetailsFormRiverpod({
     Key? key,
-    required this.userDetails,
+    this.userDetails,
     required this.onUpdate,
   }) : super(key: key);
 
@@ -63,16 +63,16 @@ class _UserDetailsFormRiverpodState
 
   void _initializeControllers() {
     _weightController = TextEditingController(
-        text: widget.userDetails.weightKg.toString());
+        text: widget.userDetails?.weightKg.toString());
     _heightController = TextEditingController(
-        text: widget.userDetails.heightCm.toString());
+        text: widget.userDetails?.heightCm.toString());
     _preferencesController = TextEditingController(
-        text: widget.userDetails.openTextPreferences ?? '');
+        text: widget.userDetails?.openTextPreferences ?? '');
     _dietaryRestrictionsController = TextEditingController(
-        text: widget.userDetails.dietaryRestrictions ?? '');
-    _dailyMealsPreference = widget.userDetails.dailyMealsPreference;
-    _exerciseFrequency = widget.userDetails.exerciseFrequency;
-    _selectedAllergies = widget.userDetails.allergies?.toList() ?? [];
+        text: widget.userDetails?.dietaryRestrictions ?? '');
+    _dailyMealsPreference = widget.userDetails?.dailyMealsPreference ?? 3;
+    _exerciseFrequency = widget.userDetails?.exerciseFrequency ?? ExerciseFrequency.NOT_SPECIFIED;
+    _selectedAllergies = widget.userDetails?.allergies?.toList() ?? [];
   }
 
   @override
@@ -105,12 +105,12 @@ class _UserDetailsFormRiverpodState
     });
 
     final updatedDetails = UserDetails(
-      userId: widget.userDetails.userId,
+      userId: widget.userDetails!.userId,
       weightKg: double.parse(_weightController.text),
       heightCm: double.parse(_heightController.text),
       openTextPreferences: _preferencesController.text,
       dietaryRestrictions: _dietaryRestrictionsController.text,
-      activeMealPlanId: widget.userDetails.activeMealPlanId,
+      activeMealPlanId: widget.userDetails!.activeMealPlanId,
       allergies: _selectedAllergies,
       dailyMealsPreference: _dailyMealsPreference,
       exerciseFrequency: _exerciseFrequency,
