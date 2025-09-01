@@ -6,7 +6,21 @@ import 'package:intl/intl.dart';
 import '../../../../providers/cognito_profile_provider.dart';
 
 class UserProfileSectionRiverpod extends ConsumerStatefulWidget {
-  const UserProfileSectionRiverpod({super.key});
+  final CognitoProfileData profileData;
+  final String uniqueId;
+  final Future<bool> Function({
+    String? givenName,
+    String? familyName,
+    String? gender,
+    String? birthdate,
+  }) onUpdateProfile;
+
+  const UserProfileSectionRiverpod({
+    Key? key,
+    required this.profileData,
+    required this.uniqueId,
+    required this.onUpdateProfile,
+  }) : super(key: key);
 
   @override
   ConsumerState<UserProfileSectionRiverpod> createState() =>
@@ -17,13 +31,12 @@ class _UserProfileSectionRiverpodState
     extends ConsumerState<UserProfileSectionRiverpod>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  final _givenNameController = TextEditingController();
-  final _familyNameController = TextEditingController();
+  late TextEditingController _givenNameController;
+  late TextEditingController _familyNameController;
   String? _selectedGender;
   DateTime? _selectedDate;
-  bool _isLoading = false;
-  bool _isInitialized = false;
   bool _isDirty = false;
+  bool _isLoading = false;
 
   late AnimationController _saveButtonController;
   late Animation<double> _saveButtonScale;
@@ -31,6 +44,7 @@ class _UserProfileSectionRiverpodState
   @override
   void initState() {
     super.initState();
+    _initializeControllers();
     _saveButtonController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
@@ -38,21 +52,36 @@ class _UserProfileSectionRiverpodState
     _saveButtonScale = Tween<double>(begin: 1.0, end: 0.95).animate(
       CurvedAnimation(parent: _saveButtonController, curve: Curves.easeInOut),
     );
-    
-    // Schedule the attributes loading for after the widget is fully initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadUserProfileAttributes();
-    });
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Ensure text controllers are properly initialized
-    if (_givenNameController.text.isEmpty &&
-        _familyNameController.text.isEmpty) {
-      // Only load if controllers are empty to avoid overwriting user input
-      _loadUserProfileAttributes();
+  void didUpdateWidget(UserProfileSectionRiverpod oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.profileData != widget.profileData || 
+        oldWidget.uniqueId != widget.uniqueId) {
+      _initializeControllers();
+      setState(() {
+        _isDirty = false;
+      });
+    }
+  }
+
+  void _initializeControllers() {
+    final attributes = widget.profileData.userAttributes;
+    
+    _givenNameController = TextEditingController(text: attributes['given_name'] ?? '');
+    _familyNameController = TextEditingController(text: attributes['family_name'] ?? '');
+    _selectedGender = attributes['gender'];
+    
+    if (attributes['birthdate'] != null && attributes['birthdate']!.isNotEmpty) {
+      try {
+        _selectedDate = DateFormat('yyyy-MM-dd').parse(attributes['birthdate']!);
+      } catch (e) {
+        safePrint('[UserProfileSection] Error parsing birthdate: $e');
+        _selectedDate = null;
+      }
+    } else {
+      _selectedDate = null;
     }
   }
 
@@ -72,72 +101,6 @@ class _UserProfileSectionRiverpodState
     }
   }
 
-  /// Load current user profile attributes
-  Future<void> _loadUserProfileAttributes() async {
-    try {
-      safePrint('[UserProfileSection] Loading user profile attributes...');
-
-      // Force refresh by invalidating the provider cache
-      ref.invalidate(userProfileAttributesProvider);
-
-      final attributes = await ref.read(userProfileAttributesProvider.future);
-      if (mounted) {
-        setState(() {
-          // Only set text if controllers are empty to avoid overwriting user input
-          if (_givenNameController.text.isEmpty) {
-            _givenNameController.text = attributes['given_name'] ?? '';
-          }
-          if (_familyNameController.text.isEmpty) {
-            _familyNameController.text = attributes['family_name'] ?? '';
-          }
-          _selectedGender = attributes['gender'];
-          if (attributes['birthdate'] != null &&
-              attributes['birthdate']!.isNotEmpty) {
-            try {
-              _selectedDate =
-                  DateFormat('yyyy-MM-dd').parse(attributes['birthdate']!);
-            } catch (e) {
-              safePrint('[UserProfileSection] Error parsing birthdate: $e');
-            }
-          }
-          _isInitialized = true;
-          _isDirty = false;
-        });
-        safePrint('[UserProfileSection] Loaded attributes: $attributes');
-      }
-    } catch (e) {
-      safePrint('[UserProfileSection] Error loading attributes: $e');
-      if (mounted) {
-        setState(() {
-          _isInitialized = true;
-        });
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
-                  ),
-                  const SizedBox(width: 12),
-                  const Text('Error loading profile data'),
-                ],
-              ),
-              backgroundColor: Colors.red.shade600,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          );
-        }
-      }
-    }
-  }
-
   /// Handle save button press
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate() || _isLoading) {
@@ -153,23 +116,18 @@ class _UserProfileSectionRiverpodState
     });
 
     try {
-      final attributes = <String, String>{};
-      if (_givenNameController.text.isNotEmpty) {
-        attributes['given_name'] = _givenNameController.text.trim();
-      }
-      if (_familyNameController.text.isNotEmpty) {
-        attributes['family_name'] = _familyNameController.text.trim();
-      }
-      if (_selectedGender != null) {
-        attributes['gender'] = _selectedGender!;
-      }
-      if (_selectedDate != null) {
-        attributes['birthdate'] =
-            DateFormat('yyyy-MM-dd').format(_selectedDate!);
-      }
+      final success = await widget.onUpdateProfile(
+        givenName: _givenNameController.text.trim().isNotEmpty ? _givenNameController.text.trim() : null,
+        familyName: _familyNameController.text.trim().isNotEmpty ? _familyNameController.text.trim() : null,
+        gender: _selectedGender,
+        birthdate: _selectedDate != null ? DateFormat('yyyy-MM-dd').format(_selectedDate!) : null,
+      );
 
-      if (attributes.isEmpty) {
-        if (context.mounted) {
+      if (mounted && context.mounted) {
+        if (success) {
+          setState(() {
+            _isDirty = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -180,80 +138,39 @@ class _UserProfileSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.info_outline_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('No changes to save'),
+                  const Text('Profile updated successfully!'),
                 ],
               ),
-              backgroundColor: Colors.orange.shade600,
+              backgroundColor: Colors.green.shade600,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           );
-        }
-        return;
-      }
-
-      // Force fresh execution by invalidating the provider cache
-      ref.invalidate(updateUserProfileAttributesProvider);
-      final success = await ref
-          .read(updateUserProfileAttributesProvider(attributes).future);
-
-      if (mounted) {
-        if (success) {
-          setState(() {
-            _isDirty = false;
-          });
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
-                    ),
-                    const SizedBox(width: 12),
-                    const Text('Profile updated successfully!'),
-                  ],
-                ),
-                backgroundColor: Colors.green.shade600,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            );
-          }
-          // Refresh the attributes
-          await _loadUserProfileAttributes();
         } else {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    const SizedBox(width: 12),
-                    const Text('Failed to update profile. Please try again.'),
-                  ],
-                ),
-                backgroundColor: Colors.red.shade600,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('Failed to update profile. Please try again.'),
+                ],
               ),
-            );
-          }
+              backgroundColor: Colors.red.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
         }
       }
     } catch (e) {
@@ -309,30 +226,6 @@ class _UserProfileSectionRiverpodState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    // Show loading state while initializing
-    if (!_isInitialized) {
-      return Container(
-        height: 200,
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: colorScheme.shadow.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Center(
-          child: CircularProgressIndicator(
-            color: colorScheme.primary,
-            strokeWidth: 3,
-          ),
-        ),
-      );
-    }
 
     return Container(
       decoration: BoxDecoration(
@@ -392,16 +285,6 @@ class _UserProfileSectionRiverpodState
                       ),
                     ),
                   ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: _loadUserProfileAttributes,
-                  icon: const Icon(Icons.refresh_rounded, size: 20),
-                  tooltip: 'Refresh Profile',
-                  style: IconButton.styleFrom(
-                    backgroundColor: colorScheme.surface,
-                    foregroundColor: colorScheme.onSurface,
-                  ),
-                ),
               ],
             ),
             const SizedBox(height: 24),

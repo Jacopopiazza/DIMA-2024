@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 import '../services/cognito_profile_service.dart';
 
@@ -8,172 +9,255 @@ final cognitoProfileServiceProvider = Provider<CognitoProfileService>((ref) {
   return CognitoProfileService();
 });
 
-/// Provider for subscribing user (FREE -> PRO)
-final subscribeProvider = FutureProvider<bool>((ref) async {
-  print('[CognitoProfileProvider] Starting subscription process...');
-  try {
-    final service = ref.read(cognitoProfileServiceProvider);
-    print(
-        '[CognitoProfileProvider] Service instance retrieved, calling subscribe()');
+/// Model class to hold cognito profile data
+class CognitoProfileData {
+  final String? subscriptionStatus;
+  final Map<String, String> userAttributes;
 
-    final result = await service.subscribe();
-    print(
-        '[CognitoProfileProvider] Subscribe service call completed with result: $result');
+  const CognitoProfileData({
+    this.subscriptionStatus,
+    this.userAttributes = const {},
+  });
 
-    if (result) {
-      print(
-          '[CognitoProfileProvider] Subscription successful, user upgraded to PRO');
-    } else {
-      print(
-          '[CognitoProfileProvider] Subscription failed, service returned false');
-    }
-
-    return result;
-  } catch (e, stackTrace) {
-    print('[CognitoProfileProvider] Error during subscription: $e');
-    print('[CognitoProfileProvider] Stack trace: $stackTrace');
-    rethrow;
-  }
-});
-
-/// Provider for unsubscribing user (PRO -> FREE)
-final unsubscribeProvider = FutureProvider<bool>((ref) async {
-  print('[CognitoProfileProvider] Starting unsubscription process...');
-  try {
-    final service = ref.read(cognitoProfileServiceProvider);
-    print(
-        '[CognitoProfileProvider] Service instance retrieved, calling unsubscribe()');
-
-    final result = await service.unsubscribe();
-    print(
-        '[CognitoProfileProvider] Unsubscribe service call completed with result: $result');
-
-    if (result) {
-      print(
-          '[CognitoProfileProvider] Unsubscription successful, user downgraded to FREE');
-    } else {
-      print(
-          '[CognitoProfileProvider] Unsubscription failed, service returned false');
-    }
-
-    return result;
-  } catch (e, stackTrace) {
-    print('[CognitoProfileProvider] Error during unsubscription: $e');
-    print('[CognitoProfileProvider] Stack trace: $stackTrace');
-    rethrow;
-  }
-});
-
-/// Provider for getting current subscription status
-final subscriptionStatusProvider = FutureProvider<String?>((ref) async {
-  print('[CognitoProfileProvider] Fetching current subscription status...');
-  try {
-    final service = ref.read(cognitoProfileServiceProvider);
-    print(
-        '[CognitoProfileProvider] Service instance retrieved, calling getSubscriptionStatus()');
-
-    final status = await service.getSubscriptionStatus();
-    print('[CognitoProfileProvider] Current subscription status: $status');
-
-    return status;
-  } catch (e, stackTrace) {
-    print('[CognitoProfileProvider] Error fetching subscription status: $e');
-    print('[CognitoProfileProvider] Stack trace: $stackTrace');
-    rethrow;
-  }
-});
-
-/// Provider for refreshing subscription status (forces fresh fetch)
-final refreshSubscriptionStatusProvider = FutureProvider<String?>((ref) async {
-  print('[CognitoProfileProvider] Force refreshing subscription status...');
-  try {
-    // Invalidate the cached subscription status to force fresh fetch
-    ref.invalidate(subscriptionStatusProvider);
-    print(
-        '[CognitoProfileProvider] Invalidated cached status, fetching fresh data...');
-
-    final service = ref.read(cognitoProfileServiceProvider);
-    final status = await service.getSubscriptionStatus();
-    print('[CognitoProfileProvider] Fresh subscription status: $status');
-
-    return status;
-  } catch (e, stackTrace) {
-    print('[CognitoProfileProvider] Error refreshing subscription status: $e');
-    print('[CognitoProfileProvider] Stack trace: $stackTrace');
-    rethrow;
-  }
-});
-
-/// Provider for getting current user profile attributes
-final userProfileAttributesProvider =
-    FutureProvider<Map<String, String>>((ref) async {
-  print('[CognitoProfileProvider] Fetching current user profile attributes...');
-  try {
-    final service = ref.read(cognitoProfileServiceProvider);
-    print(
-        '[CognitoProfileProvider] Service instance retrieved, calling getUserProfileAttributes()');
-
-    final attributes = await service.getUserProfileAttributes();
-    print('[CognitoProfileProvider] Current profile attributes: $attributes');
-
-    return attributes;
-  } catch (e, stackTrace) {
-    print('[CognitoProfileProvider] Error fetching profile attributes: $e');
-    print('[CognitoProfileProvider] Stack trace: $stackTrace');
-    rethrow;
-  }
-});
-
-/// Provider for updating user profile attributes
-final updateUserProfileAttributesProvider =
-    FutureProvider.family<bool, Map<String, String>>((ref, attributes) async {
-  print('[CognitoProfileProvider] Starting profile attributes update...');
-  try {
-    final service = ref.read(cognitoProfileServiceProvider);
-    print(
-        '[CognitoProfileProvider] Service instance retrieved, calling updateUserProfileAttributes()');
-
-    final result = await service.updateUserProfileAttributes(
-      givenName: attributes['given_name'],
-      familyName: attributes['family_name'],
-      gender: attributes['gender'],
-      birthdate: attributes['birthdate'],
+  CognitoProfileData copyWith({
+    String? subscriptionStatus,
+    Map<String, String>? userAttributes,
+  }) {
+    return CognitoProfileData(
+      subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
+      userAttributes: userAttributes ?? this.userAttributes,
     );
-
-    if (result) {
-      print('[CognitoProfileProvider] Profile attributes update successful');
-      // Invalidate the profile attributes provider to refresh the data
-      ref.invalidate(userProfileAttributesProvider);
-    } else {
-      print('[CognitoProfileProvider] Profile attributes update failed');
-    }
-
-    return result;
-  } catch (e, stackTrace) {
-    print('[CognitoProfileProvider] Error updating profile attributes: $e');
-    print('[CognitoProfileProvider] Stack trace: $stackTrace');
-    rethrow;
   }
+
+  @override
+  String toString() {
+    return 'CognitoProfileData(subscriptionStatus: $subscriptionStatus, userAttributes: $userAttributes)';
+  }
+}
+
+/// Provider for the cognito profile state. The String is a unique ID to force rebuilds.
+final cognitoProfileProvider = StateNotifierProvider<CognitoProfileNotifier,
+    AsyncValue<(CognitoProfileData?, String)>>((ref) {
+  return CognitoProfileNotifier(ref);
 });
 
-/// Provider for refreshing user profile attributes (forces fresh fetch)
-final refreshUserProfileAttributesProvider =
-    FutureProvider<Map<String, String>>((ref) async {
-  print('[CognitoProfileProvider] Force refreshing user profile attributes...');
-  try {
-    // Invalidate the cached profile attributes to force fresh fetch
-    ref.invalidate(userProfileAttributesProvider);
-    print(
-        '[CognitoProfileProvider] Invalidated cached profile attributes, fetching fresh data...');
+/// Notifier class to manage cognito profile state
+class CognitoProfileNotifier
+    extends StateNotifier<AsyncValue<(CognitoProfileData?, String)>> {
+  final Ref ref;
 
-    final service = ref.read(cognitoProfileServiceProvider);
-    final attributes = await service.getUserProfileAttributes();
-    print('[CognitoProfileProvider] Fresh profile attributes: $attributes');
-
-    return attributes;
-  } catch (e, stackTrace) {
-    print('[CognitoProfileProvider] Error refreshing profile attributes: $e');
-    print('[CognitoProfileProvider] Stack trace: $stackTrace');
-    rethrow;
+  CognitoProfileNotifier(this.ref) : super(const AsyncValue.loading()) {
+    _initialize();
   }
+
+  Future<void> _initialize() async {
+    try {
+      await loadCognitoProfile();
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  Future<void> loadCognitoProfile() async {
+    print('[CognitoProfileNotifier] Loading cognito profile...');
+    final previousState = state;
+    // Set state to loading, but `copyWithPrevious` will keep the old data and set isRefreshing to true.
+    state = AsyncValue<(CognitoProfileData?, String)>.loading()
+        .copyWithPrevious(previousState);
+
+    try {
+      final service = ref.read(cognitoProfileServiceProvider);
+      
+      // Fetch subscription status and user attributes concurrently
+      final results = await Future.wait([
+        service.getSubscriptionStatus(),
+        service.getUserProfileAttributes(),
+      ]);
+
+      final subscriptionStatus = results[0] as String?;
+      final userAttributes = results[1] as Map<String, String>;
+
+      final profileData = CognitoProfileData(
+        subscriptionStatus: subscriptionStatus,
+        userAttributes: userAttributes,
+      );
+
+      print('[CognitoProfileNotifier] Profile data loaded: $profileData');
+      // On success, update the state with the new data and a unique ID.
+      state = AsyncValue.data((profileData, const Uuid().v4()));
+    } catch (error, stackTrace) {
+      print('[CognitoProfileNotifier] Error loading profile: $error');
+      print('[CognitoProfileNotifier] Stack trace: $stackTrace');
+      // On error, report the error but keep the previous data.
+      state = AsyncValue<(CognitoProfileData?, String)>.error(error, stackTrace)
+          .copyWithPrevious(previousState);
+    }
+  }
+
+  Future<bool> subscribe() async {
+    print('[CognitoProfileNotifier] Starting subscription process...');
+    final previousState = state;
+    final previousTuple = previousState.value;
+
+    try {
+      final service = ref.read(cognitoProfileServiceProvider);
+      print('[CognitoProfileNotifier] Service instance retrieved, calling subscribe()');
+
+      final result = await service.subscribe();
+      print('[CognitoProfileNotifier] Subscribe service call completed with result: $result');
+
+      if (result) {
+        print('[CognitoProfileNotifier] Subscription successful, user upgraded to PRO');
+        
+        // Optimistically update the subscription status
+        if (previousTuple != null) {
+          final updatedProfileData = previousTuple.$1?.copyWith(subscriptionStatus: 'PRO');
+          state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
+        }
+        
+        // Refresh the profile to get the latest data
+        await loadCognitoProfile();
+      } else {
+        print('[CognitoProfileNotifier] Subscription failed, service returned false');
+      }
+
+      return result;
+    } catch (e, stackTrace) {
+      print('[CognitoProfileNotifier] Error during subscription: $e');
+      print('[CognitoProfileNotifier] Stack trace: $stackTrace');
+      
+      // On error, keep the previous state
+      state = AsyncValue<(CognitoProfileData?, String)>.error(e, stackTrace)
+          .copyWithPrevious(previousState);
+      return false;
+    }
+  }
+
+  Future<bool> unsubscribe() async {
+    print('[CognitoProfileNotifier] Starting unsubscription process...');
+    final previousState = state;
+    final previousTuple = previousState.value;
+
+    try {
+      final service = ref.read(cognitoProfileServiceProvider);
+      print('[CognitoProfileNotifier] Service instance retrieved, calling unsubscribe()');
+
+      final result = await service.unsubscribe();
+      print('[CognitoProfileNotifier] Unsubscribe service call completed with result: $result');
+
+      if (result) {
+        print('[CognitoProfileNotifier] Unsubscription successful, user downgraded to FREE');
+        
+        // Optimistically update the subscription status
+        if (previousTuple != null) {
+          final updatedProfileData = previousTuple.$1?.copyWith(subscriptionStatus: 'FREE');
+          state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
+        }
+        
+        // Refresh the profile to get the latest data
+        await loadCognitoProfile();
+      } else {
+        print('[CognitoProfileNotifier] Unsubscription failed, service returned false');
+      }
+
+      return result;
+    } catch (e, stackTrace) {
+      print('[CognitoProfileNotifier] Error during unsubscription: $e');
+      print('[CognitoProfileNotifier] Stack trace: $stackTrace');
+      
+      // On error, keep the previous state
+      state = AsyncValue<(CognitoProfileData?, String)>.error(e, stackTrace)
+          .copyWithPrevious(previousState);
+      return false;
+    }
+  }
+
+  Future<bool> updateUserProfileAttributes({
+    String? givenName,
+    String? familyName,
+    String? gender,
+    String? birthdate,
+  }) async {
+    print('[CognitoProfileNotifier] Starting profile attributes update...');
+    final previousState = state;
+    final previousTuple = previousState.value;
+
+    if (previousTuple == null) {
+      // Cannot update if there's no previous state
+      return false;
+    }
+
+    // Create optimistic update
+    final currentAttributes = previousTuple.$1?.userAttributes ?? <String, String>{};
+    final updatedAttributes = Map<String, String>.from(currentAttributes);
+    
+    if (givenName != null) updatedAttributes['given_name'] = givenName;
+    if (familyName != null) updatedAttributes['family_name'] = familyName;
+    if (gender != null) updatedAttributes['gender'] = gender;
+    if (birthdate != null) updatedAttributes['birthdate'] = birthdate;
+
+    // Optimistically update the UI, but REUSE the existing unique ID to prevent rebuild
+    final updatedProfileData = previousTuple.$1?.copyWith(userAttributes: updatedAttributes);
+    state = AsyncValue.data((updatedProfileData, previousTuple.$2));
+
+    try {
+      final service = ref.read(cognitoProfileServiceProvider);
+      print('[CognitoProfileNotifier] Service instance retrieved, calling updateUserProfileAttributes()');
+
+      final result = await service.updateUserProfileAttributes(
+        givenName: givenName,
+        familyName: familyName,
+        gender: gender,
+        birthdate: birthdate,
+      );
+
+      if (result) {
+        print('[CognitoProfileNotifier] Profile attributes update successful');
+        // The optimistic update was correct. We can now assign a new ID to mark a "clean" state.
+        state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
+        return true;
+      } else {
+        print('[CognitoProfileNotifier] Profile attributes update failed');
+        // If update failed, revert to the previous state
+        state = previousState;
+        return false;
+      }
+    } catch (e, stackTrace) {
+      print('[CognitoProfileNotifier] Error updating profile attributes: $e');
+      print('[CognitoProfileNotifier] Stack trace: $stackTrace');
+      
+      // If update failed, revert to previous state and show error
+      state = AsyncValue<(CognitoProfileData?, String)>.error(e, stackTrace)
+          .copyWithPrevious(previousState);
+      return false;
+    }
+  }
+
+  Future<void> refresh() async {
+    print('[CognitoProfileNotifier] Force refreshing cognito profile...');
+    await loadCognitoProfile();
+  }
+}
+
+// Convenience providers for specific data access
+final subscriptionStatusProvider = Provider<String?>((ref) {
+  final profileState = ref.watch(cognitoProfileProvider);
+  return profileState.value?.$1?.subscriptionStatus;
+});
+
+final userProfileAttributesProvider = Provider<Map<String, String>>((ref) {
+  final profileState = ref.watch(cognitoProfileProvider);
+  return profileState.value?.$1?.userAttributes ?? {};
+});
+
+// Provider to check if profile is loading/refreshing
+final isProfileLoadingProvider = Provider<bool>((ref) {
+  final profileState = ref.watch(cognitoProfileProvider);
+  return profileState.isLoading || profileState.isRefreshing;
+});
+
+// Provider to get profile error
+final profileErrorProvider = Provider<Object?>((ref) {
+  final profileState = ref.watch(cognitoProfileProvider);
+  return profileState.error;
 });

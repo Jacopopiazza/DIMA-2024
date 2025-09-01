@@ -1,7 +1,10 @@
+import 'package:dima_application/Views/UserViews/SettingsScreen/widgets/pro_subscription_section_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/user_details_provider.dart';
+import '../../../providers/cognito_profile_provider.dart';
 import 'widgets/user_details_form_riverpod.dart';
+import 'widgets/user_profile_section_riverpod.dart';
 import 'widgets/password_change_form_riverpod.dart';
 import 'widgets/danger_zone_section_riverpod.dart';
 import 'widgets/actions_section_riverpod.dart';
@@ -49,6 +52,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
   Widget build(BuildContext context) {
     final userIdAsync = ref.watch(userIdProvider);
     final userDetailsAsync = ref.watch(userDetailsProvider);
+    final cognitoProfileAsync = ref.watch(cognitoProfileProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -79,7 +83,12 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
               child: SlideTransition(
                 position: _slideAnimation,
                 child: RefreshIndicator(
-                  onRefresh: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
+                  onRefresh: () async {
+                    final refreshTasks = <Future<void>>[];
+                    refreshTasks.add(ref.read(cognitoProfileProvider.notifier).refresh());
+                    refreshTasks.add(ref.read(userDetailsProvider.notifier).loadUserDetails(userId));
+                    await Future.wait(refreshTasks);
+                  },
                   backgroundColor: colorScheme.surface,
                   color: colorScheme.primary,
                   child: ListView(
@@ -90,11 +99,82 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                       _buildHeaderSection(colorScheme, theme),
                       const SizedBox(height: 32),
 
+                      // Cognito profile section
+                      cognitoProfileAsync.when(
+                        skipLoadingOnRefresh: true,
+                        loading: () => _buildSectionLoadingState(colorScheme, 'Loading profile...'),
+                        error: (error, stackTrace) => _buildSectionErrorState(
+                          'Profile Error', 
+                          error.toString(), 
+                          colorScheme, 
+                          theme,
+                          onRetry: () => ref.read(cognitoProfileProvider.notifier).refresh(),
+                        ),
+                        data: (data) {
+                          final profileData = data.$1;
+                          final uniqueId = data.$2;
+
+                          if (profileData == null || profileData.subscriptionStatus == null || profileData.subscriptionStatus!.isEmpty || profileData.userAttributes == {} || profileData.userAttributes.isEmpty) {
+                            return _buildNoProfileState(colorScheme, theme);
+                          }
+
+                          return Column(
+                            children: [
+                              // Subscription Section
+                              ProSubscriptionSectionRiverpod(
+                                key: ValueKey('subscription_$uniqueId'),
+                                subscriptionStatus: profileData.subscriptionStatus,
+                                onSubscribe: () async {
+                                  return await ref
+                                      .read(cognitoProfileProvider.notifier)
+                                      .subscribe();
+                                },
+                                onUnsubscribe: () async {
+                                  return await ref
+                                      .read(cognitoProfileProvider.notifier)
+                                      .unsubscribe();
+                                },
+                              ),
+                              const SizedBox(height: 24),
+
+                              // User Profile Section
+                              UserProfileSectionRiverpod(
+                                key: ValueKey('profile_$uniqueId'),
+                                profileData: profileData,
+                                uniqueId: uniqueId,
+                                onUpdateProfile: ({
+                                  String? givenName,
+                                  String? familyName,
+                                  String? gender,
+                                  String? birthdate,
+                                }) async {
+                                  return await ref
+                                      .read(cognitoProfileProvider.notifier)
+                                      .updateUserProfileAttributes(
+                                        givenName: givenName,
+                                        familyName: familyName,
+                                        gender: gender,
+                                        birthdate: birthdate,
+                                      );
+                                },
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          );
+                        },
+                      ),
+
                       // User details section
                       userDetailsAsync.when(
                         skipLoadingOnRefresh: true,
-                        loading: () => _buildSectionLoadingState(colorScheme),
-                        error: (error, stackTrace) => _buildSectionErrorState(error.toString(), colorScheme, theme),
+                        loading: () => _buildSectionLoadingState(colorScheme, 'Loading preferences...'),
+                        error: (error, stackTrace) => _buildSectionErrorState(
+                          'Preferences Error',
+                          error.toString(), 
+                          colorScheme, 
+                          theme,
+                          onRetry: () => ref.read(userDetailsProvider.notifier).loadUserDetails(userId),
+                        ),
                         data: (data) {
                           final userDetails = data.$1;
                           final uniqueId = data.$2;
@@ -106,7 +186,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                           return Column(
                             children: [
                               UserDetailsFormRiverpod(
-                                key: ValueKey(uniqueId),
+                                key: ValueKey('details_$uniqueId'),
                                 userDetails: userDetails,
                                 onUpdate: (updatedDetails) async {
                                   return await ref
@@ -313,23 +393,41 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
     );
   }
 
-  Widget _buildSectionLoadingState(ColorScheme colorScheme) {
-    return Container(
+  Widget _buildSectionLoadingState(ColorScheme colorScheme, String message) {
+    return Column( 
+      children: [
+      Container(
       height: 200,
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Center(
-        child: CircularProgressIndicator(
-          color: colorScheme.primary,
-          strokeWidth: 3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: colorScheme.primary,
+              strokeWidth: 3,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              message,
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
       ),
-    );
+    ),
+    const SizedBox(height: 24),
+    ]);
+
   }
 
-  Widget _buildSectionErrorState(String error, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildSectionErrorState(String title, String error, ColorScheme colorScheme, ThemeData theme, {VoidCallback? onRetry}) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -345,7 +443,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
           ),
           const SizedBox(height: 16),
           Text(
-            'Error loading user details',
+            title,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: colorScheme.onErrorContainer,
@@ -359,13 +457,65 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
               color: colorScheme.onErrorContainer.withOpacity(0.8),
             ),
           ),
+          if (onRetry != null) ...[
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Retry'),
+              style: FilledButton.styleFrom(
+                backgroundColor: colorScheme.onErrorContainer,
+                foregroundColor: colorScheme.errorContainer,
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
+  Widget _buildNoProfileState(ColorScheme colorScheme, ThemeData theme) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              Icon(
+                Icons.account_circle_outlined,
+                size: 48,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Profile Unavailable',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Personal data and subscription status are currently unavailable. Please try refreshing or check back later.',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
   Widget _buildNoDetailsState(ColorScheme colorScheme, ThemeData theme) {
-    return Container(
+    return Column(children :[Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
@@ -380,14 +530,23 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
           ),
           const SizedBox(height: 16),
           Text(
-            'No user details available',
+            'Preferences Unavailable',
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
             ),
           ),
+          const SizedBox(height: 8),
+          Text(
+            'Your preferences and settings data are currently unavailable. Please try refreshing or check back later.',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              height: 1.5,
+            ),
+          ),
         ],
       ),
-    );
+    ),const SizedBox(height: 24)]);
   }
 }

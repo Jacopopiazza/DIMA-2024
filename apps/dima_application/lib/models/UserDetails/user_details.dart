@@ -35,7 +35,7 @@ class UserDetails {
       userId: amplifyDetails.userId,
       weightKg: amplifyDetails.weightKg,
       heightCm: amplifyDetails.heightCm,
-      exerciseFrequency: amplifyDetails.exerciseFrequency?.index,
+      exerciseFrequency: amplifyDetails.exerciseFrequency.index,
       dailyMealsPreference: amplifyDetails.dailyMealsPreference,
       allergies: List<String>.from(amplifyDetails.allergies ?? []),
       dietaryRestrictions:

@@ -1,11 +1,17 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../providers/cognito_profile_provider.dart';
-
 class ProSubscriptionSectionRiverpod extends ConsumerStatefulWidget {
-  const ProSubscriptionSectionRiverpod({super.key});
+  final String? subscriptionStatus;
+  final Future<bool> Function() onSubscribe;
+  final Future<bool> Function() onUnsubscribe;
+
+  const ProSubscriptionSectionRiverpod({
+    Key? key,
+    required this.subscriptionStatus,
+    required this.onSubscribe,
+    required this.onUnsubscribe,
+  }) : super(key: key);
 
   @override
   ConsumerState<ProSubscriptionSectionRiverpod> createState() =>
@@ -15,9 +21,7 @@ class ProSubscriptionSectionRiverpod extends ConsumerStatefulWidget {
 class _ProSubscriptionSectionRiverpodState
     extends ConsumerState<ProSubscriptionSectionRiverpod>
     with SingleTickerProviderStateMixin {
-  String? _currentStatus;
   bool _isLoading = false;
-
   late AnimationController _buttonController;
   late Animation<double> _buttonScale;
 
@@ -31,11 +35,6 @@ class _ProSubscriptionSectionRiverpodState
     _buttonScale = Tween<double>(begin: 1.0, end: 0.95).animate(
       CurvedAnimation(parent: _buttonController, curve: Curves.easeInOut),
     );
-    
-    // Schedule the status loading for after the widget is fully initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadSubscriptionStatus();
-    });
   }
 
   @override
@@ -44,38 +43,47 @@ class _ProSubscriptionSectionRiverpodState
     super.dispose();
   }
 
-  /// Load current subscription status
-  Future<void> _loadSubscriptionStatus() async {
+  bool get _isPro => widget.subscriptionStatus?.toUpperCase() == 'PRO';
+
+  /// Handle subscribe button press
+  Future<void> _subscribe() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    _buttonController.forward().then((_) {
+      _buttonController.reverse();
+    });
+
     try {
-      safePrint('[ProSubscriptionSection] Loading subscription status...');
+      final success = await widget.onSubscribe();
 
-      // Force refresh by invalidating the provider cache
-      ref.invalidate(subscriptionStatusProvider);
-
-      final status = await ref.read(subscriptionStatusProvider.future);
-      if (mounted) {
-        setState(() {
-          _currentStatus = status ?? 'FREE'; // Fallback to FREE if null
-        });
-        safePrint('[ProSubscriptionSection] Loaded status: $_currentStatus');
-      }
-    } catch (e) {
-      safePrint('[ProSubscriptionSection] Error loading status: $e');
-      // Don't show SnackBar here during initialization
-      // Just log the error and set a default status
-      if (mounted) {
-        setState(() {
-          _currentStatus = 'FREE'; // Default fallback
-        });
-      }
-    }
-  }
-
-  /// Safely show error message
-  void _showError(String message) {
-    if (mounted) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && context.mounted) {
+      if (mounted && context.mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('Successfully subscribed to PRO!'),
+                ],
+              ),
+              backgroundColor: Colors.green.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
@@ -89,7 +97,7 @@ class _ProSubscriptionSectionRiverpodState
                     child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  Text(message),
+                  const Text('Failed to subscribe. Please try again.'),
                 ],
               ),
               backgroundColor: Colors.red.shade600,
@@ -98,69 +106,31 @@ class _ProSubscriptionSectionRiverpodState
             ),
           );
         }
-      });
-    }
-  }
-
-  /// Handle subscribe button press
-  Future<void> _subscribe() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    _buttonController.forward().then((_) {
-      _buttonController.reverse();
-    });
-
-    try {
-      // Force fresh execution by invalidating the provider cache
-      ref.invalidate(subscribeProvider);
-      final success = await ref.read(subscribeProvider.future);
-
-      if (mounted) {
-        if (success) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted && context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
-                      ),
-                      const SizedBox(width: 12),
-                      const Text('Successfully subscribed to PRO!'),
-                    ],
-                  ),
-                  backgroundColor: Colors.green.shade600,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              );
-            }
-          });
-
-          // Force refresh the subscription status
-          safePrint(
-              '[ProSubscriptionSection] Subscription successful, refreshing status...');
-
-          // Wait a moment for Cognito to update, then refresh
-          await Future.delayed(const Duration(milliseconds: 500));
-          await _loadSubscriptionStatus();
-
-          // Force a rebuild
-          setState(() {});
-        } else {
-          _showError('Failed to subscribe. Please try again.');
-        }
       }
     } catch (e) {
-      _showError('Error subscribing: $e');
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                ),
+                const SizedBox(width: 12),
+                Text('Error subscribing: $e'),
+              ],
+            ),
+            backgroundColor: Colors.red.shade600,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -172,7 +142,7 @@ class _ProSubscriptionSectionRiverpodState
 
   /// Handle unsubscribe button press
   Future<void> _unsubscribe() async {
-    safePrint('[ProSubscriptionSection] Unsubscribe button clicked!');
+    if (_isLoading) return;
 
     setState(() {
       _isLoading = true;
@@ -183,58 +153,79 @@ class _ProSubscriptionSectionRiverpodState
     });
 
     try {
-      safePrint('[ProSubscriptionSection] Calling unsubscribeProvider...');
-      // Force fresh execution by invalidating the provider cache
-      ref.invalidate(unsubscribeProvider);
-      final success = await ref.read(unsubscribeProvider.future);
-      safePrint(
-          '[ProSubscriptionSection] unsubscribeProvider returned: $success');
+      final success = await widget.onUnsubscribe();
 
-      if (mounted) {
+      if (mounted && context.mounted) {
         if (success) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted && context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
-                      ),
-                      const SizedBox(width: 12),
-                      const Text('Successfully unsubscribed to FREE!'),
-                    ],
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
                   ),
-                  backgroundColor: Colors.orange.shade600,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              );
-            }
-          });
-
-          // Force refresh the subscription status
-          safePrint(
-              '[ProSubscriptionSection] Unsubscription successful, refreshing status...');
-
-          // Wait a moment for Cognito to update, then refresh
-          await Future.delayed(const Duration(milliseconds: 500));
-          await _loadSubscriptionStatus();
-
-          // Force a rebuild
-          setState(() {});
+                  const SizedBox(width: 12),
+                  const Text('Successfully unsubscribed to FREE!'),
+                ],
+              ),
+              backgroundColor: Colors.orange.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
         } else {
-          _showError('Failed to unsubscribe. Please try again.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('Failed to unsubscribe. Please try again.'),
+                ],
+              ),
+              backgroundColor: Colors.red.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
         }
       }
     } catch (e) {
-      _showError('Error unsubscribing: $e');
-      safePrint('[ProSubscriptionSection] Error unsubscribing: $e');
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                ),
+                const SizedBox(width: 12),
+                Text('Error unsubscribing: $e'),
+              ],
+            ),
+            backgroundColor: Colors.red.shade600,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -248,31 +239,8 @@ class _ProSubscriptionSectionRiverpodState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final isPro = _currentStatus == 'PRO';
-
-    // Show loading state while initializing
-    if (_currentStatus == null) {
-      return Container(
-        height: 200,
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: colorScheme.shadow.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Center(
-          child: CircularProgressIndicator(
-            color: colorScheme.primary,
-            strokeWidth: 3,
-          ),
-        ),
-      );
-    }
+    final status = widget.subscriptionStatus ?? 'FREE';
+    final isPro = _isPro;
 
     return Container(
       decoration: BoxDecoration(
@@ -318,7 +286,7 @@ class _ProSubscriptionSectionRiverpodState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        isPro ? 'PRO Plan' : 'PRO Plan',
+                        'PRO Plan',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: isPro ? Colors.green.shade700 : colorScheme.onSurface,
@@ -361,7 +329,7 @@ class _ProSubscriptionSectionRiverpodState
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Current Status: $_currentStatus',
+                    'Current Status: $status',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isPro ? Colors.green.shade800 : Colors.orange.shade800,
                       fontWeight: FontWeight.w600,
@@ -402,14 +370,12 @@ class _ProSubscriptionSectionRiverpodState
                   ),
                   const SizedBox(height: 12),
                   _buildFeatureItem(
-                    context, 
                     theme, 
                     colorScheme,
                     "Expert meal planning validation", 
                     isPro
                   ),
                   _buildFeatureItem(
-                    context, 
                     theme, 
                     colorScheme,
                     "Personal nutritionist chat in-app", 
@@ -420,7 +386,7 @@ class _ProSubscriptionSectionRiverpodState
             ),
             const SizedBox(height: 24),
 
-            // Action Button
+            // Action Buttons
             Center(
               child: ScaleTransition(
                 scale: _buttonScale,
@@ -480,7 +446,6 @@ class _ProSubscriptionSectionRiverpodState
   }
 
   Widget _buildFeatureItem(
-    BuildContext context, 
     ThemeData theme, 
     ColorScheme colorScheme,
     String text, 

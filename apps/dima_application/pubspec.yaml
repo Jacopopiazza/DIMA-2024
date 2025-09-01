@@ -57,6 +57,7 @@ dependencies:
   isar: ^3.1.0
   isar_flutter_libs: ^3.1.0 # solo per Android/iOS, ma non fa danni su altre piattaforme
   collection: ^1.19.0
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:

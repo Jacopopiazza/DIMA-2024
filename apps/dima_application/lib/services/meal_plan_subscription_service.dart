@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:convert'; // Aggiunto per JSON parsing
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:amplify_api/amplify_api.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 
 class MealPlanSubscriptionService {
