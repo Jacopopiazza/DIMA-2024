@@ -2,6 +2,7 @@ import 'package:dima_application/Utils/localization_helpers.dart';
 import 'package:dima_application/generated/flutter-models/Ingredient.dart';
 import 'package:dima_application/generated/flutter-models/Macros.dart';
 import 'package:dima_application/generated/flutter-models/Meal.dart';
+import 'package:dima_application/generated/flutter-models/MealNameEnum.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/providers/today_page_provider.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     // Use the meal's image if available, otherwise use the default
-    final String imageUrl = defaultImageUrl;
+    final String imageUrl = _getMealImageUrl(meal.name);
 
     // Watch the completion status to update the UI accordingly
     final todayPageState = ref.watch(todayPageProvider);
@@ -64,7 +65,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
             left: 0,
             right: 0,
             height: imageHeight,
-            child: Image.network(
+            child: Image.asset(
               imageUrl,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
@@ -76,14 +77,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                   ),
                 );
               },
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                    color: colorScheme.surfaceContainerHighest,
-                    child: Center(
-                        child: CircularProgressIndicator(
-                            color: colorScheme.primary)));
-              },
+              
             ),
           ),
 
@@ -427,5 +421,26 @@ class MealDetailsDraggablePage extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Returns an image URL string for a given meal type.
+  ///
+  /// Uses Unsplash images for specific meal types and a placeholder for others.
+  String _getMealImageUrl(MealNameEnum meal) {
+    const baseUrl = 'assets/';
+    switch (meal) {
+      case MealNameEnum.BREAKFAST:
+        return '${baseUrl}colazione.jpg';
+      case MealNameEnum.LUNCH:
+        return '${baseUrl}pranzo.jpg';
+      case MealNameEnum.DINNER:
+        return '${baseUrl}cena.png';
+      case MealNameEnum.SNACK_AFTERNOON:
+        return '${baseUrl}snack-pomeridiano.png';
+      case MealNameEnum.SNACK_MORNING:
+        return '${baseUrl}snack-mattino.jpg';
+      case MealNameEnum.SNACK_EVENING:
+        return '${baseUrl}snack-serale.png';
+    }
   }
 }
