@@ -103,46 +103,7 @@ class ApiService {
 
   // --- UserDetails Methods ---
 
-  Future<UserDetails> updateMyUserDetails(
-      UpdateUserDetailsInput updateUserDetailsInput) async {
-    safePrint("[APIService] Updating UserDetails via API...");
-    try {
-      // --- TODO: Replace with actual Amplify GraphQL Mutation ---
-      await Future.delayed(
-          const Duration(milliseconds: 300)); // Simulate network
-      final mockUserId = 'mockUserId'; // Replace with actual user ID logic
-      final updatedDetails = UserDetails(
-        userId: mockUserId,
-        weightKg: updateUserDetailsInput.weightKg,
-        heightCm: updateUserDetailsInput.heightCm,
-        exerciseFrequency: updateUserDetailsInput.exerciseFrequency,
-        dailyMealsPreference: updateUserDetailsInput.dailyMealsPreference,
-        allergies: updateUserDetailsInput.allergies,
-        openTextPreferences: updateUserDetailsInput.openTextPreferences,
-        updatedAt: TemporalDateTime.now(),
-        // createdAt should be set on creation or fetched
-      );
-      // --- End Mock ---
-
-      safePrint("[APIService] NETWORK: Update successful. Updating cache.");
-      final cacheEntry =
-          UserDetailsCache.fromUserDetails(updatedDetails, DateTime.now());
-      await _saveUserDetailsToCache(cacheEntry);
-      return updatedDetails;
-    } on ApiException catch (e) {
-      safePrint("[APIService] API Error updating user details: ${e.message}");
-      throw ApiExceptionWrapper("API error during UserDetails update",
-          underlyingException: e);
-    } on SocketException catch (e) {
-      safePrint("[APIService] Network error updating user details: $e");
-      throw NetworkException("Network error during UserDetails update",
-          underlyingException: e);
-    } catch (e, stackTrace) {
-      safePrint("[APIService] Failed to update user details: $e\n$stackTrace");
-      throw OperationFailedException("Failed to update UserDetails",
-          underlyingException: e);
-    }
-  }
+  
 
   Future<UserDetails> getMyUserDetails({bool forceRefresh = false}) async {
     // (Keep the implementation from the previous version - it doesn't need changes for stale MealPlan data)
@@ -168,7 +129,6 @@ class ApiService {
                 allergies
                 dietaryRestrictions
                 openTextPreferences
-                targetCalories
                 activeMealPlanId
                 updatedAt
                 createdAt

@@ -308,11 +308,10 @@ Represents user profile details and preferences stored in DynamoDB.
 type UserDetails @model {
   # Attributes stored in DynamoDB UserDetails item
   userId: ID! @primaryKey # Typically the Cognito Sub
-  weightKg: Float
-  heightCm: Float
-  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations
-  exerciseFrequency: ExerciseFrequency
-  dailyMealsPreference: Int
+  weightKg: Float!
+  heightCm: Float!
+  exerciseFrequency: ExerciseFrequency!
+  dailyMealsPreference: Int!
   allergies: [AllergenEnum!]
   dietaryRestrictions: String
   openTextPreferences: String
@@ -337,6 +336,23 @@ type MealPlanList {
   items: [MealPlan!]!
   nextToken: String
   activeMealPlan: ID
+}
+
+"""
+Input for specifying preferences when requesting a new meal plan.
+"""
+type PlanRequestPreferences {
+  # Include fields from UserDetails that can be overridden for this specific plan request
+  weightKg: Float!
+  heightCm: Float!
+  dateOfBirth: AWSDate!
+  gender: String!
+  language: String!
+  exerciseFrequency: ExerciseFrequency!
+  dailyMealsPreference: Int
+  allergies: [AllergenEnum!]
+  dietaryRestrictions: String
+  openTextPreferences: String
 }
 
 # ===================
@@ -433,7 +449,7 @@ input PlanRequestPreferencesInput {
   # Include fields from UserDetails that can be overridden for this specific plan request
   weightKg: Float
   heightCm: Float
-  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations (TODO: if not provided, the server will use the user's date of birth)
+  language: String
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]
@@ -473,7 +489,6 @@ Input for updating user preferences/details.
 input UpdateUserDetailsInput {
   weightKg: Float
   heightCm: Float
-  dateOfBirth: AWSDate # Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   dailyMealsPreference: Int
   allergies: [AllergenEnum!]

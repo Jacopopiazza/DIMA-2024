@@ -105,8 +105,6 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       return _buildOverridePreferences();
     }
 
-    if (userDetails == null) return _buildDefaultPreferences();
-
     final prefs = <String, dynamic>{};
 
     if (userDetails.weightKg != null) {
@@ -138,14 +136,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       prefs['openTextPreferences'] = userDetails.openTextPreferences;
     }
 
-    // Add a default dateOfBirth if not present (required for meal plan generation)
-    // Use a reasonable default (30 years old) if user hasn't provided their date of birth
-    if (!prefs.containsKey('dateOfBirth')) {
-      final thirtyYearsAgo =
-          DateTime.now().subtract(const Duration(days: 30 * 365));
-      prefs['dateOfBirth'] =
-          '${thirtyYearsAgo.year}-${thirtyYearsAgo.month.toString().padLeft(2, '0')}-${thirtyYearsAgo.day.toString().padLeft(2, '0')}';
-    }
+    final locale = Localizations.localeOf(context);
+    prefs['language'] = locale.languageCode;
+    print('Generated preferences: $prefs');
 
     return prefs;
   }
@@ -176,30 +169,11 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       prefs['openTextPreferences'] = _openTextPreferencesController.text;
     }
 
-    // Add default dateOfBirth
-    final thirtyYearsAgo =
-        DateTime.now().subtract(const Duration(days: 30 * 365));
-    prefs['dateOfBirth'] =
-        '${thirtyYearsAgo.year}-${thirtyYearsAgo.month.toString().padLeft(2, '0')}-${thirtyYearsAgo.day.toString().padLeft(2, '0')}';
+    final locale = Localizations.localeOf(context);
+    prefs['language'] = locale.languageCode;
+    print('Generated preferences: $prefs');
 
     return prefs;
-  }
-
-  /// Build default preferences when no user details are available
-  Map<String, dynamic> _buildDefaultPreferences() {
-    final thirtyYearsAgo =
-        DateTime.now().subtract(const Duration(days: 30 * 365));
-    return {
-      'weightKg': 70.0,
-      'heightCm': 170.0,
-      'dailyMealsPreference': 3,
-      'exerciseFrequency': ExerciseFrequency.TWICE_A_WEEK.name,
-      'allergies': <String>[],
-      'dietaryRestrictions': '',
-      'openTextPreferences': '',
-      'dateOfBirth':
-          '${thirtyYearsAgo.year}-${thirtyYearsAgo.month.toString().padLeft(2, '0')}-${thirtyYearsAgo.day.toString().padLeft(2, '0')}',
-    };
   }
 
   /// Convert ExerciseFrequency enum to user-friendly display text
@@ -233,8 +207,6 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     setState(() {
       _isGenerating = true;
     });
-
-    // No loading snackbar needed since button shows loading state
 
     final userDetailsAsync = ref.read(userDetailsProvider);
     final userDetails = userDetailsAsync.value?.$1;
@@ -351,10 +323,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         data: (data) {
           final userDetails = data.$1;
           final hasUserDetails = userDetails != null &&
-              (userDetails.weightKg != null ||
-                  userDetails.heightCm != null ||
-                  userDetails.dailyMealsPreference != null ||
-                  userDetails.exerciseFrequency != null ||
+              (userDetails.weightKg > 0 ||
+                  userDetails.heightCm > 0 ||
+                  userDetails.dailyMealsPreference > 0 ||
                   (userDetails.allergies?.isNotEmpty ?? false) ||
                   (userDetails.dietaryRestrictions?.isNotEmpty ?? false) ||
                   (userDetails.openTextPreferences?.isNotEmpty ?? false));

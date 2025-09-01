@@ -22,6 +22,7 @@ class UserDetailsService {
                 dailyMealsPreference
                 allergies
                 exerciseFrequency
+                dietaryRestrictions
                 heightCm
                 openTextPreferences
                 updatedAt
@@ -88,6 +89,8 @@ class UserDetailsService {
       if (userDetails.openTextPreferences != null)
         'openTextPreferences': userDetails.openTextPreferences,
       if (userDetails.weightKg != null) 'weightKg': userDetails.weightKg,
+      if (userDetails.dietaryRestrictions != null)
+        'dietaryRestrictions': userDetails.dietaryRestrictions,
     };
 
     try {
@@ -101,6 +104,7 @@ class UserDetailsService {
             exerciseFrequency
             heightCm
             openTextPreferences
+            dietaryRestrictions
             updatedAt
             userId
             weightKg

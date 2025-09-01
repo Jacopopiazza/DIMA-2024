@@ -28,18 +28,21 @@ class UserDetailsCache {
   String? exerciseFrequencyString; // Store as String since we can't store enums directly
   double? heightCm;
   String? openTextPreferences;
+  String? dietaryRestrictions; 
   String? updatedAtString; // Store as String since we can't store TemporalDateTime
   double? weightKg;
+  
 
   /// Creates a cache entry from a UserDetails object
   static UserDetailsCache fromUserDetails(UserDetails details, DateTime fetchTime) {
     return UserDetailsCache()
       ..userId = details.userId
+      ..dietaryRestrictions = details.dietaryRestrictions
       ..lastFetched = fetchTime.toUtc()
       ..activeMealPlanId = details.activeMealPlanId
       ..allergiesJson = details.allergies?.map((e) => e.name).toList()
       ..dailyMealsPreference = details.dailyMealsPreference
-      ..exerciseFrequencyString = details.exerciseFrequency?.name
+      ..exerciseFrequencyString = details.exerciseFrequency.name
       ..heightCm = details.heightCm
       ..openTextPreferences = details.openTextPreferences
       ..updatedAtString = details.updatedAt?.toString()
@@ -54,18 +57,17 @@ class UserDetailsCache {
       allergies: allergiesJson?.map((e) => AllergenEnum.values.firstWhere(
           (allergen) => allergen.name == e,
           orElse: () => AllergenEnum.values.first)).toList(),
-      dailyMealsPreference: dailyMealsPreference,
-      exerciseFrequency: exerciseFrequencyString != null
-          ? ExerciseFrequency.values.firstWhere(
-              (frequency) => frequency.name == exerciseFrequencyString,
-              orElse: () => ExerciseFrequency.values.first)
-          : null,
-      heightCm: heightCm,
+      dailyMealsPreference: dailyMealsPreference!,
+      exerciseFrequency: ExerciseFrequency.values.firstWhere(
+          (frequency) => frequency.name == exerciseFrequencyString,
+          orElse: () => ExerciseFrequency.NOT_SPECIFIED),
+      heightCm: heightCm!,
       openTextPreferences: openTextPreferences,
       updatedAt: updatedAtString != null
           ? TemporalDateTime.fromString(updatedAtString!)
           : null,
-      weightKg: weightKg,
+      weightKg: weightKg!,
+      dietaryRestrictions: dietaryRestrictions,
     );
   }
 }

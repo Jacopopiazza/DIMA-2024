@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../providers/user_details_provider.dart';
 
-class DangerZoneSectionRiverpod extends ConsumerWidget {
+class DangerZoneSectionRiverpod extends ConsumerStatefulWidget {
   final String userId;
 
   const DangerZoneSectionRiverpod({
@@ -11,52 +11,176 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
     required this.userId,
   }) : super(key: key);
 
-  Future<void> _showDeleteConfirmation(
-      BuildContext context, WidgetRef ref) async {
+  @override
+  ConsumerState<DangerZoneSectionRiverpod> createState() => 
+      _DangerZoneSectionRiverpodState();
+}
+
+class _DangerZoneSectionRiverpodState 
+    extends ConsumerState<DangerZoneSectionRiverpod>
+    with SingleTickerProviderStateMixin {
+  bool _isExpanded = false;
+  bool _isDeleting = false;
+  
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleExpansion() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      if (_isExpanded) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    });
+  }
+
+  Future<void> _showDeleteConfirmation() async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            Icon(Icons.warning, color: Theme.of(context).colorScheme.error),
-            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.red.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.warning_rounded,
+                color: Colors.red.shade700,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
             const Text('Delete Account'),
           ],
         ),
-        content: const Text(
-          'Are you sure you want to delete your account? This action cannot be undone.',
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'This action will permanently delete your account and all associated data. This cannot be undone.',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.red.shade200),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline_rounded, color: Colors.red.shade700, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'All your meal plans, preferences, and personal data will be permanently removed.',
+                      style: TextStyle(
+                        color: Colors.red.shade700,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('CANCEL'),
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.error,
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.red,
             ),
-            child: const Text('DELETE'),
+            child: const Text('Delete Account'),
           ),
         ],
       ),
     );
 
-    if (confirmed == true && context.mounted) {
-      final success =
-          await ref.read(userDetailsProvider.notifier).deleteAccount(userId);
+    if (confirmed == true && mounted) {
+      setState(() => _isDeleting = true);
+      
+      final success = await ref.read(userDetailsProvider.notifier).deleteAccount(widget.userId);
 
-      if (context.mounted) {
+      setState(() => _isDeleting = false);
+
+      if (mounted) {
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Account deleted successfully')),
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('Account deleted successfully'),
+                ],
+              ),
+              backgroundColor: Colors.green.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
           );
-          // No need to navigate - Amplify Auth will handle the UI transition
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to delete account. Please try again.'),
-              backgroundColor: Colors.red,
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('Failed to delete account'),
+                ],
+              ),
+              backgroundColor: Colors.red.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           );
         }
@@ -65,93 +189,175 @@ class DangerZoneSectionRiverpod extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark
-            ? theme.colorScheme.errorContainer.withOpacity(0.3)
-            : theme.colorScheme.error.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.error.withOpacity(isDark ? 0.5 : 0.3),
-          width: 1,
+        gradient: LinearGradient(
+          colors: [
+            Colors.red.shade50,
+            Colors.red.shade50.withOpacity(0.5),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.red.shade300, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.error.withOpacity(isDark ? 0.2 : 0.1),
+            color: Colors.red.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.warning,
-                  color: theme.colorScheme.error,
-                  size: 28,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Danger Zone',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: theme.colorScheme.error,
-                    fontWeight: FontWeight.bold,
+      child: Column(
+        children: [
+          // Header - Always visible
+          InkWell(
+            onTap: _toggleExpansion,
+            borderRadius: _isExpanded 
+                ? const BorderRadius.vertical(top: Radius.circular(16))
+                : BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade600,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.warning_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Danger Zone',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red.shade800,
+                          ),
+                        ),
+                        Text(
+                          'Irreversible and destructive actions',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.red.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    _isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                    color: Colors.red.shade600,
+                    size: 24,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+          // Expandable Content
+          if (_isExpanded)
+            FadeTransition(
+              opacity: _fadeAnimation,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Column(
+                    children: [
+                      // Warning Message
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.red.shade300),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline_rounded,
+                                  color: Colors.red.shade700,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Critical Warning',
+                                    style: theme.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red.shade800,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'The actions below are permanent and cannot be undone. All your data, including meal plans, preferences, and account information will be permanently deleted.',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: Colors.red.shade700,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      
+                      // Delete Account Button
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          onPressed: _isDeleting ? null : _showDeleteConfirmation,
+                          icon: _isDeleting
+                              ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                )
+                              : const Icon(Icons.delete_forever_rounded, size: 20),
+                          label: Text(
+                            _isDeleting ? 'Deleting Account...' : 'Delete My Account',
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: _isDeleting 
+                                ? Colors.red.withOpacity(0.7) 
+                                : Colors.red.shade600,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? theme.colorScheme.error.withOpacity(0.1)
-                    : theme.colorScheme.error.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color:
-                      theme.colorScheme.error.withOpacity(isDark ? 0.2 : 0.1),
-                  width: 1,
-                ),
-              ),
-              child: Text(
-                'The actions below are destructive and cannot be undone. Please proceed with caution.',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onErrorContainer,
-                ),
               ),
             ),
-            const SizedBox(height: 16),
-            Center(
-              child: ElevatedButton.icon(
-                icon: Icon(
-                  Icons.delete_forever,
-                  color: theme.colorScheme.onError,
-                  size: 20,
-                ),
-                label: const Text('Delete Account'),
-                onPressed: () => _showDeleteConfirmation(context, ref),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.error,
-                  foregroundColor: theme.colorScheme.onError,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  elevation: 2,
-                  iconColor: theme.colorScheme.onError,
-                ),
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

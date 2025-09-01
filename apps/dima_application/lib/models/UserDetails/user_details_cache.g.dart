@@ -32,38 +32,43 @@ const UserDetailsCacheSchema = CollectionSchema(
       name: r'dailyMealsPreference',
       type: IsarType.long,
     ),
-    r'exerciseFrequencyString': PropertySchema(
+    r'dietaryRestrictions': PropertySchema(
       id: 3,
+      name: r'dietaryRestrictions',
+      type: IsarType.string,
+    ),
+    r'exerciseFrequencyString': PropertySchema(
+      id: 4,
       name: r'exerciseFrequencyString',
       type: IsarType.string,
     ),
     r'heightCm': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'heightCm',
       type: IsarType.double,
     ),
     r'lastFetched': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'lastFetched',
       type: IsarType.dateTime,
     ),
     r'openTextPreferences': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'openTextPreferences',
       type: IsarType.string,
     ),
     r'updatedAtString': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'updatedAtString',
       type: IsarType.string,
     ),
     r'userId': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'userId',
       type: IsarType.string,
     ),
     r'weightKg': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'weightKg',
       type: IsarType.double,
     )
@@ -121,6 +126,12 @@ int _userDetailsCacheEstimateSize(
     }
   }
   {
+    final value = object.dietaryRestrictions;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.exerciseFrequencyString;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -151,13 +162,14 @@ void _userDetailsCacheSerialize(
   writer.writeString(offsets[0], object.activeMealPlanId);
   writer.writeStringList(offsets[1], object.allergiesJson);
   writer.writeLong(offsets[2], object.dailyMealsPreference);
-  writer.writeString(offsets[3], object.exerciseFrequencyString);
-  writer.writeDouble(offsets[4], object.heightCm);
-  writer.writeDateTime(offsets[5], object.lastFetched);
-  writer.writeString(offsets[6], object.openTextPreferences);
-  writer.writeString(offsets[7], object.updatedAtString);
-  writer.writeString(offsets[8], object.userId);
-  writer.writeDouble(offsets[9], object.weightKg);
+  writer.writeString(offsets[3], object.dietaryRestrictions);
+  writer.writeString(offsets[4], object.exerciseFrequencyString);
+  writer.writeDouble(offsets[5], object.heightCm);
+  writer.writeDateTime(offsets[6], object.lastFetched);
+  writer.writeString(offsets[7], object.openTextPreferences);
+  writer.writeString(offsets[8], object.updatedAtString);
+  writer.writeString(offsets[9], object.userId);
+  writer.writeDouble(offsets[10], object.weightKg);
 }
 
 UserDetailsCache _userDetailsCacheDeserialize(
@@ -170,14 +182,15 @@ UserDetailsCache _userDetailsCacheDeserialize(
   object.activeMealPlanId = reader.readStringOrNull(offsets[0]);
   object.allergiesJson = reader.readStringList(offsets[1]);
   object.dailyMealsPreference = reader.readLongOrNull(offsets[2]);
-  object.exerciseFrequencyString = reader.readStringOrNull(offsets[3]);
-  object.heightCm = reader.readDoubleOrNull(offsets[4]);
+  object.dietaryRestrictions = reader.readStringOrNull(offsets[3]);
+  object.exerciseFrequencyString = reader.readStringOrNull(offsets[4]);
+  object.heightCm = reader.readDoubleOrNull(offsets[5]);
   object.id = id;
-  object.lastFetched = reader.readDateTime(offsets[5]);
-  object.openTextPreferences = reader.readStringOrNull(offsets[6]);
-  object.updatedAtString = reader.readStringOrNull(offsets[7]);
-  object.userId = reader.readString(offsets[8]);
-  object.weightKg = reader.readDoubleOrNull(offsets[9]);
+  object.lastFetched = reader.readDateTime(offsets[6]);
+  object.openTextPreferences = reader.readStringOrNull(offsets[7]);
+  object.updatedAtString = reader.readStringOrNull(offsets[8]);
+  object.userId = reader.readString(offsets[9]);
+  object.weightKg = reader.readDoubleOrNull(offsets[10]);
   return object;
 }
 
@@ -197,16 +210,18 @@ P _userDetailsCacheDeserializeProp<P>(
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 5:
-      return (reader.readDateTime(offset)) as P;
-    case 6:
       return (reader.readStringOrNull(offset)) as P;
+    case 5:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 6:
+      return (reader.readDateTime(offset)) as P;
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
+      return (reader.readString(offset)) as P;
+    case 10:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -874,6 +889,160 @@ extension UserDetailsCacheQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'dietaryRestrictions',
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'dietaryRestrictions',
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dietaryRestrictions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'dietaryRestrictions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'dietaryRestrictions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'dietaryRestrictions',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'dietaryRestrictions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'dietaryRestrictions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'dietaryRestrictions',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'dietaryRestrictions',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dietaryRestrictions',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterFilterCondition>
+      dietaryRestrictionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'dietaryRestrictions',
+        value: '',
       ));
     });
   }
@@ -1796,6 +1965,20 @@ extension UserDetailsCacheQuerySortBy
   }
 
   QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
+      sortByDietaryRestrictions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dietaryRestrictions', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
+      sortByDietaryRestrictionsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dietaryRestrictions', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
       sortByExerciseFrequencyString() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exerciseFrequencyString', Sort.asc);
@@ -1921,6 +2104,20 @@ extension UserDetailsCacheQuerySortThenBy
       thenByDailyMealsPreferenceDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dailyMealsPreference', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
+      thenByDietaryRestrictions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dietaryRestrictions', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QAfterSortBy>
+      thenByDietaryRestrictionsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dietaryRestrictions', Sort.desc);
     });
   }
 
@@ -2061,6 +2258,14 @@ extension UserDetailsCacheQueryWhereDistinct
   }
 
   QueryBuilder<UserDetailsCache, UserDetailsCache, QDistinct>
+      distinctByDietaryRestrictions({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'dietaryRestrictions',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, UserDetailsCache, QDistinct>
       distinctByExerciseFrequencyString({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'exerciseFrequencyString',
@@ -2139,6 +2344,13 @@ extension UserDetailsCacheQueryProperty
       dailyMealsPreferenceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dailyMealsPreference');
+    });
+  }
+
+  QueryBuilder<UserDetailsCache, String?, QQueryOperations>
+      dietaryRestrictionsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'dietaryRestrictions');
     });
   }
 

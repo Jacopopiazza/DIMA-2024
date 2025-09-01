@@ -4,28 +4,26 @@ import 'package:dima_application/generated/flutter-models/UserDetails.dart'
 
 class UserDetails {
   final String userId;
-  final double? weightKg;
-  final double? heightCm;
+  final double weightKg;
+  final double heightCm;
   final int? exerciseFrequency;
-  final int? dailyMealsPreference;
+  final int dailyMealsPreference;
   final List<String> allergies;
-  final String dietaryRestrictions;
+  final String? dietaryRestrictions;
   final String? openTextPreferences;
-  final int? targetCalories;
   final String? activeMealPlanId;
   final TemporalDateTime? updatedAt;
   final TemporalDateTime? createdAt;
 
   UserDetails({
     required this.userId,
-    this.weightKg,
-    this.heightCm,
+    required this.weightKg,
+    required this.heightCm,
     this.exerciseFrequency,
-    this.dailyMealsPreference,
+    required this.dailyMealsPreference,
     required this.allergies,
-    required this.dietaryRestrictions,
+    this.dietaryRestrictions,
     this.openTextPreferences,
-    this.targetCalories,
     this.activeMealPlanId,
     this.updatedAt,
     this.createdAt,

@@ -385,18 +385,20 @@ class TodayPage extends ConsumerWidget {
   ///
   /// Uses Unsplash images for specific meal types and a placeholder for others.
   String _getMealImageUrl(MealNameEnum meal) {
-    const baseUrl = 'https://images.unsplash.com/photo-';
+    const baseUrl = 'assets/';
     switch (meal) {
       case MealNameEnum.BREAKFAST:
-        return '${baseUrl}1484723091739-30a097e8f929?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+        return '${baseUrl}colazione.jpg';
       case MealNameEnum.LUNCH:
-        return '${baseUrl}1540189549336-e6e99c3679fe?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+        return '${baseUrl}pranzo.jpg';
       case MealNameEnum.DINNER:
-        return '${baseUrl}1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+        return '${baseUrl}cena.png';
       case MealNameEnum.SNACK_AFTERNOON:
+        return '${baseUrl}snack-pomeridiano.png';
       case MealNameEnum.SNACK_MORNING:
+        return '${baseUrl}snack-mattino.jpg';
       case MealNameEnum.SNACK_EVENING:
-        return '${baseUrl}1551709076-39f3910593f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+        return '${baseUrl}snack-serale.png';
       default:
         // Use a placeholder image with the meal name encoded in the text.
         return 'https://via.placeholder.com/600x250.png/grey/white?text=${Uri.encodeComponent(meal.name.toString())}';

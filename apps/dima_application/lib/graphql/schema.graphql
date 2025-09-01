@@ -180,6 +180,20 @@ type PlanDayCompletion @model {
   userId: ID!
 }
 
+type PlanRequestPreferences {
+  allergies: [AllergenEnum!]
+  dailyMealsPreference: Int
+  dateOfBirth: AWSDate!
+  dietaryRestrictions: String
+  exerciseFrequency: ExerciseFrequency!
+  gender: String!
+  heightCm: Float!
+  language: String!
+  openTextPreferences: String
+  #  Include fields from UserDetails that can be overridden for this specific plan request
+  weightKg: Float!
+}
+
 #  ===================
 #       QUERIES
 # ===================
@@ -217,19 +231,17 @@ type UserDetails @model {
   allergies: [AllergenEnum!]
   #  Timestamp of the last update for this record
   createdAt: AWSDateTime
-  dailyMealsPreference: Int
-  dateOfBirth: AWSDate
+  dailyMealsPreference: Int!
   dietaryRestrictions: String
-  #  Optional, if needed for age-based recommendations
-  exerciseFrequency: ExerciseFrequency
-  heightCm: Float
+  exerciseFrequency: ExerciseFrequency!
+  heightCm: Float!
   openTextPreferences: String
   #  ID of the currently active MealPlan
   updatedAt: AWSDateTime
   #  Attributes stored in DynamoDB UserDetails item
   userId: ID! @primaryKey
   #  Typically the Cognito Sub
-  weightKg: Float
+  weightKg: Float!
 }
 
 #  For flexible preferences or potentially the DailyPlan if needed, though Map is preferred
@@ -383,11 +395,10 @@ input ModifyAssignedMealPlanInput {
 input PlanRequestPreferencesInput {
   allergies: [AllergenEnum!]
   dailyMealsPreference: Int
-  dateOfBirth: AWSDate
   dietaryRestrictions: String
-  #  Optional, if needed for age-based recommendations (TODO: if not provided, the server will use the user's date of birth)
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
+  language: String
   openTextPreferences: String
   #  Include fields from UserDetails that can be overridden for this specific plan request
   weightKg: Float
@@ -428,9 +439,7 @@ input UpdateNutritionistProfileInput {
 input UpdateUserDetailsInput {
   allergies: [AllergenEnum!]
   dailyMealsPreference: Int
-  dateOfBirth: AWSDate
   dietaryRestrictions: String
-  #  Optional, if needed for age-based recommendations
   exerciseFrequency: ExerciseFrequency
   heightCm: Float
   openTextPreferences: String

@@ -1,5 +1,4 @@
 import 'package:dima_application/Views/UserViews/MyPlansScreen/subscription_test_page.dart';
-import 'package:dima_application/generated/flutter-models/MealPlanValidationStatus.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
@@ -856,25 +855,16 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                             .read(mealPlansProvider.notifier)
                             .modifyMealPlan(mealPlanId, newName);
                         
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(success 
-                                ? 'Plan name updated successfully!' 
-                                : 'Failed to update plan name'),
-                              backgroundColor: success ? Colors.green.shade600 : Colors.red.shade600,
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                          );
-                        }
+                        if (!success) {
+              throw Exception('Failed to update meal plan');
+            }
                       },
                     );
                   },
                 );
               },
             ),
-            if (plan.validationStatus != MealPlanValidationStatus.VALIDATED)
+            if (plan.validationStatus == MealPlanValidationStatus.NOT_VALIDATED)
               _buildActionButton(
                 context,
                 Icons.person_add_rounded,

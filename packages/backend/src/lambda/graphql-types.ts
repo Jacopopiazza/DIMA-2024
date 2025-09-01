@@ -450,13 +450,28 @@ export type PlanDayCompletion = {
 };
 
 /** Input for specifying preferences when requesting a new meal plan. */
+export type PlanRequestPreferences = {
+  __typename?: 'PlanRequestPreferences';
+  allergies?: Maybe<Array<AllergenEnum>>;
+  dailyMealsPreference?: Maybe<Scalars['Int']['output']>;
+  dateOfBirth: Scalars['AWSDate']['output'];
+  dietaryRestrictions?: Maybe<Scalars['String']['output']>;
+  exerciseFrequency: ExerciseFrequency;
+  gender: Scalars['String']['output'];
+  heightCm: Scalars['Float']['output'];
+  language: Scalars['String']['output'];
+  openTextPreferences?: Maybe<Scalars['String']['output']>;
+  weightKg: Scalars['Float']['output'];
+};
+
+/** Input for specifying preferences when requesting a new meal plan. */
 export type PlanRequestPreferencesInput = {
   allergies?: InputMaybe<Array<AllergenEnum>>;
   dailyMealsPreference?: InputMaybe<Scalars['Int']['input']>;
-  dateOfBirth?: InputMaybe<Scalars['AWSDate']['input']>;
   dietaryRestrictions?: InputMaybe<Scalars['String']['input']>;
   exerciseFrequency?: InputMaybe<ExerciseFrequency>;
   heightCm?: InputMaybe<Scalars['Float']['input']>;
+  language?: InputMaybe<Scalars['String']['input']>;
   openTextPreferences?: InputMaybe<Scalars['String']['input']>;
   weightKg?: InputMaybe<Scalars['Float']['input']>;
 };
@@ -598,7 +613,6 @@ export type UpdateNutritionistProfileInput = {
 export type UpdateUserDetailsInput = {
   allergies?: InputMaybe<Array<AllergenEnum>>;
   dailyMealsPreference?: InputMaybe<Scalars['Int']['input']>;
-  dateOfBirth?: InputMaybe<Scalars['AWSDate']['input']>;
   dietaryRestrictions?: InputMaybe<Scalars['String']['input']>;
   exerciseFrequency?: InputMaybe<ExerciseFrequency>;
   heightCm?: InputMaybe<Scalars['Float']['input']>;
@@ -612,15 +626,14 @@ export type UserDetails = {
   activeMealPlanId?: Maybe<Scalars['ID']['output']>;
   allergies?: Maybe<Array<AllergenEnum>>;
   createdAt?: Maybe<Scalars['AWSDateTime']['output']>;
-  dailyMealsPreference?: Maybe<Scalars['Int']['output']>;
-  dateOfBirth?: Maybe<Scalars['AWSDate']['output']>;
+  dailyMealsPreference: Scalars['Int']['output'];
   dietaryRestrictions?: Maybe<Scalars['String']['output']>;
-  exerciseFrequency?: Maybe<ExerciseFrequency>;
-  heightCm?: Maybe<Scalars['Float']['output']>;
+  exerciseFrequency: ExerciseFrequency;
+  heightCm: Scalars['Float']['output'];
   openTextPreferences?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['AWSDateTime']['output']>;
   userId: Scalars['ID']['output'];
-  weightKg?: Maybe<Scalars['Float']['output']>;
+  weightKg: Scalars['Float']['output'];
 };
 
 /** Input for validating a meal plan. */
