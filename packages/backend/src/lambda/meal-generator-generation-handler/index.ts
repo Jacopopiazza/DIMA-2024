@@ -49,6 +49,7 @@ import { MealPlanSNSMessage } from '../../types/MealPlanSNSMessage';
 import {
   DailyPlanData,
   ExerciseFrequency,
+  PlanRequestPreferences,
   PlanRequestPreferencesInput,
   PlanStatus,
   UserDetails,
@@ -117,7 +118,6 @@ async function publishMealPlanNotification(
 }
 
 async function getGeminiApiKey(): Promise<string> {
-  // ... (function remains the same as previous version)
   if (geminiApiKey) return geminiApiKey;
   if (!GEMINI_SECRET_ARN)
     throw new Error('GEMINI_SECRET_ARN environment variable not set.');
@@ -156,7 +156,7 @@ async function getGeminiApiKey(): Promise<string> {
   return geminiApiKey!;
 }
 
-function buildUserPrompt(preferences: PlanRequestPreferencesInput): string {
+function buildUserPrompt(preferences: PlanRequestPreferences): string {
   // Drop dateOfBirth and replace it with age
   const dateOfBirth = preferences.dateOfBirth!;
   let age = `${calculateAge(dateOfBirth)}`;
@@ -174,6 +174,8 @@ function buildUserPrompt(preferences: PlanRequestPreferencesInput): string {
     'Dietary Restrictions': preferences.dietaryRestrictions || 'None',
     'User Preferences': preferences.openTextPreferences || 'None',
     'Age (years)': age,
+    Gender: preferences.gender,
+    Language: preferences.language,
   };
 
   const prefsStr = Object.entries(prefs)
@@ -186,9 +188,13 @@ function buildUserPrompt(preferences: PlanRequestPreferencesInput): string {
 function buildUserPreferencesForGenerator(
   userDetails: UserDetails,
   preferences: PlanRequestPreferencesInput,
-): PlanRequestPreferencesInput {
+): PlanRequestPreferences {
   // Prepare the preferences object for the generator
-  const userPreferences: PlanRequestPreferencesInput = {
+
+  const dateOfBirth = '2000-01-01'; // TODO: This will come from Cognito
+  const gender = 'male'; // TODO: This will come from Cognito
+
+  const userPreferences: PlanRequestPreferences = {
     allergies: preferences.allergies || userDetails.allergies || [],
     dailyMealsPreference:
       preferences.dailyMealsPreference || userDetails.dailyMealsPreference || 3,
@@ -202,7 +208,9 @@ function buildUserPreferencesForGenerator(
     weightKg: preferences.weightKg || userDetails.weightKg,
     openTextPreferences:
       preferences.openTextPreferences || userDetails.openTextPreferences || '',
-    dateOfBirth: userDetails.dateOfBirth, // TODO: decide if it's something that should be possible to override
+    dateOfBirth: dateOfBirth,
+    gender: gender,
+    language: preferences.language || 'en',
   };
 
   return userPreferences;
@@ -334,7 +342,7 @@ async function getUserDetails(userId: string): Promise<UserDetails> {
 
 async function generateMealPlan(
   apiKey: string,
-  userPreferences: PlanRequestPreferencesInput,
+  userPreferences: PlanRequestPreferences,
 ): Promise<DailyPlanData> {
   // --- Define the JSON Schema for Gemini ---
   // This schema MUST match the `DailyPlanDataInput` type in your AppSync schema.
@@ -347,7 +355,7 @@ async function generateMealPlan(
     },
     systemInstruction: [
       {
-        text: `You are a professional nutritionist tasked with generating a realistic and nutritionally balanced 7-day meal plan for a user. Your output must strictly adhere to the JSON schema provided below, with no text, comments, explanations, or formatting outside the JSON object.
+        text: `You are a professional nutritionist tasked with generating a realistic and nutritionally balanced 7-day meal plan for a user. Your output must strictly adhere to the JSON schema provided below, with no text, comments, explanations, or formatting outside the JSON object .The user will specify a Language in their prompt, and all meal plan fields that include ingredient names, preparation steps, and recipe instructions must be written in that language.
 
 # Output Rules (MANDATORY)
 - Return only one valid JSON object.
@@ -593,7 +601,7 @@ export const handler: Handler<GeneratorEvent> = async (event) => {
     let userDetails: UserDetails = await getUserDetails(event.userId);
 
     // --- 3. Prepare the preferences object ---
-    const userPreferences: PlanRequestPreferencesInput =
+    const userPreferences: PlanRequestPreferences =
       buildUserPreferencesForGenerator(userDetails, preferences);
 
     // --- 4. Validate User Preferences ---
