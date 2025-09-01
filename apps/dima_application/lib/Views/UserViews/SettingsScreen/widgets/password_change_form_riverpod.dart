@@ -75,7 +75,9 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
     return password.length >= 8 && 
            password.contains(RegExp(r'[A-Z]')) &&
            password.contains(RegExp(r'[a-z]')) &&
-           password.contains(RegExp(r'[0-9]'));
+           password.contains(RegExp(r'[0-9]')) &&
+           password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')) &&
+           password.length >= 8;
   }
 
   String _getPasswordStrength(String password) {
