@@ -37,10 +37,28 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       parent: _fabAnimationController,
       curve: Curves.easeInOut,
     ));
+
+    // Mark that we're on MyPlansPage and trigger initial refresh
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(currentPageProvider.notifier).state = 'MyPlansPage';
+      // Auto-refresh when entering the page if there were unread notifications
+      final notificationState = ref.read(mealPlanNotificationProvider);
+      if (notificationState.hasUnreadNotifications) {
+        _refreshPlans();
+      }
+    });
   }
 
   @override
   void dispose() {
+    // Mark that we're leaving MyPlansPage - only if still mounted
+    if (mounted) {
+      try {
+        ref.read(currentPageProvider.notifier).state = null;
+      } catch (e) {
+        // Ignore errors if ref is no longer available
+      }
+    }
     _fabAnimationController.dispose();
     super.dispose();
   }
@@ -68,42 +86,53 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     // Listen for notifications and auto-refresh
     ref.listen<NotificationState>(mealPlanNotificationProvider,
         (previous, current) {
-      if (current.hasUnreadNotifications && current.notifications.isNotEmpty) {
-        final latestNotification = current.notifications.last;
-        if (latestNotification.success) {
-          // Auto-refresh the meal plans list when a new plan is generated
-          _refreshPlans();
-          // Mark notifications as read since we're handling them here
-          ref.read(mealPlanNotificationProvider.notifier).markAllAsRead();
+      // Only auto-refresh if we're currently on this page AND actively listening
+      final currentPage = ref.read(currentPageProvider);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Icon(Icons.refresh,
-                        color: Colors.white, size: 16),
+      if (currentPage == 'MyPlansPage' &&
+          current.hasUnreadNotifications &&
+          current.notifications.isNotEmpty) {
+        final latestNotification = current.notifications.last;
+
+        // Always refresh regardless of success/failure
+        _refreshPlans();
+        // Mark notifications as read since we're handling them here
+        ref.read(mealPlanNotificationProvider.notifier).markAllAsRead();
+
+        // Show different messages based on success/failure
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text('New meal plan available! List refreshed.'),
-                  ),
-                ],
-              ),
-              backgroundColor: Colors.green.shade600,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              duration: const Duration(seconds: 3),
+                  child: Icon(
+                      latestNotification.success ? Icons.refresh : Icons.info,
+                      color: Colors.white,
+                      size: 16),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(latestNotification.success
+                      ? 'New meal plan available! List refreshed.'
+                      : 'Meal plan status updated. List refreshed.'),
+                ),
+              ],
             ),
-          );
-        }
+            backgroundColor: latestNotification.success
+                ? Colors.green.shade600
+                : Colors.blue.shade600,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(seconds: 3),
+          ),
+        );
       }
     });
 
@@ -227,76 +256,78 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   }
 
   Widget _buildEmptyState(BuildContext context, ColorScheme colorScheme) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      return SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: constraints.maxHeight,
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(32),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
-                      shape: BoxShape.circle,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.restaurant_menu_rounded,
+                        size: 64,
+                        color: colorScheme.primary,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.restaurant_menu_rounded,
-                      size: 64,
-                      color: colorScheme.primary,
+                    const SizedBox(height: 32),
+                    Text(
+                      'No meal plans yet',
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface,
+                              ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  Text(
-                    'No meal plans yet',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
+                    const SizedBox(height: 16),
+                    Text(
+                      'Create your first personalized meal plan\nto get started with healthy eating',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            height: 1.4,
+                          ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Create your first personalized meal plan\nto get started with healthy eating',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      height: 1.4,
+                    const SizedBox(height: 16),
+                    Text(
+                      'Pull down to refresh',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontStyle: FontStyle.italic,
+                          ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Pull down to refresh',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      fontStyle: FontStyle.italic,
+                    const SizedBox(height: 32),
+                    FilledButton.tonalIcon(
+                      onPressed: () => _openGenerateMealPlan(context),
+                      icon: const Icon(Icons.add_rounded),
+                      label: const Text('Create Meal Plan'),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  FilledButton.tonalIcon(
-                    onPressed: () => _openGenerateMealPlan(context),
-                    icon: const Icon(Icons.add_rounded),
-                    label: const Text('Create Meal Plan'),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   Widget _buildErrorState(BuildContext context, String error,
       ColorScheme colorScheme, ThemeData theme) {
