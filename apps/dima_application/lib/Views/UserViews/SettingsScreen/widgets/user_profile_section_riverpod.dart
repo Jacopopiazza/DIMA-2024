@@ -14,7 +14,8 @@ class UserProfileSectionRiverpod extends ConsumerStatefulWidget {
 }
 
 class _UserProfileSectionRiverpodState
-    extends ConsumerState<UserProfileSectionRiverpod> {
+    extends ConsumerState<UserProfileSectionRiverpod>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _givenNameController = TextEditingController();
   final _familyNameController = TextEditingController();
@@ -22,10 +23,22 @@ class _UserProfileSectionRiverpodState
   DateTime? _selectedDate;
   bool _isLoading = false;
   bool _isInitialized = false;
+  bool _isDirty = false;
+
+  late AnimationController _saveButtonController;
+  late Animation<double> _saveButtonScale;
 
   @override
   void initState() {
     super.initState();
+    _saveButtonController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _saveButtonScale = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _saveButtonController, curve: Curves.easeInOut),
+    );
+    
     // Schedule the attributes loading for after the widget is fully initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadUserProfileAttributes();
@@ -45,9 +58,18 @@ class _UserProfileSectionRiverpodState
 
   @override
   void dispose() {
+    _saveButtonController.dispose();
     _givenNameController.dispose();
     _familyNameController.dispose();
     super.dispose();
+  }
+
+  void _onFieldChanged() {
+    if (!_isDirty) {
+      setState(() {
+        _isDirty = true;
+      });
+    }
   }
 
   /// Load current user profile attributes
@@ -79,6 +101,7 @@ class _UserProfileSectionRiverpodState
             }
           }
           _isInitialized = true;
+          _isDirty = false;
         });
         safePrint('[UserProfileSection] Loaded attributes: $attributes');
       }
@@ -88,24 +111,45 @@ class _UserProfileSectionRiverpodState
         setState(() {
           _isInitialized = true;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error loading profile data: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('Error loading profile data'),
+                ],
+              ),
+              backgroundColor: Colors.red.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
+        }
       }
     }
   }
 
   /// Handle save button press
   Future<void> _saveProfile() async {
-    if (!_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate() || _isLoading) {
       return;
     }
 
     setState(() {
       _isLoading = true;
+    });
+
+    _saveButtonController.forward().then((_) {
+      _saveButtonController.reverse();
     });
 
     try {
@@ -125,12 +169,29 @@ class _UserProfileSectionRiverpodState
       }
 
       if (attributes.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No changes to save'),
-            backgroundColor: Colors.orange,
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.info_outline_rounded, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text('No changes to save'),
+                ],
+              ),
+              backgroundColor: Colors.orange.shade600,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          );
+        }
         return;
       }
 
@@ -141,29 +202,81 @@ class _UserProfileSectionRiverpodState
 
       if (mounted) {
         if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Profile updated successfully!'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          setState(() {
+            _isDirty = false;
+          });
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text('Profile updated successfully!'),
+                  ],
+                ),
+                backgroundColor: Colors.green.shade600,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+            );
+          }
           // Refresh the attributes
           await _loadUserProfileAttributes();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to update profile. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text('Failed to update profile. Please try again.'),
+                  ],
+                ),
+                backgroundColor: Colors.red.shade600,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+            );
+          }
         }
       }
     } catch (e) {
-      if (mounted) {
+      if (mounted && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error updating profile: $e'),
-            backgroundColor: Colors.red,
+            content: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                ),
+                const SizedBox(width: 12),
+                Text('Error updating profile: $e'),
+              ],
+            ),
+            backgroundColor: Colors.red.shade600,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -187,6 +300,7 @@ class _UserProfileSectionRiverpodState
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+        _onFieldChanged();
       });
     }
   }
@@ -194,26 +308,27 @@ class _UserProfileSectionRiverpodState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
     // Show loading state while initializing
     if (!_isInitialized) {
       return Container(
+        height: 200,
         decoration: BoxDecoration(
-          color: isDark
-              ? theme.colorScheme.secondary.withValues(alpha: 0.1)
-              : theme.colorScheme.primary.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color:
-                theme.colorScheme.primary.withValues(alpha: isDark ? 0.3 : 0.2),
-            width: 1,
-          ),
+          color: colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.shadow.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Center(
-            child: CircularProgressIndicator(),
+        child: Center(
+          child: CircularProgressIndicator(
+            color: colorScheme.primary,
+            strokeWidth: 3,
           ),
         ),
       );
@@ -221,131 +336,162 @@ class _UserProfileSectionRiverpodState
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark
-            ? theme.colorScheme.secondary.withValues(alpha: 0.1)
-            : theme.colorScheme.primary.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color:
-              theme.colorScheme.primary.withValues(alpha: isDark ? 0.3 : 0.2),
-          width: 1,
-        ),
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header
             Row(
               children: [
-                Icon(
-                  Icons.person,
-                  color: theme.colorScheme.primary,
-                  size: 24,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'User Profile',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: theme.colorScheme.primary,
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.person_rounded,
+                    color: colorScheme.onPrimary,
+                    size: 20,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'User Profile',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                if (_isDirty && !_isLoading)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: Colors.orange.shade300),
+                    ),
+                    child: Text(
+                      'Unsaved',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: Colors.orange.shade800,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: 8),
                 IconButton(
                   onPressed: _loadUserProfileAttributes,
-                  icon: const Icon(Icons.refresh),
+                  icon: const Icon(Icons.refresh_rounded, size: 20),
                   tooltip: 'Refresh Profile',
+                  style: IconButton.styleFrom(
+                    backgroundColor: colorScheme.surface,
+                    foregroundColor: colorScheme.onSurface,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
+
             Form(
               key: _formKey,
               child: Column(
                 children: [
-                  // Given Name
-                  TextFormField(
-                    key: const ValueKey('given_name_field'),
-                    controller: _givenNameController,
-                    enabled: true,
-                    decoration: InputDecoration(
-                      labelText: 'Given Name',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.person_outline),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Given Name is required';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      // Handle text changes without triggering rebuilds
-                    },
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Family Name
-                  TextFormField(
-                    key: const ValueKey('family_name_field'),
-                    controller: _familyNameController,
-                    enabled: true,
-                    decoration: InputDecoration(
-                      labelText: 'Family Name',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.person_outline),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Family Name is required';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      // Handle text changes without triggering rebuilds
-                    },
+                  // Given Name & Family Name Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildTextField(
+                          key: const ValueKey('given_name_field'),
+                          controller: _givenNameController,
+                          label: 'Given Name',
+                          icon: Icons.person_outline_rounded,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Given Name is required';
+                            }
+                            return null;
+                          },
+                          colorScheme: colorScheme,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildTextField(
+                          key: const ValueKey('family_name_field'),
+                          controller: _familyNameController,
+                          label: 'Family Name',
+                          icon: Icons.person_outline_rounded,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Family Name is required';
+                            }
+                            return null;
+                          },
+                          colorScheme: colorScheme,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
 
                   // Gender
-                  DropdownButtonFormField<String>(
+                  _buildDropdownField<String>(
                     value: _selectedGender,
-                    decoration: InputDecoration(
-                      labelText: 'Gender',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.wc),
-                    ),
-                    items: [
-                      const DropdownMenuItem(
-                        value: 'male',
-                        child: Text('Male'),
-                      ),
-                      const DropdownMenuItem(
-                        value: 'female',
-                        child: Text('Female'),
-                      ),
-                      const DropdownMenuItem(
-                        value: 'other',
-                        child: Text('Other'),
-                      ),
+                    label: 'Gender',
+                    icon: Icons.wc_rounded,
+                    items: const [
+                      DropdownMenuItem(value: 'male', child: Text('Male')),
+                      DropdownMenuItem(value: 'female', child: Text('Female')),
+                      DropdownMenuItem(value: 'other', child: Text('Other')),
                     ],
                     onChanged: (value) {
                       setState(() {
                         _selectedGender = value;
+                        _onFieldChanged();
                       });
                     },
+                    colorScheme: colorScheme,
                   ),
                   const SizedBox(height: 16),
 
                   // Birthdate
                   InkWell(
                     onTap: _selectDate,
+                    borderRadius: BorderRadius.circular(12),
                     child: InputDecorator(
                       decoration: InputDecoration(
                         labelText: 'Birthdate',
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.cake),
-                        suffixIcon: const Icon(Icons.calendar_today),
+                        prefixIcon: const Icon(Icons.cake_rounded, size: 20),
+                        suffixIcon: const Icon(Icons.calendar_today_rounded, size: 20),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.outline),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+                        ),
+                        filled: true,
+                        fillColor: colorScheme.surface,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       ),
                       child: Text(
                         _selectedDate != null
@@ -353,27 +499,47 @@ class _UserProfileSectionRiverpodState
                             : 'Select date',
                         style: TextStyle(
                           color: _selectedDate != null
-                              ? theme.textTheme.bodyLarge?.color
-                              : theme.textTheme.bodyLarge?.color
-                                  ?.withValues(alpha: 0.6),
+                              ? colorScheme.onSurface
+                              : colorScheme.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
 
                   // Save button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _saveProfile,
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text('Save Changes'),
+                  Center(
+                    child: ScaleTransition(
+                      scale: _saveButtonScale,
+                      child: FilledButton.icon(
+                        onPressed: (_isDirty && !_isLoading) ? _saveProfile : null,
+                        icon: _isLoading
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
+                                ),
+                              )
+                            : const Icon(Icons.save_rounded, size: 20),
+                        label: Text(
+                          _isLoading ? 'Saving...' : 'Save Changes',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: _isDirty ? colorScheme.onPrimary : colorScheme.onSurface,
+                          ),
+                        ),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: _isDirty && !_isLoading 
+                              ? colorScheme.primary 
+                              : colorScheme.primary.withOpacity(0.5),
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -382,6 +548,75 @@ class _UserProfileSectionRiverpodState
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField({
+    Key? key,
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    required ColorScheme colorScheme,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      key: key,
+      controller: controller,
+      onChanged: (_) => _onFieldChanged(),
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, size: 20),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.outline),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+        ),
+        filled: true,
+        fillColor: colorScheme.surface,
+        contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
+      ),
+      validator: validator,
+    );
+  }
+
+  Widget _buildDropdownField<T>({
+    required T? value,
+    required String label,
+    required IconData icon,
+    required List<DropdownMenuItem<T>> items,
+    required ValueChanged<T?> onChanged,
+    required ColorScheme colorScheme,
+  }) {
+    return DropdownButtonFormField<T>(
+      value: value,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, size: 20),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.outline),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+        ),
+        filled: true,
+        fillColor: colorScheme.surface,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      items: items,
+      onChanged: onChanged,
     );
   }
 }
