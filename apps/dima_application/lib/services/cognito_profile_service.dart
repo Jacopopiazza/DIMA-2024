@@ -3,13 +3,13 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 /// Service for updating Cognito user attributes
 /// This service handles direct updates to Cognito user pool attributes
 class CognitoProfileService {
-  /// Subscribe user - changes subscription status from FREE to PRO
-  Future<bool> subscribe() async {
+  /// Updates subscription status to the specified value
+  Future<bool> _updateSubscriptionStatus(String status) async {
     try {
-      safePrint('[CognitoProfileService] Starting subscription process...');
+      safePrint('[CognitoProfileService] Starting subscription update to $status...');
 
       final attributes = {
-        'custom:subscriptionStatus': 'PRO',
+        'custom:subscriptionStatus': status,
       };
 
       final cognitoAttributes = attributes.entries.map((entry) {
@@ -27,55 +27,23 @@ class CognitoProfileService {
         attributes: cognitoAttributes,
       );
 
-      safePrint('[CognitoProfileService] Successfully subscribed user to PRO');
+      safePrint('[CognitoProfileService] Successfully updated subscription to $status');
       return true;
     } on AuthException catch (e) {
-      safePrint('[CognitoProfileService] Auth error subscribing: ${e.message}');
+      safePrint('[CognitoProfileService] Auth error updating subscription: ${e.message}');
       safePrint('[CognitoProfileService] Auth error details: ${e.toString()}');
       return false;
     } catch (e) {
-      safePrint('[CognitoProfileService] Unexpected error subscribing: $e');
+      safePrint('[CognitoProfileService] Unexpected error updating subscription: $e');
       return false;
     }
   }
+
+  /// Subscribe user - changes subscription status from FREE to PRO
+  Future<bool> subscribe() async => _updateSubscriptionStatus('PRO');
 
   /// Unsubscribe user - changes subscription status from PRO to FREE
-  Future<bool> unsubscribe() async {
-    try {
-      safePrint('[CognitoProfileService] Starting unsubscription process...');
-
-      final attributes = {
-        'custom:subscriptionStatus': 'FREE',
-      };
-
-      final cognitoAttributes = attributes.entries.map((entry) {
-        return AuthUserAttribute(
-          userAttributeKey: CognitoUserAttributeKey.custom(
-              entry.key.replaceFirst('custom:', '')),
-          value: entry.value,
-        );
-      }).toList();
-
-      safePrint(
-          '[CognitoProfileService] Attempting to update attribute: ${cognitoAttributes.first.userAttributeKey.key} = ${cognitoAttributes.first.value}');
-
-      await Amplify.Auth.updateUserAttributes(
-        attributes: cognitoAttributes,
-      );
-
-      safePrint(
-          '[CognitoProfileService] Successfully unsubscribed user to FREE');
-      return true;
-    } on AuthException catch (e) {
-      safePrint(
-          '[CognitoProfileService] Auth error unsubscribing: ${e.message}');
-      safePrint('[CognitoProfileService] Auth error details: ${e.toString()}');
-      return false;
-    } catch (e) {
-      safePrint('[CognitoProfileService] Unexpected error unsubscribing: $e');
-      return false;
-    }
-  }
+  Future<bool> unsubscribe() async => _updateSubscriptionStatus('FREE');
 
   /// Get current subscription status
   /// Note: AWS Cognito normalizes custom attribute names to lowercase when retrieving them,
@@ -154,18 +122,28 @@ class CognitoProfileService {
       safePrint(
           '[CognitoProfileService] Starting profile attributes update...');
 
-      // For now, only update given_name and family_name (standard attributes)
       final attributes = <String, String>{};
-      if (givenName != null) attributes['given_name'] = givenName;
-      if (familyName != null) attributes['family_name'] = familyName;
-      // Note: gender and birthdate are commented out for now as they need different handling
+      // Basic validation: non-null and non-empty
+      if (givenName != null && givenName.isNotEmpty) attributes['given_name'] = givenName;
+      if (familyName != null && familyName.isNotEmpty) attributes['family_name'] = familyName;
+      if (gender != null && gender.isNotEmpty) attributes['gender'] = gender;
+      if (birthdate != null && birthdate.isNotEmpty) {
+        // Basic date format validation (YYYY-MM-DD)
+        final dateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+        if (dateRegex.hasMatch(birthdate)) {
+          attributes['birthdate'] = birthdate;
+        } else {
+          safePrint('[CognitoProfileService] Invalid birthdate format: $birthdate');
+          return false;
+        }
+      }
 
       if (attributes.isEmpty) {
-        safePrint('[CognitoProfileService] No attributes to update');
+        safePrint('[CognitoProfileService] No valid attributes to update');
         return true;
       }
 
-      // For standard attributes, we need to use the predefined CognitoUserAttributeKey constants
+      // For standard attributes, use predefined CognitoUserAttributeKey constants
       final cognitoAttributes = <AuthUserAttribute>[];
 
       if (attributes.containsKey('given_name')) {
@@ -179,6 +157,20 @@ class CognitoProfileService {
         cognitoAttributes.add(AuthUserAttribute(
           userAttributeKey: CognitoUserAttributeKey.familyName,
           value: attributes['family_name']!,
+        ));
+      }
+
+      if (attributes.containsKey('gender')) {
+        cognitoAttributes.add(AuthUserAttribute(
+          userAttributeKey: CognitoUserAttributeKey.gender,
+          value: attributes['gender']!,
+        ));
+      }
+
+      if (attributes.containsKey('birthdate')) {
+        cognitoAttributes.add(AuthUserAttribute(
+          userAttributeKey: CognitoUserAttributeKey.birthdate,
+          value: attributes['birthdate']!,
         ));
       }
 
