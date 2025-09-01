@@ -152,14 +152,9 @@ class UserDetailsService {
   Future<bool> deleteAccount(String userId) async {
     safePrint('[UserDetailsService] Deleting account for userId: $userId');
     try {
-      final userDetails = await getUserDetails(userId);
-      if (userDetails != null) {
-        final request = ModelMutations.delete(userDetails);
-        await Amplify.API.mutate(request: request).response;
-        await clearCache(userId);
-        return true;
-      }
-      return false;
+      await Amplify.Auth.deleteUser();
+      safePrint('Delete user succeeded');
+      return true;
     } catch (e) {
       safePrint('[UserDetailsService] Error deleting account: $e');
       return false;
