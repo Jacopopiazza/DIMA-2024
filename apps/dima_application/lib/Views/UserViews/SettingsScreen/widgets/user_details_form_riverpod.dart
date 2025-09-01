@@ -63,9 +63,9 @@ class _UserDetailsFormRiverpodState
 
   void _initializeControllers() {
     _weightController = TextEditingController(
-        text: widget.userDetails.weightKg?.toString() ?? '');
+        text: widget.userDetails.weightKg.toString());
     _heightController = TextEditingController(
-        text: widget.userDetails.heightCm?.toString() ?? '');
+        text: widget.userDetails.heightCm.toString());
     _preferencesController = TextEditingController(
         text: widget.userDetails.openTextPreferences ?? '');
     _dietaryRestrictionsController = TextEditingController(
