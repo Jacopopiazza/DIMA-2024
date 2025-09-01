@@ -7,6 +7,7 @@ import 'widgets/danger_zone_section_riverpod.dart';
 import 'widgets/password_change_form_riverpod.dart';
 import 'widgets/pro_subscription_section_riverpod.dart';
 import 'widgets/user_details_form_riverpod.dart';
+import 'widgets/user_profile_section_riverpod.dart';
 
 class SettingsScreenRiverpod extends ConsumerWidget {
   const SettingsScreenRiverpod({super.key});
@@ -99,6 +100,8 @@ class SettingsScreenRiverpod extends ConsumerWidget {
 
                                       return Column(
                                         children: [
+                                          const UserProfileSectionRiverpod(),
+                                          const SizedBox(height: 24),
                                           UserDetailsFormRiverpod(
                                             key: ValueKey(
                                                 uniqueId), // Use the unique ID for the key

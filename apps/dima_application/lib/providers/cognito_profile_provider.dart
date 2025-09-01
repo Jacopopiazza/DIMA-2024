@@ -103,3 +103,77 @@ final refreshSubscriptionStatusProvider = FutureProvider<String?>((ref) async {
     rethrow;
   }
 });
+
+/// Provider for getting current user profile attributes
+final userProfileAttributesProvider =
+    FutureProvider<Map<String, String>>((ref) async {
+  print('[CognitoProfileProvider] Fetching current user profile attributes...');
+  try {
+    final service = ref.read(cognitoProfileServiceProvider);
+    print(
+        '[CognitoProfileProvider] Service instance retrieved, calling getUserProfileAttributes()');
+
+    final attributes = await service.getUserProfileAttributes();
+    print('[CognitoProfileProvider] Current profile attributes: $attributes');
+
+    return attributes;
+  } catch (e, stackTrace) {
+    print('[CognitoProfileProvider] Error fetching profile attributes: $e');
+    print('[CognitoProfileProvider] Stack trace: $stackTrace');
+    rethrow;
+  }
+});
+
+/// Provider for updating user profile attributes
+final updateUserProfileAttributesProvider =
+    FutureProvider.family<bool, Map<String, String>>((ref, attributes) async {
+  print('[CognitoProfileProvider] Starting profile attributes update...');
+  try {
+    final service = ref.read(cognitoProfileServiceProvider);
+    print(
+        '[CognitoProfileProvider] Service instance retrieved, calling updateUserProfileAttributes()');
+
+    final result = await service.updateUserProfileAttributes(
+      givenName: attributes['given_name'],
+      familyName: attributes['family_name'],
+      gender: attributes['gender'],
+      birthdate: attributes['birthdate'],
+    );
+
+    if (result) {
+      print('[CognitoProfileProvider] Profile attributes update successful');
+      // Invalidate the profile attributes provider to refresh the data
+      ref.invalidate(userProfileAttributesProvider);
+    } else {
+      print('[CognitoProfileProvider] Profile attributes update failed');
+    }
+
+    return result;
+  } catch (e, stackTrace) {
+    print('[CognitoProfileProvider] Error updating profile attributes: $e');
+    print('[CognitoProfileProvider] Stack trace: $stackTrace');
+    rethrow;
+  }
+});
+
+/// Provider for refreshing user profile attributes (forces fresh fetch)
+final refreshUserProfileAttributesProvider =
+    FutureProvider<Map<String, String>>((ref) async {
+  print('[CognitoProfileProvider] Force refreshing user profile attributes...');
+  try {
+    // Invalidate the cached profile attributes to force fresh fetch
+    ref.invalidate(userProfileAttributesProvider);
+    print(
+        '[CognitoProfileProvider] Invalidated cached profile attributes, fetching fresh data...');
+
+    final service = ref.read(cognitoProfileServiceProvider);
+    final attributes = await service.getUserProfileAttributes();
+    print('[CognitoProfileProvider] Fresh profile attributes: $attributes');
+
+    return attributes;
+  } catch (e, stackTrace) {
+    print('[CognitoProfileProvider] Error refreshing profile attributes: $e');
+    print('[CognitoProfileProvider] Stack trace: $stackTrace');
+    rethrow;
+  }
+});

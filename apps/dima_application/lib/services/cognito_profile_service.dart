@@ -112,4 +112,95 @@ class CognitoProfileService {
       return null;
     }
   }
+
+  /// Get current user profile attributes
+  Future<Map<String, String>> getUserProfileAttributes() async {
+    try {
+      final attributes = await Amplify.Auth.fetchUserAttributes();
+      final profileAttributes = <String, String>{};
+
+      for (final attr in attributes) {
+        final key = attr.userAttributeKey.key;
+        if (key == 'given_name' ||
+            key == 'family_name' ||
+            key == 'gender' ||
+            key == 'birthdate') {
+          profileAttributes[key] = attr.value;
+        }
+      }
+
+      safePrint(
+          '[CognitoProfileService] Fetched profile attributes: $profileAttributes');
+      return profileAttributes;
+    } on AuthException catch (e) {
+      safePrint(
+          '[CognitoProfileService] Auth error getting profile attributes: ${e.message}');
+      return {};
+    } catch (e) {
+      safePrint(
+          '[CognitoProfileService] Unexpected error getting profile attributes: $e');
+      return {};
+    }
+  }
+
+  /// Update user profile attributes
+  Future<bool> updateUserProfileAttributes({
+    String? givenName,
+    String? familyName,
+    String? gender,
+    String? birthdate,
+  }) async {
+    try {
+      safePrint(
+          '[CognitoProfileService] Starting profile attributes update...');
+
+      // For now, only update given_name and family_name (standard attributes)
+      final attributes = <String, String>{};
+      if (givenName != null) attributes['given_name'] = givenName;
+      if (familyName != null) attributes['family_name'] = familyName;
+      // Note: gender and birthdate are commented out for now as they need different handling
+
+      if (attributes.isEmpty) {
+        safePrint('[CognitoProfileService] No attributes to update');
+        return true;
+      }
+
+      // For standard attributes, we need to use the predefined CognitoUserAttributeKey constants
+      final cognitoAttributes = <AuthUserAttribute>[];
+
+      if (attributes.containsKey('given_name')) {
+        cognitoAttributes.add(AuthUserAttribute(
+          userAttributeKey: CognitoUserAttributeKey.givenName,
+          value: attributes['given_name']!,
+        ));
+      }
+
+      if (attributes.containsKey('family_name')) {
+        cognitoAttributes.add(AuthUserAttribute(
+          userAttributeKey: CognitoUserAttributeKey.familyName,
+          value: attributes['family_name']!,
+        ));
+      }
+
+      safePrint(
+          '[CognitoProfileService] Updating attributes: ${attributes.keys.join(', ')}');
+
+      await Amplify.Auth.updateUserAttributes(
+        attributes: cognitoAttributes,
+      );
+
+      safePrint(
+          '[CognitoProfileService] Successfully updated profile attributes');
+      return true;
+    } on AuthException catch (e) {
+      safePrint(
+          '[CognitoProfileService] Auth error updating profile attributes: ${e.message}');
+      safePrint('[CognitoProfileService] Auth error details: ${e.toString()}');
+      return false;
+    } catch (e) {
+      safePrint(
+          '[CognitoProfileService] Unexpected error updating profile attributes: $e');
+      return false;
+    }
+  }
 }
