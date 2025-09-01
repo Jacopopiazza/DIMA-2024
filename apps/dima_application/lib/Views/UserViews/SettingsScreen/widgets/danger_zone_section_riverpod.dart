@@ -59,6 +59,9 @@ class _DangerZoneSectionRiverpodState
   }
 
   Future<void> _showDeleteConfirmation() async {
+
+    final colorScheme = Theme.of(context).colorScheme;
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -78,7 +81,10 @@ class _DangerZoneSectionRiverpodState
               ),
             ),
             const SizedBox(width: 12),
-            const Text('Delete Account'),
+            Text(
+              'Delete Account',
+              style: TextStyle(color: colorScheme.onSurface),
+            ),
           ],
         ),
         content: Column(
@@ -125,7 +131,7 @@ class _DangerZoneSectionRiverpodState
             style: FilledButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text('Delete Account'),
+            child: Text('Delete Account', style: TextStyle(color: colorScheme.onSurface),),
           ),
         ],
       ),
@@ -191,6 +197,7 @@ class _DangerZoneSectionRiverpodState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Container(
       decoration: BoxDecoration(
@@ -333,12 +340,12 @@ class _DangerZoneSectionRiverpodState
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ),
                                 )
-                              : const Icon(Icons.delete_forever_rounded, size: 20),
+                              : Icon(Icons.delete_forever_rounded, size: 20, color: colorScheme.onSurface),
                           label: Text(
                             _isDeleting ? 'Deleting Account...' : 'Delete My Account',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           style: FilledButton.styleFrom(
