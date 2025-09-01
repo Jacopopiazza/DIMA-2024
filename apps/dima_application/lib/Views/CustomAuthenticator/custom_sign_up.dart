@@ -1,5 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
+import 'package:dima_application/Utils/gender_type_enum.dart';
 import 'package:dima_application/Utils/user_type_enum.dart';
 import 'package:dima_application/Views/CustomAuthenticator/role_selection_field.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
@@ -62,6 +63,15 @@ class _SignUpButton extends SignUpButton {
 
   @override
   void onPressed(BuildContext context, AuthenticatorState state) {
+
+    if (state.getAttribute(CognitoUserAttributeKey.gender) != null) {
+      // If gender is already set, use it
+      final gender = state.getAttribute(CognitoUserAttributeKey.gender)!;
+      if (gender.toLowerCase() != 'male' && gender.toLowerCase() != 'female'){
+       state.authAttributes[CognitoUserAttributeKey.gender] = "other";
+      }
+    }
+
     // Set a default custom attribute for subscription status
     state.setCustomAttribute(
       CognitoUserAttributeKey.custom('subscriptionStatus'),

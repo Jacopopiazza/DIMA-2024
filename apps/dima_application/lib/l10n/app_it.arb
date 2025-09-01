@@ -1,11 +1,26 @@
 {
   "@@locale": "it",
+  "mealNameBREAKFAST": "Colazione",
+  "mealNameDINNER": "Cena",
+  "mealNameLUNCH": "Pranzo",
+  "mealNameSNACK_MORNING": "Snack (Mattina)",
+  "mealNameSNACK_AFTERNOON": "Snack (Pomeriggio)",
+  "mealNameSNACK_EVENING": "Snack (Dopo cena)",
+  "todayProgress": "Progressi di oggi",
+  "calories": "Calorie",
+  "carbs": "Carboidrati",
+  "fats": "Grassi",
+  "proteins": "Proteine",
+  "todaysMeals": "Ricette odierne",
   "helloWorld": "Ciao Mondo!",
   "signedIn": "Loggato!",
   "userRole": "Utente",
   "nutritionistRole": "Nutrizionista",
   "signUpDropdownText": "Registrati come",
   "socialSignUpNotice": "La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente.",
+  "maleGender": "Maschio",
+  "femaleGender": "Femmina",
+  "otherGender": "Altro",
   "energy": "Energia",
   "ingredients": "Ingredienti",
   "recipe": "Ricetta",
@@ -82,103 +97,65 @@
   "@_ exerciseFrequencies": {
     "description": "Chiavi di localizzazione per i valori di ExerciseFrequency enum. Nota: 'Or' è escluso."
   },
-  "mealNameBREAKFAST": "Colazione",
-  "mealNameDINNER": "Cena",
-  "mealNameLUNCH": "Pranzo",
-  "mealNameSNACK_MORNING": "Snack (Mattina)",
-  "mealNameSNACK_AFTERNOON": "Snack (Pomeriggio)",
-  "mealNameSNACK_EVENING": "Snack (Dopo cena)",
-  "todayProgress": "Progressi di oggi",
-  "calories": "Calorie",
-  "carbs": "Carboidrati",
-  "fats": "Grassi",
-  "proteins": "Proteine",
-  "todaysMeals": "Ricette odierne",
-  "signIn": "Accedi",
-  "@signIn": {
-    "description": "Label of the button to sign in the user."
+  "confirmSignUp": "Inserisci il tuo codice di conferma",
+  "@confirmSignUp": {
+    "description": "Title of the Confirm Sign Up step and form"
   },
-  "signUp": "Crea account",
-  "@signUp": {
-    "description": "Label of the button to sign up the user."
+  "confirmSignInMfa": "Inserisci il tuo codice di accesso",
+  "@confirmSignInMfa": {
+    "description": "Title of the Confirm Sign In with MFA step and form"
   },
-  "confirm": "Conferma",
-  "@confirm": {
-    "description": "Label of button to confirm an action"
+  "confirmSignInCustomAuth": "Inserisci il tuo codice di accesso",
+  "@confirmSignInCustomAuth": {
+    "description": "Title of the Confirm Sign In with Custom Auth step and form"
   },
-  "continueLabel": "Continua",
-  "@continueLabel": {
-    "description": "Label of button to continue to the next action"
+  "confirmSignInNewPassword": "Cambia la tua password per accedere",
+  "@confirmSignInNewPassword": {
+    "description": "Title of the Confirm Sign In with New Password step and form"
   },
-  "submit": "Invia",
-  "@submit": {
-    "description": "Label of button to submit a form"
+  "continueSignInWithMfaSelection": "Seleziona il tuo metodo di Autenticazione a Due Fattori preferito",
+  "@continueSignInWithMfaSelection": {
+    "description": "Title of the SignIn with MFA selection step and form"
   },
-  "changePassword": "Cambia password",
-  "@changePassword": {
-    "description": "Label of button to change a password"
+  "continueSignInWithTotpSetup": "Abilita Autenticazione a Due Fattori",
+  "@continueSignInWithTotpSetup": {
+    "description": "Title of the SignIn with TOTP setup step and form"
   },
-  "sendCode": "Invia codice",
-  "@sendCode": {
-    "description": "Label of button to send a verification code to the user's device"
+  "confirmSignInWithTotpMfaCode": "Inserisci il tuo codice monouso",
+  "@confirmSignInWithTotpMfaCode": {
+    "description": "Title of the Confirm Sign In with Totp MFA Code step and form"
   },
-  "lostCode": "Hai perso il codice?",
-  "@lostCode": {
-    "description": "Label of button prompting user if they've not received or have misplaced a verification code we sent"
+  "resetPassword": "Invia Codice",
+  "@resetPassword": {
+    "description": "Title of the Reset Password step and form"
   },
-  "noAccount": "Non hai un account?",
-  "@noAccount": {
-    "description": "Hint text for the 'Go to Sign Up' button"
+  "verifyUser": "Il recupero dell'account richiede informazioni di contatto verificate",
+  "@verifyUser": {
+    "description": "Title of the Verify and Confirm Verify User s and forms"
   },
-  "haveAccount": "Hai già un account?",
-  "@haveAccount": {
-    "description": "Hint text for the 'Go to Sign In' button"
+  "totpStep1Title": "Passo 1: Scarica un'app Autenticatore",
+  "@totpStep1Title": {
+    "description": "The title for the first step of TOTP setup"
   },
-  "forgotPassword": "Hai dimenticato la password?",
-  "@forgotPassword": {
-    "description": "Hint text for the 'Reset Password' button"
+  "totpStep2Title": "Passo 2: Scansiona il codice QR",
+  "@totpStep2Title": {
+    "description": "The title for the second step of TOTP setup"
   },
-  "confirmResetPassword": "Reimposta password",
-  "@confirmResetPassword": {
-    "description": "Label of button to confirm the reset of a user's password"
+  "totpStep3Title": "Passo 3: Verifica il tuo codice",
+  "@totpStep3Title": {
+    "description": "The title for the third step of TOTP setup"
   },
-  "verify": "Verifica",
-  "@verify": {
-    "description": "Label of button to verify a user's attribute, such as their email or phone number"
+  "totpStep1Body": "Le app autenticatore generano codici monouso che possono essere utilizzati per verificare la tua identità",
+  "@totpStep1Body": {
+    "description": "The body text for step one of TOTP setup"
   },
-  "skip": "Salta",
-  "@skip": {
-    "description": "Label of button to skip the current step or action."
+  "totpStep2Body": "Apri l'app Autenticatore e scansiona il codice QR o inserisci la chiave per ottenere il tuo codice di verifica",
+  "@totpStep2Body": {
+    "description": "The body text for step two of TOTP setup"
   },
-  "copyKey": "Copia chiave",
-  "@copyKey": {
-    "description": "Label of button to copy a value."
-  },
-  "signOut": "Esci",
-  "@signOut": {
-    "description": "Label of button to sign out the user"
-  },
-  "backTo": "Torna a {previousStep, select, signUp{Registrati} signIn{Accedi} confirmSignUp{Conferma registrazione} confirmSignInMfa{Conferma accesso} confirmSignInNewPassword{Conferma accesso} sendCode{Invia codice} resetPassword{Reimposta password} verifyUser{Verifica utente} confirmVerifyUser{Conferma verifica utente} other{ERRORE}}",
-  "@backTo": {
-    "description": "Label of button to return to the previous step",
-    "placeholders": {
-      "previousStep": {
-        "type": "String",
-        "example": "signIn",
-        "description": "The title of the previous step."
-      }
-    }
-  },
-  "signInWith": "Accedi con {provider, select, google{Google} facebook{Facebook} amazon{Amazon} apple{Apple} other{ERRORE}}",
-  "@signInWith": {
-    "description": "Label of button to sign in with a social provider",
-    "placeholders": {
-      "provider": {
-        "type": "String",
-        "example": "google",
-        "description": "The social sign-in provider"
-      }
-    }
+  "totpStep3Body": "Inserisci il codice a 6 cifre dalla tua app Autenticatore",
+  "@totpStep3Body": {
+    "description": "The body text for step three of TOTP setup"
   },
   "selectDialCode": "Seleziona il prefisso telefonico del tuo paese",
   "@selectDialCode": {
@@ -1164,6 +1141,29 @@
   "@zw": {
     "description": "Display name for Zimbabwe"
   },
+  "codeSent": "Un codice di conferma è stato inviato a {destination}.",
+  "@codeSent": {
+    "description": "The message that is displayed after a new confirmation code is sent via Email/SMS.",
+    "placeholders": {
+      "destination": {
+        "type": "String",
+        "example": "j**@g**.com",
+        "description": "The privacy-enabled delivery destination."
+      }
+    }
+  },
+  "codeSentUnknown": "Un codice di conferma è stato inviato.",
+  "@codeSentUnknown": {
+    "description": "The message that is displayed after a new confirmation code is sent via an unknown delivery medium"
+  },
+  "copySucceeded": "Copiato negli appunti!",
+  "@copySucceeded": {
+    "description": "The message that is displayed after a value was copied to the clipboard"
+  },
+  "copyFailed": "Copia negli appunti fallita.",
+  "@copyFailed": {
+    "description": "The message that is displayed after a value failed to copy to the clipboard"
+  },
   "username": "Nome utente",
   "@username": {
     "description": "User's chosen username."
@@ -1386,87 +1386,90 @@
   "@selectEmail": {
     "description": "Label for the radio button to select email as the user's chosen MFA method."
   },
-  "totpStep1Title": "Passo 1: Scarica un'app Autenticatore",
-  "@totpStep1Title": {
-    "description": "The title for the first step of TOTP setup"
+  "signIn": "Accedi",
+  "@signIn": {
+    "description": "Label of the button to sign in the user."
   },
-  "totpStep2Title": "Passo 2: Scansiona il codice QR",
-  "@totpStep2Title": {
-    "description": "The title for the second step of TOTP setup"
+  "signUp": "Crea account",
+  "@signUp": {
+    "description": "Label of the button to sign up the user."
   },
-  "totpStep3Title": "Passo 3: Verifica il tuo codice",
-  "@totpStep3Title": {
-    "description": "The title for the third step of TOTP setup"
+  "confirm": "Conferma",
+  "@confirm": {
+    "description": "Label of button to confirm an action"
   },
-  "totpStep1Body": "Le app autenticatore generano codici monouso che possono essere utilizzati per verificare la tua identità",
-  "@totpStep1Body": {
-    "description": "The body text for step one of TOTP setup"
+  "continueLabel": "Continua",
+  "@continueLabel": {
+    "description": "Label of button to continue to the next action"
   },
-  "totpStep2Body": "Apri l'app Autenticatore e scansiona il codice QR o inserisci la chiave per ottenere il tuo codice di verifica",
-  "@totpStep2Body": {
-    "description": "The body text for step two of TOTP setup"
+  "submit": "Invia",
+  "@submit": {
+    "description": "Label of button to submit a form"
   },
-  "totpStep3Body": "Inserisci il codice a 6 cifre dalla tua app Autenticatore",
-  "@totpStep3Body": {
-    "description": "The body text for step three of TOTP setup"
+  "changePassword": "Cambia password",
+  "@changePassword": {
+    "description": "Label of button to change a password"
   },
-  "codeSent": "Un codice di conferma è stato inviato a {destination}.",
-  "@codeSent": {
-    "description": "The message that is displayed after a new confirmation code is sent via Email/SMS.",
+  "sendCode": "Invia codice",
+  "@sendCode": {
+    "description": "Label of button to send a verification code to the user's device"
+  },
+  "lostCode": "Hai perso il codice?",
+  "@lostCode": {
+    "description": "Label of button prompting user if they've not received or have misplaced a verification code we sent"
+  },
+  "noAccount": "Non hai un account?",
+  "@noAccount": {
+    "description": "Hint text for the 'Go to Sign Up' button"
+  },
+  "haveAccount": "Hai già un account?",
+  "@haveAccount": {
+    "description": "Hint text for the 'Go to Sign In' button"
+  },
+  "forgotPassword": "Hai dimenticato la password?",
+  "@forgotPassword": {
+    "description": "Hint text for the 'Reset Password' button"
+  },
+  "confirmResetPassword": "Reimposta password",
+  "@confirmResetPassword": {
+    "description": "Label of button to confirm the reset of a user's password"
+  },
+  "verify": "Verifica",
+  "@verify": {
+    "description": "Label of button to verify a user's attribute, such as their email or phone number"
+  },
+  "skip": "Salta",
+  "@skip": {
+    "description": "Label of button to skip the current step or action."
+  },
+  "copyKey": "Copia chiave",
+  "@copyKey": {
+    "description": "Label of button to copy a value."
+  },
+  "signOut": "Esci",
+  "@signOut": {
+    "description": "Label of button to sign out the user"
+  },
+  "backTo": "Torna a {previousStep, select, signUp{Registrati} signIn{Accedi} confirmSignUp{Conferma registrazione} confirmSignInMfa{Conferma accesso} confirmSignInNewPassword{Conferma accesso} sendCode{Invia codice} resetPassword{Reimposta password} verifyUser{Verifica utente} confirmVerifyUser{Conferma verifica utente} other{ERRORE}}",
+  "@backTo": {
+    "description": "Label of button to return to the previous step",
     "placeholders": {
-      "destination": {
+      "previousStep": {
         "type": "String",
-        "example": "j**@g**.com",
-        "description": "The privacy-enabled delivery destination."
+        "example": "signIn",
+        "description": "The title of the previous step."
       }
     }
   },
-  "codeSentUnknown": "Un codice di conferma è stato inviato.",
-  "@codeSentUnknown": {
-    "description": "The message that is displayed after a new confirmation code is sent via an unknown delivery medium"
-  },
-  "copySucceeded": "Copiato negli appunti!",
-  "@copySucceeded": {
-    "description": "The message that is displayed after a value was copied to the clipboard"
-  },
-  "copyFailed": "Copia negli appunti fallita.",
-  "@copyFailed": {
-    "description": "The message that is displayed after a value failed to copy to the clipboard"
-  },
-  "confirmSignUp": "Inserisci il tuo codice di conferma",
-  "@confirmSignUp": {
-    "description": "Title of the Confirm Sign Up step and form"
-  },
-  "confirmSignInMfa": "Inserisci il tuo codice di accesso",
-  "@confirmSignInMfa": {
-    "description": "Title of the Confirm Sign In with MFA step and form"
-  },
-  "confirmSignInCustomAuth": "Inserisci il tuo codice di accesso",
-  "@confirmSignInCustomAuth": {
-    "description": "Title of the Confirm Sign In with Custom Auth step and form"
-  },
-  "confirmSignInNewPassword": "Cambia la tua password per accedere",
-  "@confirmSignInNewPassword": {
-    "description": "Title of the Confirm Sign In with New Password step and form"
-  },
-  "continueSignInWithMfaSelection": "Seleziona il tuo metodo di Autenticazione a Due Fattori preferito",
-  "@continueSignInWithMfaSelection": {
-    "description": "Title of the SignIn with MFA selection step and form"
-  },
-  "continueSignInWithTotpSetup": "Abilita Autenticazione a Due Fattori",
-  "@continueSignInWithTotpSetup": {
-    "description": "Title of the SignIn with TOTP setup step and form"
-  },
-  "confirmSignInWithTotpMfaCode": "Inserisci il tuo codice monouso",
-  "@confirmSignInWithTotpMfaCode": {
-    "description": "Title of the Confirm Sign In with Totp MFA Code step and form"
-  },
-  "resetPassword": "Invia Codice",
-  "@resetPassword": {
-    "description": "Title of the Reset Password step and form"
-  },
-  "verifyUser": "Il recupero dell'account richiede informazioni di contatto verificate",
-  "@verifyUser": {
-    "description": "Title of the Verify and Confirm Verify User s and forms"
+  "signInWith": "Accedi con {provider, select, google{Google} facebook{Facebook} amazon{Amazon} apple{Apple} other{ERRORE}}",
+  "@signInWith": {
+    "description": "Label of button to sign in with a social provider",
+    "placeholders": {
+      "provider": {
+        "type": "String",
+        "example": "google",
+        "description": "The social sign-in provider"
+      }
+    }
   }
 }

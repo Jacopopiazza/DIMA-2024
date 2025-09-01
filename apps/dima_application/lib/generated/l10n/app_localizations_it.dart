@@ -9,45 +9,6 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get helloWorld => 'Ciao Mondo!';
-
-  @override
-  String get signedIn => 'Loggato!';
-
-  @override
-  String get userRole => 'Utente';
-
-  @override
-  String get nutritionistRole => 'Nutrizionista';
-
-  @override
-  String get signUpDropdownText => 'Registrati come';
-
-  @override
-  String get socialSignUpNotice => 'La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l\'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente.';
-
-  @override
-  String get energy => 'Energia';
-
-  @override
-  String get ingredients => 'Ingredienti';
-
-  @override
-  String get recipe => 'Ricetta';
-
-  @override
-  String get noRecipe => 'Ricetta non disponibile';
-
-  @override
-  String get mealCompleted => 'Già mangiato';
-
-  @override
-  String get mealToBeCompleted => 'Segna come mangiato';
-
-  @override
-  String get back => 'Indietro';
-
-  @override
   String get settingsTitle => 'Impostazioni';
 
   @override
@@ -235,6 +196,54 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exerciseFrequencyTWICE_A_WEEK => 'Due volte a settimana';
+
+  @override
+  String get energy => 'Energia';
+
+  @override
+  String get ingredients => 'Ingredienti';
+
+  @override
+  String get recipe => 'Ricetta';
+
+  @override
+  String get noRecipe => 'Ricetta non disponibile';
+
+  @override
+  String get mealCompleted => 'Già mangiato';
+
+  @override
+  String get mealToBeCompleted => 'Segna come mangiato';
+
+  @override
+  String get back => 'Indietro';
+
+  @override
+  String get helloWorld => 'Ciao Mondo!';
+
+  @override
+  String get signedIn => 'Loggato!';
+
+  @override
+  String get userRole => 'Utente';
+
+  @override
+  String get nutritionistRole => 'Nutrizionista';
+
+  @override
+  String get signUpDropdownText => 'Registrati come';
+
+  @override
+  String get socialSignUpNotice => 'La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l\'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente.';
+
+  @override
+  String get maleGender => 'Maschio';
+
+  @override
+  String get femaleGender => 'Femmina';
+
+  @override
+  String get otherGender => 'Altro';
 
   @override
   String get mealNameBREAKFAST => 'Colazione';
@@ -1243,6 +1252,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectEmail => 'Email';
 
   @override
+  String codeSent(String destination) {
+    return 'Un codice di conferma è stato inviato a $destination.';
+  }
+
+  @override
+  String get codeSentUnknown => 'Un codice di conferma è stato inviato.';
+
+  @override
+  String get copySucceeded => 'Copiato negli appunti!';
+
+  @override
+  String get copyFailed => 'Copia negli appunti fallita.';
+
+  @override
   String get totpStep1Title => 'Passo 1: Scarica un\'app Autenticatore';
 
   @override
@@ -1259,20 +1282,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get totpStep3Body => 'Inserisci il codice a 6 cifre dalla tua app Autenticatore';
-
-  @override
-  String codeSent(String destination) {
-    return 'Un codice di conferma è stato inviato a $destination.';
-  }
-
-  @override
-  String get codeSentUnknown => 'Un codice di conferma è stato inviato.';
-
-  @override
-  String get copySucceeded => 'Copiato negli appunti!';
-
-  @override
-  String get copyFailed => 'Copia negli appunti fallita.';
 
   @override
   String get confirmSignUp => 'Inserisci il tuo codice di conferma';
