@@ -125,22 +125,16 @@ final todayPageProvider =
     StateNotifierProvider<TodayPageNotifier, TodayPageState>((ref) {
   final isar = ref.watch(isarProvider);
   final mealPlansService = MealPlansService(isar: isar);
-  final notifier = TodayPageNotifier(isar, mealPlansService);
+  final notifier = TodayPageNotifier(isar, mealPlansService, ref);
 
-  // Watch the meal plans provider and refresh when it changes
-  ref.listen(mealPlansProvider, (previous, next) {
-    final shouldRefresh = next.when(
-      data: (plans) {
-        final previousData = previous?.asData?.value;
-        return previousData == null || previousData != plans;
-      },
-      loading: () => false,
-      error: (_, __) => false,
-    );
-
-    if (shouldRefresh) {
+  // Watch for changes in the active meal plan ID specifically
+  ref.listen(activeMealPlanIdProvider, (previous, next) {
+    safePrint(
+        "[TodayPageProvider] Active plan ID listener triggered: $previous -> $next (loading: ${notifier.state.status == DataStatus.loading})");
+    if (previous != null && next != null && previous != next && 
+        notifier.state.status != DataStatus.loading) {
       safePrint(
-          "[TodayPageProvider] Meal plans updated, refreshing today page...");
+          "[TodayPageProvider] Active meal plan changed from $previous to $next, refreshing...");
       notifier.refreshTodayData();
     }
   });
@@ -152,10 +146,65 @@ final todayPageProvider =
 class TodayPageNotifier extends StateNotifier<TodayPageState> {
   final Isar _isar;
   final MealPlansService _mealPlansService; // Use the injected MealPlansService
+  late final StateNotifierProviderRef<TodayPageNotifier, TodayPageState> _ref;
 
-  TodayPageNotifier(this._isar, this._mealPlansService)
+  TodayPageNotifier(this._isar, this._mealPlansService, this._ref)
       : super(TodayPageState()) {
     _loadUserPlanAndData();
+  }
+
+  /// Gets the active meal plan ID from the meal plans provider to avoid circular dependency
+  Future<String?> _getActiveMealPlanId() async {
+    safePrint("[TodayPageNotifier] Getting active plan ID...");
+    
+    // First try to get from provider (cached value)
+    final activePlanId = _ref.read(activeMealPlanIdProvider);
+    safePrint("[TodayPageNotifier] activeMealPlanIdProvider returned: $activePlanId");
+    if (activePlanId != null) {
+      safePrint("[TodayPageNotifier] Got active plan ID from provider: $activePlanId");
+      return activePlanId;
+    }
+    
+    // If not cached, read current meal plans data without triggering refresh
+    final mealPlansAsync = _ref.read(mealPlansProvider);
+    safePrint("[TodayPageNotifier] mealPlansProvider state: ${mealPlansAsync.runtimeType}");
+    final currentActivePlanId = mealPlansAsync.when(
+      data: (plans) {
+        final cachedId = _ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId;
+        safePrint("[TodayPageNotifier] Found ${plans.length} plans, cached active ID: $cachedId");
+        return cachedId;
+      },
+      loading: () {
+        safePrint("[TodayPageNotifier] Meal plans still loading");
+        return null;
+      },
+      error: (error, stack) {
+        safePrint("[TodayPageNotifier] Meal plans error: $error");
+        return null;
+      },
+    );
+    
+    if (currentActivePlanId != null) {
+      safePrint("[TodayPageNotifier] Got active plan ID from meal plans notifier: $currentActivePlanId");
+      return currentActivePlanId;
+    }
+    
+    // If meal plans are still loading, wait for them to complete
+    if (mealPlansAsync is AsyncLoading) {
+      safePrint("[TodayPageNotifier] Waiting for meal plans to load...");
+      try {
+        final plans = await _ref.read(mealPlansProvider.future);
+        final finalActivePlanId = _ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId;
+        safePrint("[TodayPageNotifier] After waiting - plans loaded: ${plans.length}, active ID: $finalActivePlanId");
+        return finalActivePlanId;
+      } catch (e) {
+        safePrint("[TodayPageNotifier] Error waiting for meal plans: $e");
+        return null;
+      }
+    }
+    
+    safePrint("[TodayPageNotifier] No active plan ID available - meal plans may not be loaded yet");
+    return null;
   }
 
   /// Loads the user's active meal plan and associated data (today's meals, completion status).
@@ -193,9 +242,8 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
     DateTime? planFetchTime; // UTC time when plan data was obtained
 
     try {
-      // 1. Get Chosen Plan ID directly from MealPlansService (same source as plans page)
-      final mealPlansList = await _mealPlansService.listMyMealPlans();
-      chosenPlanId = mealPlansList.activeMealPlan;
+      // 1. Get Chosen Plan ID from the meal plans provider to avoid circular dependency
+      chosenPlanId = await _getActiveMealPlanId();
 
       if (chosenPlanId == null || chosenPlanId.isEmpty) {
         safePrint("[TodayPageNotifier] No active meal plan ID found.");

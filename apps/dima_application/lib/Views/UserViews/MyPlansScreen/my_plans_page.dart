@@ -21,6 +21,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _fabAnimationController;
   late Animation<double> _fabScaleAnimation;
+  bool _isManuallyRefreshing = false;
 
   @override
   void initState() {
@@ -72,8 +73,17 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   }
 
   Future<void> _refreshPlans() async {
-    final notifier = ref.read(mealPlansProvider.notifier);
-    await notifier.listMyMealPlans();
+    if (_isManuallyRefreshing) return;
+    
+    _isManuallyRefreshing = true;
+    try {
+      final notifier = ref.read(mealPlansProvider.notifier);
+      await notifier.listMyMealPlans();
+    } finally {
+      if (mounted) {
+        _isManuallyRefreshing = false;
+      }
+    }
   }
 
   @override
@@ -86,11 +96,13 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     ref.listen<NotificationState>(mealPlanNotificationProvider,
         (previous, current) {
       // Only auto-refresh if we're currently on this page AND actively listening
+      // AND not already manually refreshing
       final currentPage = ref.read(currentPageProvider);
 
       if (currentPage == 'MyPlansPage' &&
           current.hasUnreadNotifications &&
-          current.notifications.isNotEmpty) {
+          current.notifications.isNotEmpty &&
+          !_isManuallyRefreshing) {
         final latestNotification = current.notifications.last;
 
         // Always refresh regardless of success/failure
