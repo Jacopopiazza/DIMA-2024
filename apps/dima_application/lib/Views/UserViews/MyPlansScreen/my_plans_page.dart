@@ -1,4 +1,4 @@
-import 'package:dima_application/Views/UserViews/MyPlansScreen/subscription_test_page.dart';
+import 'package:dima_application/Views/UserViews/MyPlansScreen/action_confirmation_dialog.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../generate_meal_plan_page.dart';
-import 'delete_confirmation_dialog.dart';
 import 'modify_plan_name_dialog.dart';
 import 'read_meal_plan_page.dart';
 import 'select_nutritionist_dialog.dart';
@@ -774,63 +773,64 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
 
   Future<bool> _handleSwipe(BuildContext context, plan,
       DismissDirection direction, bool isActive) async {
+    // For SET ACTIVE (startToEnd):
     if (direction == DismissDirection.startToEnd && !isActive) {
       // Set as active
-      final confirmed = await showDialog<bool>(
+      await showDialog<void>(
         context: context,
         builder: (BuildContext dialogContext) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            title: const Text('Set Active Plan'),
-            content: Text(
-                'Make "${plan.planName ?? 'Unnamed Plan'}" your active meal plan?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(false),
-                child: const Text('Cancel'),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.of(dialogContext).pop(true),
-                child: const Text('Set Active'),
-              ),
-            ],
+          return ActionConfirmationDialog(
+            title: 'Set Active Plan',
+            content:
+                'Make "${plan.planName ?? 'Unnamed Plan'}" your active meal plan?',
+            actionLabel: 'Set Active',
+            actionColor: Theme.of(context).colorScheme.primary,
+            actionIcon: Icons.radio_button_checked_rounded,
+            onConfirm: () async {
+              final success = await ref
+                  .read(mealPlansProvider.notifier)
+                  .setActiveMealPlan(plan.mealPlanId);
+
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success
+                        ? 'Active meal plan updated!'
+                        : 'Failed to set active meal plan'),
+                    backgroundColor:
+                        success ? Colors.green.shade600 : Colors.red.shade600,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                );
+              }
+
+              if (!success) {
+                throw Exception('Failed to set active meal plan');
+              }
+            },
           );
         },
       );
-
-      if (confirmed == true) {
-        final success = await ref
-            .read(mealPlansProvider.notifier)
-            .setActiveMealPlan(plan.mealPlanId);
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(success
-                  ? 'Active meal plan updated!'
-                  : 'Failed to set active meal plan'),
-              backgroundColor:
-                  success ? Colors.green.shade600 : Colors.red.shade600,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
-          );
-        }
-      }
       return false;
-    } else if (direction == DismissDirection.endToStart) {
+    }
+
+// For DELETE (endToStart):
+    else if (direction == DismissDirection.endToStart) {
       // Delete
-      final confirmed = await showDialog<bool>(
+      await showDialog<void>(
         context: context,
         builder: (BuildContext dialogContext) {
-          return DeleteConfirmationDialog(
+          return ActionConfirmationDialog(
             title: 'Delete Meal Plan',
             content:
                 'Are you sure you want to delete "${plan.planName ?? 'Unnamed Plan'}"?',
+            actionLabel: 'Delete',
+            actionColor: Colors.red,
+            actionIcon: Icons.delete_rounded,
+            actionTextColor: Colors.white,
             onConfirm: () async {
-              Navigator.of(dialogContext).pop();
               final success = await ref
                   .read(mealPlansProvider.notifier)
                   .deleteMealPlan(plan.mealPlanId);
@@ -848,6 +848,10 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                         borderRadius: BorderRadius.circular(12)),
                   ),
                 );
+              }
+
+              if (!success) {
+                throw Exception('Failed to delete meal plan');
               }
             },
           );
