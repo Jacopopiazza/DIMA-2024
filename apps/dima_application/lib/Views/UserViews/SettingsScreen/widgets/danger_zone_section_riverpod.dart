@@ -12,16 +12,16 @@ class DangerZoneSectionRiverpod extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<DangerZoneSectionRiverpod> createState() => 
+  ConsumerState<DangerZoneSectionRiverpod> createState() =>
       _DangerZoneSectionRiverpodState();
 }
 
-class _DangerZoneSectionRiverpodState 
+class _DangerZoneSectionRiverpodState
     extends ConsumerState<DangerZoneSectionRiverpod>
     with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
   bool _isDeleting = false;
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
@@ -59,7 +59,6 @@ class _DangerZoneSectionRiverpodState
   }
 
   Future<void> _showDeleteConfirmation() async {
-
     final colorScheme = Theme.of(context).colorScheme;
 
     final confirmed = await showDialog<bool>(
@@ -105,7 +104,8 @@ class _DangerZoneSectionRiverpodState
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline_rounded, color: Colors.red.shade700, size: 16),
+                  Icon(Icons.info_outline_rounded,
+                      color: Colors.red.shade700, size: 16),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -131,7 +131,10 @@ class _DangerZoneSectionRiverpodState
             style: FilledButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: Text('Delete Account', style: TextStyle(color: colorScheme.onSurface),),
+            child: Text(
+              'Delete Account',
+              style: TextStyle(color: colorScheme.onSurface),
+            ),
           ),
         ],
       ),
@@ -139,8 +142,10 @@ class _DangerZoneSectionRiverpodState
 
     if (confirmed == true && mounted) {
       setState(() => _isDeleting = true);
-      
-      final success = await ref.read(userDetailsProvider.notifier).deleteAccount(widget.userId);
+
+      final success = await ref
+          .read(userDetailsProvider.notifier)
+          .deleteAccount(widget.userId);
 
       setState(() => _isDeleting = false);
 
@@ -156,7 +161,8 @@ class _DangerZoneSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.check_rounded,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Text('Account deleted successfully'),
@@ -164,7 +170,8 @@ class _DangerZoneSectionRiverpodState
               ),
               backgroundColor: Colors.green.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         } else {
@@ -178,7 +185,8 @@ class _DangerZoneSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.error_outline_rounded,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Text('Failed to delete account'),
@@ -186,7 +194,8 @@ class _DangerZoneSectionRiverpodState
               ),
               backgroundColor: Colors.red.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         }
@@ -224,7 +233,7 @@ class _DangerZoneSectionRiverpodState
           // Header - Always visible
           InkWell(
             onTap: _toggleExpansion,
-            borderRadius: _isExpanded 
+            borderRadius: _isExpanded
                 ? const BorderRadius.vertical(top: Radius.circular(16))
                 : BorderRadius.circular(16),
             child: Container(
@@ -265,7 +274,9 @@ class _DangerZoneSectionRiverpodState
                     ),
                   ),
                   Icon(
-                    _isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                    _isExpanded
+                        ? Icons.expand_less_rounded
+                        : Icons.expand_more_rounded,
                     color: Colors.red.shade600,
                     size: 24,
                   ),
@@ -273,7 +284,7 @@ class _DangerZoneSectionRiverpodState
               ),
             ),
           ),
-          
+
           // Expandable Content
           if (_isExpanded)
             FadeTransition(
@@ -325,32 +336,37 @@ class _DangerZoneSectionRiverpodState
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Delete Account Button
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.icon(
-                          onPressed: _isDeleting ? null : _showDeleteConfirmation,
+                          onPressed:
+                              _isDeleting ? null : _showDeleteConfirmation,
                           icon: _isDeleting
                               ? SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
-                              : Icon(Icons.delete_forever_rounded, size: 20, color: colorScheme.onSurface),
+                              : Icon(Icons.delete_forever_rounded,
+                                  size: 20, color: colorScheme.onSurface),
                           label: Text(
-                            _isDeleting ? 'Deleting Account...' : 'Delete My Account',
+                            _isDeleting
+                                ? 'Deleting Account...'
+                                : 'Delete My Account',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSurface,
                             ),
                           ),
                           style: FilledButton.styleFrom(
-                            backgroundColor: _isDeleting 
-                                ? Colors.red.withOpacity(0.7) 
+                            backgroundColor: _isDeleting
+                                ? Colors.red.withOpacity(0.7)
                                 : Colors.red.shade600,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(

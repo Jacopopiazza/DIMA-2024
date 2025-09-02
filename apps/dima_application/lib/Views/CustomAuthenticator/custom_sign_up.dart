@@ -63,12 +63,11 @@ class _SignUpButton extends SignUpButton {
 
   @override
   void onPressed(BuildContext context, AuthenticatorState state) {
-
     if (state.getAttribute(CognitoUserAttributeKey.gender) != null) {
       // If gender is already set, use it
       final gender = state.getAttribute(CognitoUserAttributeKey.gender)!;
-      if (gender.toLowerCase() != 'male' && gender.toLowerCase() != 'female'){
-       state.authAttributes[CognitoUserAttributeKey.gender] = "other";
+      if (gender.toLowerCase() != 'male' && gender.toLowerCase() != 'female') {
+        state.authAttributes[CognitoUserAttributeKey.gender] = "other";
       }
     }
 

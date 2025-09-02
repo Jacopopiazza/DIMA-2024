@@ -34,11 +34,16 @@ class UpdateUserDetailsInput {
     if (heightCm != null) data['heightCm'] = heightCm;
     if (targetCalories != null) data['targetCalories'] = targetCalories;
     // Convert enums to their string names for JSON/GraphQL
-    if (allergies != null) data['allergies'] = allergies!.map((e) => e.name).toList();
-    if (dailyMealsPreference != null) data['dailyMealsPreference'] = dailyMealsPreference;
-    if (dietaryRestrictions != null && dietaryRestrictions!.isNotEmpty) data['dietaryRestrictions'] = dietaryRestrictions;
-    if (exerciseFrequency != null) data['exerciseFrequency'] = exerciseFrequency!.name;
-    if (openTextPreferences != null) data['openTextPreferences'] = openTextPreferences;
+    if (allergies != null)
+      data['allergies'] = allergies!.map((e) => e.name).toList();
+    if (dailyMealsPreference != null)
+      data['dailyMealsPreference'] = dailyMealsPreference;
+    if (dietaryRestrictions != null && dietaryRestrictions!.isNotEmpty)
+      data['dietaryRestrictions'] = dietaryRestrictions;
+    if (exerciseFrequency != null)
+      data['exerciseFrequency'] = exerciseFrequency!.name;
+    if (openTextPreferences != null)
+      data['openTextPreferences'] = openTextPreferences;
     return data;
   }
 }

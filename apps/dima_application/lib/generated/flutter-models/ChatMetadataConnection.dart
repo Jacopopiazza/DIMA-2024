@@ -23,7 +23,6 @@ import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'package:collection/collection.dart';
 
-
 /** This is an auto generated class representing the ChatMetadataConnection type in your schema. */
 class ChatMetadataConnection {
   final List<ChatMetadata>? _items;
@@ -32,111 +31,117 @@ class ChatMetadataConnection {
   List<ChatMetadata> get items {
     try {
       return _items!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String? get nextToken {
     return _nextToken;
   }
-  
-  const ChatMetadataConnection._internal({required items, nextToken}): _items = items, _nextToken = nextToken;
-  
-  factory ChatMetadataConnection({required List<ChatMetadata> items, String? nextToken}) {
+
+  const ChatMetadataConnection._internal({required items, nextToken})
+      : _items = items,
+        _nextToken = nextToken;
+
+  factory ChatMetadataConnection(
+      {required List<ChatMetadata> items, String? nextToken}) {
     return ChatMetadataConnection._internal(
-      items: items != null ? List<ChatMetadata>.unmodifiable(items) : items,
-      nextToken: nextToken);
+        items: items != null ? List<ChatMetadata>.unmodifiable(items) : items,
+        nextToken: nextToken);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is ChatMetadataConnection &&
-      DeepCollectionEquality().equals(_items, other._items) &&
-      _nextToken == other._nextToken;
+        DeepCollectionEquality().equals(_items, other._items) &&
+        _nextToken == other._nextToken;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("ChatMetadataConnection {");
-    buffer.write("items=" + (_items != null ? _items!.toString() : "null") + ", ");
+    buffer.write(
+        "items=" + (_items != null ? _items!.toString() : "null") + ", ");
     buffer.write("nextToken=" + "$_nextToken");
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  ChatMetadataConnection copyWith({List<ChatMetadata>? items, String? nextToken}) {
-    return ChatMetadataConnection._internal(
-      items: items ?? this.items,
-      nextToken: nextToken ?? this.nextToken);
-  }
-  
-  ChatMetadataConnection copyWithModelFieldValues({
-    ModelFieldValue<List<ChatMetadata>>? items,
-    ModelFieldValue<String?>? nextToken
-  }) {
-    return ChatMetadataConnection._internal(
-      items: items == null ? this.items : items.value,
-      nextToken: nextToken == null ? this.nextToken : nextToken.value
-    );
-  }
-  
-  ChatMetadataConnection.fromJson(Map<String, dynamic> json)  
-    : _items = json['items']  is Map
-        ? (json['items']['items'] is List
-          ? (json['items']['items'] as List)
-              .where((e) => e != null)
-              .map((e) => ChatMetadata.fromJson(new Map<String, dynamic>.from(e)))
-              .toList()
-          : null)
-        : (json['items'] is List
-          ? (json['items'] as List)
-              .where((e) => e?['serializedData'] != null)
-              .map((e) => ChatMetadata.fromJson(new Map<String, dynamic>.from(e?['serializedData'])))
-              .toList()
-          : null),
-      _nextToken = json['nextToken'];
-  
-  Map<String, dynamic> toJson() => {
-    'items': _items?.map((ChatMetadata? e) => e?.toJson()).toList(), 'nextToken': _nextToken
-  };
-  
-  Map<String, Object?> toMap() => {
-    'items': _items,
-    'nextToken': _nextToken
-  };
 
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  ChatMetadataConnection copyWith(
+      {List<ChatMetadata>? items, String? nextToken}) {
+    return ChatMetadataConnection._internal(
+        items: items ?? this.items, nextToken: nextToken ?? this.nextToken);
+  }
+
+  ChatMetadataConnection copyWithModelFieldValues(
+      {ModelFieldValue<List<ChatMetadata>>? items,
+      ModelFieldValue<String?>? nextToken}) {
+    return ChatMetadataConnection._internal(
+        items: items == null ? this.items : items.value,
+        nextToken: nextToken == null ? this.nextToken : nextToken.value);
+  }
+
+  ChatMetadataConnection.fromJson(Map<String, dynamic> json)
+      : _items = json['items'] is Map
+            ? (json['items']['items'] is List
+                ? (json['items']['items'] as List)
+                    .where((e) => e != null)
+                    .map((e) =>
+                        ChatMetadata.fromJson(new Map<String, dynamic>.from(e)))
+                    .toList()
+                : null)
+            : (json['items'] is List
+                ? (json['items'] as List)
+                    .where((e) => e?['serializedData'] != null)
+                    .map((e) => ChatMetadata.fromJson(
+                        new Map<String, dynamic>.from(e?['serializedData'])))
+                    .toList()
+                : null),
+        _nextToken = json['nextToken'];
+
+  Map<String, dynamic> toJson() => {
+        'items': _items?.map((ChatMetadata? e) => e?.toJson()).toList(),
+        'nextToken': _nextToken
+      };
+
+  Map<String, Object?> toMap() => {'items': _items, 'nextToken': _nextToken};
+
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "ChatMetadataConnection";
     modelSchemaDefinition.pluralName = "ChatMetadataConnections";
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'items',
-      isRequired: true,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.collection, ofModelName: amplify_core.ModelFieldTypeEnum.string.name)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'nextToken',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'items',
+            isRequired: true,
+            isArray: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.collection,
+                ofModelName: amplify_core.ModelFieldTypeEnum.string.name)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'nextToken',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.string)));
   });
 }

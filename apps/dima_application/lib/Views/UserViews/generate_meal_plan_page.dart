@@ -6,7 +6,6 @@ import 'package:dima_application/providers/user_details_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 class GenerateMealPlanPage extends ConsumerStatefulWidget {
   const GenerateMealPlanPage({super.key});
 
@@ -237,13 +236,15 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
               ),
               const SizedBox(width: 12),
               const Expanded(
-                child: Text('Meal plan generation started! You\'ll receive a notification when it\'s ready.'),
+                child: Text(
+                    'Meal plan generation started! You\'ll receive a notification when it\'s ready.'),
               ),
             ],
           ),
           backgroundColor: Colors.green.shade600,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           duration: const Duration(seconds: 4),
         ),
       );
@@ -259,7 +260,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: const Icon(Icons.error_outline, color: Colors.white, size: 16),
+                child: const Icon(Icons.error_outline,
+                    color: Colors.white, size: 16),
               ),
               const SizedBox(width: 12),
               const Text('Failed to start meal plan generation'),
@@ -267,7 +269,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
           ),
           backgroundColor: Colors.red.shade600,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           duration: const Duration(seconds: 3),
         ),
       );
@@ -319,7 +322,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             ],
           ),
         ),
-        error: (error, stack) => _buildErrorState(error.toString(), colorScheme, theme),
+        error: (error, stack) =>
+            _buildErrorState(error.toString(), colorScheme, theme),
         data: (data) {
           final userDetails = data.$1;
           final hasUserDetails = userDetails != null &&
@@ -358,12 +362,14 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                             _buildNoUserDetailsCard(colorScheme, theme),
                             const SizedBox(height: 24),
                           ] else ...[
-                            _buildUserDetailsCard(userDetails, colorScheme, theme),
+                            _buildUserDetailsCard(
+                                userDetails, colorScheme, theme),
                             const SizedBox(height: 24),
                           ],
 
                           // Preference Override Section
-                          _buildPreferenceOverrideSection(userDetails, colorScheme, theme),
+                          _buildPreferenceOverrideSection(
+                              userDetails, colorScheme, theme),
                           const SizedBox(height: 120), // Space for FAB
                         ],
                       ),
@@ -380,7 +386,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     );
   }
 
-  Widget _buildErrorState(String error, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildErrorState(
+      String error, ColorScheme colorScheme, ThemeData theme) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -532,7 +539,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.orange.shade600,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
             ),
             const SizedBox(height: 16),
@@ -556,7 +564,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     );
   }
 
-  Widget _buildUserDetailsCard(dynamic userDetails, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildUserDetailsCard(
+      dynamic userDetails, ColorScheme colorScheme, ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.green.shade50,
@@ -627,7 +636,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       runSpacing: 8,
       children: details
           .map((detail) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.green.shade100,
                   borderRadius: BorderRadius.circular(20),
@@ -645,7 +655,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     );
   }
 
-  Widget _buildPreferenceOverrideSection(dynamic userDetails, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildPreferenceOverrideSection(
+      dynamic userDetails, ColorScheme colorScheme, ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
@@ -699,14 +710,14 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: _useOverrides 
-                  ? Colors.orange.shade50 
-                  : Colors.green.shade50,
+                color: _useOverrides
+                    ? Colors.orange.shade50
+                    : Colors.green.shade50,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: _useOverrides 
-                    ? Colors.orange.shade200 
-                    : Colors.green.shade200,
+                  color: _useOverrides
+                      ? Colors.orange.shade200
+                      : Colors.green.shade200,
                 ),
               ),
               child: Row(
@@ -714,9 +725,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   Icon(
                     _useOverrides ? Icons.edit_rounded : Icons.person_rounded,
                     size: 16,
-                    color: _useOverrides 
-                      ? Colors.orange.shade700 
-                      : Colors.green.shade700,
+                    color: _useOverrides
+                        ? Colors.orange.shade700
+                        : Colors.green.shade700,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -725,9 +736,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                           ? 'Using custom preferences for this meal plan'
                           : 'Using your profile preferences',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: _useOverrides 
-                          ? Colors.orange.shade700 
-                          : Colors.green.shade700,
+                        color: _useOverrides
+                            ? Colors.orange.shade700
+                            : Colors.green.shade700,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -750,7 +761,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Physical Details Section
-        _buildSectionHeader('Physical Details', Icons.monitor_weight_rounded, colorScheme, theme),
+        _buildSectionHeader('Physical Details', Icons.monitor_weight_rounded,
+            colorScheme, theme),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -778,12 +790,16 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 24),
 
         // Meal Preferences Section
-        _buildSectionHeader('Meal Preferences', Icons.restaurant_rounded, colorScheme, theme),
+        _buildSectionHeader(
+            'Meal Preferences', Icons.restaurant_rounded, colorScheme, theme),
         const SizedBox(height: 12),
         _buildDropdownField<int>(
           value: _dailyMealsPreference,
           label: 'Daily Meals',
-          items: [for (int i = 1; i <= 6; i++) DropdownMenuItem(value: i, child: Text('$i meals'))],
+          items: [
+            for (int i = 1; i <= 6; i++)
+              DropdownMenuItem(value: i, child: Text('$i meals'))
+          ],
           onChanged: (value) => setState(() => _dailyMealsPreference = value),
           colorScheme: colorScheme,
         ),
@@ -803,7 +819,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 24),
 
         // Dietary Information Section
-        _buildSectionHeader('Dietary Information', Icons.local_dining_rounded, colorScheme, theme),
+        _buildSectionHeader('Dietary Information', Icons.local_dining_rounded,
+            colorScheme, theme),
         const SizedBox(height: 12),
         _buildTextField(
           controller: _dietaryRestrictionsController,
@@ -823,14 +840,16 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 24),
 
         // Allergies Section
-        _buildSectionHeader('Allergies', Icons.warning_rounded, colorScheme, theme),
+        _buildSectionHeader(
+            'Allergies', Icons.warning_rounded, colorScheme, theme),
         const SizedBox(height: 12),
         _buildAllergiesSelection(colorScheme, theme),
       ],
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildSectionHeader(
+      String title, IconData icon, ColorScheme colorScheme, ThemeData theme) {
     return Row(
       children: [
         Icon(icon, color: colorScheme.primary, size: 20),
@@ -877,7 +896,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         ),
         filled: true,
         fillColor: colorScheme.surface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }
@@ -907,7 +927,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         ),
         filled: true,
         fillColor: colorScheme.surface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       items: items,
       onChanged: onChanged,
@@ -942,7 +963,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   .replaceAll('_', ' ')
                   .toLowerCase()
                   .split(' ')
-                  .map((word) => word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}')
+                  .map((word) => word.isEmpty
+                      ? ''
+                      : '${word[0].toUpperCase()}${word.substring(1)}')
                   .join(' ');
 
               return FilterChip(
@@ -966,9 +989,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 selectedColor: colorScheme.primary.withOpacity(0.2),
                 checkmarkColor: colorScheme.primary,
                 side: BorderSide(
-                  color: isSelected 
-                    ? colorScheme.primary 
-                    : colorScheme.outline.withOpacity(0.5),
+                  color: isSelected
+                      ? colorScheme.primary
+                      : colorScheme.outline.withOpacity(0.5),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -984,39 +1007,40 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
   Widget _buildGenerateButton(ColorScheme colorScheme, ThemeData theme) {
     final isCustom = _useOverrides;
     final buttonColor = isCustom ? Colors.orange.shade600 : colorScheme.primary;
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: FilledButton.icon(
         onPressed: _isGenerating ? null : _generateMealPlan,
-        icon: _isGenerating 
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        icon: _isGenerating
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Icon(
+                isCustom ? Icons.tune_rounded : Icons.auto_awesome_rounded,
+                size: 20,
+                color: Colors.white,
               ),
-            )
-          : Icon(
-              isCustom ? Icons.tune_rounded : Icons.auto_awesome_rounded,
-              size: 20,
-              color: Colors.white,
-            ),
         label: Text(
-          _isGenerating 
-            ? 'Creating Meal Plan...'
-            : isCustom
-                ? 'Generate with Custom Preferences'
-                : 'Generate Personalized Plan',
+          _isGenerating
+              ? 'Creating Meal Plan...'
+              : isCustom
+                  ? 'Generate with Custom Preferences'
+                  : 'Generate Personalized Plan',
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
         ),
         style: FilledButton.styleFrom(
-          backgroundColor: _isGenerating ? buttonColor.withOpacity(0.7) : buttonColor,
+          backgroundColor:
+              _isGenerating ? buttonColor.withOpacity(0.7) : buttonColor,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           shape: RoundedRectangleBorder(

@@ -32,5 +32,4 @@ enum GenderTypeEnum {
   static bool contains(String value) {
     return GenderTypeEnum.values.any((type) => type.value == value);
   }
-
 }

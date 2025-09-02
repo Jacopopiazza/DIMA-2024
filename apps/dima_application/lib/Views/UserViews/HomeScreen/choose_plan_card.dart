@@ -30,7 +30,6 @@ class ChoosePlanCard extends StatelessWidget {
   /// equal to or wider than the breakpoint.
   final double largeScreenWidth;
 
-
   /// Creates a ChoosePlanCard widget.
   ///
   /// Parameters:
@@ -65,7 +64,6 @@ class ChoosePlanCard extends StatelessWidget {
 
     // Ensure the final width is not negative
     final finalWidth = max(0.0, calculatedWidth);
-
 
     Widget card = Card(
       elevation: 3.0,

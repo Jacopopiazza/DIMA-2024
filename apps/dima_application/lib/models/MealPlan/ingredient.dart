@@ -14,7 +14,10 @@ class IngredientCache {
   IngredientCache(); // Default constructor needed by Isar
 
   IngredientCache.create(
-      {required this.name, required this.amount, required this.macros, required this.unit});
+      {required this.name,
+      required this.amount,
+      required this.macros,
+      required this.unit});
 
   factory IngredientCache.fromJson(Map<String, dynamic> json) {
     return IngredientCache.create(
@@ -39,7 +42,7 @@ class IngredientCache {
     return IngredientCache.create(
       amount: amplifyIngredient.amount,
       name: amplifyIngredient.name,
-      unit: amplifyIngredient.unit ?? 'g', 
+      unit: amplifyIngredient.unit ?? 'g',
       macros: MacrosCache.fromAmplify(amplifyIngredient.macros),
     );
   }

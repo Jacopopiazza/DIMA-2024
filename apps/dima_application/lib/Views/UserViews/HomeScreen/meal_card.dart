@@ -197,7 +197,6 @@ class MealCard extends StatelessWidget {
       fit: BoxFit
           .cover, // Scale the image to cover the available space without distortion
     );
-
   }
 
   /// Builds a circular progress indicator displayed while the image is loading.

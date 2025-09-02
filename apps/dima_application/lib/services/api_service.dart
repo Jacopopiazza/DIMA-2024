@@ -103,8 +103,6 @@ class ApiService {
 
   // --- UserDetails Methods ---
 
-  
-
   Future<UserDetails> getMyUserDetails({bool forceRefresh = false}) async {
     // (Keep the implementation from the previous version - it doesn't need changes for stale MealPlan data)
     safePrint(

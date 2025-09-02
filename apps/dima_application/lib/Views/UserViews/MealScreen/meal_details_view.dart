@@ -77,7 +77,6 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                   ),
                 );
               },
-              
             ),
           ),
 

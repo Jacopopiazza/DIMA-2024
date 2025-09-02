@@ -22,7 +22,6 @@
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
-
 /** This is an auto generated class representing the MealWithStatus type in your schema. */
 class MealWithStatus {
   final bool? _isCompleted;
@@ -31,111 +30,109 @@ class MealWithStatus {
   bool get isCompleted {
     try {
       return _isCompleted!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   Meal get meal {
     try {
       return _meal!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
-  const MealWithStatus._internal({required isCompleted, required meal}): _isCompleted = isCompleted, _meal = meal;
-  
+
+  const MealWithStatus._internal({required isCompleted, required meal})
+      : _isCompleted = isCompleted,
+        _meal = meal;
+
   factory MealWithStatus({required bool isCompleted, required Meal meal}) {
-    return MealWithStatus._internal(
-      isCompleted: isCompleted,
-      meal: meal);
+    return MealWithStatus._internal(isCompleted: isCompleted, meal: meal);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is MealWithStatus &&
-      _isCompleted == other._isCompleted &&
-      _meal == other._meal;
+        _isCompleted == other._isCompleted &&
+        _meal == other._meal;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("MealWithStatus {");
-    buffer.write("isCompleted=" + (_isCompleted != null ? _isCompleted!.toString() : "null") + ", ");
+    buffer.write("isCompleted=" +
+        (_isCompleted != null ? _isCompleted!.toString() : "null") +
+        ", ");
     buffer.write("meal=" + (_meal != null ? _meal!.toString() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
+
   MealWithStatus copyWith({bool? isCompleted, Meal? meal}) {
     return MealWithStatus._internal(
-      isCompleted: isCompleted ?? this.isCompleted,
-      meal: meal ?? this.meal);
+        isCompleted: isCompleted ?? this.isCompleted, meal: meal ?? this.meal);
   }
-  
-  MealWithStatus copyWithModelFieldValues({
-    ModelFieldValue<bool>? isCompleted,
-    ModelFieldValue<Meal>? meal
-  }) {
-    return MealWithStatus._internal(
-      isCompleted: isCompleted == null ? this.isCompleted : isCompleted.value,
-      meal: meal == null ? this.meal : meal.value
-    );
-  }
-  
-  MealWithStatus.fromJson(Map<String, dynamic> json)  
-    : _isCompleted = json['isCompleted'],
-      _meal = json['meal'] != null
-          ? json['meal']['serializedData'] != null
-              ? Meal.fromJson(new Map<String, dynamic>.from(json['meal']['serializedData']))
-              : Meal.fromJson(new Map<String, dynamic>.from(json['meal']))
-        : null;
-  
-  Map<String, dynamic> toJson() => {
-    'isCompleted': _isCompleted, 'meal': _meal?.toJson()
-  };
-  
-  Map<String, Object?> toMap() => {
-    'isCompleted': _isCompleted,
-    'meal': _meal
-  };
 
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  MealWithStatus copyWithModelFieldValues(
+      {ModelFieldValue<bool>? isCompleted, ModelFieldValue<Meal>? meal}) {
+    return MealWithStatus._internal(
+        isCompleted: isCompleted == null ? this.isCompleted : isCompleted.value,
+        meal: meal == null ? this.meal : meal.value);
+  }
+
+  MealWithStatus.fromJson(Map<String, dynamic> json)
+      : _isCompleted = json['isCompleted'],
+        _meal = json['meal'] != null
+            ? json['meal']['serializedData'] != null
+                ? Meal.fromJson(new Map<String, dynamic>.from(
+                    json['meal']['serializedData']))
+                : Meal.fromJson(new Map<String, dynamic>.from(json['meal']))
+            : null;
+
+  Map<String, dynamic> toJson() =>
+      {'isCompleted': _isCompleted, 'meal': _meal?.toJson()};
+
+  Map<String, Object?> toMap() => {'isCompleted': _isCompleted, 'meal': _meal};
+
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "MealWithStatus";
     modelSchemaDefinition.pluralName = "MealWithStatuses";
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'isCompleted',
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.bool)
-    ));
-    
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'isCompleted',
+            isRequired: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.bool)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'meal',
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'Meal')
-    ));
+        fieldName: 'meal',
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embedded,
+            ofCustomTypeName: 'Meal')));
   });
 }

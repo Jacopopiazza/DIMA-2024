@@ -58,7 +58,7 @@ class _UserProfileSectionRiverpodState
   @override
   void didUpdateWidget(UserProfileSectionRiverpod oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.profileData != widget.profileData || 
+    if (oldWidget.profileData != widget.profileData ||
         oldWidget.uniqueId != widget.uniqueId) {
       _initializeControllers();
       setState(() {
@@ -69,14 +69,18 @@ class _UserProfileSectionRiverpodState
 
   void _initializeControllers() {
     final attributes = widget.profileData.userAttributes;
-    
-    _givenNameController = TextEditingController(text: attributes['given_name'] ?? '');
-    _familyNameController = TextEditingController(text: attributes['family_name'] ?? '');
+
+    _givenNameController =
+        TextEditingController(text: attributes['given_name'] ?? '');
+    _familyNameController =
+        TextEditingController(text: attributes['family_name'] ?? '');
     _selectedGender = attributes['gender'];
-    
-    if (attributes['birthdate'] != null && attributes['birthdate']!.isNotEmpty) {
+
+    if (attributes['birthdate'] != null &&
+        attributes['birthdate']!.isNotEmpty) {
       try {
-        _selectedDate = DateFormat('yyyy-MM-dd').parse(attributes['birthdate']!);
+        _selectedDate =
+            DateFormat('yyyy-MM-dd').parse(attributes['birthdate']!);
       } catch (e) {
         safePrint('[UserProfileSection] Error parsing birthdate: $e');
         _selectedDate = null;
@@ -118,10 +122,16 @@ class _UserProfileSectionRiverpodState
 
     try {
       final success = await widget.onUpdateProfile(
-        givenName: _givenNameController.text.trim().isNotEmpty ? _givenNameController.text.trim() : null,
-        familyName: _familyNameController.text.trim().isNotEmpty ? _familyNameController.text.trim() : null,
+        givenName: _givenNameController.text.trim().isNotEmpty
+            ? _givenNameController.text.trim()
+            : null,
+        familyName: _familyNameController.text.trim().isNotEmpty
+            ? _familyNameController.text.trim()
+            : null,
         gender: _selectedGender,
-        birthdate: _selectedDate != null ? DateFormat('yyyy-MM-dd').format(_selectedDate!) : null,
+        birthdate: _selectedDate != null
+            ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
+            : null,
       );
 
       if (mounted && context.mounted) {
@@ -139,7 +149,8 @@ class _UserProfileSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.check_rounded,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Text('Profile updated successfully!'),
@@ -147,7 +158,8 @@ class _UserProfileSectionRiverpodState
               ),
               backgroundColor: Colors.green.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         } else {
@@ -161,7 +173,8 @@ class _UserProfileSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.error_outline_rounded,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Text('Failed to update profile. Please try again.'),
@@ -169,7 +182,8 @@ class _UserProfileSectionRiverpodState
               ),
               backgroundColor: Colors.red.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         }
@@ -186,7 +200,8 @@ class _UserProfileSectionRiverpodState
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  child: const Icon(Icons.error_outline_rounded,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
                 Text('Error updating profile: $e'),
@@ -194,7 +209,8 @@ class _UserProfileSectionRiverpodState
             ),
             backgroundColor: Colors.red.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -272,7 +288,8 @@ class _UserProfileSectionRiverpodState
                 ),
                 if (_isDirty && !_isLoading)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange.shade100,
                       borderRadius: BorderRadius.circular(6),
@@ -360,22 +377,26 @@ class _UserProfileSectionRiverpodState
                       decoration: InputDecoration(
                         labelText: 'Birthdate',
                         prefixIcon: const Icon(Icons.cake_rounded, size: 20),
-                        suffixIcon: const Icon(Icons.calendar_today_rounded, size: 20),
+                        suffixIcon:
+                            const Icon(Icons.calendar_today_rounded, size: 20),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(color: colorScheme.outline),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
+                          borderSide: BorderSide(
+                              color: colorScheme.outline.withOpacity(0.5)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+                          borderSide:
+                              BorderSide(color: colorScheme.primary, width: 2),
                         ),
                         filled: true,
                         fillColor: colorScheme.surface,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                       child: Text(
                         _selectedDate != null
@@ -396,14 +417,16 @@ class _UserProfileSectionRiverpodState
                     child: ScaleTransition(
                       scale: _saveButtonScale,
                       child: FilledButton.icon(
-                        onPressed: (_isDirty && !_isLoading) ? _saveProfile : null,
+                        onPressed:
+                            (_isDirty && !_isLoading) ? _saveProfile : null,
                         icon: _isLoading
                             ? SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      colorScheme.onPrimary),
                                 ),
                               )
                             : const Icon(Icons.save_rounded, size: 20),
@@ -411,14 +434,17 @@ class _UserProfileSectionRiverpodState
                           _isLoading ? 'Saving...' : 'Save Changes',
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: _isDirty ? colorScheme.onPrimary : colorScheme.onSurface,
+                            color: _isDirty
+                                ? colorScheme.onPrimary
+                                : colorScheme.onSurface,
                           ),
                         ),
                         style: FilledButton.styleFrom(
-                          backgroundColor: _isDirty && !_isLoading 
-                              ? colorScheme.primary 
+                          backgroundColor: _isDirty && !_isLoading
+                              ? colorScheme.primary
                               : colorScheme.primary.withOpacity(0.5),
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -464,7 +490,8 @@ class _UserProfileSectionRiverpodState
         ),
         filled: true,
         fillColor: colorScheme.surface,
-        contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
+        contentPadding:
+            const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
       ),
       validator: validator,
     );
@@ -497,7 +524,8 @@ class _UserProfileSectionRiverpodState
         ),
         filled: true,
         fillColor: colorScheme.surface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       items: items,
       onChanged: onChanged,

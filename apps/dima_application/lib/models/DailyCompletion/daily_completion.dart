@@ -38,7 +38,7 @@ class DailyCompletion {
     // Initialize latestUpdate with the current time upon creation
     required this.latestUpdate,
     this.id = Isar.autoIncrement,
-  }): this.date = dateOnly(date); // Normalize date
+  }) : this.date = dateOnly(date); // Normalize date
 
   // Helper to ensure date is stored without time component
   static DateTime dateOnly(DateTime dt) {
@@ -60,5 +60,4 @@ class DailyCompletion {
       latestUpdate: latestUpdate ?? DateTime.now(),
     );
   }
-
 }

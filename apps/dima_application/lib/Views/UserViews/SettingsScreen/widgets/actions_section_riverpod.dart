@@ -59,7 +59,7 @@ class ActionsSectionRiverpod extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 20),
-            
+
             // Actions List
             Column(
               children: [
@@ -100,7 +100,7 @@ class ActionsSectionRiverpod extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final theme = Theme.of(context);
-    
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -159,7 +159,7 @@ class ActionsSectionRiverpod extends ConsumerWidget {
 
   void _handleRefreshData(BuildContext context, WidgetRef ref) {
     ref.read(userDetailsProvider.notifier).loadUserDetails(userId);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -170,7 +170,8 @@ class ActionsSectionRiverpod extends ConsumerWidget {
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Icon(Icons.refresh_rounded, color: Colors.white, size: 16),
+              child: const Icon(Icons.refresh_rounded,
+                  color: Colors.white, size: 16),
             ),
             const SizedBox(width: 12),
             const Text('Data refreshed successfully'),
@@ -200,7 +201,8 @@ class ActionsSectionRiverpod extends ConsumerWidget {
             const Text('Sign Out'),
           ],
         ),
-        content: const Text('Are you sure you want to sign out of your account?'),
+        content:
+            const Text('Are you sure you want to sign out of your account?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),

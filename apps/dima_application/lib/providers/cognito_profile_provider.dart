@@ -11,11 +11,9 @@ final cognitoProfileServiceProvider = Provider<CognitoProfileService>((ref) {
 
 /// Model class to hold cognito profile data
 class CognitoProfileData {
-  final String subscriptionStatus;
   final Map<String, String> userAttributes;
 
   const CognitoProfileData({
-    this.subscriptionStatus = '',
     this.userAttributes = const {},
   });
 
@@ -24,14 +22,13 @@ class CognitoProfileData {
     Map<String, String>? userAttributes,
   }) {
     return CognitoProfileData(
-      subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
       userAttributes: userAttributes ?? this.userAttributes,
     );
   }
 
   @override
   String toString() {
-    return 'CognitoProfileData(subscriptionStatus: $subscriptionStatus, userAttributes: $userAttributes)';
+    return 'CognitoProfileData(userAttributes: $userAttributes)';
   }
 }
 
@@ -67,18 +64,10 @@ class CognitoProfileNotifier
 
     try {
       final service = ref.read(cognitoProfileServiceProvider);
-      
-      // Fetch subscription status and user attributes concurrently
-      final results = await Future.wait([
-        service.getSubscriptionStatus(),
-        service.getUserProfileAttributes(),
-      ]);
 
-      final subscriptionStatus = results[0] as String;
-      final userAttributes = results[1] as Map<String, String>;
+      final userAttributes = await service.getUserProfileAttributes();
 
       final profileData = CognitoProfileData(
-        subscriptionStatus: subscriptionStatus,
         userAttributes: userAttributes,
       );
 
@@ -91,84 +80,6 @@ class CognitoProfileNotifier
       // On error, report the error but keep the previous data.
       state = AsyncValue<(CognitoProfileData, String)>.error(error, stackTrace)
           .copyWithPrevious(previousState);
-    }
-  }
-
-  Future<bool> subscribe() async {
-    print('[CognitoProfileNotifier] Starting subscription process...');
-    final previousState = state;
-    final previousTuple = previousState.value;
-
-    try {
-      final service = ref.read(cognitoProfileServiceProvider);
-      print('[CognitoProfileNotifier] Service instance retrieved, calling subscribe()');
-
-      final result = await service.subscribe();
-      print('[CognitoProfileNotifier] Subscribe service call completed with result: $result');
-
-      if (result) {
-        print('[CognitoProfileNotifier] Subscription successful, user upgraded to PRO');
-        
-        // Optimistically update the subscription status
-        if (previousTuple != null) {
-          final updatedProfileData = previousTuple.$1.copyWith(subscriptionStatus: 'PRO');
-          state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
-        }
-        
-        // Refresh the profile to get the latest data
-        await loadCognitoProfile();
-      } else {
-        print('[CognitoProfileNotifier] Subscription failed, service returned false');
-      }
-
-      return result;
-    } catch (e, stackTrace) {
-      print('[CognitoProfileNotifier] Error during subscription: $e');
-      print('[CognitoProfileNotifier] Stack trace: $stackTrace');
-      
-      // On error, keep the previous state
-      state = AsyncValue<(CognitoProfileData, String)>.error(e, stackTrace)
-          .copyWithPrevious(previousState);
-      return false;
-    }
-  }
-
-  Future<bool> unsubscribe() async {
-    print('[CognitoProfileNotifier] Starting unsubscription process...');
-    final previousState = state;
-    final previousTuple = previousState.value;
-
-    try {
-      final service = ref.read(cognitoProfileServiceProvider);
-      print('[CognitoProfileNotifier] Service instance retrieved, calling unsubscribe()');
-
-      final result = await service.unsubscribe();
-      print('[CognitoProfileNotifier] Unsubscribe service call completed with result: $result');
-
-      if (result) {
-        print('[CognitoProfileNotifier] Unsubscription successful, user downgraded to FREE');
-        
-        // Optimistically update the subscription status
-        if (previousTuple != null) {
-          final updatedProfileData = previousTuple.$1.copyWith(subscriptionStatus: 'FREE');
-          state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
-        }
-        
-        // Refresh the profile to get the latest data
-        await loadCognitoProfile();
-      } else {
-        print('[CognitoProfileNotifier] Unsubscription failed, service returned false');
-      }
-
-      return result;
-    } catch (e, stackTrace) {
-      print('[CognitoProfileNotifier] Error during unsubscription: $e');
-      print('[CognitoProfileNotifier] Stack trace: $stackTrace');
-      
-      // On error, keep the previous state
-      state = AsyncValue<(CognitoProfileData, String)>.error(e, stackTrace)
-          .copyWithPrevious(previousState);
-      return false;
     }
   }
 
@@ -190,19 +101,21 @@ class CognitoProfileNotifier
     // Create optimistic update
     final currentAttributes = previousTuple.$1.userAttributes;
     final updatedAttributes = Map<String, String>.from(currentAttributes);
-    
+
     if (givenName != null) updatedAttributes['given_name'] = givenName;
     if (familyName != null) updatedAttributes['family_name'] = familyName;
     if (gender != null) updatedAttributes['gender'] = gender;
     if (birthdate != null) updatedAttributes['birthdate'] = birthdate;
 
     // Optimistically update the UI, but REUSE the existing unique ID to prevent rebuild
-    final updatedProfileData = previousTuple.$1.copyWith(userAttributes: updatedAttributes);
+    final updatedProfileData =
+        previousTuple.$1.copyWith(userAttributes: updatedAttributes);
     state = AsyncValue.data((updatedProfileData, previousTuple.$2));
 
     try {
       final service = ref.read(cognitoProfileServiceProvider);
-      print('[CognitoProfileNotifier] Service instance retrieved, calling updateUserProfileAttributes()');
+      print(
+          '[CognitoProfileNotifier] Service instance retrieved, calling updateUserProfileAttributes()');
 
       final result = await service.updateUserProfileAttributes(
         givenName: givenName,
@@ -225,7 +138,7 @@ class CognitoProfileNotifier
     } catch (e, stackTrace) {
       print('[CognitoProfileNotifier] Error updating profile attributes: $e');
       print('[CognitoProfileNotifier] Stack trace: $stackTrace');
-      
+
       // If update failed, revert to previous state and show error
       state = AsyncValue<(CognitoProfileData, String)>.error(e, stackTrace)
           .copyWithPrevious(previousState);
@@ -238,12 +151,6 @@ class CognitoProfileNotifier
     await loadCognitoProfile();
   }
 }
-
-// Convenience providers for specific data access
-final subscriptionStatusProvider = Provider<String?>((ref) {
-  final profileState = ref.watch(cognitoProfileProvider);
-  return profileState.value?.$1.subscriptionStatus;
-});
 
 final userProfileAttributesProvider = Provider<Map<String, String>>((ref) {
   final profileState = ref.watch(cognitoProfileProvider);

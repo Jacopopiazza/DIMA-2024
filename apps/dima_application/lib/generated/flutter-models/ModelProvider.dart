@@ -40,6 +40,7 @@ import 'MealWithStatus.dart';
 import 'NutritionistProfileConnection.dart';
 import 'PlanRequestPreferences.dart';
 import 'TodaysPlan.dart';
+import 'UserSubscriptionStatus.dart';
 
 export 'AllergenEnum.dart';
 export 'ChatMessage.dart';
@@ -66,23 +67,48 @@ export 'PlanDayCompletion.dart';
 export 'PlanRequestPreferences.dart';
 export 'PlanStatus.dart';
 export 'SenderType.dart';
+export 'SubscriptionStatusEnum.dart';
 export 'TodaysPlan.dart';
 export 'UserDetails.dart';
+export 'UserSubscriptionStatus.dart';
 export 'WeekdayEnum.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "8da0fa0c2f48afc312a34e46c86ac19b";
+  String version = "9213b1fcdcced2dfa1f7e47390794f5e";
   @override
-  List<amplify_core.ModelSchema> modelSchemas = [ChatMessage.schema, ChatMetadata.schema, MealPlan.schema, NutritionistProfile.schema, PlanDayCompletion.schema, UserDetails.schema];
+  List<amplify_core.ModelSchema> modelSchemas = [
+    ChatMessage.schema,
+    ChatMetadata.schema,
+    MealPlan.schema,
+    NutritionistProfile.schema,
+    PlanDayCompletion.schema,
+    UserDetails.schema
+  ];
   @override
-  List<amplify_core.ModelSchema> customTypeSchemas = [ChatMessageConnection.schema, ChatMetadataConnection.schema, DailyPlanData.schema, Ingredient.schema, Macros.schema, Meal.schema, MealPlanConnection.schema, MealPlanGenerationStatus.schema, MealPlanList.schema, MealPlanResponse.schema, MealWithStatus.schema, NutritionistProfileConnection.schema, PlanRequestPreferences.schema, TodaysPlan.schema];
+  List<amplify_core.ModelSchema> customTypeSchemas = [
+    ChatMessageConnection.schema,
+    ChatMetadataConnection.schema,
+    DailyPlanData.schema,
+    Ingredient.schema,
+    Macros.schema,
+    Meal.schema,
+    MealPlanConnection.schema,
+    MealPlanGenerationStatus.schema,
+    MealPlanList.schema,
+    MealPlanResponse.schema,
+    MealWithStatus.schema,
+    NutritionistProfileConnection.schema,
+    PlanRequestPreferences.schema,
+    TodaysPlan.schema,
+    UserSubscriptionStatus.schema
+  ];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
-  
+
   amplify_core.ModelType getModelTypeByModelName(String modelName) {
-    switch(modelName) {
+    switch (modelName) {
       case "ChatMessage":
         return ChatMessage.classType;
       case "ChatMetadata":
@@ -96,11 +122,12 @@ class ModelProvider implements amplify_core.ModelProviderInterface {
       case "UserDetails":
         return UserDetails.classType;
       default:
-        throw Exception("Failed to find model in model provider for model name: " + modelName);
+        throw Exception(
+            "Failed to find model in model provider for model name: " +
+                modelName);
     }
   }
 }
-
 
 class ModelFieldValue<T> {
   const ModelFieldValue.value(this.value);

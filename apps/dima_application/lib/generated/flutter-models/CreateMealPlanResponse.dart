@@ -22,7 +22,6 @@
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
-
 /** This is an auto generated class representing the CreateMealPlanResponse type in your schema. */
 class CreateMealPlanResponse {
   final String? _mealPlanId;
@@ -32,116 +31,119 @@ class CreateMealPlanResponse {
   String? get mealPlanId {
     return _mealPlanId;
   }
-  
+
   String? get message {
     return _message;
   }
-  
+
   bool get success {
     try {
       return _success!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
-  const CreateMealPlanResponse._internal({mealPlanId, message, required success}): _mealPlanId = mealPlanId, _message = message, _success = success;
-  
-  factory CreateMealPlanResponse({String? mealPlanId, String? message, required bool success}) {
+
+  const CreateMealPlanResponse._internal(
+      {mealPlanId, message, required success})
+      : _mealPlanId = mealPlanId,
+        _message = message,
+        _success = success;
+
+  factory CreateMealPlanResponse(
+      {String? mealPlanId, String? message, required bool success}) {
     return CreateMealPlanResponse._internal(
-      mealPlanId: mealPlanId,
-      message: message,
-      success: success);
+        mealPlanId: mealPlanId, message: message, success: success);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is CreateMealPlanResponse &&
-      _mealPlanId == other._mealPlanId &&
-      _message == other._message &&
-      _success == other._success;
+        _mealPlanId == other._mealPlanId &&
+        _message == other._message &&
+        _success == other._success;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("CreateMealPlanResponse {");
     buffer.write("mealPlanId=" + "$_mealPlanId" + ", ");
     buffer.write("message=" + "$_message" + ", ");
-    buffer.write("success=" + (_success != null ? _success!.toString() : "null"));
+    buffer
+        .write("success=" + (_success != null ? _success!.toString() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  CreateMealPlanResponse copyWith({String? mealPlanId, String? message, bool? success}) {
-    return CreateMealPlanResponse._internal(
-      mealPlanId: mealPlanId ?? this.mealPlanId,
-      message: message ?? this.message,
-      success: success ?? this.success);
-  }
-  
-  CreateMealPlanResponse copyWithModelFieldValues({
-    ModelFieldValue<String?>? mealPlanId,
-    ModelFieldValue<String?>? message,
-    ModelFieldValue<bool>? success
-  }) {
-    return CreateMealPlanResponse._internal(
-      mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
-      message: message == null ? this.message : message.value,
-      success: success == null ? this.success : success.value
-    );
-  }
-  
-  CreateMealPlanResponse.fromJson(Map<String, dynamic> json)  
-    : _mealPlanId = json['mealPlanId'],
-      _message = json['message'],
-      _success = json['success'];
-  
-  Map<String, dynamic> toJson() => {
-    'mealPlanId': _mealPlanId, 'message': _message, 'success': _success
-  };
-  
-  Map<String, Object?> toMap() => {
-    'mealPlanId': _mealPlanId,
-    'message': _message,
-    'success': _success
-  };
 
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  CreateMealPlanResponse copyWith(
+      {String? mealPlanId, String? message, bool? success}) {
+    return CreateMealPlanResponse._internal(
+        mealPlanId: mealPlanId ?? this.mealPlanId,
+        message: message ?? this.message,
+        success: success ?? this.success);
+  }
+
+  CreateMealPlanResponse copyWithModelFieldValues(
+      {ModelFieldValue<String?>? mealPlanId,
+      ModelFieldValue<String?>? message,
+      ModelFieldValue<bool>? success}) {
+    return CreateMealPlanResponse._internal(
+        mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
+        message: message == null ? this.message : message.value,
+        success: success == null ? this.success : success.value);
+  }
+
+  CreateMealPlanResponse.fromJson(Map<String, dynamic> json)
+      : _mealPlanId = json['mealPlanId'],
+        _message = json['message'],
+        _success = json['success'];
+
+  Map<String, dynamic> toJson() =>
+      {'mealPlanId': _mealPlanId, 'message': _message, 'success': _success};
+
+  Map<String, Object?> toMap() =>
+      {'mealPlanId': _mealPlanId, 'message': _message, 'success': _success};
+
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "CreateMealPlanResponse";
     modelSchemaDefinition.pluralName = "CreateMealPlanResponses";
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'mealPlanId',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'message',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'success',
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.bool)
-    ));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'mealPlanId',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'message',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'success',
+            isRequired: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.bool)));
   });
 }

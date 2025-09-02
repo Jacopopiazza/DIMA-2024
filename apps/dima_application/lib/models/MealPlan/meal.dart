@@ -16,7 +16,6 @@ class MealCache {
   late List<IngredientCache> ingredients;
   late MacrosCache totalMacros;
 
-
   MealCache(); // Default constructor needed by Isar
 
   MealCache.create(
@@ -57,12 +56,12 @@ class MealCache {
           .toList(),
       // Ensure the enum values match exactly between Amplify and Isar versions
       name: MealNameEnum.values.firstWhere(
-            (e) => e.name == amplifyMeal.name.name,
-            orElse: () {
-              // Optional: Log a warning if a mismatch occurs
-              return MealNameEnum.values.first; // Provide a default value
-            },
-           ),
+        (e) => e.name == amplifyMeal.name.name,
+        orElse: () {
+          // Optional: Log a warning if a mismatch occurs
+          return MealNameEnum.values.first; // Provide a default value
+        },
+      ),
       recipe: amplifyMeal.recipe ?? 'EMPTY RECIPE',
       recipeName: amplifyMeal.recipeName ?? 'EMPTY RECIPE NAME',
       totalMacros: MacrosCache.fromAmplify(amplifyMeal.totalMacros),
@@ -70,15 +69,12 @@ class MealCache {
   }
 
   Meal toMeal() {
-
     if (name == null || !MealNameEnum.values.contains(name!)) {
       throw ArgumentError("Invalid meal name: ${name?.name}");
     }
 
     return Meal(
-      name: MealNameEnum.values.firstWhere(
-        (e) => e.name == name!.name
-      ),
+      name: MealNameEnum.values.firstWhere((e) => e.name == name!.name),
       recipe: recipe,
       recipeName: recipeName,
       ingredients: ingredients.map((ing) => ing.toIngredient()).toList(),

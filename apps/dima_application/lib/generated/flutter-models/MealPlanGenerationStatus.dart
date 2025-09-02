@@ -22,7 +22,6 @@
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
-
 /** This is an auto generated class representing the MealPlanGenerationStatus type in your schema. */
 class MealPlanGenerationStatus {
   final String? _mealPlanId;
@@ -32,116 +31,127 @@ class MealPlanGenerationStatus {
   String? get mealPlanId {
     return _mealPlanId;
   }
-  
+
   String? get message {
     return _message;
   }
-  
+
   MealPlanGenerationStatusValue get status {
     try {
       return _status!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
-  const MealPlanGenerationStatus._internal({mealPlanId, message, required status}): _mealPlanId = mealPlanId, _message = message, _status = status;
-  
-  factory MealPlanGenerationStatus({String? mealPlanId, String? message, required MealPlanGenerationStatusValue status}) {
+
+  const MealPlanGenerationStatus._internal(
+      {mealPlanId, message, required status})
+      : _mealPlanId = mealPlanId,
+        _message = message,
+        _status = status;
+
+  factory MealPlanGenerationStatus(
+      {String? mealPlanId,
+      String? message,
+      required MealPlanGenerationStatusValue status}) {
     return MealPlanGenerationStatus._internal(
-      mealPlanId: mealPlanId,
-      message: message,
-      status: status);
+        mealPlanId: mealPlanId, message: message, status: status);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is MealPlanGenerationStatus &&
-      _mealPlanId == other._mealPlanId &&
-      _message == other._message &&
-      _status == other._status;
+        _mealPlanId == other._mealPlanId &&
+        _message == other._message &&
+        _status == other._status;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("MealPlanGenerationStatus {");
     buffer.write("mealPlanId=" + "$_mealPlanId" + ", ");
     buffer.write("message=" + "$_message" + ", ");
-    buffer.write("status=" + (_status != null ? amplify_core.enumToString(_status)! : "null"));
+    buffer.write("status=" +
+        (_status != null ? amplify_core.enumToString(_status)! : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  MealPlanGenerationStatus copyWith({String? mealPlanId, String? message, MealPlanGenerationStatusValue? status}) {
-    return MealPlanGenerationStatus._internal(
-      mealPlanId: mealPlanId ?? this.mealPlanId,
-      message: message ?? this.message,
-      status: status ?? this.status);
-  }
-  
-  MealPlanGenerationStatus copyWithModelFieldValues({
-    ModelFieldValue<String?>? mealPlanId,
-    ModelFieldValue<String?>? message,
-    ModelFieldValue<MealPlanGenerationStatusValue>? status
-  }) {
-    return MealPlanGenerationStatus._internal(
-      mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
-      message: message == null ? this.message : message.value,
-      status: status == null ? this.status : status.value
-    );
-  }
-  
-  MealPlanGenerationStatus.fromJson(Map<String, dynamic> json)  
-    : _mealPlanId = json['mealPlanId'],
-      _message = json['message'],
-      _status = amplify_core.enumFromString<MealPlanGenerationStatusValue>(json['status'], MealPlanGenerationStatusValue.values);
-  
-  Map<String, dynamic> toJson() => {
-    'mealPlanId': _mealPlanId, 'message': _message, 'status': amplify_core.enumToString(_status)
-  };
-  
-  Map<String, Object?> toMap() => {
-    'mealPlanId': _mealPlanId,
-    'message': _message,
-    'status': _status
-  };
 
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  MealPlanGenerationStatus copyWith(
+      {String? mealPlanId,
+      String? message,
+      MealPlanGenerationStatusValue? status}) {
+    return MealPlanGenerationStatus._internal(
+        mealPlanId: mealPlanId ?? this.mealPlanId,
+        message: message ?? this.message,
+        status: status ?? this.status);
+  }
+
+  MealPlanGenerationStatus copyWithModelFieldValues(
+      {ModelFieldValue<String?>? mealPlanId,
+      ModelFieldValue<String?>? message,
+      ModelFieldValue<MealPlanGenerationStatusValue>? status}) {
+    return MealPlanGenerationStatus._internal(
+        mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
+        message: message == null ? this.message : message.value,
+        status: status == null ? this.status : status.value);
+  }
+
+  MealPlanGenerationStatus.fromJson(Map<String, dynamic> json)
+      : _mealPlanId = json['mealPlanId'],
+        _message = json['message'],
+        _status = amplify_core.enumFromString<MealPlanGenerationStatusValue>(
+            json['status'], MealPlanGenerationStatusValue.values);
+
+  Map<String, dynamic> toJson() => {
+        'mealPlanId': _mealPlanId,
+        'message': _message,
+        'status': amplify_core.enumToString(_status)
+      };
+
+  Map<String, Object?> toMap() =>
+      {'mealPlanId': _mealPlanId, 'message': _message, 'status': _status};
+
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "MealPlanGenerationStatus";
     modelSchemaDefinition.pluralName = "MealPlanGenerationStatuses";
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'mealPlanId',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'message',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'status',
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.enumeration)
-    ));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'mealPlanId',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'message',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'status',
+            isRequired: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.enumeration)));
   });
 }

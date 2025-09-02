@@ -62,16 +62,17 @@ class _UserDetailsFormRiverpodState
   }
 
   void _initializeControllers() {
-    _weightController = TextEditingController(
-        text: widget.userDetails?.weightKg.toString());
-    _heightController = TextEditingController(
-        text: widget.userDetails?.heightCm.toString());
+    _weightController =
+        TextEditingController(text: widget.userDetails?.weightKg.toString());
+    _heightController =
+        TextEditingController(text: widget.userDetails?.heightCm.toString());
     _preferencesController = TextEditingController(
         text: widget.userDetails?.openTextPreferences ?? '');
     _dietaryRestrictionsController = TextEditingController(
         text: widget.userDetails?.dietaryRestrictions ?? '');
     _dailyMealsPreference = widget.userDetails?.dailyMealsPreference ?? 3;
-    _exerciseFrequency = widget.userDetails?.exerciseFrequency ?? ExerciseFrequency.NOT_SPECIFIED;
+    _exerciseFrequency = widget.userDetails?.exerciseFrequency ??
+        ExerciseFrequency.NOT_SPECIFIED;
     _selectedAllergies = widget.userDetails?.allergies?.toList() ?? [];
   }
 
@@ -137,7 +138,8 @@ class _UserDetailsFormRiverpodState
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                  child: const Icon(Icons.check_rounded,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
                 const Text('Profile updated successfully'),
@@ -145,7 +147,8 @@ class _UserDetailsFormRiverpodState
             ),
             backgroundColor: Colors.green.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       } else {
@@ -159,7 +162,8 @@ class _UserDetailsFormRiverpodState
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  child: const Icon(Icons.error_outline_rounded,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
                 const Text('Failed to update profile'),
@@ -167,7 +171,8 @@ class _UserDetailsFormRiverpodState
             ),
             backgroundColor: Colors.red.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -246,7 +251,8 @@ class _UserDetailsFormRiverpodState
                 ),
                 if (_isDirty && !_isLoading)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange.shade100,
                       borderRadius: BorderRadius.circular(6),
@@ -265,7 +271,8 @@ class _UserDetailsFormRiverpodState
             const SizedBox(height: 24),
 
             // Physical Details Section
-            _buildSectionHeader('Physical Details', Icons.monitor_weight_rounded, colorScheme, theme),
+            _buildSectionHeader('Physical Details',
+                Icons.monitor_weight_rounded, colorScheme, theme),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -295,7 +302,8 @@ class _UserDetailsFormRiverpodState
             const SizedBox(height: 24),
 
             // Meal Preferences Section
-            _buildSectionHeader('Meal Preferences', Icons.restaurant_rounded, colorScheme, theme),
+            _buildSectionHeader('Meal Preferences', Icons.restaurant_rounded,
+                colorScheme, theme),
             const SizedBox(height: 12),
             _buildDropdownField<int>(
               value: _dailyMealsPreference,
@@ -339,13 +347,15 @@ class _UserDetailsFormRiverpodState
             const SizedBox(height: 24),
 
             // Allergies Section
-            _buildSectionHeader('Allergies', Icons.warning_rounded, colorScheme, theme),
+            _buildSectionHeader(
+                'Allergies', Icons.warning_rounded, colorScheme, theme),
             const SizedBox(height: 12),
             _buildAllergiesSelection(colorScheme, theme),
             const SizedBox(height: 24),
 
             // Additional Preferences Section
-            _buildSectionHeader('Additional Preferences', Icons.note_alt_rounded, colorScheme, theme),
+            _buildSectionHeader('Additional Preferences',
+                Icons.note_alt_rounded, colorScheme, theme),
             const SizedBox(height: 12),
             _buildTextField(
               controller: _dietaryRestrictionsController,
@@ -378,7 +388,8 @@ class _UserDetailsFormRiverpodState
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                colorScheme.onPrimary),
                           ),
                         )
                       : const Icon(Icons.save_rounded, size: 20),
@@ -386,14 +397,17 @@ class _UserDetailsFormRiverpodState
                     _isLoading ? 'Saving...' : 'Save Changes',
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: _isDirty ? colorScheme.onSecondary : colorScheme.onSurface,
+                      color: _isDirty
+                          ? colorScheme.onSecondary
+                          : colorScheme.onSurface,
                     ),
                   ),
                   style: FilledButton.styleFrom(
-                    backgroundColor: _isDirty && !_isLoading 
-                        ? colorScheme.primary 
+                    backgroundColor: _isDirty && !_isLoading
+                        ? colorScheme.primary
                         : colorScheme.primary.withOpacity(0.5),
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -407,7 +421,8 @@ class _UserDetailsFormRiverpodState
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildSectionHeader(
+      String title, IconData icon, ColorScheme colorScheme, ThemeData theme) {
     return Row(
       children: [
         Icon(icon, color: colorScheme.primary, size: 20),
@@ -457,7 +472,8 @@ class _UserDetailsFormRiverpodState
         ),
         filled: true,
         fillColor: colorScheme.surface,
-        contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
+        contentPadding:
+            const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
       ),
     );
   }
@@ -489,7 +505,8 @@ class _UserDetailsFormRiverpodState
         ),
         filled: true,
         fillColor: colorScheme.surface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       items: items,
       onChanged: onChanged,
@@ -544,9 +561,9 @@ class _UserDetailsFormRiverpodState
                 selectedColor: colorScheme.primary.withOpacity(0.2),
                 checkmarkColor: colorScheme.primary,
                 side: BorderSide(
-                  color: isSelected 
-                    ? colorScheme.primary 
-                    : colorScheme.outline.withOpacity(0.5),
+                  color: isSelected
+                      ? colorScheme.primary
+                      : colorScheme.outline.withOpacity(0.5),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),

@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../providers/user_details_provider.dart';
 
 class PasswordChangeFormRiverpod extends ConsumerStatefulWidget {
-  final Future<bool> Function(String oldPassword, String newPassword) onChangePassword;
+  final Future<bool> Function(String oldPassword, String newPassword)
+      onChangePassword;
 
   const PasswordChangeFormRiverpod({
     Key? key,
@@ -11,17 +12,18 @@ class PasswordChangeFormRiverpod extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<PasswordChangeFormRiverpod> createState() => 
+  ConsumerState<PasswordChangeFormRiverpod> createState() =>
       _ModernPasswordChangeFormRiverpodState();
 }
 
-class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChangeFormRiverpod>
+class _ModernPasswordChangeFormRiverpodState
+    extends ConsumerState<PasswordChangeFormRiverpod>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
@@ -72,24 +74,24 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
   }
 
   bool _validatePassword(String password) {
-    return password.length >= 8 && 
-           password.contains(RegExp(r'[A-Z]')) &&
-           password.contains(RegExp(r'[a-z]')) &&
-           password.contains(RegExp(r'[0-9]')) &&
-           password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')) &&
-           password.length >= 8;
+    return password.length >= 8 &&
+        password.contains(RegExp(r'[A-Z]')) &&
+        password.contains(RegExp(r'[a-z]')) &&
+        password.contains(RegExp(r'[0-9]')) &&
+        password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')) &&
+        password.length >= 8;
   }
 
   String _getPasswordStrength(String password) {
     if (password.isEmpty) return '';
     if (password.length < 8) return 'Too short';
-    
+
     int score = 0;
     if (password.contains(RegExp(r'[a-z]'))) score++;
     if (password.contains(RegExp(r'[A-Z]'))) score++;
     if (password.contains(RegExp(r'[0-9]'))) score++;
     if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) score++;
-    
+
     if (score <= 1) return 'Weak';
     if (score <= 2) return 'Fair';
     if (score <= 3) return 'Good';
@@ -98,11 +100,16 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
 
   Color _getPasswordStrengthColor(String strength) {
     switch (strength) {
-      case 'Weak': return Colors.red;
-      case 'Fair': return Colors.orange;
-      case 'Good': return Colors.blue;
-      case 'Strong': return Colors.green;
-      default: return Colors.grey;
+      case 'Weak':
+        return Colors.red;
+      case 'Fair':
+        return Colors.orange;
+      case 'Good':
+        return Colors.blue;
+      case 'Strong':
+        return Colors.green;
+      default:
+        return Colors.grey;
     }
   }
 
@@ -112,9 +119,9 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
     setState(() => _isLoading = true);
 
     final success = await ref.read(userDetailsProvider.notifier).changePassword(
-      _oldPasswordController.text,
-      _newPasswordController.text,
-    );
+          _oldPasswordController.text,
+          _newPasswordController.text,
+        );
 
     setState(() => _isLoading = false);
 
@@ -130,7 +137,8 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                  child: const Icon(Icons.check_rounded,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
                 const Text('Password changed successfully'),
@@ -138,10 +146,11 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
             ),
             backgroundColor: Colors.green.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
-        
+
         // Clear form and collapse
         _oldPasswordController.clear();
         _newPasswordController.clear();
@@ -158,7 +167,8 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  child: const Icon(Icons.error_outline_rounded,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
                 const Text('Failed to change password'),
@@ -166,7 +176,8 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
             ),
             backgroundColor: Colors.red.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -195,7 +206,7 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
           // Header - Always visible
           InkWell(
             onTap: _toggleExpansion,
-            borderRadius: _isExpanded 
+            borderRadius: _isExpanded
                 ? const BorderRadius.vertical(top: Radius.circular(16))
                 : BorderRadius.circular(16),
             child: Container(
@@ -236,7 +247,9 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                     ),
                   ),
                   Icon(
-                    _isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                    _isExpanded
+                        ? Icons.expand_less_rounded
+                        : Icons.expand_more_rounded,
                     color: colorScheme.onSurfaceVariant,
                     size: 24,
                   ),
@@ -244,7 +257,7 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
               ),
             ),
           ),
-          
+
           // Expandable Form
           if (_isExpanded)
             FadeTransition(
@@ -264,11 +277,12 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                           obscureText: _obscureOldPassword,
                           decoration: InputDecoration(
                             labelText: 'Current Password',
-                            prefixIcon: const Icon(Icons.lock_outline_rounded, size: 20),
+                            prefixIcon: const Icon(Icons.lock_outline_rounded,
+                                size: 20),
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscureOldPassword 
-                                    ? Icons.visibility_off_rounded 
+                                _obscureOldPassword
+                                    ? Icons.visibility_off_rounded
                                     : Icons.visibility_rounded,
                                 size: 20,
                               ),
@@ -292,7 +306,7 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                           },
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // New Password
                         TextFormField(
                           controller: _newPasswordController,
@@ -300,11 +314,12 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                           onChanged: (value) => setState(() {}),
                           decoration: InputDecoration(
                             labelText: 'New Password',
-                            prefixIcon: const Icon(Icons.lock_reset_rounded, size: 20),
+                            prefixIcon:
+                                const Icon(Icons.lock_reset_rounded, size: 20),
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscureNewPassword 
-                                    ? Icons.visibility_off_rounded 
+                                _obscureNewPassword
+                                    ? Icons.visibility_off_rounded
                                     : Icons.visibility_rounded,
                                 size: 20,
                               ),
@@ -333,7 +348,7 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                             return null;
                           },
                         ),
-                        
+
                         // Password Strength Indicator
                         if (_newPasswordController.text.isNotEmpty) ...[
                           const SizedBox(height: 8),
@@ -342,13 +357,17 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                               Icon(
                                 Icons.info_outline_rounded,
                                 size: 16,
-                                color: _getPasswordStrengthColor(_getPasswordStrength(_newPasswordController.text)),
+                                color: _getPasswordStrengthColor(
+                                    _getPasswordStrength(
+                                        _newPasswordController.text)),
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 'Strength: ${_getPasswordStrength(_newPasswordController.text)}',
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: _getPasswordStrengthColor(_getPasswordStrength(_newPasswordController.text)),
+                                  color: _getPasswordStrengthColor(
+                                      _getPasswordStrength(
+                                          _newPasswordController.text)),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -356,24 +375,26 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                           ),
                         ],
                         const SizedBox(height: 16),
-                        
+
                         // Confirm Password
                         TextFormField(
                           controller: _confirmPasswordController,
                           obscureText: _obscureConfirmPassword,
                           decoration: InputDecoration(
                             labelText: 'Confirm New Password',
-                            prefixIcon: const Icon(Icons.lock_outline_rounded, size: 20),
+                            prefixIcon: const Icon(Icons.lock_outline_rounded,
+                                size: 20),
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscureConfirmPassword 
-                                    ? Icons.visibility_off_rounded 
+                                _obscureConfirmPassword
+                                    ? Icons.visibility_off_rounded
                                     : Icons.visibility_rounded,
                                 size: 20,
                               ),
                               onPressed: () {
                                 setState(() {
-                                  _obscureConfirmPassword = !_obscureConfirmPassword;
+                                  _obscureConfirmPassword =
+                                      !_obscureConfirmPassword;
                                 });
                               },
                             ),
@@ -394,7 +415,7 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                           },
                         ),
                         const SizedBox(height: 24),
-                        
+
                         // Password Requirements
                         Container(
                           padding: const EdgeInsets.all(12),
@@ -416,15 +437,25 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              _buildRequirement('At least 8 characters', _newPasswordController.text.length >= 8),
-                              _buildRequirement('Uppercase letter (A-Z)', _newPasswordController.text.contains(RegExp(r'[A-Z]'))),
-                              _buildRequirement('Lowercase letter (a-z)', _newPasswordController.text.contains(RegExp(r'[a-z]'))),
-                              _buildRequirement('Number (0-9)', _newPasswordController.text.contains(RegExp(r'[0-9]'))),
+                              _buildRequirement('At least 8 characters',
+                                  _newPasswordController.text.length >= 8),
+                              _buildRequirement(
+                                  'Uppercase letter (A-Z)',
+                                  _newPasswordController.text
+                                      .contains(RegExp(r'[A-Z]'))),
+                              _buildRequirement(
+                                  'Lowercase letter (a-z)',
+                                  _newPasswordController.text
+                                      .contains(RegExp(r'[a-z]'))),
+                              _buildRequirement(
+                                  'Number (0-9)',
+                                  _newPasswordController.text
+                                      .contains(RegExp(r'[0-9]'))),
                             ],
                           ),
                         ),
                         const SizedBox(height: 24),
-                        
+
                         // Submit Button
                         FilledButton.icon(
                           onPressed: _isLoading ? null : _handleSubmit,
@@ -434,12 +465,15 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        colorScheme.onPrimary),
                                   ),
                                 )
                               : const Icon(Icons.save_rounded, size: 20),
-                            label: Text(
-                            _isLoading ? 'Changing Password...' : 'Change Password',
+                          label: Text(
+                            _isLoading
+                                ? 'Changing Password...'
+                                : 'Change Password',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSecondary,
@@ -467,15 +501,19 @@ class _ModernPasswordChangeFormRiverpodState extends ConsumerState<PasswordChang
   Widget _buildRequirement(String text, bool isMet) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
           Icon(
-            isMet ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
+            isMet
+                ? Icons.check_circle_rounded
+                : Icons.radio_button_unchecked_rounded,
             size: 16,
-            color: isMet ? Colors.green : colorScheme.onSurfaceVariant.withOpacity(0.5),
+            color: isMet
+                ? Colors.green
+                : colorScheme.onSurfaceVariant.withOpacity(0.5),
           ),
           const SizedBox(width: 8),
           Text(

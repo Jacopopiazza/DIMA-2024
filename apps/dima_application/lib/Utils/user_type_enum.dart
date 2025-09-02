@@ -29,5 +29,4 @@ enum UserTypeEnum {
   static bool contains(String value) {
     return UserTypeEnum.values.any((type) => type.value == value);
   }
-
 }

@@ -22,15 +22,14 @@
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
-/** This is an auto generated class representing the MealPlanResponse type in your schema. */
-class MealPlanResponse {
-  final String? _mealPlanId;
-  final String? _message;
-  final bool? _success;
+/** This is an auto generated class representing the UserSubscriptionStatus type in your schema. */
+class UserSubscriptionStatus {
+  final SubscriptionStatusEnum? _subscriptionStatus;
+  final String? _userId;
 
-  String get mealPlanId {
+  SubscriptionStatusEnum get subscriptionStatus {
     try {
-      return _mealPlanId!;
+      return _subscriptionStatus!;
     } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
           amplify_core.AmplifyExceptionMessages
@@ -41,13 +40,9 @@ class MealPlanResponse {
     }
   }
 
-  String? get message {
-    return _message;
-  }
-
-  bool get success {
+  String get userId {
     try {
-      return _success!;
+      return _userId!;
     } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
           amplify_core.AmplifyExceptionMessages
@@ -58,16 +53,16 @@ class MealPlanResponse {
     }
   }
 
-  const MealPlanResponse._internal(
-      {required mealPlanId, message, required success})
-      : _mealPlanId = mealPlanId,
-        _message = message,
-        _success = success;
+  const UserSubscriptionStatus._internal(
+      {required subscriptionStatus, required userId})
+      : _subscriptionStatus = subscriptionStatus,
+        _userId = userId;
 
-  factory MealPlanResponse(
-      {required String mealPlanId, String? message, required bool success}) {
-    return MealPlanResponse._internal(
-        mealPlanId: mealPlanId, message: message, success: success);
+  factory UserSubscriptionStatus(
+      {required SubscriptionStatusEnum subscriptionStatus,
+      required String userId}) {
+    return UserSubscriptionStatus._internal(
+        subscriptionStatus: subscriptionStatus, userId: userId);
   }
 
   bool equals(Object other) {
@@ -77,10 +72,9 @@ class MealPlanResponse {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is MealPlanResponse &&
-        _mealPlanId == other._mealPlanId &&
-        _message == other._message &&
-        _success == other._success;
+    return other is UserSubscriptionStatus &&
+        _subscriptionStatus == other._subscriptionStatus &&
+        _userId == other._userId;
   }
 
   @override
@@ -90,69 +84,66 @@ class MealPlanResponse {
   String toString() {
     var buffer = new StringBuffer();
 
-    buffer.write("MealPlanResponse {");
-    buffer.write("mealPlanId=" + "$_mealPlanId" + ", ");
-    buffer.write("message=" + "$_message" + ", ");
-    buffer
-        .write("success=" + (_success != null ? _success!.toString() : "null"));
+    buffer.write("UserSubscriptionStatus {");
+    buffer.write("subscriptionStatus=" +
+        (_subscriptionStatus != null
+            ? amplify_core.enumToString(_subscriptionStatus)!
+            : "null") +
+        ", ");
+    buffer.write("userId=" + "$_userId");
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  MealPlanResponse copyWith(
-      {String? mealPlanId, String? message, bool? success}) {
-    return MealPlanResponse._internal(
-        mealPlanId: mealPlanId ?? this.mealPlanId,
-        message: message ?? this.message,
-        success: success ?? this.success);
+  UserSubscriptionStatus copyWith(
+      {SubscriptionStatusEnum? subscriptionStatus, String? userId}) {
+    return UserSubscriptionStatus._internal(
+        subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
+        userId: userId ?? this.userId);
   }
 
-  MealPlanResponse copyWithModelFieldValues(
-      {ModelFieldValue<String>? mealPlanId,
-      ModelFieldValue<String?>? message,
-      ModelFieldValue<bool>? success}) {
-    return MealPlanResponse._internal(
-        mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
-        message: message == null ? this.message : message.value,
-        success: success == null ? this.success : success.value);
+  UserSubscriptionStatus copyWithModelFieldValues(
+      {ModelFieldValue<SubscriptionStatusEnum>? subscriptionStatus,
+      ModelFieldValue<String>? userId}) {
+    return UserSubscriptionStatus._internal(
+        subscriptionStatus: subscriptionStatus == null
+            ? this.subscriptionStatus
+            : subscriptionStatus.value,
+        userId: userId == null ? this.userId : userId.value);
   }
 
-  MealPlanResponse.fromJson(Map<String, dynamic> json)
-      : _mealPlanId = json['mealPlanId'],
-        _message = json['message'],
-        _success = json['success'];
+  UserSubscriptionStatus.fromJson(Map<String, dynamic> json)
+      : _subscriptionStatus =
+            amplify_core.enumFromString<SubscriptionStatusEnum>(
+                json['subscriptionStatus'], SubscriptionStatusEnum.values),
+        _userId = json['userId'];
 
-  Map<String, dynamic> toJson() =>
-      {'mealPlanId': _mealPlanId, 'message': _message, 'success': _success};
+  Map<String, dynamic> toJson() => {
+        'subscriptionStatus': amplify_core.enumToString(_subscriptionStatus),
+        'userId': _userId
+      };
 
   Map<String, Object?> toMap() =>
-      {'mealPlanId': _mealPlanId, 'message': _message, 'success': _success};
+      {'subscriptionStatus': _subscriptionStatus, 'userId': _userId};
 
   static var schema = amplify_core.Model.defineSchema(
       define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "MealPlanResponse";
-    modelSchemaDefinition.pluralName = "MealPlanResponses";
+    modelSchemaDefinition.name = "UserSubscriptionStatus";
+    modelSchemaDefinition.pluralName = "UserSubscriptionStatuses";
 
     modelSchemaDefinition.addField(
         amplify_core.ModelFieldDefinition.customTypeField(
-            fieldName: 'mealPlanId',
+            fieldName: 'subscriptionStatus',
+            isRequired: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.enumeration)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'userId',
             isRequired: true,
             ofType: amplify_core.ModelFieldType(
                 amplify_core.ModelFieldTypeEnum.string)));
-
-    modelSchemaDefinition.addField(
-        amplify_core.ModelFieldDefinition.customTypeField(
-            fieldName: 'message',
-            isRequired: false,
-            ofType: amplify_core.ModelFieldType(
-                amplify_core.ModelFieldTypeEnum.string)));
-
-    modelSchemaDefinition.addField(
-        amplify_core.ModelFieldDefinition.customTypeField(
-            fieldName: 'success',
-            isRequired: true,
-            ofType: amplify_core.ModelFieldType(
-                amplify_core.ModelFieldTypeEnum.bool)));
   });
 }

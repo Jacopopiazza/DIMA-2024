@@ -23,7 +23,6 @@ import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'package:collection/collection.dart';
 
-
 /** This is an auto generated class representing the DailyPlanData type in your schema. */
 class DailyPlanData {
   final List<Meal>? _friday;
@@ -37,221 +36,274 @@ class DailyPlanData {
   List<Meal>? get friday {
     return _friday;
   }
-  
+
   List<Meal>? get monday {
     return _monday;
   }
-  
+
   List<Meal>? get saturday {
     return _saturday;
   }
-  
+
   List<Meal>? get sunday {
     return _sunday;
   }
-  
+
   List<Meal>? get thursday {
     return _thursday;
   }
-  
+
   List<Meal>? get tuesday {
     return _tuesday;
   }
-  
+
   List<Meal>? get wednesday {
     return _wednesday;
   }
-  
-  const DailyPlanData._internal({friday, monday, saturday, sunday, thursday, tuesday, wednesday}): _friday = friday, _monday = monday, _saturday = saturday, _sunday = sunday, _thursday = thursday, _tuesday = tuesday, _wednesday = wednesday;
-  
-  factory DailyPlanData({List<Meal>? friday, List<Meal>? monday, List<Meal>? saturday, List<Meal>? sunday, List<Meal>? thursday, List<Meal>? tuesday, List<Meal>? wednesday}) {
+
+  const DailyPlanData._internal(
+      {friday, monday, saturday, sunday, thursday, tuesday, wednesday})
+      : _friday = friday,
+        _monday = monday,
+        _saturday = saturday,
+        _sunday = sunday,
+        _thursday = thursday,
+        _tuesday = tuesday,
+        _wednesday = wednesday;
+
+  factory DailyPlanData(
+      {List<Meal>? friday,
+      List<Meal>? monday,
+      List<Meal>? saturday,
+      List<Meal>? sunday,
+      List<Meal>? thursday,
+      List<Meal>? tuesday,
+      List<Meal>? wednesday}) {
     return DailyPlanData._internal(
-      friday: friday != null ? List<Meal>.unmodifiable(friday) : friday,
-      monday: monday != null ? List<Meal>.unmodifiable(monday) : monday,
-      saturday: saturday != null ? List<Meal>.unmodifiable(saturday) : saturday,
-      sunday: sunday != null ? List<Meal>.unmodifiable(sunday) : sunday,
-      thursday: thursday != null ? List<Meal>.unmodifiable(thursday) : thursday,
-      tuesday: tuesday != null ? List<Meal>.unmodifiable(tuesday) : tuesday,
-      wednesday: wednesday != null ? List<Meal>.unmodifiable(wednesday) : wednesday);
+        friday: friday != null ? List<Meal>.unmodifiable(friday) : friday,
+        monday: monday != null ? List<Meal>.unmodifiable(monday) : monday,
+        saturday:
+            saturday != null ? List<Meal>.unmodifiable(saturday) : saturday,
+        sunday: sunday != null ? List<Meal>.unmodifiable(sunday) : sunday,
+        thursday:
+            thursday != null ? List<Meal>.unmodifiable(thursday) : thursday,
+        tuesday: tuesday != null ? List<Meal>.unmodifiable(tuesday) : tuesday,
+        wednesday:
+            wednesday != null ? List<Meal>.unmodifiable(wednesday) : wednesday);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is DailyPlanData &&
-      DeepCollectionEquality().equals(_friday, other._friday) &&
-      DeepCollectionEquality().equals(_monday, other._monday) &&
-      DeepCollectionEquality().equals(_saturday, other._saturday) &&
-      DeepCollectionEquality().equals(_sunday, other._sunday) &&
-      DeepCollectionEquality().equals(_thursday, other._thursday) &&
-      DeepCollectionEquality().equals(_tuesday, other._tuesday) &&
-      DeepCollectionEquality().equals(_wednesday, other._wednesday);
+        DeepCollectionEquality().equals(_friday, other._friday) &&
+        DeepCollectionEquality().equals(_monday, other._monday) &&
+        DeepCollectionEquality().equals(_saturday, other._saturday) &&
+        DeepCollectionEquality().equals(_sunday, other._sunday) &&
+        DeepCollectionEquality().equals(_thursday, other._thursday) &&
+        DeepCollectionEquality().equals(_tuesday, other._tuesday) &&
+        DeepCollectionEquality().equals(_wednesday, other._wednesday);
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("DailyPlanData {");
-    buffer.write("friday=" + (_friday != null ? _friday!.toString() : "null") + ", ");
-    buffer.write("monday=" + (_monday != null ? _monday!.toString() : "null") + ", ");
-    buffer.write("saturday=" + (_saturday != null ? _saturday!.toString() : "null") + ", ");
-    buffer.write("sunday=" + (_sunday != null ? _sunday!.toString() : "null") + ", ");
-    buffer.write("thursday=" + (_thursday != null ? _thursday!.toString() : "null") + ", ");
-    buffer.write("tuesday=" + (_tuesday != null ? _tuesday!.toString() : "null") + ", ");
-    buffer.write("wednesday=" + (_wednesday != null ? _wednesday!.toString() : "null"));
+    buffer.write(
+        "friday=" + (_friday != null ? _friday!.toString() : "null") + ", ");
+    buffer.write(
+        "monday=" + (_monday != null ? _monday!.toString() : "null") + ", ");
+    buffer.write("saturday=" +
+        (_saturday != null ? _saturday!.toString() : "null") +
+        ", ");
+    buffer.write(
+        "sunday=" + (_sunday != null ? _sunday!.toString() : "null") + ", ");
+    buffer.write("thursday=" +
+        (_thursday != null ? _thursday!.toString() : "null") +
+        ", ");
+    buffer.write(
+        "tuesday=" + (_tuesday != null ? _tuesday!.toString() : "null") + ", ");
+    buffer.write(
+        "wednesday=" + (_wednesday != null ? _wednesday!.toString() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  DailyPlanData copyWith({List<Meal>? friday, List<Meal>? monday, List<Meal>? saturday, List<Meal>? sunday, List<Meal>? thursday, List<Meal>? tuesday, List<Meal>? wednesday}) {
-    return DailyPlanData._internal(
-      friday: friday ?? this.friday,
-      monday: monday ?? this.monday,
-      saturday: saturday ?? this.saturday,
-      sunday: sunday ?? this.sunday,
-      thursday: thursday ?? this.thursday,
-      tuesday: tuesday ?? this.tuesday,
-      wednesday: wednesday ?? this.wednesday);
-  }
-  
-  DailyPlanData copyWithModelFieldValues({
-    ModelFieldValue<List<Meal>>? friday,
-    ModelFieldValue<List<Meal>>? monday,
-    ModelFieldValue<List<Meal>>? saturday,
-    ModelFieldValue<List<Meal>>? sunday,
-    ModelFieldValue<List<Meal>>? thursday,
-    ModelFieldValue<List<Meal>>? tuesday,
-    ModelFieldValue<List<Meal>>? wednesday
-  }) {
-    return DailyPlanData._internal(
-      friday: friday == null ? this.friday : friday.value,
-      monday: monday == null ? this.monday : monday.value,
-      saturday: saturday == null ? this.saturday : saturday.value,
-      sunday: sunday == null ? this.sunday : sunday.value,
-      thursday: thursday == null ? this.thursday : thursday.value,
-      tuesday: tuesday == null ? this.tuesday : tuesday.value,
-      wednesday: wednesday == null ? this.wednesday : wednesday.value
-    );
-  }
-  
-  DailyPlanData.fromJson(Map<String, dynamic> json)  
-    : _friday = json['friday'] is List
-        ? (json['friday'] as List)
-          .where((e) => e != null)
-          .map((e) => Meal.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _monday = json['monday'] is List
-        ? (json['monday'] as List)
-          .where((e) => e != null)
-          .map((e) => Meal.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _saturday = json['saturday'] is List
-        ? (json['saturday'] as List)
-          .where((e) => e != null)
-          .map((e) => Meal.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _sunday = json['sunday'] is List
-        ? (json['sunday'] as List)
-          .where((e) => e != null)
-          .map((e) => Meal.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _thursday = json['thursday'] is List
-        ? (json['thursday'] as List)
-          .where((e) => e != null)
-          .map((e) => Meal.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _tuesday = json['tuesday'] is List
-        ? (json['tuesday'] as List)
-          .where((e) => e != null)
-          .map((e) => Meal.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _wednesday = json['wednesday'] is List
-        ? (json['wednesday'] as List)
-          .where((e) => e != null)
-          .map((e) => Meal.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null;
-  
-  Map<String, dynamic> toJson() => {
-    'friday': _friday?.map((Meal? e) => e?.toJson()).toList(), 'monday': _monday?.map((Meal? e) => e?.toJson()).toList(), 'saturday': _saturday?.map((Meal? e) => e?.toJson()).toList(), 'sunday': _sunday?.map((Meal? e) => e?.toJson()).toList(), 'thursday': _thursday?.map((Meal? e) => e?.toJson()).toList(), 'tuesday': _tuesday?.map((Meal? e) => e?.toJson()).toList(), 'wednesday': _wednesday?.map((Meal? e) => e?.toJson()).toList()
-  };
-  
-  Map<String, Object?> toMap() => {
-    'friday': _friday,
-    'monday': _monday,
-    'saturday': _saturday,
-    'sunday': _sunday,
-    'thursday': _thursday,
-    'tuesday': _tuesday,
-    'wednesday': _wednesday
-  };
 
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  DailyPlanData copyWith(
+      {List<Meal>? friday,
+      List<Meal>? monday,
+      List<Meal>? saturday,
+      List<Meal>? sunday,
+      List<Meal>? thursday,
+      List<Meal>? tuesday,
+      List<Meal>? wednesday}) {
+    return DailyPlanData._internal(
+        friday: friday ?? this.friday,
+        monday: monday ?? this.monday,
+        saturday: saturday ?? this.saturday,
+        sunday: sunday ?? this.sunday,
+        thursday: thursday ?? this.thursday,
+        tuesday: tuesday ?? this.tuesday,
+        wednesday: wednesday ?? this.wednesday);
+  }
+
+  DailyPlanData copyWithModelFieldValues(
+      {ModelFieldValue<List<Meal>>? friday,
+      ModelFieldValue<List<Meal>>? monday,
+      ModelFieldValue<List<Meal>>? saturday,
+      ModelFieldValue<List<Meal>>? sunday,
+      ModelFieldValue<List<Meal>>? thursday,
+      ModelFieldValue<List<Meal>>? tuesday,
+      ModelFieldValue<List<Meal>>? wednesday}) {
+    return DailyPlanData._internal(
+        friday: friday == null ? this.friday : friday.value,
+        monday: monday == null ? this.monday : monday.value,
+        saturday: saturday == null ? this.saturday : saturday.value,
+        sunday: sunday == null ? this.sunday : sunday.value,
+        thursday: thursday == null ? this.thursday : thursday.value,
+        tuesday: tuesday == null ? this.tuesday : tuesday.value,
+        wednesday: wednesday == null ? this.wednesday : wednesday.value);
+  }
+
+  DailyPlanData.fromJson(Map<String, dynamic> json)
+      : _friday = json['friday'] is List
+            ? (json['friday'] as List)
+                .where((e) => e != null)
+                .map((e) => Meal.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _monday = json['monday'] is List
+            ? (json['monday'] as List)
+                .where((e) => e != null)
+                .map((e) => Meal.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _saturday = json['saturday'] is List
+            ? (json['saturday'] as List)
+                .where((e) => e != null)
+                .map((e) => Meal.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _sunday = json['sunday'] is List
+            ? (json['sunday'] as List)
+                .where((e) => e != null)
+                .map((e) => Meal.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _thursday = json['thursday'] is List
+            ? (json['thursday'] as List)
+                .where((e) => e != null)
+                .map((e) => Meal.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _tuesday = json['tuesday'] is List
+            ? (json['tuesday'] as List)
+                .where((e) => e != null)
+                .map((e) => Meal.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _wednesday = json['wednesday'] is List
+            ? (json['wednesday'] as List)
+                .where((e) => e != null)
+                .map((e) => Meal.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null;
+
+  Map<String, dynamic> toJson() => {
+        'friday': _friday?.map((Meal? e) => e?.toJson()).toList(),
+        'monday': _monday?.map((Meal? e) => e?.toJson()).toList(),
+        'saturday': _saturday?.map((Meal? e) => e?.toJson()).toList(),
+        'sunday': _sunday?.map((Meal? e) => e?.toJson()).toList(),
+        'thursday': _thursday?.map((Meal? e) => e?.toJson()).toList(),
+        'tuesday': _tuesday?.map((Meal? e) => e?.toJson()).toList(),
+        'wednesday': _wednesday?.map((Meal? e) => e?.toJson()).toList()
+      };
+
+  Map<String, Object?> toMap() => {
+        'friday': _friday,
+        'monday': _monday,
+        'saturday': _saturday,
+        'sunday': _sunday,
+        'thursday': _thursday,
+        'tuesday': _tuesday,
+        'wednesday': _wednesday
+      };
+
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "DailyPlanData";
     modelSchemaDefinition.pluralName = "DailyPlanData";
-    
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'friday',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Meal')
-    ));
-    
+        fieldName: 'friday',
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Meal')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'monday',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Meal')
-    ));
-    
+        fieldName: 'monday',
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Meal')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'saturday',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Meal')
-    ));
-    
+        fieldName: 'saturday',
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Meal')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'sunday',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Meal')
-    ));
-    
+        fieldName: 'sunday',
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Meal')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'thursday',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Meal')
-    ));
-    
+        fieldName: 'thursday',
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Meal')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'tuesday',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Meal')
-    ));
-    
+        fieldName: 'tuesday',
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Meal')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'wednesday',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Meal')
-    ));
+        fieldName: 'wednesday',
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Meal')));
   });
 }

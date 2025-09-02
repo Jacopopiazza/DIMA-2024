@@ -329,49 +329,122 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     );
   }
 
+  // Replace the existing _buildErrorState method with this improved version:
+
   Widget _buildErrorState(BuildContext context, String error,
       ColorScheme colorScheme, ThemeData theme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: colorScheme.errorContainer,
-                borderRadius: BorderRadius.circular(16),
+    // Check if this looks like a network error
+    final isNetworkError = error.toLowerCase().contains('network') ||
+        error.toLowerCase().contains('connection') ||
+        error.toLowerCase().contains('timeout') ||
+        error.toLowerCase().contains('socket') ||
+        error.toLowerCase().contains('unreachable') ||
+        error.contains('SocketException') ||
+        error.contains('HttpException');
+
+    return RefreshIndicator(
+      onRefresh: _refreshPlans,
+      backgroundColor: colorScheme.surface,
+      color: colorScheme.primary,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
               ),
-              child: Icon(
-                Icons.error_outline_rounded,
-                size: 48,
-                color: colorScheme.onErrorContainer,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: isNetworkError
+                              ? Colors.orange.shade100
+                              : colorScheme.errorContainer,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(
+                          isNetworkError
+                              ? Icons.wifi_off_rounded
+                              : Icons.error_outline_rounded,
+                          size: 48,
+                          color: isNetworkError
+                              ? Colors.orange.shade700
+                              : colorScheme.onErrorContainer,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        isNetworkError
+                            ? 'Connection Problem'
+                            : 'Something went wrong',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        isNetworkError
+                            ? 'Unable to load your meal plans.\nCheck your internet connection and try again.'
+                            : 'Unable to load your meal plans',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          height: 1.4,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Pull down to refresh',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FilledButton.icon(
+                            onPressed: _refreshPlans,
+                            icon: const Icon(Icons.refresh_rounded),
+                            label: const Text('Try Again'),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: isNetworkError
+                                  ? Colors.orange.shade600
+                                  : null,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                            ),
+                          ),
+                          if (!isNetworkError) ...[
+                            const SizedBox(width: 16),
+                            FilledButton.tonalIcon(
+                              onPressed: () => _openGenerateMealPlan(context),
+                              icon: const Icon(Icons.add_rounded),
+                              label: const Text('Create Plan'),
+                              style: FilledButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 12),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 24),
-            Text(
-              'Something went wrong',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Unable to load your meal plans',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: _refreshPlans,
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try Again'),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

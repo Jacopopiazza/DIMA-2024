@@ -62,7 +62,8 @@ class MealPlanSubscriptionService {
         final data = response.data!;
         final notification = _parseNotification(data);
 
-        safePrint('Received meal plan notification: ${notification.mealPlanId}');
+        safePrint(
+            'Received meal plan notification: ${notification.mealPlanId}');
 
         // Invia la notifica attraverso lo stream
         _controller.add(notification);
@@ -89,7 +90,7 @@ class MealPlanSubscriptionService {
       print("📋 Parsed JSON map: $jsonMap");
 
       // I dati della subscription sono nested sotto "onMealPlanStatusChanged"
-      final Map<String, dynamic>? notificationData = 
+      final Map<String, dynamic>? notificationData =
           jsonMap['onMealPlanStatusChanged'] as Map<String, dynamic>?;
 
       if (notificationData == null) {
@@ -100,7 +101,6 @@ class MealPlanSubscriptionService {
 
       print("✅ Notification data found: $notificationData");
       return _createMealPlanResponse(notificationData);
-
     } catch (e) {
       print("❌ Error parsing JSON: $e");
       print("Raw data was: $jsonData");

@@ -143,6 +143,7 @@ type Mutation {
   sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   setActiveMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   setPlanDayCompletion(input: SetPlanDayCompletionInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
+  setUserSubscriptionStatus(subscriptionStatus: SubscriptionStatusEnum!): UserSubscriptionStatus @aws_auth(cognito_groups : ["USERS"])
   unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   updateMyNutritionistProfile(input: UpdateNutritionistProfileInput!): NutritionistProfile @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   updateUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["USERS"])
@@ -205,6 +206,7 @@ type Query {
   getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["USERS"])
   getUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS"])
+  getUserSubscriptionStatus: UserSubscriptionStatus @aws_auth(cognito_groups : ["USERS"])
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   listMyAssignedMealPlans(limit: Int, nextToken: String): MealPlanList @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   listMyChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["USERS"])
@@ -242,6 +244,11 @@ type UserDetails @model {
   userId: ID! @primaryKey
   #  Typically the Cognito Sub
   weightKg: Float!
+}
+
+type UserSubscriptionStatus {
+  subscriptionStatus: SubscriptionStatusEnum!
+  userId: ID!
 }
 
 #  For flexible preferences or potentially the DailyPlan if needed, though Map is preferred
@@ -311,6 +318,11 @@ enum PlanStatus {
 enum SenderType {
   NUTRITIONIST
   USER
+}
+
+enum SubscriptionStatusEnum {
+  FREE
+  PRO
 }
 
 enum WeekdayEnum {

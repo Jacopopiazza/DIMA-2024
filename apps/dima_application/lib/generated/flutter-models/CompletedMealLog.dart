@@ -23,7 +23,6 @@ import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'package:collection/collection.dart';
 
-
 /** This is an auto generated class representing the CompletedMealLog type in your schema. */
 class CompletedMealLog extends amplify_core.Model {
   static const classType = const _CompletedMealLogModelType();
@@ -36,194 +35,238 @@ class CompletedMealLog extends amplify_core.Model {
 
   @override
   getInstanceType() => classType;
-  
-  @Deprecated('[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
+
+  @Deprecated(
+      '[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
   @override
   String getId() => id;
-  
+
   CompletedMealLogModelIdentifier get modelIdentifier {
-      return CompletedMealLogModelIdentifier(
-        id: id
-      );
+    return CompletedMealLogModelIdentifier(id: id);
   }
-  
+
   List<String>? get completedMealKeys {
     return _completedMealKeys;
   }
-  
+
   amplify_core.TemporalDate get date {
     try {
       return _date!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get userId {
     try {
       return _userId!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   amplify_core.TemporalDateTime? get createdAt {
     return _createdAt;
   }
-  
+
   amplify_core.TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-  
-  const CompletedMealLog._internal({required this.id, completedMealKeys, required date, required userId, createdAt, updatedAt}): _completedMealKeys = completedMealKeys, _date = date, _userId = userId, _createdAt = createdAt, _updatedAt = updatedAt;
-  
-  factory CompletedMealLog({String? id, List<String>? completedMealKeys, required amplify_core.TemporalDate date, required String userId}) {
+
+  const CompletedMealLog._internal(
+      {required this.id,
+      completedMealKeys,
+      required date,
+      required userId,
+      createdAt,
+      updatedAt})
+      : _completedMealKeys = completedMealKeys,
+        _date = date,
+        _userId = userId,
+        _createdAt = createdAt,
+        _updatedAt = updatedAt;
+
+  factory CompletedMealLog(
+      {String? id,
+      List<String>? completedMealKeys,
+      required amplify_core.TemporalDate date,
+      required String userId}) {
     return CompletedMealLog._internal(
-      id: id == null ? amplify_core.UUID.getUUID() : id,
-      completedMealKeys: completedMealKeys != null ? List<String>.unmodifiable(completedMealKeys) : completedMealKeys,
-      date: date,
-      userId: userId);
+        id: id == null ? amplify_core.UUID.getUUID() : id,
+        completedMealKeys: completedMealKeys != null
+            ? List<String>.unmodifiable(completedMealKeys)
+            : completedMealKeys,
+        date: date,
+        userId: userId);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is CompletedMealLog &&
-      id == other.id &&
-      DeepCollectionEquality().equals(_completedMealKeys, other._completedMealKeys) &&
-      _date == other._date &&
-      _userId == other._userId;
+        id == other.id &&
+        DeepCollectionEquality()
+            .equals(_completedMealKeys, other._completedMealKeys) &&
+        _date == other._date &&
+        _userId == other._userId;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("CompletedMealLog {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("completedMealKeys=" + (_completedMealKeys != null ? _completedMealKeys!.toString() : "null") + ", ");
+    buffer.write("completedMealKeys=" +
+        (_completedMealKeys != null ? _completedMealKeys!.toString() : "null") +
+        ", ");
     buffer.write("date=" + (_date != null ? _date!.format() : "null") + ", ");
     buffer.write("userId=" + "$_userId" + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("createdAt=" +
+        (_createdAt != null ? _createdAt!.format() : "null") +
+        ", ");
+    buffer.write(
+        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  CompletedMealLog copyWith({List<String>? completedMealKeys, amplify_core.TemporalDate? date, String? userId}) {
-    return CompletedMealLog._internal(
-      id: id,
-      completedMealKeys: completedMealKeys ?? this.completedMealKeys,
-      date: date ?? this.date,
-      userId: userId ?? this.userId);
-  }
-  
-  CompletedMealLog copyWithModelFieldValues({
-    ModelFieldValue<List<String>>? completedMealKeys,
-    ModelFieldValue<amplify_core.TemporalDate>? date,
-    ModelFieldValue<String>? userId
-  }) {
-    return CompletedMealLog._internal(
-      id: id,
-      completedMealKeys: completedMealKeys == null ? this.completedMealKeys : completedMealKeys.value,
-      date: date == null ? this.date : date.value,
-      userId: userId == null ? this.userId : userId.value
-    );
-  }
-  
-  CompletedMealLog.fromJson(Map<String, dynamic> json)  
-    : id = json['id'],
-      _completedMealKeys = json['completedMealKeys']?.cast<String>(),
-      _date = json['date'] != null ? amplify_core.TemporalDate.fromString(json['date']) : null,
-      _userId = json['userId'],
-      _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
-  
-  Map<String, dynamic> toJson() => {
-    'id': id, 'completedMealKeys': _completedMealKeys, 'date': _date?.format(), 'userId': _userId, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
-  };
-  
-  Map<String, Object?> toMap() => {
-    'id': id,
-    'completedMealKeys': _completedMealKeys,
-    'date': _date,
-    'userId': _userId,
-    'createdAt': _createdAt,
-    'updatedAt': _updatedAt
-  };
 
-  static final amplify_core.QueryModelIdentifier<CompletedMealLogModelIdentifier> MODEL_IDENTIFIER = amplify_core.QueryModelIdentifier<CompletedMealLogModelIdentifier>();
+  CompletedMealLog copyWith(
+      {List<String>? completedMealKeys,
+      amplify_core.TemporalDate? date,
+      String? userId}) {
+    return CompletedMealLog._internal(
+        id: id,
+        completedMealKeys: completedMealKeys ?? this.completedMealKeys,
+        date: date ?? this.date,
+        userId: userId ?? this.userId);
+  }
+
+  CompletedMealLog copyWithModelFieldValues(
+      {ModelFieldValue<List<String>>? completedMealKeys,
+      ModelFieldValue<amplify_core.TemporalDate>? date,
+      ModelFieldValue<String>? userId}) {
+    return CompletedMealLog._internal(
+        id: id,
+        completedMealKeys: completedMealKeys == null
+            ? this.completedMealKeys
+            : completedMealKeys.value,
+        date: date == null ? this.date : date.value,
+        userId: userId == null ? this.userId : userId.value);
+  }
+
+  CompletedMealLog.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        _completedMealKeys = json['completedMealKeys']?.cast<String>(),
+        _date = json['date'] != null
+            ? amplify_core.TemporalDate.fromString(json['date'])
+            : null,
+        _userId = json['userId'],
+        _createdAt = json['createdAt'] != null
+            ? amplify_core.TemporalDateTime.fromString(json['createdAt'])
+            : null,
+        _updatedAt = json['updatedAt'] != null
+            ? amplify_core.TemporalDateTime.fromString(json['updatedAt'])
+            : null;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'completedMealKeys': _completedMealKeys,
+        'date': _date?.format(),
+        'userId': _userId,
+        'createdAt': _createdAt?.format(),
+        'updatedAt': _updatedAt?.format()
+      };
+
+  Map<String, Object?> toMap() => {
+        'id': id,
+        'completedMealKeys': _completedMealKeys,
+        'date': _date,
+        'userId': _userId,
+        'createdAt': _createdAt,
+        'updatedAt': _updatedAt
+      };
+
+  static final amplify_core
+      .QueryModelIdentifier<CompletedMealLogModelIdentifier> MODEL_IDENTIFIER =
+      amplify_core.QueryModelIdentifier<CompletedMealLogModelIdentifier>();
   static final ID = amplify_core.QueryField(fieldName: "id");
-  static final COMPLETEDMEALKEYS = amplify_core.QueryField(fieldName: "completedMealKeys");
+  static final COMPLETEDMEALKEYS =
+      amplify_core.QueryField(fieldName: "completedMealKeys");
   static final DATE = amplify_core.QueryField(fieldName: "date");
   static final USERID = amplify_core.QueryField(fieldName: "userId");
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "CompletedMealLog";
     modelSchemaDefinition.pluralName = "CompletedMealLogs";
-    
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.id());
-    
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: CompletedMealLog.COMPLETEDMEALKEYS,
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.collection, ofModelName: amplify_core.ModelFieldTypeEnum.string.name)
-    ));
-    
+        key: CompletedMealLog.COMPLETEDMEALKEYS,
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.collection,
+            ofModelName: amplify_core.ModelFieldTypeEnum.string.name)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: CompletedMealLog.DATE,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.date)
-    ));
-    
+        key: CompletedMealLog.DATE,
+        isRequired: true,
+        ofType:
+            amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.date)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: CompletedMealLog.USERID,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
-      fieldName: 'createdAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
-    ));
+        key: CompletedMealLog.USERID,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.nonQueryField(
+            fieldName: 'createdAt',
+            isRequired: false,
+            isReadOnly: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.dateTime)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.nonQueryField(
+            fieldName: 'updatedAt',
+            isRequired: false,
+            isReadOnly: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.dateTime)));
   });
 }
 
-class _CompletedMealLogModelType extends amplify_core.ModelType<CompletedMealLog> {
+class _CompletedMealLogModelType
+    extends amplify_core.ModelType<CompletedMealLog> {
   const _CompletedMealLogModelType();
-  
+
   @override
   CompletedMealLog fromJson(Map<String, dynamic> jsonData) {
     return CompletedMealLog.fromJson(jsonData);
   }
-  
+
   @override
   String modelName() {
     return 'CompletedMealLog';
@@ -234,41 +277,37 @@ class _CompletedMealLogModelType extends amplify_core.ModelType<CompletedMealLog
  * This is an auto generated class representing the model identifier
  * of [CompletedMealLog] in your schema.
  */
-class CompletedMealLogModelIdentifier implements amplify_core.ModelIdentifier<CompletedMealLog> {
+class CompletedMealLogModelIdentifier
+    implements amplify_core.ModelIdentifier<CompletedMealLog> {
   final String id;
 
   /** Create an instance of CompletedMealLogModelIdentifier using [id] the primary key. */
-  const CompletedMealLogModelIdentifier({
-    required this.id});
-  
+  const CompletedMealLogModelIdentifier({required this.id});
+
   @override
-  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{
-    'id': id
-  });
-  
+  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{'id': id});
+
   @override
   List<Map<String, dynamic>> serializeAsList() => serializeAsMap()
-    .entries
-    .map((entry) => (<String, dynamic>{ entry.key: entry.value }))
-    .toList();
-  
+      .entries
+      .map((entry) => (<String, dynamic>{entry.key: entry.value}))
+      .toList();
+
   @override
   String serializeAsString() => serializeAsMap().values.join('#');
-  
+
   @override
   String toString() => 'CompletedMealLogModelIdentifier(id: $id)';
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    
-    return other is CompletedMealLogModelIdentifier &&
-      id == other.id;
+
+    return other is CompletedMealLogModelIdentifier && id == other.id;
   }
-  
+
   @override
-  int get hashCode =>
-    id.hashCode;
+  int get hashCode => id.hashCode;
 }

@@ -38,8 +38,7 @@ class UserDetails {
       exerciseFrequency: amplifyDetails.exerciseFrequency.index,
       dailyMealsPreference: amplifyDetails.dailyMealsPreference,
       allergies: List<String>.from(amplifyDetails.allergies ?? []),
-      dietaryRestrictions:
-          amplifyDetails.dietaryRestrictions ?? "",
+      dietaryRestrictions: amplifyDetails.dietaryRestrictions ?? "",
       openTextPreferences: amplifyDetails.openTextPreferences,
       activeMealPlanId: amplifyDetails.activeMealPlanId,
       updatedAt: amplifyDetails.updatedAt,

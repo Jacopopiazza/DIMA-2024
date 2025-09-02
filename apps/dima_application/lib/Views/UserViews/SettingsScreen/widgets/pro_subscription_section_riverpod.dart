@@ -1,8 +1,9 @@
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProSubscriptionSectionRiverpod extends ConsumerStatefulWidget {
-  final String? subscriptionStatus;
+  final SubscriptionStatusEnum? subscriptionStatus;
   final Future<bool> Function() onSubscribe;
   final Future<bool> Function() onUnsubscribe;
 
@@ -43,7 +44,7 @@ class _ProSubscriptionSectionRiverpodState
     super.dispose();
   }
 
-  bool get _isPro => widget.subscriptionStatus?.toUpperCase() == 'PRO';
+  bool get _isPro => widget.subscriptionStatus == SubscriptionStatusEnum.PRO;
 
   /// Handle subscribe button press
   Future<void> _subscribe() async {
@@ -72,7 +73,8 @@ class _ProSubscriptionSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.check_rounded,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Text('Successfully subscribed to PRO!'),
@@ -80,7 +82,8 @@ class _ProSubscriptionSectionRiverpodState
               ),
               backgroundColor: Colors.green.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         } else {
@@ -94,7 +97,8 @@ class _ProSubscriptionSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.error_outline_rounded,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Text('Failed to subscribe. Please try again.'),
@@ -102,7 +106,8 @@ class _ProSubscriptionSectionRiverpodState
               ),
               backgroundColor: Colors.red.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         }
@@ -119,7 +124,8 @@ class _ProSubscriptionSectionRiverpodState
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  child: const Icon(Icons.error_outline_rounded,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
                 Text('Error subscribing: $e'),
@@ -127,7 +133,8 @@ class _ProSubscriptionSectionRiverpodState
             ),
             backgroundColor: Colors.red.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -167,7 +174,8 @@ class _ProSubscriptionSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.check_rounded,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Text('Successfully unsubscribed to FREE!'),
@@ -175,7 +183,8 @@ class _ProSubscriptionSectionRiverpodState
               ),
               backgroundColor: Colors.orange.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         } else {
@@ -189,7 +198,8 @@ class _ProSubscriptionSectionRiverpodState
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                    child: const Icon(Icons.error_outline_rounded,
+                        color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
                   const Text('Failed to unsubscribe. Please try again.'),
@@ -197,7 +207,8 @@ class _ProSubscriptionSectionRiverpodState
               ),
               backgroundColor: Colors.red.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
           );
         }
@@ -214,7 +225,8 @@ class _ProSubscriptionSectionRiverpodState
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+                  child: const Icon(Icons.error_outline_rounded,
+                      color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
                 Text('Error unsubscribing: $e'),
@@ -222,7 +234,8 @@ class _ProSubscriptionSectionRiverpodState
             ),
             backgroundColor: Colors.red.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -239,7 +252,7 @@ class _ProSubscriptionSectionRiverpodState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final status = widget.subscriptionStatus ?? 'FREE';
+    final status = widget.subscriptionStatus ?? SubscriptionStatusEnum.FREE;
     final isPro = _isPro;
 
     return Container(
@@ -289,11 +302,15 @@ class _ProSubscriptionSectionRiverpodState
                         'PRO Plan',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: isPro ? Colors.green.shade700 : colorScheme.onSurface,
+                          color: isPro
+                              ? Colors.green.shade700
+                              : colorScheme.onSurface,
                         ),
                       ),
                       Text(
-                        isPro ? 'Active subscription' : 'Upgrade to unlock premium features',
+                        isPro
+                            ? 'Active subscription'
+                            : 'Upgrade to unlock premium features',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -329,9 +346,11 @@ class _ProSubscriptionSectionRiverpodState
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Current Status: $status',
+                    'Current Status: ${_capitalizeFirst(status.name)}',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: isPro ? Colors.green.shade800 : Colors.orange.shade800,
+                      color: isPro
+                          ? Colors.green.shade800
+                          : Colors.orange.shade800,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -354,33 +373,31 @@ class _ProSubscriptionSectionRiverpodState
                   Row(
                     children: [
                       Icon(
-                        isPro ? Icons.check_circle_rounded : Icons.upgrade_rounded,
+                        isPro
+                            ? Icons.check_circle_rounded
+                            : Icons.upgrade_rounded,
                         color: isPro ? Colors.green : colorScheme.primary,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        isPro ? 'You have access to:' : 'Unlock premium features:',
+                        isPro
+                            ? 'You have access to:'
+                            : 'Unlock premium features:',
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: isPro ? Colors.green.shade700 : colorScheme.onSurface,
+                          color: isPro
+                              ? Colors.green.shade700
+                              : colorScheme.onSurface,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 12),
-                  _buildFeatureItem(
-                    theme, 
-                    colorScheme,
-                    "Expert meal planning validation", 
-                    isPro
-                  ),
-                  _buildFeatureItem(
-                    theme, 
-                    colorScheme,
-                    "Personal nutritionist chat in-app", 
-                    isPro
-                  ),
+                  _buildFeatureItem(theme, colorScheme,
+                      "Expert meal planning validation", isPro),
+                  _buildFeatureItem(theme, colorScheme,
+                      "Personal nutritionist chat in-app", isPro),
                 ],
               ),
             ),
@@ -401,7 +418,9 @@ class _ProSubscriptionSectionRiverpodState
                     : isPro
                         ? FilledButton.icon(
                             onPressed: _unsubscribe,
-                            icon: const Icon(Icons.remove_circle_outline_rounded, size: 20),
+                            icon: const Icon(
+                                Icons.remove_circle_outline_rounded,
+                                size: 20),
                             label: Text(
                               'Unsubscribe from PRO',
                               style: theme.textTheme.titleSmall?.copyWith(
@@ -412,7 +431,8 @@ class _ProSubscriptionSectionRiverpodState
                             style: FilledButton.styleFrom(
                               backgroundColor: Colors.orange.shade600,
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 32, vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -431,7 +451,8 @@ class _ProSubscriptionSectionRiverpodState
                             style: FilledButton.styleFrom(
                               backgroundColor: colorScheme.primary,
                               foregroundColor: colorScheme.onPrimary,
-                              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 32, vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -445,12 +466,13 @@ class _ProSubscriptionSectionRiverpodState
     );
   }
 
+  String _capitalizeFirst(String text) {
+    if (text.isEmpty) return '';
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+  }
+
   Widget _buildFeatureItem(
-    ThemeData theme, 
-    ColorScheme colorScheme,
-    String text, 
-    bool isPro
-  ) {
+      ThemeData theme, ColorScheme colorScheme, String text, bool isPro) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -458,7 +480,9 @@ class _ProSubscriptionSectionRiverpodState
           Container(
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
-              color: isPro ? Colors.green.shade100 : colorScheme.primary.withOpacity(0.1),
+              color: isPro
+                  ? Colors.green.shade100
+                  : colorScheme.primary.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(

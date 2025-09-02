@@ -23,7 +23,6 @@ import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'package:collection/collection.dart';
 
-
 /** This is an auto generated class representing the MealPlanList type in your schema. */
 class MealPlanList {
   final String? _activeMealPlan;
@@ -33,129 +32,145 @@ class MealPlanList {
   String? get activeMealPlan {
     return _activeMealPlan;
   }
-  
+
   List<MealPlan> get items {
     try {
       return _items!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String? get nextToken {
     return _nextToken;
   }
-  
-  const MealPlanList._internal({activeMealPlan, required items, nextToken}): _activeMealPlan = activeMealPlan, _items = items, _nextToken = nextToken;
-  
-  factory MealPlanList({String? activeMealPlan, required List<MealPlan> items, String? nextToken}) {
+
+  const MealPlanList._internal({activeMealPlan, required items, nextToken})
+      : _activeMealPlan = activeMealPlan,
+        _items = items,
+        _nextToken = nextToken;
+
+  factory MealPlanList(
+      {String? activeMealPlan,
+      required List<MealPlan> items,
+      String? nextToken}) {
     return MealPlanList._internal(
-      activeMealPlan: activeMealPlan,
-      items: items != null ? List<MealPlan>.unmodifiable(items) : items,
-      nextToken: nextToken);
+        activeMealPlan: activeMealPlan,
+        items: items != null ? List<MealPlan>.unmodifiable(items) : items,
+        nextToken: nextToken);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is MealPlanList &&
-      _activeMealPlan == other._activeMealPlan &&
-      DeepCollectionEquality().equals(_items, other._items) &&
-      _nextToken == other._nextToken;
+        _activeMealPlan == other._activeMealPlan &&
+        DeepCollectionEquality().equals(_items, other._items) &&
+        _nextToken == other._nextToken;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("MealPlanList {");
     buffer.write("activeMealPlan=" + "$_activeMealPlan" + ", ");
-    buffer.write("items=" + (_items != null ? _items!.toString() : "null") + ", ");
+    buffer.write(
+        "items=" + (_items != null ? _items!.toString() : "null") + ", ");
     buffer.write("nextToken=" + "$_nextToken");
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  MealPlanList copyWith({String? activeMealPlan, List<MealPlan>? items, String? nextToken}) {
-    return MealPlanList._internal(
-      activeMealPlan: activeMealPlan ?? this.activeMealPlan,
-      items: items ?? this.items,
-      nextToken: nextToken ?? this.nextToken);
-  }
-  
-  MealPlanList copyWithModelFieldValues({
-    ModelFieldValue<String?>? activeMealPlan,
-    ModelFieldValue<List<MealPlan>>? items,
-    ModelFieldValue<String?>? nextToken
-  }) {
-    return MealPlanList._internal(
-      activeMealPlan: activeMealPlan == null ? this.activeMealPlan : activeMealPlan.value,
-      items: items == null ? this.items : items.value,
-      nextToken: nextToken == null ? this.nextToken : nextToken.value
-    );
-  }
-  
-  MealPlanList.fromJson(Map<String, dynamic> json)  
-    : _activeMealPlan = json['activeMealPlan'],
-      _items = json['items']  is Map
-        ? (json['items']['items'] is List
-          ? (json['items']['items'] as List)
-              .where((e) => e != null)
-              .map((e) => MealPlan.fromJson(new Map<String, dynamic>.from(e)))
-              .toList()
-          : null)
-        : (json['items'] is List
-          ? (json['items'] as List)
-              .where((e) => e?['serializedData'] != null)
-              .map((e) => MealPlan.fromJson(new Map<String, dynamic>.from(e?['serializedData'])))
-              .toList()
-          : null),
-      _nextToken = json['nextToken'];
-  
-  Map<String, dynamic> toJson() => {
-    'activeMealPlan': _activeMealPlan, 'items': _items?.map((MealPlan? e) => e?.toJson()).toList(), 'nextToken': _nextToken
-  };
-  
-  Map<String, Object?> toMap() => {
-    'activeMealPlan': _activeMealPlan,
-    'items': _items,
-    'nextToken': _nextToken
-  };
 
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  MealPlanList copyWith(
+      {String? activeMealPlan, List<MealPlan>? items, String? nextToken}) {
+    return MealPlanList._internal(
+        activeMealPlan: activeMealPlan ?? this.activeMealPlan,
+        items: items ?? this.items,
+        nextToken: nextToken ?? this.nextToken);
+  }
+
+  MealPlanList copyWithModelFieldValues(
+      {ModelFieldValue<String?>? activeMealPlan,
+      ModelFieldValue<List<MealPlan>>? items,
+      ModelFieldValue<String?>? nextToken}) {
+    return MealPlanList._internal(
+        activeMealPlan:
+            activeMealPlan == null ? this.activeMealPlan : activeMealPlan.value,
+        items: items == null ? this.items : items.value,
+        nextToken: nextToken == null ? this.nextToken : nextToken.value);
+  }
+
+  MealPlanList.fromJson(Map<String, dynamic> json)
+      : _activeMealPlan = json['activeMealPlan'],
+        _items = json['items'] is Map
+            ? (json['items']['items'] is List
+                ? (json['items']['items'] as List)
+                    .where((e) => e != null)
+                    .map((e) =>
+                        MealPlan.fromJson(new Map<String, dynamic>.from(e)))
+                    .toList()
+                : null)
+            : (json['items'] is List
+                ? (json['items'] as List)
+                    .where((e) => e?['serializedData'] != null)
+                    .map((e) => MealPlan.fromJson(
+                        new Map<String, dynamic>.from(e?['serializedData'])))
+                    .toList()
+                : null),
+        _nextToken = json['nextToken'];
+
+  Map<String, dynamic> toJson() => {
+        'activeMealPlan': _activeMealPlan,
+        'items': _items?.map((MealPlan? e) => e?.toJson()).toList(),
+        'nextToken': _nextToken
+      };
+
+  Map<String, Object?> toMap() => {
+        'activeMealPlan': _activeMealPlan,
+        'items': _items,
+        'nextToken': _nextToken
+      };
+
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "MealPlanList";
     modelSchemaDefinition.pluralName = "MealPlanLists";
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'activeMealPlan',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'items',
-      isRequired: true,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.collection, ofModelName: amplify_core.ModelFieldTypeEnum.string.name)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'nextToken',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'activeMealPlan',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'items',
+            isRequired: true,
+            isArray: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.collection,
+                ofModelName: amplify_core.ModelFieldTypeEnum.string.name)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'nextToken',
+            isRequired: false,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.string)));
   });
 }

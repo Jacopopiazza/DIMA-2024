@@ -11,7 +11,6 @@ part 'daily_plan.g.dart';
 //-------------------------------------------------
 @embedded
 class DailyPlanCache {
-
   // Use IsarMeal list. Initialize to empty lists.
   // Isar doesn't distinguish between null list and empty list well
   // when embedded, so using non-nullable empty lists is often easier.

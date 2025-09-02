@@ -29,7 +29,8 @@ class NutritionistProfileService {
       final response = await Amplify.API.query(request: request).response;
 
       if (response.hasErrors) {
-        safePrint('[NutritionistProfileService] Error loading nutritionist profile: ${response.errors}');
+        safePrint(
+            '[NutritionistProfileService] Error loading nutritionist profile: ${response.errors}');
         return null;
       }
 
@@ -42,7 +43,8 @@ class NutritionistProfileService {
 
       return NutritionistProfile.fromJson(profileData);
     } catch (e) {
-      safePrint('[NutritionistProfileService] Error loading nutritionist profile: $e');
+      safePrint(
+          '[NutritionistProfileService] Error loading nutritionist profile: $e');
       return null;
     }
   }
@@ -54,7 +56,8 @@ class NutritionistProfileService {
     String? profilePictureUrl,
     required bool isAvailable,
   }) async {
-    safePrint('[NutritionistProfileService] Updating nutritionist profile with specialization: $specialization, bio: $bio, profilePictureUrl: $profilePictureUrl, isAvailable: $isAvailable');
+    safePrint(
+        '[NutritionistProfileService] Updating nutritionist profile with specialization: $specialization, bio: $bio, profilePictureUrl: $profilePictureUrl, isAvailable: $isAvailable');
     try {
       final request = GraphQLRequest<String>(
         document: '''
@@ -85,7 +88,8 @@ class NutritionistProfileService {
       final response = await Amplify.API.mutate(request: request).response;
 
       if (response.hasErrors) {
-        safePrint('[NutritionistProfileService] Error updating nutritionist profile: ${response.errors}');
+        safePrint(
+            '[NutritionistProfileService] Error updating nutritionist profile: ${response.errors}');
         return null;
       }
 
@@ -96,21 +100,25 @@ class NutritionistProfileService {
       final decoded = json.decode(response.data!);
       final profileData = decoded['updateMyNutritionistProfile'];
       if (profileData == null) {
-        safePrint('[NutritionistProfileService] Error: updateMyNutritionistProfile returned null');
+        safePrint(
+            '[NutritionistProfileService] Error: updateMyNutritionistProfile returned null');
         return null;
       }
-      safePrint('[NutritionistProfileService] Successfully updated nutritionist profile: $profileData');
+      safePrint(
+          '[NutritionistProfileService] Successfully updated nutritionist profile: $profileData');
       return NutritionistProfile.fromJson(
           Map<String, dynamic>.from(profileData));
     } catch (e) {
-      safePrint('[NutritionistProfileService] Error updating nutritionist profile: $e');
+      safePrint(
+          '[NutritionistProfileService] Error updating nutritionist profile: $e');
       return null;
     }
   }
 
   /// Check if the nutritionist has a valid profile
   Future<bool> hasValidProfile() async {
-    safePrint('[NutritionistProfileService] Checking if nutritionist has a valid profile');
+    safePrint(
+        '[NutritionistProfileService] Checking if nutritionist has a valid profile');
     final profile = await getMyProfile();
     if (profile == null) {
       safePrint('[NutritionistProfileService] No profile found');
@@ -125,7 +133,8 @@ class NutritionistProfileService {
         profile.specialization!.isNotEmpty &&
         profile.bio != null &&
         profile.bio!.isNotEmpty;
-    safePrint('[NutritionistProfileService] Profile validity check: $isProfileValid');
+    safePrint(
+        '[NutritionistProfileService] Profile validity check: $isProfileValid');
     // Check if required fields are filled
     return isProfileValid;
   }

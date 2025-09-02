@@ -743,8 +743,7 @@ class MealPlansService {
     } catch (e) {
       safePrint(
           '[MealPlansService] Error fetching meal plans: \\${e.toString()}');
-      return LightMealPlanList(
-          items: [], nextToken: null, activeMealPlan: null);
+      throw e;
     }
   }
 

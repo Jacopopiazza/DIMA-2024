@@ -22,7 +22,6 @@
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
-
 /** This is an auto generated class representing the Macros type in your schema. */
 class Macros {
   final double? _calories;
@@ -33,161 +32,189 @@ class Macros {
   double get calories {
     try {
       return _calories!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   double get carbohydrates {
     try {
       return _carbohydrates!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   double get fats {
     try {
       return _fats!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   double get proteins {
     try {
       return _proteins!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
-  const Macros._internal({required calories, required carbohydrates, required fats, required proteins}): _calories = calories, _carbohydrates = carbohydrates, _fats = fats, _proteins = proteins;
-  
-  factory Macros({required double calories, required double carbohydrates, required double fats, required double proteins}) {
+
+  const Macros._internal(
+      {required calories,
+      required carbohydrates,
+      required fats,
+      required proteins})
+      : _calories = calories,
+        _carbohydrates = carbohydrates,
+        _fats = fats,
+        _proteins = proteins;
+
+  factory Macros(
+      {required double calories,
+      required double carbohydrates,
+      required double fats,
+      required double proteins}) {
     return Macros._internal(
-      calories: calories,
-      carbohydrates: carbohydrates,
-      fats: fats,
-      proteins: proteins);
+        calories: calories,
+        carbohydrates: carbohydrates,
+        fats: fats,
+        proteins: proteins);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Macros &&
-      _calories == other._calories &&
-      _carbohydrates == other._carbohydrates &&
-      _fats == other._fats &&
-      _proteins == other._proteins;
+        _calories == other._calories &&
+        _carbohydrates == other._carbohydrates &&
+        _fats == other._fats &&
+        _proteins == other._proteins;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("Macros {");
-    buffer.write("calories=" + (_calories != null ? _calories!.toString() : "null") + ", ");
-    buffer.write("carbohydrates=" + (_carbohydrates != null ? _carbohydrates!.toString() : "null") + ", ");
+    buffer.write("calories=" +
+        (_calories != null ? _calories!.toString() : "null") +
+        ", ");
+    buffer.write("carbohydrates=" +
+        (_carbohydrates != null ? _carbohydrates!.toString() : "null") +
+        ", ");
     buffer.write("fats=" + (_fats != null ? _fats!.toString() : "null") + ", ");
-    buffer.write("proteins=" + (_proteins != null ? _proteins!.toString() : "null"));
+    buffer.write(
+        "proteins=" + (_proteins != null ? _proteins!.toString() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  Macros copyWith({double? calories, double? carbohydrates, double? fats, double? proteins}) {
-    return Macros._internal(
-      calories: calories ?? this.calories,
-      carbohydrates: carbohydrates ?? this.carbohydrates,
-      fats: fats ?? this.fats,
-      proteins: proteins ?? this.proteins);
-  }
-  
-  Macros copyWithModelFieldValues({
-    ModelFieldValue<double>? calories,
-    ModelFieldValue<double>? carbohydrates,
-    ModelFieldValue<double>? fats,
-    ModelFieldValue<double>? proteins
-  }) {
-    return Macros._internal(
-      calories: calories == null ? this.calories : calories.value,
-      carbohydrates: carbohydrates == null ? this.carbohydrates : carbohydrates.value,
-      fats: fats == null ? this.fats : fats.value,
-      proteins: proteins == null ? this.proteins : proteins.value
-    );
-  }
-  
-  Macros.fromJson(Map<String, dynamic> json)  
-    : _calories = (json['calories'] as num?)?.toDouble(),
-      _carbohydrates = (json['carbohydrates'] as num?)?.toDouble(),
-      _fats = (json['fats'] as num?)?.toDouble(),
-      _proteins = (json['proteins'] as num?)?.toDouble();
-  
-  Map<String, dynamic> toJson() => {
-    'calories': _calories, 'carbohydrates': _carbohydrates, 'fats': _fats, 'proteins': _proteins
-  };
-  
-  Map<String, Object?> toMap() => {
-    'calories': _calories,
-    'carbohydrates': _carbohydrates,
-    'fats': _fats,
-    'proteins': _proteins
-  };
 
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  Macros copyWith(
+      {double? calories,
+      double? carbohydrates,
+      double? fats,
+      double? proteins}) {
+    return Macros._internal(
+        calories: calories ?? this.calories,
+        carbohydrates: carbohydrates ?? this.carbohydrates,
+        fats: fats ?? this.fats,
+        proteins: proteins ?? this.proteins);
+  }
+
+  Macros copyWithModelFieldValues(
+      {ModelFieldValue<double>? calories,
+      ModelFieldValue<double>? carbohydrates,
+      ModelFieldValue<double>? fats,
+      ModelFieldValue<double>? proteins}) {
+    return Macros._internal(
+        calories: calories == null ? this.calories : calories.value,
+        carbohydrates:
+            carbohydrates == null ? this.carbohydrates : carbohydrates.value,
+        fats: fats == null ? this.fats : fats.value,
+        proteins: proteins == null ? this.proteins : proteins.value);
+  }
+
+  Macros.fromJson(Map<String, dynamic> json)
+      : _calories = (json['calories'] as num?)?.toDouble(),
+        _carbohydrates = (json['carbohydrates'] as num?)?.toDouble(),
+        _fats = (json['fats'] as num?)?.toDouble(),
+        _proteins = (json['proteins'] as num?)?.toDouble();
+
+  Map<String, dynamic> toJson() => {
+        'calories': _calories,
+        'carbohydrates': _carbohydrates,
+        'fats': _fats,
+        'proteins': _proteins
+      };
+
+  Map<String, Object?> toMap() => {
+        'calories': _calories,
+        'carbohydrates': _carbohydrates,
+        'fats': _fats,
+        'proteins': _proteins
+      };
+
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Macros";
     modelSchemaDefinition.pluralName = "Macros";
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'calories',
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'carbohydrates',
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'fats',
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.customTypeField(
-      fieldName: 'proteins',
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
-    ));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'calories',
+            isRequired: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.double)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'carbohydrates',
+            isRequired: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.double)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'fats',
+            isRequired: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.double)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.customTypeField(
+            fieldName: 'proteins',
+            isRequired: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.double)));
   });
 }

@@ -22,7 +22,6 @@
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 
-
 /** This is an auto generated class representing the MealPlanNotification type in your schema. */
 class MealPlanNotification extends amplify_core.Model {
   static const classType = const _MealPlanNotificationModelType();
@@ -35,202 +34,234 @@ class MealPlanNotification extends amplify_core.Model {
 
   @override
   getInstanceType() => classType;
-  
-  @Deprecated('[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
+
+  @Deprecated(
+      '[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
   @override
   String getId() => id;
-  
+
   MealPlanNotificationModelIdentifier get modelIdentifier {
-      return MealPlanNotificationModelIdentifier(
-        id: id
-      );
+    return MealPlanNotificationModelIdentifier(id: id);
   }
-  
+
   String get mealPlanId {
     try {
       return _mealPlanId!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get message {
     try {
       return _message!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get status {
     try {
       return _status!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   amplify_core.TemporalDateTime? get createdAt {
     return _createdAt;
   }
-  
+
   amplify_core.TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-  
-  const MealPlanNotification._internal({required this.id, required mealPlanId, required message, required status, createdAt, updatedAt}): _mealPlanId = mealPlanId, _message = message, _status = status, _createdAt = createdAt, _updatedAt = updatedAt;
-  
-  factory MealPlanNotification({String? id, required String mealPlanId, required String message, required String status}) {
+
+  const MealPlanNotification._internal(
+      {required this.id,
+      required mealPlanId,
+      required message,
+      required status,
+      createdAt,
+      updatedAt})
+      : _mealPlanId = mealPlanId,
+        _message = message,
+        _status = status,
+        _createdAt = createdAt,
+        _updatedAt = updatedAt;
+
+  factory MealPlanNotification(
+      {String? id,
+      required String mealPlanId,
+      required String message,
+      required String status}) {
     return MealPlanNotification._internal(
-      id: id == null ? amplify_core.UUID.getUUID() : id,
-      mealPlanId: mealPlanId,
-      message: message,
-      status: status);
+        id: id == null ? amplify_core.UUID.getUUID() : id,
+        mealPlanId: mealPlanId,
+        message: message,
+        status: status);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is MealPlanNotification &&
-      id == other.id &&
-      _mealPlanId == other._mealPlanId &&
-      _message == other._message &&
-      _status == other._status;
+        id == other.id &&
+        _mealPlanId == other._mealPlanId &&
+        _message == other._message &&
+        _status == other._status;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("MealPlanNotification {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("mealPlanId=" + "$_mealPlanId" + ", ");
     buffer.write("message=" + "$_message" + ", ");
     buffer.write("status=" + "$_status" + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("createdAt=" +
+        (_createdAt != null ? _createdAt!.format() : "null") +
+        ", ");
+    buffer.write(
+        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  MealPlanNotification copyWith({String? mealPlanId, String? message, String? status}) {
-    return MealPlanNotification._internal(
-      id: id,
-      mealPlanId: mealPlanId ?? this.mealPlanId,
-      message: message ?? this.message,
-      status: status ?? this.status);
-  }
-  
-  MealPlanNotification copyWithModelFieldValues({
-    ModelFieldValue<String>? mealPlanId,
-    ModelFieldValue<String>? message,
-    ModelFieldValue<String>? status
-  }) {
-    return MealPlanNotification._internal(
-      id: id,
-      mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
-      message: message == null ? this.message : message.value,
-      status: status == null ? this.status : status.value
-    );
-  }
-  
-  MealPlanNotification.fromJson(Map<String, dynamic> json)  
-    : id = json['id'],
-      _mealPlanId = json['mealPlanId'],
-      _message = json['message'],
-      _status = json['status'],
-      _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
-  
-  Map<String, dynamic> toJson() => {
-    'id': id, 'mealPlanId': _mealPlanId, 'message': _message, 'status': _status, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
-  };
-  
-  Map<String, Object?> toMap() => {
-    'id': id,
-    'mealPlanId': _mealPlanId,
-    'message': _message,
-    'status': _status,
-    'createdAt': _createdAt,
-    'updatedAt': _updatedAt
-  };
 
-  static final amplify_core.QueryModelIdentifier<MealPlanNotificationModelIdentifier> MODEL_IDENTIFIER = amplify_core.QueryModelIdentifier<MealPlanNotificationModelIdentifier>();
+  MealPlanNotification copyWith(
+      {String? mealPlanId, String? message, String? status}) {
+    return MealPlanNotification._internal(
+        id: id,
+        mealPlanId: mealPlanId ?? this.mealPlanId,
+        message: message ?? this.message,
+        status: status ?? this.status);
+  }
+
+  MealPlanNotification copyWithModelFieldValues(
+      {ModelFieldValue<String>? mealPlanId,
+      ModelFieldValue<String>? message,
+      ModelFieldValue<String>? status}) {
+    return MealPlanNotification._internal(
+        id: id,
+        mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
+        message: message == null ? this.message : message.value,
+        status: status == null ? this.status : status.value);
+  }
+
+  MealPlanNotification.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        _mealPlanId = json['mealPlanId'],
+        _message = json['message'],
+        _status = json['status'],
+        _createdAt = json['createdAt'] != null
+            ? amplify_core.TemporalDateTime.fromString(json['createdAt'])
+            : null,
+        _updatedAt = json['updatedAt'] != null
+            ? amplify_core.TemporalDateTime.fromString(json['updatedAt'])
+            : null;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'mealPlanId': _mealPlanId,
+        'message': _message,
+        'status': _status,
+        'createdAt': _createdAt?.format(),
+        'updatedAt': _updatedAt?.format()
+      };
+
+  Map<String, Object?> toMap() => {
+        'id': id,
+        'mealPlanId': _mealPlanId,
+        'message': _message,
+        'status': _status,
+        'createdAt': _createdAt,
+        'updatedAt': _updatedAt
+      };
+
+  static final amplify_core
+      .QueryModelIdentifier<MealPlanNotificationModelIdentifier>
+      MODEL_IDENTIFIER =
+      amplify_core.QueryModelIdentifier<MealPlanNotificationModelIdentifier>();
   static final ID = amplify_core.QueryField(fieldName: "id");
   static final MEALPLANID = amplify_core.QueryField(fieldName: "mealPlanId");
   static final MESSAGE = amplify_core.QueryField(fieldName: "message");
   static final STATUS = amplify_core.QueryField(fieldName: "status");
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "MealPlanNotification";
     modelSchemaDefinition.pluralName = "MealPlanNotifications";
-    
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.id());
-    
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: MealPlanNotification.MEALPLANID,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: MealPlanNotification.MEALPLANID,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: MealPlanNotification.MESSAGE,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: MealPlanNotification.MESSAGE,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: MealPlanNotification.STATUS,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
-      fieldName: 'createdAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
-    ));
+        key: MealPlanNotification.STATUS,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.nonQueryField(
+            fieldName: 'createdAt',
+            isRequired: false,
+            isReadOnly: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.dateTime)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.nonQueryField(
+            fieldName: 'updatedAt',
+            isRequired: false,
+            isReadOnly: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.dateTime)));
   });
 }
 
-class _MealPlanNotificationModelType extends amplify_core.ModelType<MealPlanNotification> {
+class _MealPlanNotificationModelType
+    extends amplify_core.ModelType<MealPlanNotification> {
   const _MealPlanNotificationModelType();
-  
+
   @override
   MealPlanNotification fromJson(Map<String, dynamic> jsonData) {
     return MealPlanNotification.fromJson(jsonData);
   }
-  
+
   @override
   String modelName() {
     return 'MealPlanNotification';
@@ -241,41 +272,37 @@ class _MealPlanNotificationModelType extends amplify_core.ModelType<MealPlanNoti
  * This is an auto generated class representing the model identifier
  * of [MealPlanNotification] in your schema.
  */
-class MealPlanNotificationModelIdentifier implements amplify_core.ModelIdentifier<MealPlanNotification> {
+class MealPlanNotificationModelIdentifier
+    implements amplify_core.ModelIdentifier<MealPlanNotification> {
   final String id;
 
   /** Create an instance of MealPlanNotificationModelIdentifier using [id] the primary key. */
-  const MealPlanNotificationModelIdentifier({
-    required this.id});
-  
+  const MealPlanNotificationModelIdentifier({required this.id});
+
   @override
-  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{
-    'id': id
-  });
-  
+  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{'id': id});
+
   @override
   List<Map<String, dynamic>> serializeAsList() => serializeAsMap()
-    .entries
-    .map((entry) => (<String, dynamic>{ entry.key: entry.value }))
-    .toList();
-  
+      .entries
+      .map((entry) => (<String, dynamic>{entry.key: entry.value}))
+      .toList();
+
   @override
   String serializeAsString() => serializeAsMap().values.join('#');
-  
+
   @override
   String toString() => 'MealPlanNotificationModelIdentifier(id: $id)';
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    
-    return other is MealPlanNotificationModelIdentifier &&
-      id == other.id;
+
+    return other is MealPlanNotificationModelIdentifier && id == other.id;
   }
-  
+
   @override
-  int get hashCode =>
-    id.hashCode;
+  int get hashCode => id.hashCode;
 }

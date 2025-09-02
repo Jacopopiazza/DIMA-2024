@@ -45,7 +45,8 @@ String localizeAllergen(BuildContext context, AllergenEnum allergen) {
     default:
       // Fallback: Log a warning and return the raw enum name
       // Consider using a logging package in a real app
-      debugPrint('Warning: Missing localization for AllergenEnum.${allergen.name}');
+      debugPrint(
+          'Warning: Missing localization for AllergenEnum.${allergen.name}');
       return allergen.name;
   }
 }
@@ -54,7 +55,8 @@ String localizeAllergen(BuildContext context, AllergenEnum allergen) {
 ///
 /// Uses the keys defined in the .arb files (e.g., "exerciseFrequencyEVERY_DAY").
 /// Returns the enum's name as a fallback if a localization key is missing.
-String localizeExerciseFrequency(BuildContext context, ExerciseFrequency frequency) {
+String localizeExerciseFrequency(
+    BuildContext context, ExerciseFrequency frequency) {
   // Get the generated localizations class instance
   final localizations = AppLocalizations.of(context)!;
 
@@ -82,11 +84,11 @@ String localizeExerciseFrequency(BuildContext context, ExerciseFrequency frequen
 
     default:
       // Fallback: Log a warning and return the raw enum name
-      debugPrint('Warning: Missing localization for ExerciseFrequency.${frequency.name}');
+      debugPrint(
+          'Warning: Missing localization for ExerciseFrequency.${frequency.name}');
       return frequency.name;
   }
 }
-
 
 /// Provides localized strings for MealNameEnum enum values.
 ///
@@ -95,7 +97,7 @@ String localizeExerciseFrequency(BuildContext context, ExerciseFrequency frequen
 String localizeMealName(BuildContext context, MealNameEnum meal) {
   final localizations = AppLocalizations.of(context)!;
 
-  switch(meal){
+  switch (meal) {
     case MealNameEnum.BREAKFAST:
       return localizations.mealNameBREAKFAST;
     case MealNameEnum.DINNER:
@@ -112,7 +114,6 @@ String localizeMealName(BuildContext context, MealNameEnum meal) {
       debugPrint('Warning: Missing localization for MealNameEnum.${meal.name}');
       return meal.name;
   }
-
 }
 
 // You can add other enum localization helpers here if needed in the future.
