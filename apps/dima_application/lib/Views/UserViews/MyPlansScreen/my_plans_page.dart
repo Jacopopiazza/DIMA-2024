@@ -273,15 +273,6 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                           ),
                     ),
                     const SizedBox(height: 32),
-                    FilledButton.tonalIcon(
-                      onPressed: () => _openGenerateMealPlan(context),
-                      icon: const Icon(Icons.add_rounded),
-                      label: const Text('Create Meal Plan'),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
-                      ),
-                    ),
                   ],
                 ),
               ),
