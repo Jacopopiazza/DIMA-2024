@@ -84,8 +84,6 @@ class CognitoProfileNotifier
   }
 
   Future<bool> updateUserProfileAttributes({
-    String? givenName,
-    String? familyName,
     String? gender,
     String? birthdate,
   }) async {
@@ -102,8 +100,6 @@ class CognitoProfileNotifier
     final currentAttributes = previousTuple.$1.userAttributes;
     final updatedAttributes = Map<String, String>.from(currentAttributes);
 
-    if (givenName != null) updatedAttributes['given_name'] = givenName;
-    if (familyName != null) updatedAttributes['family_name'] = familyName;
     if (gender != null) updatedAttributes['gender'] = gender;
     if (birthdate != null) updatedAttributes['birthdate'] = birthdate;
 
@@ -118,8 +114,6 @@ class CognitoProfileNotifier
           '[CognitoProfileNotifier] Service instance retrieved, calling updateUserProfileAttributes()');
 
       final result = await service.updateUserProfileAttributes(
-        givenName: givenName,
-        familyName: familyName,
         gender: gender,
         birthdate: birthdate,
       );

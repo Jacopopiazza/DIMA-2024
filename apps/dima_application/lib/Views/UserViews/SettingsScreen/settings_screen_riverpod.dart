@@ -170,8 +170,6 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                                   return await ref
                                       .read(cognitoProfileProvider.notifier)
                                       .updateUserProfileAttributes(
-                                        givenName: givenName,
-                                        familyName: familyName,
                                         gender: gender,
                                         birthdate: birthdate,
                                       );

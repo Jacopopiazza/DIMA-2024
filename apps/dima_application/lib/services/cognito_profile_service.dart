@@ -35,8 +35,6 @@ class CognitoProfileService {
 
   /// Update user profile attributes
   Future<bool> updateUserProfileAttributes({
-    String? givenName,
-    String? familyName,
     String? gender,
     String? birthdate,
   }) async {
@@ -45,11 +43,6 @@ class CognitoProfileService {
           '[CognitoProfileService] Starting profile attributes update...');
 
       final attributes = <String, String>{};
-      // Basic validation: non-null and non-empty
-      if (givenName != null && givenName.isNotEmpty)
-        attributes['given_name'] = givenName;
-      if (familyName != null && familyName.isNotEmpty)
-        attributes['family_name'] = familyName;
       if (gender != null && gender.isNotEmpty) attributes['gender'] = gender;
       if (birthdate != null && birthdate.isNotEmpty) {
         // Basic date format validation (YYYY-MM-DD)
@@ -70,20 +63,6 @@ class CognitoProfileService {
 
       // For standard attributes, use predefined CognitoUserAttributeKey constants
       final cognitoAttributes = <AuthUserAttribute>[];
-
-      if (attributes.containsKey('given_name')) {
-        cognitoAttributes.add(AuthUserAttribute(
-          userAttributeKey: CognitoUserAttributeKey.givenName,
-          value: attributes['given_name']!,
-        ));
-      }
-
-      if (attributes.containsKey('family_name')) {
-        cognitoAttributes.add(AuthUserAttribute(
-          userAttributeKey: CognitoUserAttributeKey.familyName,
-          value: attributes['family_name']!,
-        ));
-      }
 
       if (attributes.containsKey('gender')) {
         cognitoAttributes.add(AuthUserAttribute(

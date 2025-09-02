@@ -122,12 +122,8 @@ class _UserProfileSectionRiverpodState
 
     try {
       final success = await widget.onUpdateProfile(
-        givenName: _givenNameController.text.trim().isNotEmpty
-            ? _givenNameController.text.trim()
-            : null,
-        familyName: _familyNameController.text.trim().isNotEmpty
-            ? _familyNameController.text.trim()
-            : null,
+        givenName: null, // Readonly field - don't update
+        familyName: null, // Readonly field - don't update
         gender: _selectedGender,
         birthdate: _selectedDate != null
             ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
@@ -320,6 +316,7 @@ class _UserProfileSectionRiverpodState
                           controller: _givenNameController,
                           label: 'Given Name',
                           icon: Icons.person_outline_rounded,
+                          readOnly: true,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'Given Name is required';
@@ -336,6 +333,7 @@ class _UserProfileSectionRiverpodState
                           controller: _familyNameController,
                           label: 'Family Name',
                           icon: Icons.person_outline_rounded,
+                          readOnly: true,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'Family Name is required';
@@ -346,6 +344,29 @@ class _UserProfileSectionRiverpodState
                         ),
                       ),
                     ],
+                  ),
+                  // Helper text for readonly fields
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline_rounded,
+                          size: 14,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            'Name fields are managed by your authentication provider and cannot be changed here.',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 16),
 
@@ -468,14 +489,21 @@ class _UserProfileSectionRiverpodState
     required IconData icon,
     required ColorScheme colorScheme,
     String? Function(String?)? validator,
+    bool readOnly = false,
   }) {
     return TextFormField(
       key: key,
       controller: controller,
-      onChanged: (_) => _onFieldChanged(),
+      readOnly: readOnly,
+      onChanged: readOnly ? null : (_) => _onFieldChanged(),
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, size: 20),
+        suffixIcon: readOnly 
+            ? Icon(Icons.lock_outline_rounded, 
+                size: 16, 
+                color: colorScheme.onSurface.withOpacity(0.5))
+            : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: colorScheme.outline),
@@ -488,11 +516,20 @@ class _UserProfileSectionRiverpodState
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: colorScheme.primary, width: 2),
         ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
+        ),
         filled: true,
-        fillColor: colorScheme.surface,
+        fillColor: readOnly 
+            ? colorScheme.surfaceContainerHighest
+            : colorScheme.surface,
         contentPadding:
             const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
       ),
+      style: readOnly 
+          ? TextStyle(color: colorScheme.onSurface.withOpacity(0.7))
+          : null,
       validator: validator,
     );
   }
