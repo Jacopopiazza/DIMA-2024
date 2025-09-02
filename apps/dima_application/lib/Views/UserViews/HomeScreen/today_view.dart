@@ -168,6 +168,21 @@ class TodayPage extends ConsumerWidget {
         );
         break;
 
+      case DataStatus.errorNetworkWithCache:
+        // Network error but we have cached data to show
+        showPlanDetails =
+            (state.todaysMeals != null && state.todaysMeals!.isNotEmpty);
+        showNoMealsView =
+            !showPlanDetails; // If no plan details, show no meals view.
+        // Show offline indicator with specific network error message
+        topIndicator = StaleDataIndicator(
+          message: state.errorMessage ??
+              "Network unavailable. Showing cached data.", // Use custom message or default
+          lastFetched: state.planLastFetched, // Provide the last fetched time
+          onRefresh: () => notifier.refreshData(), // Provide refresh callback
+        );
+        break;
+
       case DataStatus.errorNetwork:
       case DataStatus.errorOther:
         // An error occurred (network or other).

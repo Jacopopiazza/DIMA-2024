@@ -4,6 +4,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:dima_application/Views/CustomAuthenticator/customized_authenticator.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/models/ActivePlanCache/active_plan_cache.dart';
 import 'package:dima_application/models/DailyCompletion/daily_completion.dart';
 import 'package:dima_application/models/MealPlan/meal_plan.dart';
 import 'package:dima_application/models/TodayPage/today_page_data.dart';
@@ -44,6 +45,7 @@ Future<void> main() async {
     final dir = await getApplicationDocumentsDirectory();
     final isar = await Isar.open(
       [
+        ActivePlanCacheSchema,
         TodayPageDataSchema,
         DailyCompletionSchema,
         MealPlanCacheSchema,
