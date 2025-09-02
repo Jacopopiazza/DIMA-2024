@@ -282,49 +282,8 @@ class MealDetailsDraggablePage extends ConsumerWidget {
               ),
               onPressed: () => Navigator.maybePop(context),
             ),
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.white, size: 28),
-              tooltip: 'More options',
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.black.withAlpha(100),
-                padding: const EdgeInsets.all(8),
-              ),
-              onPressed: () {
-                // TODO: Implement more options menu
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) => _buildOptionsSheet(context),
-                );
-              },
-            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildOptionsSheet(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.edit),
-            title: const Text('Edit meal'),
-            onTap: () {
-              // TODO: Implement edit meal functionality
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.share),
-            title: const Text('Share meal'),
-            onTap: () {
-              // TODO: Implement share meal functionality
-              Navigator.pop(context);
-            },
-          ),
-        ],
       ),
     );
   }
