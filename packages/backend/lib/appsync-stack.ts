@@ -409,14 +409,85 @@ export class AppSyncApiStack extends cdk.Stack {
       ),
     });
 
-    // --- Resolver for Mutation.updateMyNutritionistProfile ---
-    tableDS.createResolver('MutationUpdateMyNutritionistProfileResolver', {
+    const getCognitoUserDetails = new NodejsFunction(
+      this,
+      'GetCognitoUserDetails',
+      {
+        functionName: 'get-cognito-user-details',
+        runtime: lambda.Runtime.NODEJS_22_X,
+        handler: 'handler',
+        entry: 'src/lambda/get-cognito-user-details/index.ts',
+        timeout: cdk.Duration.seconds(30),
+        memorySize: 256,
+        bundling: {
+          format: OutputFormat.CJS,
+          bundleAwsSDK: false,
+          minify: false, // Minify the code
+          sourceMap: true, // Generate source maps
+          externalModules: ['@aws-sdk/client-cognito-identity-provider'],
+        },
+        environment: {
+          USER_POOL_ID: props.userPool.userPoolId,
+        },
+        tracing: lambda.Tracing.ACTIVE,
+        logRetention: logs.RetentionDays.ONE_WEEK,
+      },
+    );
+
+    // Add Cognito permissions
+    props.userPool.grant(getCognitoUserDetails, 'cognito-idp:AdminGetUser');
+
+    const lambdaDS = api.addLambdaDataSource(
+      'GetCognitoUserDetailsDataSource',
+      getCognitoUserDetails,
+    );
+
+    // Create the pipeline functions
+    const getCognitoDetailsFunction = new appsync.AppsyncFunction(
+      this,
+      'GetCognitoDetailsFunction',
+      {
+        name: 'getCognitoDetails',
+        api,
+        dataSource: lambdaDS, // Use Lambda data source
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset('resolvers/function.getCognitoDetails.js'),
+      },
+    );
+
+    const updateMyNutritionistProfileFunction = new appsync.AppsyncFunction(
+      this,
+      'UpdateMyNutritionistProfileFunction',
+      {
+        name: 'updateMyNutritionistProfile',
+        api,
+        dataSource: tableDS, // Use DynamoDB data source
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset(
+          'resolvers/function.updateMyNutritionistProfile.js',
+        ),
+      },
+    );
+
+    // Replace your existing resolver with pipeline resolver
+    new appsync.Resolver(this, 'MutationUpdateMyNutritionistProfileResolver', {
+      api,
       typeName: 'Mutation',
       fieldName: 'updateMyNutritionistProfile',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
-      code: appsync.Code.fromAsset(
-        'resolvers/mutation.updateMyNutritionistProfile.js',
-      ),
+      pipelineConfig: [
+        getCognitoDetailsFunction,
+        updateMyNutritionistProfileFunction,
+      ],
+      code: appsync.Code.fromInline(`
+        export function request(ctx) {
+          return {};
+        }
+        
+        export function response(ctx) {
+          return ctx.prev.result;
+        }
+      `),
     });
 
     // ====================================================================

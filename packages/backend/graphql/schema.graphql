@@ -500,8 +500,6 @@ input UpdateUserDetailsInput {
 Input for updating nutritionist profile.
 """
 input UpdateNutritionistProfileInput {
-  givenName: String
-  familyName: String
   specialization: String
   bio: String
   profilePictureUrl: String

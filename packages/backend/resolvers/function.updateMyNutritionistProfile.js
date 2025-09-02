@@ -1,16 +1,24 @@
+import { util } from '@aws-appsync/utils';
+
 export function request(ctx) {
-  const {
-    givenName,
-    familyName,
-    specialization,
-    bio,
-    profilePictureUrl,
-    isAvailable,
-  } = ctx.args.input;
+  const { specialization, bio, profilePictureUrl, isAvailable } =
+    ctx.args.input;
+
+  if (!ctx.identity || !ctx.identity.sub) {
+    util.unauthorized();
+  }
+
+  // Get user details from previous function's stash
+  const givenName = ctx.stash.givenName;
+  const familyName = ctx.stash.familyName;
+
+  if (!givenName || !familyName) {
+    util.error('Missing required user attributes given_name or family_name');
+  }
+
   const userId = ctx.identity.sub;
   const now = util.time.nowISO8601();
 
-  // Prepare the item data for create/update
   const itemData = {
     PK: `NUTR#${userId}`,
     SK: 'NUTR_DETAILS',
@@ -23,7 +31,6 @@ export function request(ctx) {
     IsAvailable: isAvailable,
     CreatedAt: now,
     UpdatedAt: now,
-    // GSI1 keys for listing
     GSI1PK: 'NUTR_PROFILES_ALL',
     GSI1SK: `NUTRID#${userId}`,
   };
@@ -40,14 +47,12 @@ export function request(ctx) {
 
 export function response(ctx) {
   const item = ctx.result;
-
   if (!item) {
     return null;
   }
 
-  // Transform DynamoDB item to match NutritionistProfile type
   return {
-    id: item.NutritionistID, // Add id for codegen compatibility
+    id: item.NutritionistID,
     nutritionistId: item.NutritionistID,
     givenName: item.GivenName,
     familyName: item.FamilyName,

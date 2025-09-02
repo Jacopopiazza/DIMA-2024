@@ -602,8 +602,6 @@ export type UnmarkMealCompletedInput = {
 /** Input for updating nutritionist profile. */
 export type UpdateNutritionistProfileInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
-  familyName?: InputMaybe<Scalars['String']['input']>;
-  givenName?: InputMaybe<Scalars['String']['input']>;
   isAvailable?: InputMaybe<Scalars['Boolean']['input']>;
   profilePictureUrl?: InputMaybe<Scalars['String']['input']>;
   specialization?: InputMaybe<Scalars['String']['input']>;
