@@ -38,15 +38,25 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       curve: Curves.easeInOut,
     ));
 
-    // Mark that we're on MyPlansPage and trigger initial refresh
+    // Smart initialization: check cache status and refresh if needed
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(currentPageProvider.notifier).state = 'MyPlansPage';
-      // Auto-refresh when entering the page if there were unread notifications
-      final notificationState = ref.read(mealPlanNotificationProvider);
-      if (notificationState.hasUnreadNotifications) {
-        _refreshPlans();
-      }
+      _initializePageSmart();
     });
+  }
+
+  /// Initialize page and set current page state
+  void _initializePageSmart() {
+    ref.read(currentPageProvider.notifier).state = 'MyPlansPage';
+    
+    final mealPlansNotifier = ref.read(mealPlansProvider.notifier);
+    
+    // Only refresh if cache is stale (notifications are handled by background refresh)
+    if (mealPlansNotifier.isCacheStale) {
+      print('[MyPlansPage] Cache is stale, refreshing...');
+      _refreshPlans();
+    } else {
+      print('[MyPlansPage] Cache is fresh, no refresh needed');
+    }
   }
 
   @override
@@ -92,25 +102,21 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // Listen for notifications and auto-refresh
+    // Listen for notifications and show user feedback (background refresh is handled globally)
     ref.listen<NotificationState>(mealPlanNotificationProvider,
         (previous, current) {
-      // Only auto-refresh if we're currently on this page AND actively listening
-      // AND not already manually refreshing
       final currentPage = ref.read(currentPageProvider);
-
+      
+      // Show notification message if we're on this page
       if (currentPage == 'MyPlansPage' &&
           current.hasUnreadNotifications &&
-          current.notifications.isNotEmpty &&
-          !_isManuallyRefreshing) {
+          current.notifications.isNotEmpty) {
         final latestNotification = current.notifications.last;
-
-        // Always refresh regardless of success/failure
-        _refreshPlans();
-        // Mark notifications as read since we're handling them here
+        
+        // Mark notifications as read since we're showing them
         ref.read(mealPlanNotificationProvider.notifier).markAllAsRead();
 
-        // Show different messages based on success/failure
+        // Show user feedback (data is already being refreshed in background)
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -129,8 +135,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(latestNotification.success
-                      ? 'New meal plan available! List refreshed.'
-                      : 'Meal plan status updated. List refreshed.'),
+                      ? 'New meal plan available!'
+                      : 'Meal plan status updated.'),
                 ),
               ],
             ),

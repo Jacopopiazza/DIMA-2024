@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
   late final MealPlansService _service;
   String? _cachedActiveMealPlanId;
+  DateTime? _lastRefreshTime;
 
   @override
   FutureOr<List<LightMealPlan>> build() async {
@@ -19,6 +20,43 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
 
   /// Get the cached active meal plan ID (from last listMyMealPlans call)
   String? get cachedActiveMealPlanId => _cachedActiveMealPlanId;
+
+  /// Check if cached data is stale (older than 30 seconds)
+  bool get isCacheStale {
+    if (_lastRefreshTime == null) return true;
+    return DateTime.now().difference(_lastRefreshTime!).inSeconds > 30;
+  }
+
+  /// Mark cache as stale (call this when notifications arrive)
+  void invalidateCache() {
+    print('[MealPlansProvider] Cache invalidated');
+    _lastRefreshTime = null;
+  }
+
+  /// Background refresh that doesn't show loading states
+  /// Perfect for refreshing data when user is on other pages
+  Future<void> backgroundRefresh() async {
+    print('[MealPlansProvider] Background refresh started...');
+    try {
+      // Don't change state to loading - refresh silently in background
+      final backendPlans = await _service.listMyMealPlans();
+      print('[MealPlansProvider] Background refresh: Backend returned ${backendPlans.items.length} plans');
+
+      // Update cache and state with fresh data
+      _cachedActiveMealPlanId = backendPlans.activeMealPlan;
+      _lastRefreshTime = DateTime.now();
+      
+      // Update state with fresh data (no loading indicator)
+      state = AsyncValue.data(backendPlans.items);
+      
+      print('[MealPlansProvider] Background refresh completed: active ID: $_cachedActiveMealPlanId');
+    } catch (e) {
+      print('[MealPlansProvider] Background refresh failed: $e');
+      // Don't update state with error - keep existing data
+      // Just mark cache as stale for future refresh attempts
+      _lastRefreshTime = null;
+    }
+  }
 
   // No local cache, so this is not implemented
   // Stream<List<LightMealPlan>> watchAllPlans() => throw UnimplementedError();
@@ -35,8 +73,10 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
 
       // Cache the active meal plan ID from the response
       _cachedActiveMealPlanId = backendPlans.activeMealPlan;
+      _lastRefreshTime = DateTime.now(); // Track refresh time
+      
       print(
-          '[MealPlansProvider] Cached active meal plan ID: $_cachedActiveMealPlanId');
+          '[MealPlansProvider] Cached active meal plan ID: $_cachedActiveMealPlanId at $_lastRefreshTime');
 
       state = AsyncValue.data(backendPlans.items);
       print(

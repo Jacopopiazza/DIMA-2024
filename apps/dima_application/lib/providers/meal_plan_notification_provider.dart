@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:dima_application/services/meal_plan_subscription_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -54,9 +55,10 @@ class NotificationState {
 /// Notifier for handling meal plan notifications
 class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
   final MealPlanSubscriptionService _subscriptionService;
+  final StateNotifierProviderRef<MealPlanNotificationNotifier, NotificationState> _ref;
   StreamSubscription<MealPlanResponse>? _notificationSubscription;
 
-  MealPlanNotificationNotifier(this._subscriptionService)
+  MealPlanNotificationNotifier(this._subscriptionService, this._ref)
       : super(const NotificationState()) {
     _initializeNotifications();
   }
@@ -134,12 +136,27 @@ final mealPlanSubscriptionServiceProvider =
   return MealPlanSubscriptionService();
 });
 
-/// Provider for meal plan notifications
+/// Provider for meal plan notifications  
 final mealPlanNotificationProvider =
     StateNotifierProvider<MealPlanNotificationNotifier, NotificationState>(
         (ref) {
   final subscriptionService = ref.watch(mealPlanSubscriptionServiceProvider);
-  return MealPlanNotificationNotifier(subscriptionService);
+  return MealPlanNotificationNotifier(subscriptionService, ref);
+});
+
+/// Global notification handler that performs background refresh
+/// This is a separate provider to avoid circular dependencies
+final globalNotificationHandler = Provider<void>((ref) {
+  // Watch for notification changes globally
+  ref.listen(mealPlanNotificationProvider, (previous, current) {
+    if (current.hasUnreadNotifications && current.notifications.isNotEmpty) {
+      // Perform background refresh when notifications arrive
+      final mealPlansNotifier = ref.read(mealPlansProvider.notifier);
+      mealPlansNotifier.backgroundRefresh();
+      
+      safePrint('[GlobalNotificationHandler] Background refresh triggered due to notification');
+    }
+  });
 });
 
 /// Provider for checking if user is currently on MyPlansPage

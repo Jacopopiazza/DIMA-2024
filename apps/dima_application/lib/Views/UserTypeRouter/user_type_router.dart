@@ -14,6 +14,9 @@ class UserTypeRouter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Initialize global notification handler
+    ref.watch(globalNotificationHandler);
+    
     return FutureBuilder(
       future: _checkUserRole(),
       builder: (context, snapshot) {

@@ -133,11 +133,36 @@ final todayPageProvider =
   ref.listen(activeMealPlanIdProvider, (previous, next) {
     safePrint(
         "[TodayPageProvider] Active plan ID listener triggered: $previous -> $next (loading: ${notifier.state.status == DataStatus.loading})");
-    if (previous != next && next != null && 
-        notifier.state.status != DataStatus.loading) {
+    if (previous != next && notifier.state.status != DataStatus.loading) {
       safePrint(
           "[TodayPageProvider] Active meal plan changed from $previous to $next, refreshing...");
       notifier.refreshTodayData();
+    }
+  });
+
+  // ADDITIONAL: Watch for meal plans list changes to catch deletions
+  ref.listen(mealPlansProvider, (previous, next) {
+    // Only trigger if we currently have an active plan loaded
+    if (notifier.state.mealPlanId != null && notifier.state.status != DataStatus.loading) {
+      next.when(
+        data: (currentPlans) {
+          // Check if our current active plan still exists in the list
+          final currentActivePlanId = notifier.state.mealPlanId;
+          final planStillExists = currentPlans.any((plan) => plan.mealPlanId == currentActivePlanId);
+          
+          if (!planStillExists) {
+            safePrint(
+                "[TodayPageProvider] Current active plan ($currentActivePlanId) no longer exists in plans list, refreshing...");
+            notifier.refreshTodayData();
+          }
+        },
+        loading: () {
+          // Don't trigger on loading states
+        },
+        error: (error, stack) {
+          // Don't trigger on error states
+        },
+      );
     }
   });
 
