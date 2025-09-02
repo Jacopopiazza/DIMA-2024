@@ -74,13 +74,13 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
           _subscriptionService.notificationStream.listen(
         _handleMealPlanResponse,
         onError: (error) {
-          safePrint('Error in notification stream: $error');
+          safePrint('[MealPlanNotificationNotifier] Error in notification stream: $error');
         },
       );
 
-      safePrint('Meal plan notification system initialized');
+      safePrint('[MealPlanNotificationNotifier] Meal plan notification system initialized');
     } catch (e) {
-      safePrint('Error initializing notifications: $e');
+      safePrint('[MealPlanNotificationNotifier] Error initializing notifications: $e');
     }
   }
 
@@ -101,7 +101,7 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
       hasUnreadNotifications: true,
     );
 
-    safePrint('New meal plan notification: ${notification.message}');
+    safePrint('[MealPlanNotificationNotifier] New meal plan notification: ${notification.message}');
   }
 
   /// Mark all notifications as read
