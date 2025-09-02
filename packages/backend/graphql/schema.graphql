@@ -135,6 +135,10 @@ enum WeekdayEnum {
   SUNDAY
 }
 
+enum SubscriptionStatusEnum {
+  FREE
+  PRO
+}
 # ===================
 #     OBJECT TYPES
 # ===================
@@ -355,6 +359,14 @@ type PlanRequestPreferences {
   openTextPreferences: String
 }
 
+"""
+Represents the subscription status of a user.
+"""
+type UserSubscriptionStatus {
+  userId: ID!
+  subscriptionStatus: SubscriptionStatusEnum!
+}
+
 # ===================
 #     INPUT TYPES
 # ===================
@@ -530,6 +542,7 @@ input ModifyAssignedMealPlanInput {
   planName: String
   dailyPlan: DailyPlanDataInput
 }
+
 # ===================
 #       QUERIES
 # ===================
@@ -608,6 +621,12 @@ type Query {
   """
   listMyAssignedMealPlans(limit: Int, nextToken: String): MealPlanList
     @aws_auth(cognito_groups: ["NUTRITIONISTS"])
+
+  """
+  Get the subscription status for a specific user.
+  """
+  getUserSubscriptionStatus: UserSubscriptionStatus
+    @aws_auth(cognito_groups: ["USERS"])
 }
 
 # ===================
@@ -722,6 +741,13 @@ type Mutation {
   """
   notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponse
     @aws_iam
+
+  """
+  Set the subscription status for a specific user.
+  """
+  setUserSubscriptionStatus(
+    subscriptionStatus: SubscriptionStatusEnum!
+  ): UserSubscriptionStatus @aws_auth(cognito_groups: ["USERS"])
 }
 
 # ---------------------------------------------------

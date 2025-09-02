@@ -389,6 +389,16 @@ export class AppSyncApiStack extends cdk.Stack {
       code: appsync.Code.fromAsset('resolvers/mutation.requestValidation.js'),
     });
 
+    // --- Resolver for Mutation.setUserSubscriptionStatus ---
+    tableDS.createResolver('MutationSetUserSubscriptionStatusResolver', {
+      typeName: 'Mutation',
+      fieldName: 'setUserSubscriptionStatus',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset(
+        'resolvers/mutation.setUserSubscriptionStatus.js',
+      ),
+    });
+
     // --- Resolver for Query.listMyAssignedMealPlans ---
     tableDS.createResolver('QueryListMyAssignedMealPlansResolver', {
       typeName: 'Query',
@@ -396,6 +406,16 @@ export class AppSyncApiStack extends cdk.Stack {
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset(
         'resolvers/query.listMyAssignedMealPlans.js',
+      ),
+    });
+
+    // --- Resolver for Query.getUserSubscriptionStatus ---
+    tableDS.createResolver('QueryGetUserSubscriptionStatusResolver', {
+      typeName: 'Query',
+      fieldName: 'getUserSubscriptionStatus',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset(
+        'resolvers/query.getUserSubscriptionStatus.js',
       ),
     });
 
