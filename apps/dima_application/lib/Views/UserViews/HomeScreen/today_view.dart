@@ -35,23 +35,43 @@ class TodayPage extends ConsumerWidget {
     final bool canRefresh = todayState.status != DataStatus.errorNoPlan &&
         todayState.status != DataStatus.errorInvalidPlanId;
 
-    // Se non c'è piano, mostra direttamente il contenuto senza RefreshIndicator
+    // Se non c'è piano, mostra il contenuto con RefreshIndicator per permettere refresh manuale
     if (!canRefresh) {
-      return Center(
-        child: ChoosePlanCard(
-          onChoosePlan: () async {
-            // Naviga alla pagina di selezione piano
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MyPlansPage(),
+      return RefreshIndicator(
+        displacement: 60.0,
+        color: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        onRefresh: () => notifier.refreshData(),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return ListView(
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
               ),
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Center(
+                    child: ChoosePlanCard(
+                      onChoosePlan: () async {
+                        // Naviga alla pagina di selezione piano
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyPlansPage(),
+                          ),
+                        );
+                        // Refresh solo dopo che l'utente torna dalla selezione
+                        // e potenzialmente ha selezionato un piano
+                        if (context.mounted) {
+                          notifier.refreshData();
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ],
             );
-            // Refresh solo dopo che l'utente torna dalla selezione
-            // e potenzialmente ha selezionato un piano
-            if (context.mounted) {
-              notifier.refreshData();
-            }
           },
         ),
       );

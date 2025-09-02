@@ -131,7 +131,7 @@ final todayPageProvider =
   ref.listen(activeMealPlanIdProvider, (previous, next) {
     safePrint(
         "[TodayPageProvider] Active plan ID listener triggered: $previous -> $next (loading: ${notifier.state.status == DataStatus.loading})");
-    if (previous != null && next != null && previous != next && 
+    if (previous != next && next != null && 
         notifier.state.status != DataStatus.loading) {
       safePrint(
           "[TodayPageProvider] Active meal plan changed from $previous to $next, refreshing...");
@@ -203,8 +203,17 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
       }
     }
     
-    safePrint("[TodayPageNotifier] No active plan ID available - meal plans may not be loaded yet");
-    return null;
+    // Last resort: trigger meal plans provider to load if it hasn't loaded yet
+    safePrint("[TodayPageNotifier] No active plan ID available - triggering meal plans load as fallback...");
+    try {
+      await _ref.read(mealPlansProvider.notifier).listMyMealPlans();
+      final fallbackActivePlanId = _ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId;
+      safePrint("[TodayPageNotifier] After fallback load - active ID: $fallbackActivePlanId");
+      return fallbackActivePlanId;
+    } catch (e) {
+      safePrint("[TodayPageNotifier] Error in fallback meal plans load: $e");
+      return null;
+    }
   }
 
   /// Loads the user's active meal plan and associated data (today's meals, completion status).
