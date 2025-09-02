@@ -8,7 +8,7 @@ export function request(ctx) {
   // Valida l'input
   const { input } = ctx.args;
 
-  if (!input || !input.mealPlanId || !input.success) {
+  if (!input || !input.mealPlanId || input.success === null) {
     util.error(
       'Missing required fields in notification input',
       'ValidationException',
