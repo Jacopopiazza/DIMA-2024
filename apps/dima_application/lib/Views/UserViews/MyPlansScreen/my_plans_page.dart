@@ -138,43 +138,6 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: colorScheme.surface,
-        title: Text(
-          'Your Meal Plans',
-          style: theme.textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onSurface,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.science_outlined,
-                color: colorScheme.primary,
-                size: 20,
-              ),
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SubscriptionTestPage(),
-                ),
-              );
-            },
-            tooltip: 'Test Subscription',
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
       body: plansAsync.when(
         data: (plans) {
           final activePlanId = ref.watch(activeMealPlanIdProvider);
@@ -424,18 +387,6 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                                   horizontal: 24, vertical: 12),
                             ),
                           ),
-                          if (!isNetworkError) ...[
-                            const SizedBox(width: 16),
-                            FilledButton.tonalIcon(
-                              onPressed: () => _openGenerateMealPlan(context),
-                              icon: const Icon(Icons.add_rounded),
-                              label: const Text('Create Plan'),
-                              style: FilledButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 12),
-                              ),
-                            ),
-                          ],
                         ],
                       ),
                     ],

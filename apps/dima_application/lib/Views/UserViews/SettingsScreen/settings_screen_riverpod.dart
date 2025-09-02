@@ -62,17 +62,6 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: colorScheme.surface,
-        title: Text(
-          'Settings',
-          style: theme.textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onSurface,
-          ),
-        ),
-      ),
       body: SafeArea(
         child: userIdAsync.when(
           loading: () => _buildLoadingState(colorScheme, theme),
@@ -115,7 +104,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                         loading: () => _buildSectionLoadingState(
                             colorScheme, 'Loading subscription...'),
                         error: (error, stackTrace) =>
-                            _buildSectionErrorState(colorScheme, theme),
+                            _buildSubscriptionSectionErrorState(colorScheme, theme),
                         data: (data) {
                           final subscriptionData = data.$1;
                           final uniqueId = data.$2;
@@ -462,7 +451,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
               ),
               const SizedBox(height: 8),
               Text(
-                'Personal data and subscription status are currently unavailable. Please try refreshing or check back later.',
+                'Personal data are currently unavailable. Please try refreshing or check back later.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
@@ -502,6 +491,45 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             const SizedBox(height: 8),
             Text(
               'Your preferences and settings data are currently unavailable. Please try refreshing or check back later.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 24)
+    ]);
+  }
+
+  Widget _buildSubscriptionSectionErrorState(ColorScheme colorScheme, ThemeData theme) {
+    return Column(children: [
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              Icons.monetization_on_rounded,
+              size: 48,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Subscription Status Unavailable',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Your subscription status is currently unavailable. Please try refreshing or check back later.',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
