@@ -429,8 +429,6 @@ input UnmarkMealCompletedInput {
 
 input UpdateNutritionistProfileInput {
   bio: String
-  familyName: String
-  givenName: String
   isAvailable: Boolean
   profilePictureUrl: String
   specialization: String

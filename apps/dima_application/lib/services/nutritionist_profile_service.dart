@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
@@ -28,7 +29,7 @@ class NutritionistProfileService {
       final response = await Amplify.API.query(request: request).response;
 
       if (response.hasErrors) {
-        safePrint('Error loading nutritionist profile: ${response.errors}');
+        safePrint('[NutritionistProfileService] Error loading nutritionist profile: ${response.errors}');
         return null;
       }
 
@@ -41,29 +42,28 @@ class NutritionistProfileService {
 
       return NutritionistProfile.fromJson(profileData);
     } catch (e) {
-      safePrint('Error loading nutritionist profile: $e');
+      safePrint('[NutritionistProfileService] Error loading nutritionist profile: $e');
       return null;
     }
   }
 
   /// Update the authenticated nutritionist's profile
   Future<NutritionistProfile?> updateMyProfile({
-    required String givenName,
-    required String familyName,
     required String specialization,
     required String bio,
     String? profilePictureUrl,
     required bool isAvailable,
   }) async {
+    safePrint('[NutritionistProfileService] Updating nutritionist profile with specialization: $specialization, bio: $bio, profilePictureUrl: $profilePictureUrl, isAvailable: $isAvailable');
     try {
       final request = GraphQLRequest<String>(
         document: '''
           mutation UpdateMyNutritionistProfile(\$input: UpdateNutritionistProfileInput!) {
             updateMyNutritionistProfile(input: \$input) {
               id
-              nutritionistId
-              givenName
               familyName
+              givenName
+              nutritionistId
               specialization
               bio
               profilePictureUrl
@@ -73,8 +73,6 @@ class NutritionistProfileService {
         ''',
         variables: {
           'input': {
-            'givenName': givenName,
-            'familyName': familyName,
             'specialization': specialization,
             'bio': bio,
             'profilePictureUrl': profilePictureUrl,
@@ -87,7 +85,7 @@ class NutritionistProfileService {
       final response = await Amplify.API.mutate(request: request).response;
 
       if (response.hasErrors) {
-        safePrint('Error updating nutritionist profile: ${response.errors}');
+        safePrint('[NutritionistProfileService] Error updating nutritionist profile: ${response.errors}');
         return null;
       }
 
@@ -98,26 +96,28 @@ class NutritionistProfileService {
       final decoded = json.decode(response.data!);
       final profileData = decoded['updateMyNutritionistProfile'];
       if (profileData == null) {
-        safePrint('Error: updateMyNutritionistProfile returned null');
+        safePrint('[NutritionistProfileService] Error: updateMyNutritionistProfile returned null');
         return null;
       }
+      safePrint('[NutritionistProfileService] Successfully updated nutritionist profile: $profileData');
       return NutritionistProfile.fromJson(
           Map<String, dynamic>.from(profileData));
     } catch (e) {
-      safePrint('Error updating nutritionist profile: $e');
+      safePrint('[NutritionistProfileService] Error updating nutritionist profile: $e');
       return null;
     }
   }
 
   /// Check if the nutritionist has a valid profile
   Future<bool> hasValidProfile() async {
+    safePrint('[NutritionistProfileService] Checking if nutritionist has a valid profile');
     final profile = await getMyProfile();
     if (profile == null) {
+      safePrint('[NutritionistProfileService] No profile found');
       return false;
     }
-
-    // Check if required fields are filled
-    return profile.givenName != null &&
+    safePrint('[NutritionistProfileService] Retrieved profile: $profile');
+    bool isProfileValid = profile.givenName != null &&
         profile.givenName!.isNotEmpty &&
         profile.familyName != null &&
         profile.familyName!.isNotEmpty &&
@@ -125,5 +125,8 @@ class NutritionistProfileService {
         profile.specialization!.isNotEmpty &&
         profile.bio != null &&
         profile.bio!.isNotEmpty;
+    safePrint('[NutritionistProfileService] Profile validity check: $isProfileValid');
+    // Check if required fields are filled
+    return isProfileValid;
   }
 }

@@ -16,8 +16,6 @@ class EnterNutritionistProfile extends StatefulWidget {
 
 class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
   final _formKey = GlobalKey<FormState>();
-  final _givenNameController = TextEditingController();
-  final _familyNameController = TextEditingController();
   final _specializationController = TextEditingController();
   final _bioController = TextEditingController();
   final _profilePictureUrlController = TextEditingController();
@@ -34,8 +32,6 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
 
   @override
   void dispose() {
-    _givenNameController.dispose();
-    _familyNameController.dispose();
     _specializationController.dispose();
     _bioController.dispose();
     _profilePictureUrlController.dispose();
@@ -48,8 +44,6 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
 
       if (profile != null) {
         setState(() {
-          _givenNameController.text = profile.givenName ?? '';
-          _familyNameController.text = profile.familyName ?? '';
           _specializationController.text = profile.specialization ?? '';
           _bioController.text = profile.bio ?? '';
           _profilePictureUrlController.text = profile.profilePictureUrl ?? '';
@@ -73,8 +67,6 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
 
     try {
       final updatedProfile = await _profileService.updateMyProfile(
-        givenName: _givenNameController.text.trim(),
-        familyName: _familyNameController.text.trim(),
         specialization: _specializationController.text.trim(),
         bio: _bioController.text.trim(),
         profilePictureUrl: _profilePictureUrl,
@@ -191,40 +183,6 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 24),
-
-                      // Given Name
-                      TextFormField(
-                        controller: _givenNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'First Name',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter your first name';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Family Name
-                      TextFormField(
-                        controller: _familyNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Last Name',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter your last name';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
 
                       // Specialization
                       TextFormField(

@@ -92,8 +92,6 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> {
     if (_currentProfile != null) {
       try {
         final updatedProfile = await _profileService.updateMyProfile(
-          givenName: _currentProfile!.givenName ?? '',
-          familyName: _currentProfile!.familyName ?? '',
           specialization: _currentProfile!.specialization ?? '',
           bio: _currentProfile!.bio ?? '',
           profilePictureUrl: _currentProfile!.profilePictureUrl,
