@@ -60,8 +60,25 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final showAppBar = Navigator.canPop(context);
+    
     return Scaffold(
       backgroundColor: colorScheme.surface,
+      appBar: showAppBar ? AppBar(
+        title: Text(
+          'Settings',
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: colorScheme.surface,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ) : null,
       body: SafeArea(
         child: userIdAsync.when(
           loading: () => _buildLoadingState(colorScheme, theme),

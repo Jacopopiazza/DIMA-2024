@@ -153,8 +153,25 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       }
     });
 
+    final showAppBar = Navigator.canPop(context);
+    
     return Scaffold(
       backgroundColor: colorScheme.surface,
+      appBar: showAppBar ? AppBar(
+        title: Text(
+          'My Plans',
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: colorScheme.surface,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ) : null,
       body: plansAsync.when(
         data: (plans) {
           final activePlanId = ref.watch(activeMealPlanIdProvider);
