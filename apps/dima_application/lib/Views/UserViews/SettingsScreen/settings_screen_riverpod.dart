@@ -26,7 +26,9 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  DateTime? _lastVisitTime;
+  // Variables kept for potential future auto-refresh implementation
+  // DateTime? _lastVisitTime;
+  // bool _navigatedToOtherScreen = false;
 
   @override
   void initState() {
@@ -46,7 +48,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
       curve: Curves.easeOutCubic,
     ));
     _animationController.forward();
-    _lastVisitTime = DateTime.now();
+    // _lastVisitTime = DateTime.now(); // Disabled for auto-refresh
   }
 
   @override
@@ -56,27 +58,30 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
     routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
+  // RouteObserver methods - currently not used for auto-refresh
+  // These are kept for potential future implementation of proper app lifecycle detection
+  
+  @override
+  void didPushNext() {
+    print('[SettingsScreen] Navigation away detected (auto-refresh disabled)');
+    super.didPushNext();
+  }
+
   @override
   void didPopNext() {
-    // Called when user navigates back to this page
-    print('[SettingsScreen] User navigated back to settings page');
-    _checkAndRefreshIfStale();
+    print('[SettingsScreen] Navigation back detected (auto-refresh disabled)');
     super.didPopNext();
   }
 
   void _checkAndRefreshIfStale() {
-    final now = DateTime.now();
-    if (_lastVisitTime != null) {
-      final timeSinceLastVisit = now.difference(_lastVisitTime!);
-      print('[SettingsScreen] Time since last visit: ${timeSinceLastVisit.inSeconds} seconds');
-      
-      // If user was away for more than 60 seconds, refresh the data
-      if (timeSinceLastVisit.inSeconds > 60) {
-        print('[SettingsScreen] Data potentially stale, refreshing...');
-        _refreshAllData();
-      }
-    }
-    _lastVisitTime = now;
+    // TEMPORARILY DISABLED: Auto-refresh disabled to prevent data loss
+    // Only refresh manually via pull-to-refresh gesture
+    print('[SettingsScreen] Auto-refresh disabled - use pull-to-refresh to update data');
+    return;
+    
+    // TODO: Implement proper app lifecycle detection for real app close/reopen
+    // Current issue: Can't reliably distinguish between modal dialogs and real navigation
+    // Risk: Users lose unsaved form data due to automatic refresh
   }
 
   void _refreshAllData() {
@@ -163,10 +168,13 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                   },
                   backgroundColor: colorScheme.surface,
                   color: colorScheme.primary,
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(16.0),
-                    children: [
+                  child: GestureDetector(
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    behavior: HitTestBehavior.opaque,
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.all(16.0),
+                      children: [
                       // Header section
                       _buildHeaderSection(colorScheme, theme),
                       const SizedBox(height: 32),
@@ -283,6 +291,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                       ),
                       const SizedBox(height: 32),
                     ],
+                    ),
                   ),
                 ),
               ),

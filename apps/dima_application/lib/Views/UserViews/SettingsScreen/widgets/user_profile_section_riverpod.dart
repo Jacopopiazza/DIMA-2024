@@ -257,8 +257,8 @@ class _UserProfileSectionRiverpodState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
-            Row(
+              // Header
+              Row(
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
