@@ -12,7 +12,9 @@ import 'widgets/danger_zone_section_riverpod.dart';
 import 'widgets/actions_section_riverpod.dart';
 
 class SettingsScreenRiverpod extends ConsumerStatefulWidget {
-  const SettingsScreenRiverpod({Key? key}) : super(key: key);
+  final bool showBackButton;
+  
+  const SettingsScreenRiverpod({Key? key, this.showBackButton = false}) : super(key: key);
 
   @override
   ConsumerState<SettingsScreenRiverpod> createState() =>
@@ -128,27 +130,12 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final showAppBar = Navigator.canPop(context);
-    
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: showAppBar ? AppBar(
-        title: Text(
-          'Settings',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: colorScheme.surface,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ) : null,
-      body: SafeArea(
-        child: userIdAsync.when(
+      body: Stack(
+        children: [
+          SafeArea(
+            child: userIdAsync.when(
           loading: () => _buildLoadingState(colorScheme, theme),
           error: (error, stackTrace) =>
               _buildErrorState(error.toString(), colorScheme, theme),
@@ -302,6 +289,45 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             );
           },
         ),
+      ),
+          // Floating back button positioned on top
+          if (widget.showBackButton)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16,
+              left: 16,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.surface.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.shadow.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: colorScheme.outline.withOpacity(0.1),
+                  ),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: colorScheme.onSurface,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

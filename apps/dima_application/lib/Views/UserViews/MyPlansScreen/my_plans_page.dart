@@ -12,7 +12,9 @@ import 'read_meal_plan_page.dart';
 import 'select_nutritionist_dialog.dart';
 
 class MyPlansPage extends ConsumerStatefulWidget {
-  const MyPlansPage({super.key});
+  final bool showBackButton;
+  
+  const MyPlansPage({super.key, this.showBackButton = false});
 
   @override
   ConsumerState<MyPlansPage> createState() => _MyPlansPageState();
@@ -168,28 +170,11 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       }
     });
 
-    final showAppBar = Navigator.canPop(context);
-
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: showAppBar
-          ? AppBar(
-              title: Text(
-                'My Plans',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              backgroundColor: colorScheme.surface,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
-            )
-          : null,
-      body: plansAsync.when(
+      body: Stack(
+        children: [
+          plansAsync.when(
         data: (plans) {
           final activePlanId = ref.watch(activeMealPlanIdProvider);
           String? resolvedActivePlanId = activePlanId;
@@ -246,6 +231,45 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
         ),
         error: (e, st) =>
             _buildErrorState(context, e.toString(), colorScheme, theme),
+      ),
+          // Floating back button positioned on top
+          if (widget.showBackButton)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16,
+              left: 16,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.surface.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.shadow.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: colorScheme.outline.withOpacity(0.1),
+                  ),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: colorScheme.onSurface,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
       floatingActionButton: ScaleTransition(
         scale: _fabScaleAnimation,

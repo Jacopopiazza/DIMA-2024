@@ -100,7 +100,7 @@ class TodayPage extends ConsumerWidget {
         onChoosePlan: () async {
           await Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const MyPlansPage()),
+            MaterialPageRoute(builder: (_) => const MyPlansPage(showBackButton: true)),
           );
           if (context.mounted) {
             notifier.refreshData();

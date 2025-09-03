@@ -530,7 +530,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SettingsScreenRiverpod(),
+                    builder: (context) => const SettingsScreenRiverpod(showBackButton: true),
                   ),
                 );
               },
