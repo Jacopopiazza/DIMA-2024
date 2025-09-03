@@ -532,7 +532,6 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   Widget _buildFailedCard(BuildContext context, plan, bool isActive,
       ColorScheme colorScheme, ThemeData theme) {
     return InkWell(
-      onTap: () => _openPlanDetails(context, plan),
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
