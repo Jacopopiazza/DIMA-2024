@@ -10,6 +10,9 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as snsSubscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
+import * as sfn_tasks from 'aws-cdk-lib/aws-stepfunctions-tasks';
+import { MessageAttributeDataType } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { Construct } from 'constructs';
 
 interface AppSyncApiStackProps extends cdk.StackProps {
@@ -532,145 +535,20 @@ export class AppSyncApiStack extends cdk.Stack {
     // ====================================================================
     // ====================================================================
 
-    // Crea SNS Topic per le notifiche
+    // ====================================================================
+    //                MEAL PLAN GENERATION WORKFLOW
+    // ====================================================================
+
+    // --- 1. Notification System (SNS + Lambda) ---
+    // This system is triggered by the Step Function to notify AppSync.
+    // It can be extended later to handle push notifications.
+
     const mealPlanNotificationTopic = new sns.Topic(
       this,
       'MealPlanNotificationTopic',
       {
         topicName: 'meal-plan-notifications',
       },
-    );
-
-    // --- 1. Reference the Secret for the Gemini API Key ---
-    // IMPORTANT: Replace 'your/gemini/secret/arn' with the actual ARN of your secret in Secrets Manager
-    const geminiApiSecret = secretsmanager.Secret.fromSecretCompleteArn(
-      this,
-      'GeminiApiSecret',
-      'arn:aws:secretsmanager:us-west-2:537124974525:secret:GeminiApiSecret-FoYZ9f',
-    );
-
-    // --- 2. Define the Asynchronous Generator Lambda ---
-    const generatorLambda = new NodejsFunction(this, 'GeneratorHandler', {
-      functionName: 'meal-plan-generator-handler',
-      runtime: lambda.Runtime.NODEJS_22_X,
-      handler: 'handler',
-      entry: 'src/lambda/meal-generator-generation-handler/index.ts',
-      timeout: cdk.Duration.minutes(5),
-      memorySize: 512,
-      bundling: {
-        format: OutputFormat.CJS,
-        bundleAwsSDK: false,
-        minify: false, // Minify the code
-        sourceMap: true, // Generate source maps
-        externalModules: [
-          '@aws-sdk/client-secrets-manager',
-          '@aws-sdk/signature-v4',
-          '@aws-sdk/protocol-http',
-        ],
-      },
-      environment: {
-        TABLE_NAME: props.mealPlanningTable.tableName,
-        GEMINI_SECRET_ARN: geminiApiSecret.secretArn,
-        SNS_TOPIC_ARN: mealPlanNotificationTopic.topicArn,
-      },
-      tracing: lambda.Tracing.ACTIVE,
-      logRetention: logs.RetentionDays.ONE_WEEK,
-    });
-
-    // Grant the generator lambda permission to read the secret
-    geminiApiSecret.grantRead(generatorLambda);
-
-    // Grant the permission to publish to the SNS topic
-    mealPlanNotificationTopic.grantPublish(generatorLambda);
-
-    // Grant the generator lambda permission to write to the DynamoDB table
-    props.mealPlanningTable.grantReadWriteData(generatorLambda);
-
-    // --- 3. Define the Synchronous Request Handler Lambda ---
-    const requestLambda = new NodejsFunction(this, 'RequestHandler', {
-      functionName: 'meal-plan-request-handler',
-      runtime: lambda.Runtime.NODEJS_22_X,
-      handler: 'handler',
-      entry: 'src/lambda/meal-generation-request-handler/index.ts', // Adjust path as needed
-      timeout: cdk.Duration.seconds(30),
-      environment: {
-        MEALPLANS_TABLE_NAME: props.mealPlanningTable.tableName,
-        GENERATOR_FUNCTION_NAME: generatorLambda.functionName,
-      },
-      bundling: {
-        format: OutputFormat.ESM,
-        bundleAwsSDK: false,
-        minify: false, // Minify the code
-        sourceMap: true, // Generate source maps
-        externalModules: [
-          '@aws-sdk/client-dynamodb',
-          '@aws-sdk/lib-dynamodb',
-          '@aws-sdk/client-lambda',
-        ],
-      },
-    });
-
-    // Grant the request lambda permission to write to the DynamoDB table
-    props.mealPlanningTable.grantReadWriteData(requestLambda);
-
-    // Grant the request lambda permission to invoke the generator lambda
-    generatorLambda.grantInvoke(requestLambda);
-
-    // --- 4. Create the AppSync Data Source and Resolver ---
-    // Create a Lambda Data Source for the request handler
-    const requestLambdaDS = api.addLambdaDataSource(
-      'RequestLambdaDataSource',
-      requestLambda,
-    );
-
-    // Create the resolver for the `requestNewMealPlan` mutation
-    requestLambdaDS.createResolver('RequestNewMealPlanResolver', {
-      typeName: 'Mutation',
-      fieldName: 'requestNewMealPlan',
-    });
-
-    // --- 5.
-    // Crea lambda per gestire le notifiche
-    const notificationLambda = new NodejsFunction(this, 'NotificationHandler', {
-      functionName: 'meal-plan-notification-handler',
-      runtime: lambda.Runtime.NODEJS_22_X,
-      handler: 'handler',
-      entry: 'src/lambda/meal-generation-notification-handler/index.ts',
-      environment: {
-        APPSYNC_API_URL: api.graphqlUrl,
-      },
-      timeout: cdk.Duration.seconds(30),
-      memorySize: 256, // ← Memoria sufficiente
-      bundling: {
-        format: OutputFormat.CJS,
-        bundleAwsSDK: false,
-        minify: false, // Minify the code
-        sourceMap: true, // Generate source maps
-        externalModules: [
-          '@aws-sdk/credential-providers',
-          '@aws-sdk/signature-v4',
-          '@aws-sdk/protocol-http',
-        ],
-      },
-      logRetention: logs.RetentionDays.ONE_WEEK, // ← Log retention
-    });
-
-    // Concedi permessi AppSync alla notification lambda
-    notificationLambda.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ['appsync:GraphQL'],
-        resources: [api.arn + '/*'],
-      }),
-    );
-
-    // Collega SNS alla notification lambda
-    mealPlanNotificationTopic.addSubscription(
-      new snsSubscriptions.LambdaSubscription(notificationLambda, {
-        deadLetterQueue: new sqs.Queue(this, 'NotificationDLQ', {
-          queueName: 'meal-plan-notification-dlq',
-        }),
-      }),
     );
 
     // Crea un data source "None" per le notification mutations (se non esiste già)
@@ -696,6 +574,305 @@ export class AppSyncApiStack extends cdk.Stack {
     });
 
     // --- End of Meal Plan Generation Section ---
+
+    const notificationLambda = new NodejsFunction(this, 'NotificationHandler', {
+      functionName: 'meal-plan-notification-handler',
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'handler',
+      entry: 'src/lambda/meal-generation-notification-handler/index.ts',
+      environment: {
+        APPSYNC_API_URL: api.graphqlUrl,
+      },
+      bundling: {
+        format: OutputFormat.CJS,
+        externalModules: [
+          '@aws-sdk/credential-providers',
+          '@aws-sdk/signature-v4',
+          '@aws-sdk/protocol-http',
+        ],
+      },
+    });
+
+    // Grant the notification Lambda permission to call the AppSync API
+    notificationLambda.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['appsync:GraphQL'],
+        resources: [`${api.arn}/*`],
+      }),
+    );
+
+    // Subscribe the notification Lambda to the SNS topic
+    mealPlanNotificationTopic.addSubscription(
+      new snsSubscriptions.LambdaSubscription(notificationLambda, {
+        deadLetterQueue: new sqs.Queue(this, 'NotificationDLQ'),
+      }),
+    );
+
+    // --- 2. Workflow Lambdas ---
+    // These are the individual functions orchestrated by the Step Function.
+
+    const requestLambda = new NodejsFunction(this, 'RequestHandler', {
+      functionName: 'meal-plan-request-handler',
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'handler',
+      entry: 'src/lambda/meal-generation-request-handler/index.ts',
+      timeout: cdk.Duration.seconds(30),
+      environment: {
+        MEALPLANS_TABLE_NAME: props.mealPlanningTable.tableName,
+        // The STATE_MACHINE_ARN is added further down after the machine is created
+      },
+      bundling: {
+        format: OutputFormat.ESM,
+        externalModules: [
+          '@aws-sdk/client-dynamodb',
+          '@aws-sdk/lib-dynamodb',
+          '@aws-sdk/client-sfn',
+        ],
+      },
+    });
+
+    const validatorLambda = new NodejsFunction(this, 'ValidatorHandler', {
+      functionName: 'meal-plan-validator-handler',
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'handler',
+      entry: 'src/lambda/validate-preferences-handler/index.ts',
+      timeout: cdk.Duration.seconds(10),
+      environment: {
+        TABLE_NAME: props.mealPlanningTable.tableName,
+        // The STATE_MACHINE_ARN is added further down after the machine is created
+      },
+      bundling: {
+        format: OutputFormat.ESM,
+        externalModules: ['@aws-sdk/client-dynamodb', '@aws-sdk/lib-dynamodb'],
+      },
+    });
+
+    const geminiApiSecret = secretsmanager.Secret.fromSecretCompleteArn(
+      this,
+      'GeminiApiSecret',
+      'arn:aws:secretsmanager:us-west-2:537124974525:secret:GeminiApiSecret-FoYZ9f',
+    );
+
+    const generatorLambda = new NodejsFunction(this, 'GeneratorHandler', {
+      functionName: 'meal-plan-generator-handler',
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'handler',
+      entry: 'src/lambda/meal-generator-generation-handler/index.ts',
+      timeout: cdk.Duration.minutes(5),
+      memorySize: 512,
+      environment: {
+        GEMINI_SECRET_ARN: geminiApiSecret.secretArn,
+      },
+      bundling: {
+        format: OutputFormat.CJS,
+        // CORRECTED: Lists the actual SDK clients used by the generator's code
+        externalModules: ['@aws-sdk/client-secrets-manager'],
+      },
+    });
+
+    const updateStatusLambda = new NodejsFunction(this, 'UpdateStatusHandler', {
+      functionName: 'meal-plan-update-status-handler',
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'handler',
+      entry: 'src/lambda/meal-generation-update-status-handler/index.ts',
+      environment: { TABLE_NAME: props.mealPlanningTable.tableName },
+      timeout: cdk.Duration.seconds(30),
+      bundling: {
+        format: OutputFormat.ESM,
+        externalModules: ['@aws-sdk/client-dynamodb', '@aws-sdk/lib-dynamodb'],
+      },
+    });
+
+    const getCognitoDetailsLambda = new NodejsFunction(
+      this,
+      'GetCognitoDetailsHandler',
+      {
+        functionName: 'meal-plan-get-cognito-details-handler',
+        runtime: lambda.Runtime.NODEJS_22_X,
+        handler: 'handler',
+        entry: 'src/lambda/get-cognito-details-handler/index.ts',
+        environment: {
+          USER_POOL_ID: props.userPool.userPoolId,
+        },
+        timeout: cdk.Duration.seconds(10),
+        bundling: {
+          format: OutputFormat.ESM,
+          externalModules: ['@aws-sdk/client-cognito-identity-provider'],
+        },
+      },
+    );
+
+    props.userPool.grant(getCognitoDetailsLambda, 'cognito-idp:AdminGetUser');
+
+    // --- 3. AppSync Integration to Start the Workflow ---
+    const requestLambdaDS = api.addLambdaDataSource(
+      'RequestLambdaDataSource',
+      requestLambda,
+    );
+
+    requestLambdaDS.createResolver('RequestNewMealPlanResolver', {
+      typeName: 'Mutation',
+      fieldName: 'requestNewMealPlan',
+    });
+
+    // --- 4. Step Function State Machine ---
+
+    const getCognitoDetailsTask = new sfn_tasks.LambdaInvoke(
+      this,
+      'Get Cognito User Details',
+      {
+        lambdaFunction: getCognitoDetailsLambda,
+        payload: sfn.TaskInput.fromJsonPathAt('$'),
+        outputPath: '$.Payload',
+      },
+    );
+
+    const validatePreferencesTask = new sfn_tasks.LambdaInvoke(
+      this,
+      'Validate Preferences',
+      {
+        lambdaFunction: validatorLambda,
+        payload: sfn.TaskInput.fromJsonPathAt('$'),
+        resultPath: '$.validatedPrefs',
+        resultSelector: { 'Payload.$': '$.Payload' },
+      },
+    );
+
+    const generatePlanTask = new sfn_tasks.LambdaInvoke(
+      this,
+      'Generate Meal Plan',
+      {
+        lambdaFunction: generatorLambda,
+        payload: sfn.TaskInput.fromJsonPathAt('$'),
+        resultPath: '$.planResult',
+        resultSelector: { 'Payload.$': '$.Payload' },
+      },
+    );
+
+    // Success path: Update to GENERATED and notify
+    const updateSuccessTask = new sfn_tasks.LambdaInvoke(
+      this,
+      'Update Status to GENERATED',
+      {
+        lambdaFunction: updateStatusLambda,
+        payload: sfn.TaskInput.fromObject({
+          mealPlanId: sfn.JsonPath.stringAt('$.mealPlanId'),
+          userId: sfn.JsonPath.stringAt('$.userId'),
+          status: 'GENERATED',
+          dailyPlan: sfn.JsonPath.objectAt('$.planResult.Payload'),
+        }),
+        resultPath: '$.updateResult',
+      },
+    );
+
+    const notifySuccessTask = new sfn_tasks.SnsPublish(this, 'Notify Success', {
+      topic: mealPlanNotificationTopic,
+      message: sfn.TaskInput.fromObject({
+        type: 'MEAL_PLAN_GENERATED',
+        userId: sfn.JsonPath.stringAt('$.userId'),
+        mealPlanId: sfn.JsonPath.stringAt('$.mealPlanId'),
+        timestamp: sfn.JsonPath.stringAt('$$.State.EnteredTime'),
+      }),
+    });
+
+    // Failure path: Update to FAILED and notify
+    const updateFailureTask = new sfn_tasks.LambdaInvoke(
+      this,
+      'Update Status to FAILED',
+      {
+        lambdaFunction: updateStatusLambda,
+        payload: sfn.TaskInput.fromObject({
+          mealPlanId: sfn.JsonPath.stringAt('$.mealPlanId'),
+          userId: sfn.JsonPath.stringAt('$.userId'),
+          status: 'FAILED',
+          error: sfn.JsonPath.stringAt('$.error.Cause'),
+        }),
+        resultPath: '$.updateResult',
+      },
+    );
+
+    const notifyFailureTask = new sfn_tasks.SnsPublish(this, 'Notify Failure', {
+      topic: mealPlanNotificationTopic,
+      message: sfn.TaskInput.fromObject({
+        type: 'MEAL_PLAN_FAILED',
+        userId: sfn.JsonPath.stringAt('$.userId'),
+        mealPlanId: sfn.JsonPath.stringAt('$.mealPlanId'),
+        timestamp: sfn.JsonPath.stringAt('$$.State.EnteredTime'),
+        details: {
+          error: sfn.JsonPath.stringAt('$.error.Cause'),
+        },
+      }),
+      messageAttributes: {
+        userId: {
+          dataType: MessageAttributeDataType.STRING,
+          value: sfn.JsonPath.stringAt('$.userId'),
+        },
+        type: {
+          dataType: MessageAttributeDataType.STRING,
+          value: 'MEAL_PLAN_FAILED',
+        },
+      },
+    });
+
+    // Create the failure flow (update + notify)
+    const failureFlow = updateFailureTask.next(notifyFailureTask);
+
+    // Create the success flow (update + notify)
+    const successFlow = updateSuccessTask.next(notifySuccessTask);
+
+    // Build the main workflow with catch-all error handling
+    const definition = getCognitoDetailsTask
+      .addCatch(failureFlow, {
+        errors: ['States.ALL'],
+        resultPath: '$.error', // KEY FIX: Preserve original input, add error to $.error
+      })
+      .next(
+        validatePreferencesTask
+          .addCatch(failureFlow, {
+            errors: ['States.ALL'],
+            resultPath: '$.error', // KEY FIX: Preserve original input, add error to $.error
+          })
+          .next(
+            generatePlanTask
+              .addCatch(failureFlow, {
+                errors: ['States.ALL'],
+                resultPath: '$.error', // KEY FIX: Preserve original input, add error to $.error
+              })
+              .next(successFlow),
+          ),
+      );
+
+    // Create the state machine
+    const stateMachine = new sfn.StateMachine(
+      this,
+      'MealPlanGenerationMachine',
+      {
+        stateMachineName: 'MealPlanGenerationWorkflow',
+        definitionBody: sfn.DefinitionBody.fromChainable(definition),
+        timeout: cdk.Duration.minutes(10),
+        tracingEnabled: true,
+        logs: {
+          destination: new logs.LogGroup(this, 'MealPlanGenerationMachineLogs'),
+          level: sfn.LogLevel.ALL,
+          includeExecutionData: true,
+        },
+      },
+    );
+
+    // --- 5. IAM Permissions & Final Wiring ---
+    // Connect the Request Handler to the State Machine
+    requestLambda.addEnvironment(
+      'STATE_MACHINE_ARN',
+      stateMachine.stateMachineArn,
+    );
+    stateMachine.grantStartExecution(requestLambda);
+
+    // Grant permissions to the workflow Lambdas
+    props.mealPlanningTable.grantWriteData(requestLambda); // For the initial PENDING status
+    props.mealPlanningTable.grantReadData(validatorLambda); // For reading user details
+    geminiApiSecret.grantRead(generatorLambda);
+    props.mealPlanningTable.grantWriteData(updateStatusLambda); // For the final status update
 
     // --------------------------------------------------------------------
     // OTHER RESOLVERS WILL BE ADDED LATER
