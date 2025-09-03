@@ -105,13 +105,28 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       // Refresh critical providers for new user session
       print('[AuthStateProvider] Refreshing providers for new user session...');
       
-      // These will automatically reload with new user data
+      // For sign-in, we need to invalidate userIdProvider to detect new user
       ref.invalidate(userIdProvider);
-      ref.invalidate(userDetailsProvider); 
+      
+      // For other providers, try to use refresh methods to preserve state
+      try {
+        final todayNotifier = ref.read(todayPageProvider.notifier);
+        todayNotifier.refreshData();
+      } catch (e) {
+        ref.invalidate(todayPageProvider);
+      }
+      
+      try {
+        final mealPlansNotifier = ref.read(mealPlansProvider.notifier);
+        mealPlansNotifier.backgroundRefresh();
+      } catch (e) {
+        ref.invalidate(mealPlansProvider);
+      }
+      
+      // These need to be invalidated to load new user data
+      ref.invalidate(userDetailsProvider);
       ref.invalidate(cognitoProfileProvider);
-      ref.invalidate(mealPlansProvider);
       ref.invalidate(subscriptionStatusProvider);
-      ref.invalidate(todayPageProvider);
       
       print('[AuthStateProvider] All providers refreshed for new user');
     } catch (e) {

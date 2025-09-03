@@ -78,24 +78,35 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
   }
 
   void _refreshAllData() {
-    // Refresh all data providers used by settings screen
-    final refreshTasks = <Future<void>>[];
-    
     try {
-      refreshTasks.add(ref.read(cognitoProfileProvider.notifier).refresh());
+      print('[SettingsScreen] Refreshing all data for settings page...');
       
-      // Get current user ID and refresh user details
+      // For settings page, we need fresh user data, so invalidation is appropriate
+      // This ensures we get the latest user details, profile, and subscription status
+      
+      // Refresh cognito profile
+      ref.read(cognitoProfileProvider.notifier).refresh();
+      print('[SettingsScreen] Cognito profile refresh initiated');
+      
+      // Refresh user details for current user
       ref.read(userIdProvider.future).then((userId) {
         if (userId != null) {
           ref.read(userDetailsProvider.notifier).loadUserDetails(userId);
+          print('[SettingsScreen] User details refresh initiated for user: $userId');
+        } else {
+          print('[SettingsScreen] No user ID found, skipping user details refresh');
         }
+      }).catchError((error) {
+        print('[SettingsScreen] Error getting user ID for refresh: $error');
       });
       
-      refreshTasks.add(ref.read(subscriptionStatusProvider.notifier).refresh());
+      // Refresh subscription status
+      ref.read(subscriptionStatusProvider.notifier).refresh();
+      print('[SettingsScreen] Subscription status refresh initiated');
       
-      print('[SettingsScreen] All data refresh tasks initiated');
+      print('[SettingsScreen] All settings data refresh tasks completed');
     } catch (e) {
-      print('[SettingsScreen] Error initiating refresh: $e');
+      print('[SettingsScreen] Error refreshing settings data: $e');
     }
   }
 

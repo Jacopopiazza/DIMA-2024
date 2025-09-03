@@ -55,6 +55,7 @@ class AppLifecycleNotifier extends StateNotifier<AppLifecycleData> with WidgetsB
   final Ref ref;
   DateTime? _lastBackgroundTime;
   DateTime? _lastForegroundTime;
+  DateTime? _lastRefreshTime;
 
   AppLifecycleNotifier(this.ref) : super(AppLifecycleData(
     state: CustomAppLifecycleState.unknown,
@@ -147,6 +148,15 @@ class AppLifecycleNotifier extends StateNotifier<AppLifecycleData> with WidgetsB
   void _onAppResumedFromBackground(Duration backgroundDuration) {
     print('[AppLifecycleProvider] Processing app resume after ${backgroundDuration.inSeconds}s...');
     
+    // Add cooldown period to prevent rapid refreshes
+    final now = DateTime.now();
+    if (_lastRefreshTime != null && now.difference(_lastRefreshTime!).inSeconds < 30) {
+      print('[AppLifecycleProvider] Refresh cooldown active, skipping refresh');
+      return;
+    }
+    
+    _lastRefreshTime = now;
+    
     // Refresh stale providers when app resumes from significant background time
     Future.microtask(() {
       if (mounted) {
@@ -159,17 +169,70 @@ class AppLifecycleNotifier extends StateNotifier<AppLifecycleData> with WidgetsB
     try {
       print('[AppLifecycleProvider] Refreshing potentially stale providers...');
       
-      // Only refresh providers that might have stale data
-      // User details and cognito profile are less likely to change
-      ref.invalidate(todayPageProvider);
-      ref.invalidate(mealPlansProvider);
+      // Instead of invalidating (which disposes providers), trigger refresh methods
+      // This preserves provider state while updating data
       
-      // These are less critical but refresh anyway for completeness
-      ref.invalidate(userDetailsProvider);
-      ref.invalidate(cognitoProfileProvider);
-      ref.invalidate(subscriptionStatusProvider);
+      // Refresh today page data if provider exists
+      try {
+        final todayNotifier = ref.read(todayPageProvider.notifier);
+        todayNotifier.refreshData();
+        print('[AppLifecycleProvider] Today page data refresh triggered');
+      } catch (e) {
+        print('[AppLifecycleProvider] Could not refresh today page: $e');
+      }
       
-      print('[AppLifecycleProvider] Stale providers refreshed');
+      // Refresh meal plans data if provider exists  
+      try {
+        final mealPlansNotifier = ref.read(mealPlansProvider.notifier);
+        mealPlansNotifier.backgroundRefresh();
+        print('[AppLifecycleProvider] Meal plans background refresh triggered');
+      } catch (e) {
+        print('[AppLifecycleProvider] Could not refresh meal plans: $e');
+      }
+      
+      // Refresh user details for current user
+      try {
+        ref.read(userIdProvider.future).then((userId) {
+          if (userId != null) {
+            final userDetailsNotifier = ref.read(userDetailsProvider.notifier);
+            userDetailsNotifier.loadUserDetails(userId);
+            print('[AppLifecycleProvider] User details refresh triggered for user: $userId');
+          } else {
+            print('[AppLifecycleProvider] No user ID found, skipping user details refresh');
+          }
+        }).catchError((error) {
+          print('[AppLifecycleProvider] Error getting user ID for refresh: $error');
+        });
+      } catch (e) {
+        print('[AppLifecycleProvider] Could not refresh user details: $e');
+      }
+      
+      // Refresh cognito profile
+      try {
+        final cognitoNotifier = ref.read(cognitoProfileProvider.notifier);
+        cognitoNotifier.refresh();
+        print('[AppLifecycleProvider] Cognito profile refresh triggered');
+      } catch (e) {
+        print('[AppLifecycleProvider] Could not refresh cognito profile: $e');
+      }
+      
+      // Refresh subscription status using its refresh method if possible
+      try {
+        final subscriptionNotifier = ref.read(subscriptionStatusProvider.notifier);
+        subscriptionNotifier.refresh();
+        print('[AppLifecycleProvider] Subscription status refresh triggered');
+      } catch (e) {
+        print('[AppLifecycleProvider] Could not refresh subscription status: $e');
+        // Fallback to invalidation if refresh method fails
+        try {
+          ref.invalidate(subscriptionStatusProvider);
+          print('[AppLifecycleProvider] Subscription status invalidated as fallback');
+        } catch (e2) {
+          print('[AppLifecycleProvider] Could not invalidate subscription status: $e2');
+        }
+      }
+      
+      print('[AppLifecycleProvider] Stale providers refresh completed');
     } catch (e) {
       print('[AppLifecycleProvider] Error refreshing stale providers: $e');
     }
