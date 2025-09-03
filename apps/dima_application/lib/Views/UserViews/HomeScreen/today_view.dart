@@ -15,6 +15,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+/// Enum representing different view types
+enum _ViewType { error, noMeals, planDetails }
+
+/// Configuration class for view state
+class _ViewConfiguration {
+  final _ViewType viewType;
+  final bool requiresIndicator;
+  final String? indicatorMessage;
+  final String errorMessage;
+
+  const _ViewConfiguration({
+    required this.viewType,
+    required this.requiresIndicator,
+    this.indicatorMessage,
+    required this.errorMessage,
+  });
+}
+
 /// A ConsumerWidget that displays the main "Today" screen content.
 ///
 /// This widget observes the `todayPageProvider` to react to changes in the
@@ -26,63 +44,31 @@ class TodayPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch the provider's state to rebuild the widget when the state changes.
     final todayState = ref.watch(todayPageProvider);
-    // Read the provider's notifier to access methods that can change the state.
     final notifier = ref.read(todayPageProvider.notifier);
 
-    // Determina se il RefreshIndicator dovrebbe essere abilitato
-    final bool canRefresh = todayState.status != DataStatus.errorNoPlan &&
-        todayState.status != DataStatus.errorInvalidPlanId;
+    return _buildRefreshWrapper(
+      context: context,
+      onRefresh: () => notifier.refreshData(),
+      child: _shouldShowNoPlanView(todayState.status)
+          ? _buildNoPlanView(context, notifier)
+          : _buildBody(context, todayState, notifier),
+    );
+  }
 
-    // Se non c'è piano, mostra il contenuto con RefreshIndicator per permettere refresh manuale
-    if (!canRefresh) {
-      return RefreshIndicator(
-        displacement: 60.0,
-        color: Theme.of(context).colorScheme.primary,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        onRefresh: () => notifier.refreshData(),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return ListView(
-              physics: const AlwaysScrollableScrollPhysics(
-                parent: BouncingScrollPhysics(),
-              ),
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: Center(
-                    child: ChoosePlanCard(
-                      onChoosePlan: () async {
-                        // Naviga alla pagina di selezione piano
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MyPlansPage(),
-                          ),
-                        );
-                        // Refresh solo dopo che l'utente torna dalla selezione
-                        // e potenzialmente ha selezionato un piano
-                        if (context.mounted) {
-                          notifier.refreshData();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      );
-    }
+  /// Wraps content with RefreshIndicator and responsive layout
+  Widget _buildRefreshWrapper({
+    required BuildContext context,
+    required Future<void> Function() onRefresh,
+    required Widget child,
+  }) {
+    final theme = Theme.of(context);
 
-    // Altrimenti usa RefreshIndicator normalmente
     return RefreshIndicator(
       displacement: 60.0,
-      color: Theme.of(context).colorScheme.primary,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      onRefresh: () => notifier.refreshData(),
+      color: theme.colorScheme.primary,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      onRefresh: onRefresh,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return ListView(
@@ -92,8 +78,8 @@ class TodayPage extends ConsumerWidget {
             children: [
               ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: _buildBody(context, todayState, notifier),
-              )
+                child: child,
+              ),
             ],
           );
         },
@@ -101,305 +87,303 @@ class TodayPage extends ConsumerWidget {
     );
   }
 
-  // --- START: REFACTORED _buildBody Method ---
-  /// Builds the main content widget based on the current `TodayPageState`.
-  ///
-  /// This method orchestrates the display of different UI states:
-  /// loading skeleton, data loaded (with or without stale data indicator),
-  /// error views, or the "Choose Plan" card.
+  /// Determines if the no-plan view should be shown
+  bool _shouldShowNoPlanView(DataStatus status) {
+    return status == DataStatus.errorNoPlan ||
+        status == DataStatus.errorInvalidPlanId;
+  }
+
+  /// Builds the no-plan selection view
+  Widget _buildNoPlanView(BuildContext context, TodayPageNotifier notifier) {
+    return Center(
+      child: ChoosePlanCard(
+        onChoosePlan: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const MyPlansPage()),
+          );
+          if (context.mounted) {
+            notifier.refreshData();
+          }
+        },
+      ),
+    );
+  }
+
+  /// Configuration for different UI states
+  static const Map<DataStatus, Map<String, dynamic>> _stateConfig = {
+    DataStatus.loadedOffline: {
+      'defaultMessage': 'Showing stale data.',
+      'requiresIndicator': true,
+    },
+    DataStatus.errorNetworkWithCache: {
+      'defaultMessage': 'Network unavailable. Showing cached data.',
+      'requiresIndicator': true,
+    },
+    DataStatus.errorNetwork: {
+      'defaultMessage': 'Refresh failed. Displaying previous data.',
+      'fallbackMessage': 'Failed to load data. Check connection.',
+      'requiresIndicator': true,
+    },
+    DataStatus.errorOther: {
+      'defaultMessage': 'Refresh failed. Displaying previous data.',
+      'fallbackMessage': 'Failed to load data. Check connection.',
+      'requiresIndicator': true,
+    },
+  };
+
+  /// Builds the main content widget based on the current TodayPageState
   Widget _buildBody(
       BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
-    // Optional widget to display a StaleDataIndicator at the top.
-    Widget? topIndicator;
-    // Flags to control which main content view is displayed.
-    bool showErrorView = false; // True to show the large ErrorView card.
-    bool showPlanDetails = false; // True to show ProgressCard and MealCards.
-    bool showNoMealsView =
-        false; // True to show the "No Meals For Today" message.
-
-    // --- Determine the state and set flags/indicators ---
-    switch (state.status) {
-      case DataStatus.loading:
-        // If it's the initial load, show the full-screen shimmer skeleton.
-        if (state.isInitialLoad) {
-          return const LoadingShimmer();
-        } else {
-          // If it's a refresh loading (not initial), show the previous data
-          // if available, and the RefreshIndicator spinner handles the loading feedback.
-          // Determine if previous data exists to show plan details or 'no meals' view.
-          showPlanDetails =
-              (state.todaysMeals != null && state.todaysMeals!.isNotEmpty);
-          showNoMealsView =
-              (state.todaysMeals != null && state.todaysMeals!.isEmpty);
-
-          // If no previous data exists at all during a refresh, show a simple spinner.
-          if (!showPlanDetails && !showNoMealsView) {
-            return const Center(
-                child: Padding(
-                    padding: EdgeInsets.all(32.0),
-                    child: CircularProgressIndicator()));
-          }
-          // If previous data exists, the code will fall through to build the
-          // layout with that data, and the RefreshIndicator shows the loading.
-        }
-        break;
-
-      case DataStatus.loadedOnline:
-        // Data loaded successfully from an online source.
-        showPlanDetails =
-            (state.todaysMeals != null && state.todaysMeals!.isNotEmpty);
-        showNoMealsView =
-            !showPlanDetails; // If no plan details, show no meals view.
-        // No stale data indicator needed for online loaded data.
-        break;
-
-      case DataStatus.loadedOffline:
-        // Data loaded successfully from offline cache (stale data).
-        showPlanDetails =
-            (state.todaysMeals != null && state.todaysMeals!.isNotEmpty);
-        showNoMealsView =
-            !showPlanDetails; // If no plan details, show no meals view.
-        // Show the stale data indicator.
-        topIndicator = StaleDataIndicator(
-          message: state.errorMessage ??
-              "Showing stale data.", // Use custom message or default
-          lastFetched: state.planLastFetched, // Provide the last fetched time
-          onRefresh: () => notifier.refreshData(), // Provide refresh callback
-        );
-        break;
-
-      case DataStatus.errorNetworkWithCache:
-        // Network error but we have cached data to show
-        showPlanDetails =
-            (state.todaysMeals != null && state.todaysMeals!.isNotEmpty);
-        showNoMealsView =
-            !showPlanDetails; // If no plan details, show no meals view.
-        // Show offline indicator with specific network error message
-        topIndicator = StaleDataIndicator(
-          message: state.errorMessage ??
-              "Network unavailable. Showing cached data.", // Use custom message or default
-          lastFetched: state.planLastFetched, // Provide the last fetched time
-          onRefresh: () => notifier.refreshData(), // Provide refresh callback
-        );
-        break;
-
-      case DataStatus.errorNetwork:
-      case DataStatus.errorOther:
-        // An error occurred (network or other).
-        // Check if any previous data is available to display.
-        final bool hasPreviousData =
-            state.todaysMeals != null && state.todaysMeals!.isNotEmpty;
-        final bool hadPreviousDataButNoMeals =
-            state.todaysMeals != null && state.todaysMeals!.isEmpty;
-
-        if (hasPreviousData) {
-          // If previous meal data exists, show it along with a stale data indicator.
-          showPlanDetails = true;
-          topIndicator = StaleDataIndicator(
-            message: state.errorMessage ??
-                "Refresh failed. Displaying previous data.", // Use custom message or default
-            lastFetched: state.planLastFetched, // Provide the last fetched time
-            onRefresh: () => notifier.refreshData(), // Provide refresh callback
-          );
-        } else if (hadPreviousDataButNoMeals) {
-          // If there was previous data, but it indicated no meals for today,
-          // show the "No Meals" view along with a stale data indicator.
-          showNoMealsView = true;
-          topIndicator = StaleDataIndicator(
-            message: state.errorMessage ??
-                "Refresh failed. No meals scheduled.", // Use custom message or default
-            lastFetched: state.planLastFetched, // Provide the last fetched time
-            onRefresh: () => notifier.refreshData(), // Provide refresh callback
-          );
-        } else {
-          // If no previous data exists at all, show the large ErrorView card.
-          showErrorView = true;
-        }
-        break;
-      case DataStatus.initial:
-      default:
-        // Default state, show a simple loading spinner.
-        return const Center(child: CircularProgressIndicator());
+    // Handle initial loading
+    if (state.status == DataStatus.loading && state.isInitialLoad) {
+      return const LoadingShimmer();
     }
 
-    // --- Build the final layout based on the determined flags ---
-
-    // If the showErrorView flag is true, display the large ErrorView card centered.
-    if (showErrorView) {
-      return Center(
-          child: ErrorView(
-        message: state.errorMessage ??
-            "Failed to load data. Check connection.", // Use custom message or default
-        onRetry: () => notifier.refreshData(), // Provide retry callback
-      ));
-    }
-
-    // If the showNoMealsView flag is true, display the "No Meals For Today" view.
-    // Use a Column to stack the optional top indicator above the no meals view.
-    // Expanded ensures the _buildNoMealsView takes up the remaining space.
-    if (showNoMealsView) {
-      return Column(
-        children: [
-          if (topIndicator != null)
-            topIndicator, // Show the stale data indicator if present
-          Expanded(
-              child: _buildNoMealsView(context, notifier,
-                  state.status)), // Show the no meals view, centered vertically
-        ],
-      );
-    }
-
-    // If the showPlanDetails flag is true, display the ProgressCard and MealCards.
-    // Use a Column to stack the optional top indicator above the plan details content.
-    // No Expanded or inner SingleChildScrollView is needed here, as the outer ListView
-    // handles scrolling for the entire page content.
-    if (showPlanDetails) {
-      return Column(
-        // This column's size will be determined by the total height of its children
-        // within the ListView item, allowing the ListView to scroll if needed.
-        children: [
-          if (topIndicator != null)
-            Padding(
-              // Add padding around the stale data indicator if it's displayed.
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
-              child: topIndicator,
-            ), // Show indicator if needed
-
-          // Apply padding directly around the main content helper method's output.
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: _buildPlanDetailsViewContent(context, state,
-                notifier), // Call the helper to build the content
-          ),
-        ],
-      );
-    }
-
-    // Fallback case: If none of the expected states are met, show a generic error message.
-    return const Center(
-        child: Text(
-            "Something went wrong determining view state.")); // Hardcoded string
-  }
-  // --- END: REFACTORED _buildBody Method ---
-
-  // --- START: _buildPlanDetailsViewContent Helper Method ---
-  /// Builds ONLY the content part of the plan details view.
-  ///
-  /// This includes the `ProgressCard` and the list of `MealCard` widgets.
-  /// It assumes that `state.todaysMeals` is not null or empty when called.
-  Widget _buildPlanDetailsViewContent(
-      BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
-    // Although assumed not null by the calling logic, a defensive check is good practice.
-    if (state.todaysMeals == null) {
+    // Handle loading with no previous data
+    if (state.status == DataStatus.loading && !_hasMealData(state)) {
       return const Center(
-          child:
-              Text("Error: Meal data is missing.")); // Hardcoded error message
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
-    // Calculate total macros from the list of meals.
-    final totalMacros = _calculateTotalMacros(state.todaysMeals);
-    // Access localization delegate.
-    final localizations = AppLocalizations.of(context)!;
+    // Handle initial or unknown states
+    if (state.status == DataStatus.initial) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-    // Return a Column containing the ProgressCard and the list of MealCards.
+    // Determine view type based on meal data
+    final viewConfig = _determineViewConfiguration(state);
+
+    // Build appropriate view
+    switch (viewConfig.viewType) {
+      case _ViewType.error:
+        return _buildErrorView(state, notifier);
+      case _ViewType.noMeals:
+        return _buildNoMealsLayout(context, state, notifier, viewConfig);
+      case _ViewType.planDetails:
+        return _buildPlanDetailsLayout(context, state, notifier, viewConfig);
+    }
+  }
+
+  /// Determines the appropriate view configuration based on state
+  _ViewConfiguration _determineViewConfiguration(TodayPageState state) {
+    final hasMeals = _hasMealData(state);
+    final hasEmptyMealData =
+        state.todaysMeals != null && state.todaysMeals!.isEmpty;
+    final config = _stateConfig[state.status];
+
+    // Determine view type
+    _ViewType viewType;
+    if (state.status == DataStatus.loadedOnline) {
+      viewType = hasMeals ? _ViewType.planDetails : _ViewType.noMeals;
+    } else if (config != null) {
+      if (hasMeals) {
+        viewType = _ViewType.planDetails;
+      } else if (hasEmptyMealData) {
+        viewType = _ViewType.noMeals;
+      } else {
+        viewType = _ViewType.error;
+      }
+    } else {
+      viewType = hasMeals ? _ViewType.planDetails : _ViewType.noMeals;
+    }
+
+    // Determine if indicator is needed
+    final requiresIndicator =
+        config?['requiresIndicator'] == true && (viewType != _ViewType.error);
+
+    // Determine indicator message
+    String? indicatorMessage;
+    if (requiresIndicator) {
+      if (viewType == _ViewType.noMeals && hasEmptyMealData) {
+        indicatorMessage =
+            state.errorMessage ?? "Refresh failed. No meals scheduled.";
+      } else {
+        indicatorMessage = state.errorMessage ?? config!['defaultMessage'];
+      }
+    }
+
+    return _ViewConfiguration(
+      viewType: viewType,
+      requiresIndicator: requiresIndicator,
+      indicatorMessage: indicatorMessage,
+      errorMessage: state.errorMessage ??
+          config?['fallbackMessage'] ??
+          "Something went wrong.",
+    );
+  }
+
+  /// Builds error view
+  Widget _buildErrorView(TodayPageState state, TodayPageNotifier notifier) {
+    final config = _stateConfig[state.status];
+    return Center(
+      child: ErrorView(
+        message: state.errorMessage ??
+            config?['fallbackMessage'] ??
+            "Failed to load data. Check connection.",
+        onRetry: () => notifier.refreshData(),
+      ),
+    );
+  }
+
+  /// Builds no meals layout with optional indicator
+  Widget _buildNoMealsLayout(BuildContext context, TodayPageState state,
+      TodayPageNotifier notifier, _ViewConfiguration config) {
+    if (!config.requiresIndicator) {
+      return _buildNoMealsView(context, notifier, state.status);
+    }
+
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start, // Align children to the start (left)
       children: [
-        // Display the ProgressCard with calculated macro percentages.
-        ProgressCard(
-          calories:
-              "${state.consumedMacros.calories.round()} / ${totalMacros.calories.round()} kCal", // Format calories string
-          fatPercent: _calculatePercent(state.consumedMacros.fats,
-              totalMacros.fats), // Calculate fat percentage
-          proteinPercent: _calculatePercent(state.consumedMacros.proteins,
-              totalMacros.proteins), // Calculate protein percentage
-          carbPercent: _calculatePercent(state.consumedMacros.carbohydrates,
-              totalMacros.carbohydrates), // Calculate carb percentage
-          isLoading:
-              false, // Not in a loading state for the ProgressCard itself here
-          isInitialLoad: state
-              .isInitialLoad, // Pass initial load status for animation handling
-        ),
-        const SizedBox(
-            height: 24), // Space between ProgressCard and meal list title
-        // Title for the list of today's meals.
-        Padding(
-          padding:
-              const EdgeInsets.only(bottom: 8.0), // Padding below the title
-          child: Text(localizations.todaysMeals, // Localized title text
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall), // Apply headline small style
-        ),
-        // Map the list of Meal objects to a list of MealCard widgets.
-        ...state.todaysMeals!.map((meal) {
-          // Determine if the current meal is completed based on the state.
-          final isCompleted = state.isMealCompleted(meal.name);
-          // Wrap each MealCard in Padding for spacing.
-          return Padding(
-            padding: const EdgeInsets.only(
-                bottom: 16.0), // Space below each meal card
-            child: MealCard(
-              meal: meal, // Pass the meal data
-              mealPlanId: state.mealPlanId!,
-              isCompleted: isCompleted, // Pass the completion status
-              imageUrl: _getMealImageUrl(
-                  meal.name), // Get the image URL for the meal type
-              // onToggle: () => notifier.toggleMealCompletion(meal.name), // Optional: Callback for toggling completion
-              isLoading: false, // MealCard is not in a loading state here
-            ),
-          );
-        }).toList(), // Convert the mapped iterable to a List of Widgets
+        _buildStaleDataIndicator(config.indicatorMessage!, state, notifier),
+        Expanded(child: _buildNoMealsView(context, notifier, state.status)),
       ],
     );
   }
-  // --- END: _buildPlanDetailsViewContent Helper Method ---
+
+  /// Builds plan details layout with optional indicator
+  Widget _buildPlanDetailsLayout(BuildContext context, TodayPageState state,
+      TodayPageNotifier notifier, _ViewConfiguration config) {
+    return Column(
+      children: [
+        if (config.requiresIndicator)
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+            child: _buildStaleDataIndicator(
+                config.indicatorMessage!, state, notifier),
+          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: _buildPlanDetailsViewContent(context, state, notifier),
+        ),
+      ],
+    );
+  }
+
+  /// Builds stale data indicator widget
+  Widget _buildStaleDataIndicator(
+      String message, TodayPageState state, TodayPageNotifier notifier) {
+    return StaleDataIndicator(
+      message: message,
+      lastFetched: state.planLastFetched,
+      onRefresh: () => notifier.refreshData(),
+    );
+  }
+
+  /// Checks if state has meal data
+  bool _hasMealData(TodayPageState state) {
+    return state.todaysMeals != null && state.todaysMeals!.isNotEmpty;
+  }
+
+  /// Builds the content part of the plan details view
+  Widget _buildPlanDetailsViewContent(
+      BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
+    if (state.todaysMeals == null) {
+      return const Center(child: Text("Error: Meal data is missing."));
+    }
+
+    final totalMacros = _calculateTotalMacros(state.todaysMeals);
+    final localizations = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Progress card showing macro tracking
+        ProgressCard(
+          calories:
+              "${state.consumedMacros.calories.round()} / ${totalMacros.calories.round()} kCal",
+          fatPercent:
+              _calculatePercent(state.consumedMacros.fats, totalMacros.fats),
+          proteinPercent: _calculatePercent(
+              state.consumedMacros.proteins, totalMacros.proteins),
+          carbPercent: _calculatePercent(
+              state.consumedMacros.carbohydrates, totalMacros.carbohydrates),
+          isLoading: false,
+          isInitialLoad: state.isInitialLoad,
+        ),
+        const SizedBox(height: 24),
+
+        // Section title
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            localizations.todaysMeals,
+            style: theme.textTheme.headlineSmall,
+          ),
+        ),
+
+        // Meal cards list
+        ...state.todaysMeals!.map((meal) => _buildMealCard(meal, state)),
+      ],
+    );
+  }
+
+  /// Builds individual meal card widget
+  Widget _buildMealCard(Meal meal, TodayPageState state) {
+    final isCompleted = state.isMealCompleted(meal.name);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: MealCard(
+        meal: meal,
+        mealPlanId: state.mealPlanId!,
+        isCompleted: isCompleted,
+        imageUrl: _getMealImageUrl(meal.name),
+        isLoading: false,
+      ),
+    );
+  }
 
   // --- Keep Existing Helper Methods ---
-  /// Builds the view displayed when there are no meals scheduled for today.
-  ///
-  /// Includes an icon, message, and a refresh button.
+  /// Meal image URL mappings
+  static const Map<MealNameEnum, String> _mealImages = {
+    MealNameEnum.BREAKFAST: 'assets/colazione.jpg',
+    MealNameEnum.LUNCH: 'assets/pranzo.jpg',
+    MealNameEnum.DINNER: 'assets/cena.png',
+    MealNameEnum.SNACK_AFTERNOON: 'assets/snack-pomeridiano.png',
+    MealNameEnum.SNACK_MORNING: 'assets/snack-mattino.jpg',
+    MealNameEnum.SNACK_EVENING: 'assets/snack-serale.png',
+  };
+
+  /// Builds the view displayed when there are no meals scheduled for today
   Widget _buildNoMealsView(BuildContext context, TodayPageNotifier notifier,
       DataStatus currentStatus) {
-    // Removed the internal StaleDataIndicator as it's now handled in _buildBody.
+    final theme = Theme.of(context);
+    final today = DateFormat('EEEE').format(DateTime.now());
+
     return Center(
-      // Center the column content vertically and horizontally.
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 20.0, vertical: 40.0), // Padding around the content
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment
-              .center, // Vertically center the column's children
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Icon for no meals
-            Icon(Icons.restaurant_menu_outlined,
-                size: 50,
-                color:
-                    Theme.of(context).colorScheme.secondary), // Icon and color
-            const SizedBox(height: 16), // Space below icon
-            // Title text
-            Text("No Meals For Today", // Hardcoded title (could be localized)
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall, // Apply headline small style
-                textAlign: TextAlign.center), // Center align text
-            const SizedBox(height: 8), // Space below title
-            // Explanatory text
+            Icon(
+              Icons.restaurant_menu_outlined,
+              size: 50,
+              color: theme.colorScheme.secondary,
+            ),
+            const SizedBox(height: 16),
             Text(
-                "Your current meal plan doesn't have any meals scheduled for ${DateFormat('EEEE').format(DateTime.now())}.", // Hardcoded message with formatted day
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium, // Apply body medium style
-                textAlign: TextAlign.center), // Center align text
-            const SizedBox(height: 24), // Space below text
-            // Refresh button
+              "No Meals For Today",
+              style: theme.textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Your current meal plan doesn't have any meals scheduled for $today.",
+              style: theme.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
             TextButton.icon(
-              icon: const Icon(Icons.refresh, size: 18), // Refresh icon
-              label: const Text("Refresh Now"), // Button label (hardcoded)
-              onPressed: () =>
-                  notifier.refreshData(), // Trigger refresh on press
+              icon: const Icon(Icons.refresh, size: 18),
+              label: const Text("Refresh Now"),
+              onPressed: () => notifier.refreshData(),
             ),
           ],
         ),
@@ -407,65 +391,32 @@ class TodayPage extends ConsumerWidget {
     );
   }
 
-  /// Calculates the total macros from a list of meals.
-  ///
-  /// Returns a `Macros` object with the sum of calories, proteins, carbs, and fats.
+  /// Calculates the total macros from a list of meals
   Macros _calculateTotalMacros(List<Meal>? meals) {
     if (meals == null || meals.isEmpty) {
-      // Return zero macros if the list is null or empty.
       return Macros(
           calories: 0.0, carbohydrates: 0.0, fats: 0.0, proteins: 0.0);
     }
-    double totalCalories = 0;
-    double totalProteins = 0;
-    double totalCarbs = 0;
-    double totalFats = 0;
-    // Iterate through the meals and sum their total macros.
-    for (final meal in meals) {
-      totalCalories += meal.totalMacros.calories;
-      totalProteins += meal.totalMacros.proteins;
-      totalCarbs += meal.totalMacros.carbohydrates;
-      totalFats += meal.totalMacros.fats;
-    }
-    // Return a new Macros object with the calculated totals.
-    return Macros(
-        calories: totalCalories,
-        proteins: totalProteins,
-        carbohydrates: totalCarbs,
-        fats: totalFats);
+
+    return meals.fold(
+      Macros(calories: 0.0, carbohydrates: 0.0, fats: 0.0, proteins: 0.0),
+      (total, meal) => Macros(
+        calories: total.calories + meal.totalMacros.calories,
+        proteins: total.proteins + meal.totalMacros.proteins,
+        carbohydrates: total.carbohydrates + meal.totalMacros.carbohydrates,
+        fats: total.fats + meal.totalMacros.fats,
+      ),
+    );
   }
 
-  /// Calculates a percentage (0.0 to 1.0) of consumed value relative to a total value.
-  ///
-  /// Returns 0.0 if the total is zero or negative. Clamps the result between 0.0 and 1.0.
+  /// Calculates a percentage (0.0 to 1.0) of consumed value relative to a total value
   double _calculatePercent(double consumed, double total) {
-    if (total <= 0) return 0.0; // Avoid division by zero or negative total
-    return (consumed / total)
-        .clamp(0.0, 1.0); // Calculate and clamp the percentage
+    return total <= 0 ? 0.0 : (consumed / total).clamp(0.0, 1.0);
   }
 
-  /// Returns an image URL string for a given meal type.
-  ///
-  /// Uses Unsplash images for specific meal types and a placeholder for others.
+  /// Returns an image URL string for a given meal type
   String _getMealImageUrl(MealNameEnum meal) {
-    const baseUrl = 'assets/';
-    switch (meal) {
-      case MealNameEnum.BREAKFAST:
-        return '${baseUrl}colazione.jpg';
-      case MealNameEnum.LUNCH:
-        return '${baseUrl}pranzo.jpg';
-      case MealNameEnum.DINNER:
-        return '${baseUrl}cena.png';
-      case MealNameEnum.SNACK_AFTERNOON:
-        return '${baseUrl}snack-pomeridiano.png';
-      case MealNameEnum.SNACK_MORNING:
-        return '${baseUrl}snack-mattino.jpg';
-      case MealNameEnum.SNACK_EVENING:
-        return '${baseUrl}snack-serale.png';
-      default:
-        // Use a placeholder image with the meal name encoded in the text.
-        return 'https://via.placeholder.com/600x250.png/grey/white?text=${Uri.encodeComponent(meal.name.toString())}';
-    }
+    return _mealImages[meal] ??
+        'https://via.placeholder.com/600x250.png/grey/white?text=${Uri.encodeComponent(meal.name.toString())}';
   }
-  // --- End Keep Existing Helper Methods ---
 } // End of TodayPage class
