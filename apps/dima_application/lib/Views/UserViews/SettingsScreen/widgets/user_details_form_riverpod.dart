@@ -97,6 +97,42 @@ class _UserDetailsFormRiverpodState
   Future<void> _saveChanges() async {
     if (_isLoading) return;
 
+    // Validate required fields
+    if (_weightController.text.isEmpty) {
+      _showErrorSnackBar('Weight is required');
+      return;
+    }
+
+    if (_heightController.text.isEmpty) {
+      _showErrorSnackBar('Height is required');
+      return;
+    }
+
+    double? weightKg;
+    double? heightCm;
+
+    try {
+      weightKg = double.parse(_weightController.text);
+      if (weightKg <= 0) {
+        _showErrorSnackBar('Weight must be greater than 0');
+        return;
+      }
+    } catch (e) {
+      _showErrorSnackBar('Please enter a valid weight');
+      return;
+    }
+
+    try {
+      heightCm = double.parse(_heightController.text);
+      if (heightCm <= 0) {
+        _showErrorSnackBar('Height must be greater than 0');
+        return;
+      }
+    } catch (e) {
+      _showErrorSnackBar('Please enter a valid height');
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -106,12 +142,12 @@ class _UserDetailsFormRiverpodState
     });
 
     final updatedDetails = UserDetails(
-      userId: widget.userDetails!.userId,
-      weightKg: double.parse(_weightController.text),
-      heightCm: double.parse(_heightController.text),
+      userId: widget.userDetails?.userId ?? '',
+      weightKg: weightKg,
+      heightCm: heightCm,
       openTextPreferences: _preferencesController.text,
       dietaryRestrictions: _dietaryRestrictionsController.text,
-      activeMealPlanId: widget.userDetails!.activeMealPlanId,
+      activeMealPlanId: widget.userDetails?.activeMealPlanId,
       allergies: _selectedAllergies,
       dailyMealsPreference: _dailyMealsPreference,
       exerciseFrequency: _exerciseFrequency,
@@ -152,30 +188,36 @@ class _UserDetailsFormRiverpodState
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Icon(Icons.error_outline_rounded,
-                      color: Colors.white, size: 16),
-                ),
-                const SizedBox(width: 12),
-                const Text('Failed to update profile'),
-              ],
-            ),
-            backgroundColor: Colors.red.shade600,
-            behavior: SnackBarBehavior.floating,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-        );
+        _showErrorSnackBar('Failed to update profile');
       }
+    }
+  }
+
+  void _showErrorSnackBar(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Icon(Icons.error_outline_rounded,
+                    color: Colors.white, size: 16),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Text(message)),
+            ],
+          ),
+          backgroundColor: Colors.red.shade600,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
     }
   }
 
