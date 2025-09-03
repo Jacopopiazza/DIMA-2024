@@ -7,7 +7,7 @@ export function request(ctx) {
   }
   return {
     operation: 'Query',
-    index: 'GSI_MealPlanId',
+    index: 'GSI5_MealPlanId',
     query: {
       expression: 'mealPlanId = :mpid',
       expressionValues: {

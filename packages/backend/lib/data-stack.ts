@@ -119,112 +119,76 @@ export class DataStack extends cdk.Stack {
 
     // GSI2 - For retrieving a Nutritionist's chats, sorted by recency (listMyAssignedChats query)
     // ChatMetadata items will have:
-    // GSI2PK = "NUTR#{NutritionistID}"
-    // GSI2SK = "LMT#{LastMessageTimestampISO}" (LMT for Last Message Timestamp)
+    // nutritionistId = "NUTR#{NutritionistID}"
+    // lastMessageTimestamp = "LMT#{LastMessageTimestampISO}" (LMT for Last Message Timestamp)
     this.mealPlanningTable.addGlobalSecondaryIndex({
       indexName: 'GSI2_NutritionistChatsByRecency',
-      partitionKey: { name: 'GSI2PK', type: dynamodb.AttributeType.STRING },
-      sortKey: { name: 'GSI2SK', type: dynamodb.AttributeType.STRING },
-      projectionType: dynamodb.ProjectionType.INCLUDE,
-      nonKeyAttributes: [
-        // Attributes from ChatMetadata needed for the list
-        'ChatID', // Actual ChatID (value from PK: CHAT#<id>)
-        'UserID',
-        'MealPlanID',
-        'PlanName',
-        'UserGivenName',
-        'LastMessageTimestamp',
-        'LastMessageSnippet',
-        'NutritionistUnreadCount',
-        // Add 'CreatedAt' if you ever want to sort by creation time as a fallback
-      ],
+      partitionKey: {
+        name: 'nutritionistId',
+        type: dynamodb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: 'lastMessageTimestamp',
+        type: dynamodb.AttributeType.STRING,
+      },
+      projectionType: dynamodb.ProjectionType.ALL,
     });
 
     // GSI3 - For retrieving a User's chats, sorted by recency (listMyChats query)
     // ChatMetadata items will have:
-    // GSI3PK = "USER#{UserID}"
-    // GSI3SK = "LMT#{LastMessageTimestampISO}"
+    // userId = "USER#{UserID}"
+    // lastMessageTimestamp = "LMT#{LastMessageTimestampISO}"
     this.mealPlanningTable.addGlobalSecondaryIndex({
       indexName: 'GSI3_UserChatsByRecency',
-      partitionKey: { name: 'GSI3PK', type: dynamodb.AttributeType.STRING },
-      sortKey: { name: 'GSI3SK', type: dynamodb.AttributeType.STRING },
-      projectionType: dynamodb.ProjectionType.INCLUDE,
-      nonKeyAttributes: [
-        // Attributes from ChatMetadata needed for the list
-        'ChatID',
-        'MealPlanID',
-        'NutritionistID',
-        'PlanName',
-        'NutritionistGivenName',
-        'LastMessageTimestamp',
-        'LastMessageSnippet',
-        'UserUnreadCount',
-        // Add 'CreatedAt' if you ever want to sort by creation time as a fallback
-      ],
+      partitionKey: { name: 'userId', type: dynamodb.AttributeType.STRING },
+      sortKey: {
+        name: 'lastMessageTimestamp',
+        type: dynamodb.AttributeType.STRING,
+      },
+      projectionType: dynamodb.ProjectionType.ALL,
     });
 
     // GSI4 - For retrieving meal plans assigned to a nutritionist (listMyAssignedMealPlans query)
     // MealPlan items will have:
-    // GSI4PK = "NUTR#{NutritionistID}"
-    // GSI4SK = "PLAN#{MealPlanID}"
+    // assignedNutritionistId = "NUTR#{NutritionistID}"
     this.mealPlanningTable.addGlobalSecondaryIndex({
-      indexName: 'GSI4_NutritionistMealPlans',
-      partitionKey: { name: 'GSI4PK', type: dynamodb.AttributeType.STRING },
-      sortKey: { name: 'GSI4SK', type: dynamodb.AttributeType.STRING },
-      projectionType: dynamodb.ProjectionType.INCLUDE,
-      nonKeyAttributes: [
-        // Attributes from MealPlan needed for the list
-        'PlanName',
-        'StartDate',
-        'EndDate',
-        'Status',
-        'ValidationStatus',
-        'AssignedNutritionistId',
-        'UserId',
-        'GeneratedAt',
-        // Add 'CreatedAt' if you ever want to sort by creation time as a fallback
-      ],
-    });
-
-    // GSI4 - For retrieving a User's PlanDayCompletion records, sorted by date across plans (listPlanCompletions query or general history)
-    // PlanDayCompletion items will have:
-    // GSI4PK = "USER#{UserID}"
-    // GSI4SK = "DATE#{Date}_PLAN#{PlanID}" (Date as YYYY-MM-DD)
-    this.mealPlanningTable.addGlobalSecondaryIndex({
-      indexName: 'GSI4_UserCompletionsByDate',
-      partitionKey: { name: 'GSI4PK', type: dynamodb.AttributeType.STRING },
-      sortKey: { name: 'GSI4SK', type: dynamodb.AttributeType.STRING },
-      projectionType: dynamodb.ProjectionType.INCLUDE,
-      nonKeyAttributes: [
-        // Attributes from PlanDayCompletion needed
-        'PlanID', // Actual PlanID
-        'Date',
-        'CompletedMealNames',
-        'UpdatedAt',
-        // Ensure the main table items for PlanDayCompletion also store UserID and the GSI keys
-      ],
-    });
-
-    // GSI_AssignedNutritionistId - For retrieving meal plans assigned to a nutritionist by assignedNutritionistId
-    // MealPlan items will have:
-    // assignedNutritionistId = <nutritionistId>
-    // mealPlanId = <mealPlanId>
-    this.mealPlanningTable.addGlobalSecondaryIndex({
-      indexName: 'GSI_AssignedNutritionistId',
+      indexName: 'GSI4_AssignedNutritionistId',
       partitionKey: {
         name: 'assignedNutritionistId',
         type: dynamodb.AttributeType.STRING,
       },
-      sortKey: { name: 'mealPlanId', type: dynamodb.AttributeType.STRING }, // Optional, for sorting
+      sortKey: { name: 'generatedAt', type: dynamodb.AttributeType.STRING },
       projectionType: dynamodb.ProjectionType.ALL,
     });
 
-    // GSI_MealPlanId - For retrieving meal plans by mealPlanId
+    // GSI5_MealPlanId - For retrieving meal plans by mealPlanId
     // MealPlan items will have:
     // mealPlanId = <mealPlanId>
     this.mealPlanningTable.addGlobalSecondaryIndex({
-      indexName: 'GSI_MealPlanId',
+      indexName: 'GSI5_MealPlanId',
       partitionKey: { name: 'mealPlanId', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
+    // GSI6 - For retrieving a User's PlanDayCompletion records, sorted by date across plans (listPlanCompletions query or general history)
+    // PlanDayCompletion items will have:
+    // GSI6PK = "USER#{UserID}"
+    // GSI6SK = "DATE#{Date}_PLAN#{PlanID}" (Date as YYYY-MM-DD)
+    this.mealPlanningTable.addGlobalSecondaryIndex({
+      indexName: 'GSI6_UserCompletions',
+      partitionKey: { name: 'GSI6PK', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'GSI6SK', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
+    // ============================================
+    // GSI7 - For Chat to MealPlan lookup (optional but useful)
+    // Allows finding a chat by mealPlanId
+    // ============================================
+    this.mealPlanningTable.addGlobalSecondaryIndex({
+      indexName: 'GSI7_MealPlanChat',
+      partitionKey: { name: 'mealPlanId', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'entityType', type: dynamodb.AttributeType.STRING },
       projectionType: dynamodb.ProjectionType.ALL,
     });
 

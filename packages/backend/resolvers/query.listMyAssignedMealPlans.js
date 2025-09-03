@@ -5,11 +5,11 @@ export function request(ctx) {
 
   return {
     operation: 'Query',
-    index: 'GSI_AssignedNutritionistId',
+    index: 'GSI4_AssignedNutritionistId',
     query: {
       expression: 'assignedNutritionistId = :nid',
       expressionValues: {
-        ':nid': { S: nutritionistId },
+        ':nid': { S: `NUTR#${nutritionistId}` },
       },
     },
   };

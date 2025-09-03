@@ -43,6 +43,10 @@ export const handler = async (event: UpdateStatusEvent) => {
     updateExpressionParts.push('#dailyPlan = :dailyPlan');
     expressionAttributeNames['#dailyPlan'] = 'dailyPlan';
     expressionAttributeValues[':dailyPlan'] = dailyPlan;
+
+    updateExpressionParts.push('#generatedAt = :generatedAt');
+    expressionAttributeNames['#generatedAt'] = 'generatedAt';
+    expressionAttributeValues[':generatedAt'] = new Date().toISOString();
   }
 
   // Add error details for failures

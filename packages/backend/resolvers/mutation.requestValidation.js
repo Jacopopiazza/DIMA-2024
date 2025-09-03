@@ -29,13 +29,11 @@ export function request(ctx) {
     key: util.dynamodb.toMapValues({ PK: pk, SK: sk }),
     update: {
       expression:
-        'SET assignedNutritionistId = :nutritionistId, validationStatus = :validationStatus, updatedAt = :updatedAt, GSI4PK = :gsi4pk, GSI4SK = :gsi4sk',
+        'SET validationStatus = :validationStatus, updatedAt = :updatedAt, assignedNutritionistId = :assignedNutritionistId',
       expressionValues: util.dynamodb.toMapValues({
-        ':nutritionistId': nutritionistId,
         ':validationStatus': 'PENDING_REVIEW',
         ':updatedAt': now,
-        ':gsi4pk': `NUTR#${nutritionistId}`,
-        ':gsi4sk': `PLAN#${mealPlanId}`,
+        ':assignedNutritionistId': `NUTR#${nutritionistId}`,
       }),
     },
     condition: {

@@ -38,8 +38,8 @@
   ":planIdValue": $util.dynamodb.toDynamoDB($mealPlanId),
   ":dateValue": $util.dynamodb.toDynamoDB($dateToUse),
   ":updatedAtValue": $util.dynamodb.toDynamoDB($nowISO),
-  ":gsi4pkValue": $util.dynamodb.toDynamoDB("USER#" + $userId),
-  ":gsi4skValue": $util.dynamodb.toDynamoDB("DATE#" + $dateToUse + "_PLAN#" + $mealPlanId),
+  ":gsi6pkValue": $util.dynamodb.toDynamoDB("USER#" + $userId),
+  ":gsi6skValue": $util.dynamodb.toDynamoDB("DATE#" + $dateToUse + "_PLAN#" + $mealPlanId),
   ":emptySet": $util.dynamodb.toStringSet([]) ## For initializing completedMealNames if it doesn't exist
 })
 
@@ -49,8 +49,8 @@
   "#pid": "planId",
   "#dt": "date",
   "#ua": "updatedAt",
-  "#gsi4pk": "GSI4PK", ## Literal GSI attribute name
-  "#gsi4sk": "GSI4SK"  ## Literal GSI attribute name
+  "#gsi6pk": "GSI6PK", ## Literal GSI attribute name
+  "#gsi6sk": "GSI6SK"  ## Literal GSI attribute name
 })
 
 ## Use ADD operation for completedMealNames.
@@ -58,8 +58,8 @@
 #set($updateExpression = "SET #uid = if_not_exists(#uid, :userIdValue), ")
 $util.qr($updateExpression.append("#pid = if_not_exists(#pid, :planIdValue), "))
 $util.qr($updateExpression.append("#dt = if_not_exists(#dt, :dateValue), "))
-$util.qr($updateExpression.append("#gsi4pk = if_not_exists(#gsi4pk, :gsi4pkValue), "))
-$util.qr($updateExpression.append("#gsi4sk = if_not_exists(#gsi4sk, :gsi4skValue), "))
+$util.qr($updateExpression.append("#gsi6pk = if_not_exists(#gsi6pk, :gsi6pkValue), "))
+$util.qr($updateExpression.append("#gsi6sk = if_not_exists(#gsi6sk, :gsi6skValue), "))
 $util.qr($updateExpression.append("#ua = :updatedAtValue ")) ## Always update 'updatedAt'
 ## Initialize completedMealNames as an empty set if it doesn't exist, then ADD to it.
 ## This two-step approach (if_not_exists for init, then ADD) is safer than just ADD.
@@ -68,7 +68,7 @@ $util.qr($updateExpression.append("SET #cmn = if_not_exists(#cmn, :emptySet)")) 
 
 ## The actual expression for DynamoDB needs to be carefully constructed.
 ## A more robust way for SET if_not_exists and ADD:
-#set($updateExpression = "SET #uid = if_not_exists(#uid, :userIdValue), #pid = if_not_exists(#pid, :planIdValue), #dt = if_not_exists(#dt, :dateValue), #gsi4pk = if_not_exists(#gsi4pk, :gsi4pkValue), #gsi4sk = if_not_exists(#gsi4sk, :gsi4skValue), #ua = :updatedAtValue, #cmn = if_not_exists(#cmn, :emptySet) ADD #cmn :newMealName")
+#set($updateExpression = "SET #uid = if_not_exists(#uid, :userIdValue), #pid = if_not_exists(#pid, :planIdValue), #dt = if_not_exists(#dt, :dateValue), #gsi6pk = if_not_exists(#gsi6pk, :gsi6pkValue), #gsi6sk = if_not_exists(#gsi6sk, :gsi6skValue), #ua = :updatedAtValue, #cmn = if_not_exists(#cmn, :emptySet) ADD #cmn :newMealName")
 
 
 {
