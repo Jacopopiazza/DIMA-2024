@@ -529,23 +529,118 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     );
   }
 
+  Widget _buildFailedCard(BuildContext context, plan, bool isActive,
+      ColorScheme colorScheme, ThemeData theme) {
+    return InkWell(
+      onTap: () => _openPlanDetails(context, plan),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.red.withOpacity(0.3),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.shadow.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              // Status indicator & icon
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: _getPlanStatusColor(plan.status, isActive, colorScheme),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  _getPlanStatusIcon(plan.status, isActive),
+                  color:
+                      _getPlanStatusIconColor(plan.status, isActive, colorScheme),
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+
+              // Plan info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      plan.planName ?? 'Unnamed Plan',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        _buildStatusChip(plan.status, colorScheme, theme),
+                        const Spacer(),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          color: colorScheme.onSurfaceVariant,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildMealPlanCard(BuildContext context, plan, bool isActive,
       ColorScheme colorScheme, ThemeData theme) {
     final bool isGenerating = plan.status == PlanStatus.PENDING ||
         plan.status == PlanStatus.IN_PROGRESS;
+    final bool isFailed = plan.status == PlanStatus.FAILED;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: isGenerating
           ? _buildGeneratingCard(context, plan, isActive, colorScheme, theme)
+          : isFailed
+          ? Dismissible(
+              key: Key(plan.mealPlanId),
+              direction: DismissDirection.endToStart, // 🔥 Allow only right-to-left swipe
+              background: Container(), // No left swipe background for failed plans
+              secondaryBackground: _buildSwipeBackground(
+                colorScheme.error,
+                Icons.delete_rounded,
+                'Delete',
+                Alignment.centerRight,
+              ),
+              confirmDismiss: (direction) =>
+                  _handleSwipe(context, plan, direction, isActive),
+              child: _buildFailedCard(context, plan, isActive, colorScheme, theme),
+            )
           : Dismissible(
               key: Key(plan.mealPlanId),
-              background: _buildSwipeBackground(
-                colorScheme.primary,
-                Icons.radio_button_checked_rounded,
-                'Set Active',
-                Alignment.centerLeft,
-              ),
+              direction: isActive ? DismissDirection.endToStart : DismissDirection.horizontal,
+              background: isActive 
+                ? Container() // No left swipe background for active plans
+                : _buildSwipeBackground(
+                    colorScheme.primary,
+                    Icons.radio_button_checked_rounded,
+                    'Set Active',
+                    Alignment.centerLeft,
+                  ),
               secondaryBackground: _buildSwipeBackground(
                 colorScheme.error,
                 Icons.delete_rounded,
@@ -772,6 +867,12 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
         foregroundColor = Colors.blue.shade800;
         label = 'Generating';
         break;
+      case PlanStatus.FAILED:
+        icon = Icons.error_rounded;
+        backgroundColor = Colors.red.shade100;
+        foregroundColor = Colors.red.shade800;
+        label = 'Failed';
+        break;
       default:
         return const SizedBox.shrink(); // Hide other statuses
     }
@@ -812,6 +913,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       return Colors.blue.shade600;
     } else if (status == PlanStatus.PENDING) {
       return Colors.amber.shade600;
+    } else if (status == PlanStatus.FAILED) {
+      return Colors.red.shade600;
     }
 
     return colorScheme.surfaceContainerHigh;
@@ -824,6 +927,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       return Icons.autorenew_rounded;
     } else if (status == PlanStatus.PENDING) {
       return Icons.schedule_rounded;
+    } else if (status == PlanStatus.FAILED) {
+      return Icons.error_rounded;
     }
 
     return Icons.restaurant_menu_rounded;
@@ -837,6 +942,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       return Colors.white;
     } else if (status == PlanStatus.PENDING) {
       return Colors.white;
+    } else if (status == PlanStatus.FAILED) {
+      return Colors.white;
     }
 
     return colorScheme.onSurfaceVariant;
@@ -844,8 +951,19 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
 
   Future<bool> _handleSwipe(BuildContext context, plan,
       DismissDirection direction, bool isActive) async {
+    // For failed plans, only allow deletion (endToStart)
+    if (plan.status == PlanStatus.FAILED) {
+      if (direction == DismissDirection.startToEnd) {
+        return false; // Prevent set active for failed plans
+      }
+      // Allow deletion to proceed for failed plans
+    }
+    
     // For SET ACTIVE (startToEnd):
-    if (direction == DismissDirection.startToEnd && !isActive) {
+    if (direction == DismissDirection.startToEnd) {
+      if (isActive) {
+        return false; // Prevent set active for already active plans
+      }
       // Set as active
       await showDialog<void>(
         context: context,
@@ -1036,7 +1154,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 );
               },
             ),
-            if (plan.validationStatus == MealPlanValidationStatus.NOT_VALIDATED)
+            if (plan.status != PlanStatus.FAILED && plan.validationStatus == MealPlanValidationStatus.NOT_VALIDATED)
               _buildActionButton(
                 context,
                 Icons.person_add_rounded,
