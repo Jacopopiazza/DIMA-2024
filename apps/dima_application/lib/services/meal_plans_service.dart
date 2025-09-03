@@ -204,12 +204,12 @@ class MealPlansService {
           safePrint(
               '[MealPlansService] Error details: ${error.message} - ${error.locations} - ${error.extensions}');
         }
-        return null;
+        throw Exception('GraphQL query failed with errors');
       }
 
       if (response.data == null) {
         safePrint('[MealPlansService] Response data is null');
-        return null;
+        throw Exception('GraphQL query returned null data');
       }
 
       safePrint(
@@ -227,7 +227,7 @@ class MealPlansService {
       } else {
         safePrint(
             '[MealPlansService] Unexpected response data type: ${response.data.runtimeType}');
-        return null;
+        throw Exception('GraphQL query failed with errors');
       }
 
       safePrint(
@@ -271,7 +271,7 @@ class MealPlansService {
       safePrint(
           '[MealPlansService] Error fetching meal plan by ID: ${e.toString()}');
       safePrint('[MealPlansService] Error stack trace: ${StackTrace.current}');
-      return null;
+      throw e;
     }
   }
 
