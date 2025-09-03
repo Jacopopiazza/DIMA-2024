@@ -16,7 +16,7 @@ final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     surface: Color(0xFF121212), // dark cards/dialogs
   ),
-  scaffoldBackgroundColor: Colors.black,
+  // Removed explicit scaffoldBackgroundColor to use Material 3 theme colors
 );
 
 // A custom authenticator widget with a custom layout

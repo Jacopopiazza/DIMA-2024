@@ -47,12 +47,15 @@ class TodayPage extends ConsumerWidget {
     final todayState = ref.watch(todayPageProvider);
     final notifier = ref.read(todayPageProvider.notifier);
 
-    return _buildRefreshWrapper(
-      context: context,
-      onRefresh: () => notifier.refreshData(),
-      child: _shouldShowNoPlanView(todayState.status)
-          ? _buildNoPlanView(context, notifier)
-          : _buildBody(context, todayState, notifier),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: _buildRefreshWrapper(
+        context: context,
+        onRefresh: () => notifier.refreshData(),
+        child: _shouldShowNoPlanView(todayState.status)
+            ? _buildNoPlanView(context, notifier)
+            : _buildBody(context, todayState, notifier),
+      ),
     );
   }
 
@@ -161,7 +164,7 @@ class TodayPage extends ConsumerWidget {
     // Build appropriate view
     switch (viewConfig.viewType) {
       case _ViewType.error:
-        return _buildErrorView(state, notifier);
+        return _buildErrorView(context, state, notifier);
       case _ViewType.noMeals:
         return _buildNoMealsLayout(context, state, notifier, viewConfig);
       case _ViewType.planDetails:
@@ -218,7 +221,7 @@ class TodayPage extends ConsumerWidget {
   }
 
   /// Builds error view
-  Widget _buildErrorView(TodayPageState state, TodayPageNotifier notifier) {
+  Widget _buildErrorView(BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
     final config = _stateConfig[state.status];
     return Center(
       child: ErrorView(

@@ -363,9 +363,14 @@ class _ProgressCardState extends State<ProgressCard>
         widget.carbPercent == null) {
       return Card(
         color: cardColor, // Card background color
-        elevation: 2.0, // Card shadow
+        elevation: 4.0, // Increased card shadow for better visibility
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0)), // Rounded corners
+          borderRadius: BorderRadius.circular(15.0), // Rounded corners
+          side: BorderSide(
+            color: colorScheme.outline.withAlpha(76), // Subtle border color (30% opacity)
+            width: 0.5, // Thin border width
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0), // Padding inside the card
           child: Center(
@@ -403,9 +408,14 @@ class _ProgressCardState extends State<ProgressCard>
 
     return Card(
       color: cardColor, // Card background color
-      elevation: 2.0, // Card shadow
+      elevation: 4.0, // Increased card shadow for better visibility
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0)), // Rounded corners
+        borderRadius: BorderRadius.circular(15.0), // Rounded corners
+        side: BorderSide(
+          color: colorScheme.outline.withAlpha(76), // Subtle border color (30% opacity)
+          width: 0.5, // Thin border width
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0), // Padding inside the card
         child: Row(
