@@ -408,174 +408,228 @@ class _ProgressCardState extends State<ProgressCard>
           borderRadius: BorderRadius.circular(15.0)), // Rounded corners
       child: Padding(
         padding: const EdgeInsets.all(16.0), // Padding inside the card
-        child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Align children to the start (left)
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Row: Contains the title "Today's Progress"
-            Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .spaceBetween, // Space out children (though only one child here)
-              children: [
-                Text(
-                  localizations.todayProgress, // Localized title text
-                  style: TextStyle(
-                      fontSize: 18, // Font size for the title
-                      fontWeight: FontWeight.bold, // Bold font weight
-                      color: textColor), // Text color
-                ),
-              ],
+            // Left Section: Title + Calories
+            Expanded(
+              flex: 2, // Takes more space for content
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title "Today's Progress"
+                  Text(
+                    localizations.todayProgress,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Calories Section
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        localizations.calories,
+                        style: TextStyle(
+                          color: secondaryTextColor,
+                          fontSize: MediaQuery.of(context).size.width < 375 ? 14 : 16,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.local_fire_department_rounded,
+                            color: fatColor,
+                            size: MediaQuery.of(context).size.width < 375 ? 18 : 20,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              widget.calories!,
+                              style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.width < 375 ? 16 : 18,
+                                fontWeight: FontWeight.bold,
+                                color: textColor,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 10), // Add some space after the title
-            // Content Row: Contains the Calories section and the Progress Indicators section
-            Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .spaceBetween, // Space out the two main sections
-              crossAxisAlignment: CrossAxisAlignment
-                  .center, // Vertically align items in the row
-              children: [
-                // Calories Section: Displays the calorie icon and value
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment
-                      .start, // Align children to the start (left)
-                  mainAxisAlignment: MainAxisAlignment
-                      .center, // Vertically center children within the column
-                  children: [
-                    // "Calories" label
-                    Text(
-                      localizations.calories, // Localized label
-                      style: TextStyle(
-                          color: secondaryTextColor, // Muted text color
-                          fontSize: 16), // Font size
-                    ),
-                    const SizedBox(
-                        height: 5), // Space between label and value row
-                    // Row containing calorie icon and value
-                    Row(
-                      children: [
-                        // Calorie icon
-                        Icon(
-                          Icons.local_fire_department_rounded,
-                          color:
-                              fatColor, // Using fatColor for the calorie icon color
-                          size: 20, // Icon size
-                        ),
-                        const SizedBox(width: 4), // Space between icon and text
-                        // Calorie value text
-                        Text(
-                          widget
-                              .calories!, // Display the calorie value (non-null assertion used as handled above)
-                          style: TextStyle(
-                              fontSize: 18, // Font size
-                              fontWeight: FontWeight.bold, // Bold font weight
-                              color: textColor), // Text color
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                    width:
-                        10), // Add spacing between the Calories section and the Indicators section
-
-                // --- Progress Indicators Section ---
-                Expanded(
-                  // This section takes up the remaining horizontal space in the Row
-                  child: LayoutBuilder(
-                    // Use LayoutBuilder to get the available width for the indicators
-                    builder: (context, constraints) {
-                      // --- Calculate proportional sizes for indicators based on available width ---
-                      final double totalIndicatorWidth = constraints.maxWidth;
-
-                      // Estimate the diameter for each indicator.
-                      // The multiplier (0.28) is a heuristic to leave some space between indicators.
-                      // The clamp ensures the diameter stays within a reasonable range.
-                      final double diameter = (totalIndicatorWidth * 0.28)
-                          .clamp(30.0, 90.0); // e.g. min 30, max 90 diameter
-                      final double radius =
-                          diameter / 2.0; // Radius is half the diameter
-
-                      // Calculate derived sizes (line width, font sizes) based on the radius.
-                      // Clamping is used again to keep sizes within reasonable bounds.
-                      final double lineWidth =
-                          (radius * 0.18).clamp(3.0, 12.0); // min 3, max 12
-                      final double centerFontSize =
-                          (radius * 0.38).clamp(9.0, 18.0); // min 9, max 18
-                      final double labelFontSize = centerFontSize *
-                          0.9; // Label font size slightly smaller than center
-
-                      // Row containing the three circular progress indicators
-                      return Row(
-                        // Distribute space evenly between and around the indicators
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            const SizedBox(width: 12), // Spacing between sections
+            // Right Section: Progress Indicators (now taller and bigger)
+            Expanded(
+              flex: 3, // Takes less space but full height
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final mediaQuery = MediaQuery.of(context);
+                  final screenWidth = mediaQuery.size.width;
+                  
+                  // Available space for indicators (full height now!)
+                  final double availableWidth = constraints.maxWidth;
+                  final double availableHeight = constraints.maxHeight;
+                  
+                  // Enhanced screen size detection with width constraints
+                  final bool isVerySmallScreen = screenWidth < 375; // iPhone SE, iPhone 13 mini
+                  final bool isSmallScreen = screenWidth < 390; // Standard small category
+                  final bool isCompactDevice = availableWidth < 200; // Tight space
+                  final bool isVeryCompactDevice = availableWidth < 180; // Very tight space
+                  
+                  // More aggressive spacing reduction for small screens
+                  double minSpacing, rightPadding;
+                  if (isVeryCompactDevice) {
+                    minSpacing = 2.0; // Minimal spacing
+                    rightPadding = 4.0;
+                  } else if (isCompactDevice) {
+                    minSpacing = 3.0;
+                    rightPadding = 5.0;
+                  } else if (isVerySmallScreen) {
+                    minSpacing = 4.0;
+                    rightPadding = 6.0;
+                  } else if (isSmallScreen) {
+                    minSpacing = 6.0;
+                    rightPadding = 8.0;
+                  } else {
+                    minSpacing = 8.0;
+                    rightPadding = 8.0;
+                  }
+                  
+                  final double totalSpacing = (2 * minSpacing) + rightPadding;
+                  final double availableForCircles = availableWidth - totalSpacing;
+                  
+                  // More conservative width-based calculation
+                  final double rawWidthDiameter = availableForCircles / 3;
+                  
+                  // Apply screen-specific limits with safety margin
+                  double maxWidthDiameter, minWidthDiameter;
+                  if (isVeryCompactDevice) {
+                    maxWidthDiameter = 40.0;
+                    minWidthDiameter = 18.0;
+                  } else if (isCompactDevice) {
+                    maxWidthDiameter = 45.0;
+                    minWidthDiameter = 20.0;
+                  } else if (isVerySmallScreen) {
+                    maxWidthDiameter = 50.0;
+                    minWidthDiameter = 22.0;
+                  } else if (isSmallScreen) {
+                    maxWidthDiameter = 55.0;
+                    minWidthDiameter = 25.0;
+                  } else {
+                    maxWidthDiameter = 65.0;
+                    minWidthDiameter = 28.0;
+                  }
+                  
+                  final double widthBasedDiameter = rawWidthDiameter.clamp(minWidthDiameter, maxWidthDiameter);
+                  
+                  // Height-based calculation with screen-specific limits
+                  double heightMultiplier = isVeryCompactDevice ? 0.6 : (isCompactDevice ? 0.65 : (isVerySmallScreen ? 0.7 : (isSmallScreen ? 0.75 : 0.8)));
+                  double maxHeightDiameter = isVeryCompactDevice ? 45.0 : (isCompactDevice ? 50.0 : (isVerySmallScreen ? 55.0 : (isSmallScreen ? 60.0 : 70.0)));
+                  double minHeightDiameter = isVeryCompactDevice ? 18.0 : (isCompactDevice ? 20.0 : (isVerySmallScreen ? 22.0 : (isSmallScreen ? 25.0 : 28.0)));
+                  
+                  final double heightBasedDiameter = (availableHeight * heightMultiplier).clamp(minHeightDiameter, maxHeightDiameter);
+                  
+                  // Use the smaller of the two to ensure it fits, with additional safety margin
+                  double diameter = [widthBasedDiameter, heightBasedDiameter].reduce((a, b) => a < b ? a : b);
+                  
+                  // Apply safety margin to prevent overflow
+                  diameter = diameter * 0.98; // 2% safety margin
+                  
+                  final double radius = diameter / 2.0;
+                  
+                  // Calculate sizes based on radius with screen-specific adjustments
+                  final double lineWidth = (radius * 0.15).clamp(1.5, 6.0);
+                  
+                  // Font sizes optimized for screen categories with more granular control
+                  double centerFontSize = radius * 0.32;
+                  double labelFontSize;
+                  
+                  if (isVeryCompactDevice) {
+                    centerFontSize = centerFontSize.clamp(6.0, 9.0);
+                    labelFontSize = (centerFontSize * 0.85).clamp(5.0, 7.5);
+                  } else if (isCompactDevice) {
+                    centerFontSize = centerFontSize.clamp(6.5, 10.0);
+                    labelFontSize = (centerFontSize * 0.85).clamp(5.5, 8.5);
+                  } else if (isVerySmallScreen) {
+                    centerFontSize = centerFontSize.clamp(7.0, 11.0);
+                    labelFontSize = (centerFontSize * 0.85).clamp(6.0, 9.0);
+                  } else if (isSmallScreen) {
+                    centerFontSize = centerFontSize.clamp(8.0, 12.0);
+                    labelFontSize = (centerFontSize * 0.85).clamp(7.0, 10.0);
+                  } else {
+                    centerFontSize = centerFontSize.clamp(9.0, 14.0);
+                    labelFontSize = (centerFontSize * 0.85).clamp(7.5, 12.0);
+                  }
+                  
+                  // Position indicators towards the right
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: rightPadding),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           // Fat Progress Indicator
                           _buildProgressIndicator(
-                            percent: widget.fatPercent!, // Target percentage
-                            animation: _fatAnimation, // Animation controller
-                            label: localizations.fats, // Localized label
-                            progressColor:
-                                fatColor, // Color for the progress arc
-                            backgroundColor:
-                                progressBackgroundColor, // Background circle color
-                            centerTextColor:
-                                textColor, // Color for the percentage text
-                            labelTextColor:
-                                secondaryTextColor, // Color for the label text
-                            radius: radius, // Calculated radius
-                            lineWidth: lineWidth, // Calculated line width
-                            centerFontSize:
-                                centerFontSize, // Calculated center font size
-                            labelFontSize:
-                                labelFontSize, // Calculated label font size
+                            percent: widget.fatPercent!,
+                            animation: _fatAnimation,
+                            label: localizations.fats,
+                            progressColor: fatColor,
+                            backgroundColor: progressBackgroundColor,
+                            centerTextColor: textColor,
+                            labelTextColor: secondaryTextColor,
+                            radius: radius,
+                            lineWidth: lineWidth,
+                            centerFontSize: centerFontSize,
+                            labelFontSize: labelFontSize,
                           ),
+                          SizedBox(width: minSpacing),
                           // Protein Progress Indicator
                           _buildProgressIndicator(
-                            percent:
-                                widget.proteinPercent!, // Target percentage
-                            animation: _proAnimation, // Animation controller
-                            label: localizations.proteins, // Localized label
-                            progressColor:
-                                proColor, // Color for the progress arc
-                            backgroundColor:
-                                progressBackgroundColor, // Background circle color
-                            centerTextColor:
-                                textColor, // Color for the percentage text
-                            labelTextColor:
-                                secondaryTextColor, // Color for the label text
-                            radius: radius, // Calculated radius
-                            lineWidth: lineWidth, // Calculated line width
-                            centerFontSize:
-                                centerFontSize, // Calculated center font size
-                            labelFontSize:
-                                labelFontSize, // Calculated label font size
+                            percent: widget.proteinPercent!,
+                            animation: _proAnimation,
+                            label: localizations.proteins,
+                            progressColor: proColor,
+                            backgroundColor: progressBackgroundColor,
+                            centerTextColor: textColor,
+                            labelTextColor: secondaryTextColor,
+                            radius: radius,
+                            lineWidth: lineWidth,
+                            centerFontSize: centerFontSize,
+                            labelFontSize: labelFontSize,
                           ),
+                          SizedBox(width: minSpacing),
                           // Carbohydrates Progress Indicator
                           _buildProgressIndicator(
-                            percent: widget.carbPercent!, // Target percentage
-                            animation: _carbAnimation, // Animation controller
-                            label: localizations.carbs, // Localized label
-                            progressColor:
-                                carbColor, // Color for the progress arc
-                            backgroundColor:
-                                progressBackgroundColor, // Background circle color
-                            centerTextColor:
-                                textColor, // Color for the percentage text
-                            labelTextColor:
-                                secondaryTextColor, // Color for the label text
-                            radius: radius, // Calculated radius
-                            lineWidth: lineWidth, // Calculated line width
-                            centerFontSize:
-                                centerFontSize, // Calculated center font size
-                            labelFontSize:
-                                labelFontSize, // Calculated label font size
+                            percent: widget.carbPercent!,
+                            animation: _carbAnimation,
+                            label: localizations.carbs,
+                            progressColor: carbColor,
+                            backgroundColor: progressBackgroundColor,
+                            centerTextColor: textColor,
+                            labelTextColor: secondaryTextColor,
+                            radius: radius,
+                            lineWidth: lineWidth,
+                            centerFontSize: centerFontSize,
+                            labelFontSize: labelFontSize,
                           ),
                         ],
-                      );
-                    },
-                  ),
-                )
-              ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

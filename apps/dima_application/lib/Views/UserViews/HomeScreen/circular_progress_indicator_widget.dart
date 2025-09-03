@@ -62,28 +62,38 @@ class CircularProgressIndicatorWidget extends StatelessWidget {
           radius: radius,
           lineWidth: lineWidth,
           percent: clampedPercent,
-          center: Text(
-            '${(percent * 100).toInt()}%',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: centerFontSize,
-              color: centerTextColor,
+          center: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '${(percent * 100).toInt()}%',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: centerFontSize,
+                color: centerTextColor,
+              ),
             ),
           ),
           progressColor: progressColor,
           backgroundColor: backgroundColor,
           circularStrokeCap: CircularStrokeCap.round,
         ),
-        const SizedBox(height: 5),
-        // Label text
-        Text(
-          label,
-          style: TextStyle(
-            color: labelTextColor,
-            fontSize: labelFontSize,
+        const SizedBox(height: 3),
+        // Label text with better overflow handling
+        Container(
+          width: radius * 2.4, // Ensure enough space for the text
+          constraints: BoxConstraints(maxWidth: radius * 2.4),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: labelTextColor,
+                fontSize: labelFontSize,
+              ),
+              maxLines: 1,
+              textAlign: TextAlign.center,
+            ),
           ),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
         )
       ],
     );
