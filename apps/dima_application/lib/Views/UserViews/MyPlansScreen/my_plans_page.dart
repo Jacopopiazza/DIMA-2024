@@ -4,6 +4,7 @@ import 'package:dima_application/providers/meal_plan_notification_provider.dart'
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../navigation/route_observer.dart';
 
 import '../generate_meal_plan_page.dart';
 import 'modify_plan_name_dialog.dart';
@@ -18,10 +19,11 @@ class MyPlansPage extends ConsumerStatefulWidget {
 }
 
 class _MyPlansPageState extends ConsumerState<MyPlansPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware {
   late AnimationController _fabAnimationController;
   late Animation<double> _fabScaleAnimation;
   bool _isManuallyRefreshing = false;
+  DateTime? _lastVisitTime;
 
   @override
   void initState() {
@@ -42,6 +44,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializePageSmart();
     });
+    _lastVisitTime = DateTime.now();
   }
 
   /// Initialize page and set current page state
@@ -60,7 +63,40 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register with route observer for navigation callbacks
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    // Called when user navigates back to this page
+    print('[MyPlansPage] User navigated back to my plans page');
+    _checkAndRefreshIfStale();
+    super.didPopNext();
+  }
+
+  void _checkAndRefreshIfStale() {
+    final now = DateTime.now();
+    if (_lastVisitTime != null) {
+      final timeSinceLastVisit = now.difference(_lastVisitTime!);
+      print('[MyPlansPage] Time since last visit: ${timeSinceLastVisit.inSeconds} seconds');
+      
+      // If user was away for more than 30 seconds, refresh the data
+      if (timeSinceLastVisit.inSeconds > 30) {
+        print('[MyPlansPage] Data potentially stale, refreshing...');
+        _refreshPlans();
+      }
+    }
+    _lastVisitTime = now;
+  }
+
+  @override
   void dispose() {
+    // Unregister from route observer
+    routeObserver.unsubscribe(this);
+    
     // Mark that we're leaving MyPlansPage - only if still mounted
     if (mounted) {
       try {

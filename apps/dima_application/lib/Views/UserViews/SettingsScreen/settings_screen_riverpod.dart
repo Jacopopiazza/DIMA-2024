@@ -1,5 +1,6 @@
 import 'package:dima_application/Views/UserViews/SettingsScreen/widgets/pro_subscription_section_riverpod.dart';
 import 'package:dima_application/providers/subscription_status_provider.dart';
+import 'package:dima_application/navigation/route_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/user_details_provider.dart';
@@ -19,10 +20,11 @@ class SettingsScreenRiverpod extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  DateTime? _lastVisitTime;
 
   @override
   void initState() {
@@ -42,10 +44,65 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
       curve: Curves.easeOutCubic,
     ));
     _animationController.forward();
+    _lastVisitTime = DateTime.now();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Register with route observer for navigation callbacks
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    // Called when user navigates back to this page
+    print('[SettingsScreen] User navigated back to settings page');
+    _checkAndRefreshIfStale();
+    super.didPopNext();
+  }
+
+  void _checkAndRefreshIfStale() {
+    final now = DateTime.now();
+    if (_lastVisitTime != null) {
+      final timeSinceLastVisit = now.difference(_lastVisitTime!);
+      print('[SettingsScreen] Time since last visit: ${timeSinceLastVisit.inSeconds} seconds');
+      
+      // If user was away for more than 60 seconds, refresh the data
+      if (timeSinceLastVisit.inSeconds > 60) {
+        print('[SettingsScreen] Data potentially stale, refreshing...');
+        _refreshAllData();
+      }
+    }
+    _lastVisitTime = now;
+  }
+
+  void _refreshAllData() {
+    // Refresh all data providers used by settings screen
+    final refreshTasks = <Future<void>>[];
+    
+    try {
+      refreshTasks.add(ref.read(cognitoProfileProvider.notifier).refresh());
+      
+      // Get current user ID and refresh user details
+      ref.read(userIdProvider.future).then((userId) {
+        if (userId != null) {
+          ref.read(userDetailsProvider.notifier).loadUserDetails(userId);
+        }
+      });
+      
+      refreshTasks.add(ref.read(subscriptionStatusProvider.notifier).refresh());
+      
+      print('[SettingsScreen] All data refresh tasks initiated');
+    } catch (e) {
+      print('[SettingsScreen] Error initiating refresh: $e');
+    }
   }
 
   @override
   void dispose() {
+    // Unregister from route observer
+    routeObserver.unsubscribe(this);
     _animationController.dispose();
     super.dispose();
   }

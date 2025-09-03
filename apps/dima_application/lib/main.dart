@@ -10,6 +10,8 @@ import 'package:dima_application/models/MealPlan/meal_plan.dart';
 import 'package:dima_application/models/TodayPage/today_page_data.dart';
 import 'package:dima_application/models/UserDetails/user_details_cache.dart';
 import 'package:dima_application/providers/isar_provider.dart';
+import 'package:dima_application/providers/auth_state_provider.dart';
+import 'package:dima_application/providers/app_lifecycle_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -66,11 +68,17 @@ Future<void> main() async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Initialize the auth state provider early to start listening for auth events
+    ref.watch(authStateProvider);
+    
+    // Initialize the app lifecycle provider to handle background/foreground detection
+    ref.watch(appLifecycleProvider);
+    
     return CustomizedAuthenticator();
   }
 }
