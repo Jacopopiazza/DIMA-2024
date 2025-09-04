@@ -28,7 +28,7 @@ export class ChatStack extends Construct {
     this.getCognitoUserDetailsLambda = new NodejsFunction(this, 'GetCognitoUserDetails', {
       runtime: lambda.Runtime.NODEJS_22_X,
       handler: 'handler',
-      entry: 'src/lambda/NuovaCartella/NuovoFile.ts', // TODO: SISTEMA PERCORSO
+      entry: 'src/lambda/get-cognito-user-details-chat/index.ts', // TODO: SISTEMA PERCORSO
       environment: {
         USER_POOL_ID: props.userPool.userPoolId,
         TABLE_NAME: props.table.tableName,
@@ -37,7 +37,7 @@ export class ChatStack extends Construct {
       memorySize: 128,
       bundling: {
         format: OutputFormat.ESM,
-        externalModules: ['@aws-sdk/*'],
+        externalModules: ['@aws-sdk/client-dynamodb', '@aws-sdk/lib-dynamodb', '@aws-sdk/client-cognito-identity-provider'],
         minify: true,
       },
     });
@@ -201,15 +201,6 @@ export class ChatStack extends Construct {
       runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
 
-    // Optional: Mark messages as read
-    new appsync.Resolver(this, 'MarkMessagesAsReadResolver', {
-      api: props.api,
-      typeName: 'Mutation',
-      fieldName: 'markMessagesAsRead',
-      dataSource: props.dynamoDataSource,
-      code: appsync.Code.fromAsset('resolvers/mutation.markMessagesAsRead.js'),
-      runtime: appsync.FunctionRuntime.JS_1_0_0,
-    });
 
     // ============================================
     // 6. SUBSCRIPTION RESOLVERS
@@ -234,25 +225,5 @@ export class ChatStack extends Construct {
       runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
 
-    // Single chat subscription (optional, for web)
-    new appsync.Resolver(this, 'OnNewChatMessageResolver', {
-      api: props.api,
-      typeName: 'Subscription',
-      fieldName: 'onNewChatMessage',
-      dataSource: noneDataSource,
-      code: appsync.Code.fromInline(`
-        export function request(ctx) {
-          return { payload: {} };
-        }
-        export function response(ctx) {
-          // Filter by chatId
-          if (!ctx.result || ctx.result.chatId !== ctx.args.chatId) {
-            return null;
-          }
-          return ctx.result;
-        }
-      `),
-      runtime: appsync.FunctionRuntime.JS_1_0_0,
-    });
   }
 }

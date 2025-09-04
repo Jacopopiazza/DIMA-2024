@@ -146,12 +146,15 @@ enum SubscriptionStatusEnum {
 Represents a single message within a chat session.
 """
 type ChatMessage @model {
-  chatId: ID! # From PK
-  messageId: ID! # From SK (e.g., MSG#timestamp)
+  chatId: ID!
+  messageId: ID!
   senderId: ID!
   senderType: SenderType!
   messageContent: String!
-  sentAt: AWSDateTime! # From SK timestamp part or separate attribute
+  sentAt: AWSDateTime!
+  # Add these for better UX in the subscription
+  senderName: String # Populated from Cognito
+  recipientId: ID! # Who should receive this notification
 }
 
 """
@@ -761,4 +764,13 @@ type Subscription {
   onMealPlanStatusChanged: MealPlanResponse
     @aws_subscribe(mutations: ["notifyMealPlanStatusChanged"])
     @aws_auth(cognito_groups: ["USERS"])
+
+  """
+  Subscribe to new messages in ALL chats for the authenticated user.
+  This subscription receives messages from any chat the user participates in.
+  """
+  onNewChatMessageForUser: ChatMessage
+    @aws_subscribe(mutations: ["sendChatMessage"])
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+
 }
