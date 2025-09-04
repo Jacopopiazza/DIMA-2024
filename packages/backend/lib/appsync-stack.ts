@@ -14,6 +14,7 @@ import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import * as sfn_tasks from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { MessageAttributeDataType } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { Construct } from 'constructs';
+import { ChatStack } from './chat-stack';
 
 interface AppSyncApiStackProps extends cdk.StackProps {
   userPool: cognito.UserPool;
@@ -385,12 +386,13 @@ export class AppSyncApiStack extends cdk.Stack {
     });
 
     // --- Resolver for Mutation.requestValidation ---
-    tableDS.createResolver('MutationRequestValidationResolver', {
+    // Si trova in chat-stack
+    /*tableDS.createResolver('MutationRequestValidationResolver', {
       typeName: 'Mutation',
       fieldName: 'requestValidation',
       runtime: appsync.FunctionRuntime.JS_1_0_0,
       code: appsync.Code.fromAsset('resolvers/mutation.requestValidation.js'),
-    });
+    });*/
 
     // --- Resolver for Mutation.setUserSubscriptionStatus ---
     tableDS.createResolver('MutationSetUserSubscriptionStatusResolver', {
@@ -877,6 +879,14 @@ export class AppSyncApiStack extends cdk.Stack {
     // --------------------------------------------------------------------
     // OTHER RESOLVERS WILL BE ADDED LATER
     // --------------------------------------------------------------------
+
+
+    new ChatStack(this, 'ChatResolvers', {
+      api: api,
+      dynamoDataSource: tableDS,
+      table: props.mealPlanningTable,
+      userPool: props.userPool,
+    });
 
     // Store API details for outputs or cross-stack references
     this.graphqlUrl = api.graphqlUrl;
