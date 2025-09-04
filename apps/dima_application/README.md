@@ -8,7 +8,7 @@ A new Flutter project.
    Run the following command from Flutter porject root folder:
 
    ```bash
-   aws appsync get-introspection-schema --api-id wwgcmu5mc5gfjba52dzhuhtyvi --region us-west-2 --format SDL ./lib/graphql/schema.graphql
+   aws appsync get-introspection-schema --api-id qqqwlspcmzcnlo37zz2psijew4 --region us-west-2 --format SDL ./lib/graphql/schema.graphql
    ```
 
 2. **Re run model gen command**:

@@ -15,13 +15,23 @@ class MealPlanSubscriptionService {
   // Avvia la subscription
   Future<void> startListening() async {
     try {
-      // Query GraphQL per la subscription
+      print(
+          "[MealPlanSubscriptionService] 🔍 Starting meal plan subscription...");
+
+      // Recupera l'ID dell'utente corrente
+      final user = await Amplify.Auth.getCurrentUser();
+      final String userId = user.userId;
+
+      print("[MealPlanSubscriptionService] 🔍 User ID: $userId");
+
+      // Query GraphQL per la subscription - simplified to match working console version
       const String subscriptionDocument = '''
-        subscription OnMealPlanStatusChanged {
-          onMealPlanStatusChanged {
+        subscription OnMealPlanStatusChanged(\$userId: ID!) {
+          onMealPlanStatusChanged(userId: \$userId) {
             success
             message
             mealPlanId
+            userId
           }
         }
       ''';
@@ -29,13 +39,21 @@ class MealPlanSubscriptionService {
       // Crea la subscription request
       final subscriptionRequest = GraphQLRequest<String>(
         document: subscriptionDocument,
+        variables: {
+          'userId': userId,
+        },
       );
+
+      print(
+          "[MealPlanSubscriptionService] 📡 Subscription request created with userId: $userId");
 
       // Avvia la subscription
       final operation = Amplify.API.subscribe(subscriptionRequest);
 
       _subscription = operation.listen(
         (GraphQLResponse<String> response) {
+          print(
+              "[MealPlanSubscriptionService] 📥 Raw subscription response received");
           _handleSubscriptionData(response);
         },
         onError: (error) {
@@ -47,9 +65,10 @@ class MealPlanSubscriptionService {
         },
       );
 
-      safePrint('[MealPlanSubscriptionService] MealPlan subscription started successfully');
+      print(
+          '[MealPlanSubscriptionService] ✅ MealPlan subscription started successfully for user: $userId');
     } catch (e) {
-      safePrint('[MealPlanSubscriptionService] Error starting subscription: $e');
+      print('[MealPlanSubscriptionService] ❌ Error starting subscription: $e');
       rethrow;
     }
   }
@@ -70,11 +89,13 @@ class MealPlanSubscriptionService {
       }
 
       if (response.errors != null && response.errors!.isNotEmpty) {
-        safePrint('[MealPlanSubscriptionService] Subscription response errors: ${response.errors}');
+        safePrint(
+            '[MealPlanSubscriptionService] Subscription response errors: ${response.errors}');
         _controller.addError(response.errors!);
       }
     } catch (e) {
-      safePrint('[MealPlanSubscriptionService] Error handling subscription data: $e');
+      safePrint(
+          '[MealPlanSubscriptionService] Error handling subscription data: $e');
       _controller.addError(e);
     }
   }
@@ -94,12 +115,14 @@ class MealPlanSubscriptionService {
           jsonMap['onMealPlanStatusChanged'] as Map<String, dynamic>?;
 
       if (notificationData == null) {
-        print("[MealPlanSubscriptionService] ⚠️ No 'onMealPlanStatusChanged' field found in JSON");
+        print(
+            "[MealPlanSubscriptionService] ⚠️ No 'onMealPlanStatusChanged' field found in JSON");
         // Fallback: prova a usare il JSON completo
         return _createMealPlanResponse(jsonMap);
       }
 
-      print("[MealPlanSubscriptionService] ✅ Notification data found: $notificationData");
+      print(
+          "[MealPlanSubscriptionService] ✅ Notification data found: $notificationData");
       return _createMealPlanResponse(notificationData);
     } catch (e) {
       print("[MealPlanSubscriptionService] ❌ Error parsing JSON: $e");
@@ -132,7 +155,8 @@ class MealPlanSubscriptionService {
         mealPlanId: mealPlanId,
       );
     } catch (e) {
-      print("[MealPlanSubscriptionService] ❌ Error creating MealPlanResponse: $e");
+      print(
+          "[MealPlanSubscriptionService] ❌ Error creating MealPlanResponse: $e");
       return MealPlanResponse(
         success: false,
         message: "Error creating response: $e",

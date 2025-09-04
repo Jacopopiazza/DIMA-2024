@@ -55,7 +55,8 @@ class NotificationState {
 /// Notifier for handling meal plan notifications
 class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
   final MealPlanSubscriptionService _subscriptionService;
-  final StateNotifierProviderRef<MealPlanNotificationNotifier, NotificationState> _ref;
+  final StateNotifierProviderRef<MealPlanNotificationNotifier,
+      NotificationState> _ref;
   StreamSubscription<MealPlanResponse>? _notificationSubscription;
 
   MealPlanNotificationNotifier(this._subscriptionService, this._ref)
@@ -74,13 +75,16 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
           _subscriptionService.notificationStream.listen(
         _handleMealPlanResponse,
         onError: (error) {
-          safePrint('[MealPlanNotificationNotifier] Error in notification stream: $error');
+          safePrint(
+              '[MealPlanNotificationNotifier] Error in notification stream: $error');
         },
       );
 
-      safePrint('[MealPlanNotificationNotifier] Meal plan notification system initialized');
+      safePrint(
+          '[MealPlanNotificationNotifier] Meal plan notification system initialized');
     } catch (e) {
-      safePrint('[MealPlanNotificationNotifier] Error initializing notifications: $e');
+      safePrint(
+          '[MealPlanNotificationNotifier] Error initializing notifications: $e');
     }
   }
 
@@ -101,7 +105,8 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
       hasUnreadNotifications: true,
     );
 
-    safePrint('[MealPlanNotificationNotifier] New meal plan notification: ${notification.message}');
+    safePrint(
+        '[MealPlanNotificationNotifier] New meal plan notification: ${notification.message}');
   }
 
   /// Mark all notifications as read
@@ -136,7 +141,7 @@ final mealPlanSubscriptionServiceProvider =
   return MealPlanSubscriptionService();
 });
 
-/// Provider for meal plan notifications  
+/// Provider for meal plan notifications
 final mealPlanNotificationProvider =
     StateNotifierProvider<MealPlanNotificationNotifier, NotificationState>(
         (ref) {
@@ -153,8 +158,9 @@ final globalNotificationHandler = Provider<void>((ref) {
       // Perform background refresh when notifications arrive
       final mealPlansNotifier = ref.read(mealPlansProvider.notifier);
       mealPlansNotifier.backgroundRefresh();
-      
-      safePrint('[GlobalNotificationHandler] Background refresh triggered due to notification');
+
+      safePrint(
+          '[GlobalNotificationHandler] Background refresh triggered due to notification');
     }
   });
 });

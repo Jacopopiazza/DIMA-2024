@@ -75,10 +75,10 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Initialize the auth state provider early to start listening for auth events
     ref.watch(authStateProvider);
-    
+
     // Initialize the app lifecycle provider to handle background/foreground detection
     ref.watch(appLifecycleProvider);
-    
+
     return CustomizedAuthenticator();
   }
 }

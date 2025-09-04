@@ -40,16 +40,18 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
     try {
       // Don't change state to loading - refresh silently in background
       final backendPlans = await _service.listMyMealPlans();
-      print('[MealPlansProvider] Background refresh: Backend returned ${backendPlans.items.length} plans');
+      print(
+          '[MealPlansProvider] Background refresh: Backend returned ${backendPlans.items.length} plans');
 
       // Update cache and state with fresh data
       _cachedActiveMealPlanId = backendPlans.activeMealPlan;
       _lastRefreshTime = DateTime.now();
-      
+
       // Update state with fresh data (no loading indicator)
       state = AsyncValue.data(backendPlans.items);
-      
-      print('[MealPlansProvider] Background refresh completed: active ID: $_cachedActiveMealPlanId');
+
+      print(
+          '[MealPlansProvider] Background refresh completed: active ID: $_cachedActiveMealPlanId');
     } catch (e) {
       print('[MealPlansProvider] Background refresh failed: $e');
       // Don't update state with error - keep existing data
@@ -74,7 +76,7 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
       // Cache the active meal plan ID from the response
       _cachedActiveMealPlanId = backendPlans.activeMealPlan;
       _lastRefreshTime = DateTime.now(); // Track refresh time
-      
+
       print(
           '[MealPlansProvider] Cached active meal plan ID: $_cachedActiveMealPlanId at $_lastRefreshTime');
 

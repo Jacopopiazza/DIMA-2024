@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 class ReadMealPlanPage extends StatefulWidget {
   final String mealPlanId;
   final String? initialPlanName;
-  
+
   const ReadMealPlanPage({
     super.key,
     required this.mealPlanId,
@@ -62,7 +62,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     });
 
     try {
-      final mealPlan = await _mealPlansService.getMealPlanById(widget.mealPlanId);
+      final mealPlan =
+          await _mealPlansService.getMealPlanById(widget.mealPlanId);
       if (mounted) {
         setState(() {
           _mealPlan = mealPlan;
@@ -84,7 +85,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: Stack(
@@ -149,7 +150,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 80.0, 16.0, 16.0), // Added top padding for floating button
+        padding: const EdgeInsets.fromLTRB(
+            16.0, 80.0, 16.0, 16.0), // Added top padding for floating button
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -212,31 +214,31 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: isNetworkError 
-                      ? Colors.orange.shade50 
+                  color: isNetworkError
+                      ? Colors.orange.shade50
                       : colorScheme.errorContainer,
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: isNetworkError 
-                        ? Colors.orange.shade200 
+                    color: isNetworkError
+                        ? Colors.orange.shade200
                         : colorScheme.error.withOpacity(0.2),
                     width: 2,
                   ),
                 ),
                 child: Icon(
-                  isNetworkError 
-                      ? Icons.wifi_off_rounded 
+                  isNetworkError
+                      ? Icons.wifi_off_rounded
                       : Icons.error_outline_rounded,
                   size: 48,
-                  color: isNetworkError 
-                      ? Colors.orange.shade700 
+                  color: isNetworkError
+                      ? Colors.orange.shade700
                       : colorScheme.error,
                 ),
               ),
               const SizedBox(height: 24),
               Text(
-                isNetworkError 
-                    ? 'Connection Problem' 
+                isNetworkError
+                    ? 'Connection Problem'
                     : 'Oops! Something went wrong',
                 style: theme.textTheme.headlineSmall?.copyWith(
                   color: colorScheme.onSurface,
@@ -257,12 +259,16 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               const SizedBox(height: 32),
               FilledButton.icon(
                 onPressed: _loadMealPlan,
-                icon: Icon(isNetworkError ? Icons.wifi_rounded : Icons.refresh_rounded),
+                icon: Icon(isNetworkError
+                    ? Icons.wifi_rounded
+                    : Icons.refresh_rounded),
                 label: Text(isNetworkError ? 'Reconnect' : 'Try Again'),
                 style: FilledButton.styleFrom(
-                  backgroundColor: isNetworkError ? Colors.orange.shade600 : null,
+                  backgroundColor:
+                      isNetworkError ? Colors.orange.shade600 : null,
                   foregroundColor: isNetworkError ? Colors.white : null,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
               ),
             ],
@@ -320,7 +326,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                 icon: const Icon(Icons.refresh_rounded),
                 label: const Text('Try Again'),
                 style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
               ),
             ],
@@ -369,65 +376,75 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               size: 20,
             ),
           ),
-        title: Text(
-          'Plan Information',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
-          ),
-        ),
-        subtitle: Text(
-          'View plan details',
-          style: TextStyle(
-            color: colorScheme.onSurfaceVariant,
-            fontSize: 13,
-          ),
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8),
-                _buildInfoRow('Plan Name', _mealPlan!.planName ?? 'Unnamed Plan', colorScheme),
-                _buildInfoRow('Plan ID', _mealPlan!.mealPlanId, colorScheme),
-                if (_mealPlan!.generatedAt != null)
-                  _buildInfoRow(
-                    'Generated',
-                    DateFormat('MMM dd, yyyy HH:mm').format(
-                      _mealPlan!.generatedAt!.getDateTimeInUtc().toLocal(),
-                    ),
-                    colorScheme,
-                  ),
-                _buildInfoRow(
-                  'Status',
-                  _formatEnumValue(_mealPlan!.status?.toString().split('.').last ?? 'UNKNOWN'),
-                  colorScheme,
-                  statusColor: _getStatusColor(_mealPlan!.status, colorScheme),
-                ),
-                _buildInfoRow(
-                  'Validation',
-                  _formatEnumValue(_mealPlan!.validationStatus?.toString().split('.').last ?? 'NOT_VALIDATED'),
-                  colorScheme,
-                  statusColor: _getValidationColor(_mealPlan!.validationStatus, colorScheme),
-                ),
-                if (_mealPlan!.assignedNutritionistId != null)
-                  _buildInfoRow(
-                    'Nutritionist ID',
-                    _mealPlan!.assignedNutritionistId!,
-                    colorScheme,
-                  ),
-              ],
+          title: Text(
+            'Plan Information',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
             ),
           ),
-        ],
+          subtitle: Text(
+            'View plan details',
+            style: TextStyle(
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 13,
+            ),
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  _buildInfoRow('Plan Name',
+                      _mealPlan!.planName ?? 'Unnamed Plan', colorScheme),
+                  _buildInfoRow('Plan ID', _mealPlan!.mealPlanId, colorScheme),
+                  if (_mealPlan!.generatedAt != null)
+                    _buildInfoRow(
+                      'Generated',
+                      DateFormat('MMM dd, yyyy HH:mm').format(
+                        _mealPlan!.generatedAt!.getDateTimeInUtc().toLocal(),
+                      ),
+                      colorScheme,
+                    ),
+                  _buildInfoRow(
+                    'Status',
+                    _formatEnumValue(
+                        _mealPlan!.status?.toString().split('.').last ??
+                            'UNKNOWN'),
+                    colorScheme,
+                    statusColor:
+                        _getStatusColor(_mealPlan!.status, colorScheme),
+                  ),
+                  _buildInfoRow(
+                    'Validation',
+                    _formatEnumValue(_mealPlan!.validationStatus
+                            ?.toString()
+                            .split('.')
+                            .last ??
+                        'NOT_VALIDATED'),
+                    colorScheme,
+                    statusColor: _getValidationColor(
+                        _mealPlan!.validationStatus, colorScheme),
+                  ),
+                  if (_mealPlan!.assignedNutritionistId != null)
+                    _buildInfoRow(
+                      'Nutritionist ID',
+                      _mealPlan!.assignedNutritionistId!,
+                      colorScheme,
+                    ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value, ColorScheme colorScheme, {Color? statusColor}) {
+  Widget _buildInfoRow(String label, String value, ColorScheme colorScheme,
+      {Color? statusColor}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -446,7 +463,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           Expanded(
             child: statusColor != null
                 ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -477,7 +495,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
 
   Widget _buildDailyPlanSection(ThemeData theme, ColorScheme colorScheme) {
     final dailyPlan = _mealPlan!.dailyPlan;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withOpacity(0.7),
@@ -516,24 +534,24 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               size: 20,
             ),
           ),
-        title: Text(
-          'Weekly Meal Plan',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
+          title: Text(
+            'Weekly Meal Plan',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
           ),
-        ),
-        subtitle: Text(
-          dailyPlan == null 
-              ? 'No meal plan data available'
-              : '7-day meal schedule (Read-only)',
-          style: TextStyle(
-            color: colorScheme.onSurfaceVariant,
-            fontSize: 13,
+          subtitle: Text(
+            dailyPlan == null
+                ? 'No meal plan data available'
+                : '7-day meal schedule (Read-only)',
+            style: TextStyle(
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 13,
+            ),
           ),
-        ),
-        children: [
-          if (dailyPlan == null)
+          children: [
+            if (dailyPlan == null)
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: Column(
@@ -562,13 +580,20 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   children: [
                     const Divider(),
                     const SizedBox(height: 16),
-                    _buildReadOnlyDayMeals('Monday', dailyPlan.monday, colorScheme),
-                    _buildReadOnlyDayMeals('Tuesday', dailyPlan.tuesday, colorScheme),
-                    _buildReadOnlyDayMeals('Wednesday', dailyPlan.wednesday, colorScheme),
-                    _buildReadOnlyDayMeals('Thursday', dailyPlan.thursday, colorScheme),
-                    _buildReadOnlyDayMeals('Friday', dailyPlan.friday, colorScheme),
-                    _buildReadOnlyDayMeals('Saturday', dailyPlan.saturday, colorScheme),
-                    _buildReadOnlyDayMeals('Sunday', dailyPlan.sunday, colorScheme),
+                    _buildReadOnlyDayMeals(
+                        'Monday', dailyPlan.monday, colorScheme),
+                    _buildReadOnlyDayMeals(
+                        'Tuesday', dailyPlan.tuesday, colorScheme),
+                    _buildReadOnlyDayMeals(
+                        'Wednesday', dailyPlan.wednesday, colorScheme),
+                    _buildReadOnlyDayMeals(
+                        'Thursday', dailyPlan.thursday, colorScheme),
+                    _buildReadOnlyDayMeals(
+                        'Friday', dailyPlan.friday, colorScheme),
+                    _buildReadOnlyDayMeals(
+                        'Saturday', dailyPlan.saturday, colorScheme),
+                    _buildReadOnlyDayMeals(
+                        'Sunday', dailyPlan.sunday, colorScheme),
                   ],
                 ),
               ),
@@ -578,15 +603,16 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     );
   }
 
-  Widget _buildReadOnlyDayMeals(String dayName, List<Meal>? meals, ColorScheme colorScheme) {
+  Widget _buildReadOnlyDayMeals(
+      String dayName, List<Meal>? meals, ColorScheme colorScheme) {
     final isToday = DateFormat('EEEE').format(DateTime.now()) == dayName;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: isToday ? colorScheme.primaryContainer.withOpacity(0.3) : null,
         border: Border.all(
-          color: isToday 
+          color: isToday
               ? colorScheme.primary.withOpacity(0.3)
               : colorScheme.outline.withOpacity(0.2),
         ),
@@ -599,7 +625,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isToday 
+              color: isToday
                   ? colorScheme.primary.withOpacity(0.1)
                   : colorScheme.surfaceVariant,
               borderRadius: const BorderRadius.only(
@@ -624,14 +650,15 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: isToday 
+                    color: isToday
                         ? colorScheme.primary
                         : colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
@@ -676,7 +703,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                 children: meals
                     .asMap()
                     .entries
-                    .map((entry) => _buildReadOnlyMeal(entry.value, colorScheme))
+                    .map(
+                        (entry) => _buildReadOnlyMeal(entry.value, colorScheme))
                     .toList(),
               ),
             ),
@@ -742,8 +770,10 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (meal.recipeName != null && meal.recipeName!.isNotEmpty) ...[
-                    _buildSectionHeader('Recipe Name', Icons.restaurant_rounded, colorScheme),
+                  if (meal.recipeName != null &&
+                      meal.recipeName!.isNotEmpty) ...[
+                    _buildSectionHeader(
+                        'Recipe Name', Icons.restaurant_rounded, colorScheme),
                     const SizedBox(height: 8),
                     Text(
                       meal.recipeName!,
@@ -752,18 +782,22 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                     const SizedBox(height: 16),
                   ],
                   if (meal.recipe != null && meal.recipe!.isNotEmpty) ...[
-                    _buildSectionHeader('Instructions', Icons.list_alt_rounded, colorScheme),
+                    _buildSectionHeader(
+                        'Instructions', Icons.list_alt_rounded, colorScheme),
                     const SizedBox(height: 8),
                     _buildExpandableInstructions(meal.recipe!, colorScheme),
                     const SizedBox(height: 16),
                   ],
-                  _buildSectionHeader('Nutrition Information', Icons.local_fire_department_rounded, colorScheme),
+                  _buildSectionHeader('Nutrition Information',
+                      Icons.local_fire_department_rounded, colorScheme),
                   const SizedBox(height: 12),
                   _buildNutritionInfo(meal.totalMacros, colorScheme),
                   const SizedBox(height: 16),
-                  _buildSectionHeader('Ingredients', Icons.eco_rounded, colorScheme),
+                  _buildSectionHeader(
+                      'Ingredients', Icons.eco_rounded, colorScheme),
                   const SizedBox(height: 12),
-                  ...meal.ingredients.map((ingredient) => _buildIngredientRow(ingredient, colorScheme)),
+                  ...meal.ingredients.map((ingredient) =>
+                      _buildIngredientRow(ingredient, colorScheme)),
                 ],
               ),
             ),
@@ -773,9 +807,11 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     );
   }
 
-  Widget _buildExpandableInstructions(String instructions, ColorScheme colorScheme) {
-    final isLong = instructions.length > 150; // Threshold for showing expand/collapse
-    
+  Widget _buildExpandableInstructions(
+      String instructions, ColorScheme colorScheme) {
+    final isLong =
+        instructions.length > 150; // Threshold for showing expand/collapse
+
     if (!isLong) {
       // If not long, just show the full text
       return Container(
@@ -793,7 +829,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         ),
       );
     }
-    
+
     // For long instructions, use ExpandableInstructions widget
     return ExpandableInstructions(
       instructions: instructions,
@@ -801,7 +837,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon, ColorScheme colorScheme) {
+  Widget _buildSectionHeader(
+      String title, IconData icon, ColorScheme colorScheme) {
     return Row(
       children: [
         Icon(
@@ -841,32 +878,32 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNutritionItem(
-            'Calories', 
-            '${macros.calories.round()}', 
+            'Calories',
+            '${macros.calories.round()}',
             'kcal',
             Icons.local_fire_department_rounded,
             Colors.orange,
             colorScheme,
           ),
           _buildNutritionItem(
-            'Protein', 
-            '${macros.proteins.toStringAsFixed(1)}', 
+            'Protein',
+            '${macros.proteins.toStringAsFixed(1)}',
             'g',
             Icons.fitness_center_rounded,
             Colors.red,
             colorScheme,
           ),
           _buildNutritionItem(
-            'Carbs', 
-            '${macros.carbohydrates.toStringAsFixed(1)}', 
+            'Carbs',
+            '${macros.carbohydrates.toStringAsFixed(1)}',
             'g',
             Icons.grain_rounded,
             Colors.green,
             colorScheme,
           ),
           _buildNutritionItem(
-            'Fat', 
-            '${macros.fats.toStringAsFixed(1)}', 
+            'Fat',
+            '${macros.fats.toStringAsFixed(1)}',
             'g',
             Icons.opacity_rounded,
             Colors.blue,
@@ -878,10 +915,10 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
   }
 
   Widget _buildNutritionItem(
-    String label, 
-    String value, 
-    String unit, 
-    IconData icon, 
+    String label,
+    String value,
+    String unit,
+    IconData icon,
     Color color,
     ColorScheme colorScheme,
   ) {

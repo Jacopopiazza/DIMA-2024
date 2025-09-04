@@ -24,7 +24,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get confirmClearCacheTitle => 'Conferma Svuotamento Cache';
 
   @override
-  String get confirmClearCacheMessage => 'Sei sicuro di voler eliminare tutti i dati memorizzati localmente nella cache? Potrebbe essere necessario scaricare nuovamente i piani alimentari e altre informazioni.';
+  String get confirmClearCacheMessage =>
+      'Sei sicuro di voler eliminare tutti i dati memorizzati localmente nella cache? Potrebbe essere necessario scaricare nuovamente i piani alimentari e altre informazioni.';
 
   @override
   String get clear => 'Svuota';
@@ -48,16 +49,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get confirmDeleteAccountTitle => 'Conferma Eliminazione Account';
 
   @override
-  String get confirmDeleteAccountMessage => 'ATTENZIONE: Questa azione è irreversibile ed eliminerà permanentemente il tuo account e tutti i dati associati. Sei assolutamente sicuro di voler procedere?';
+  String get confirmDeleteAccountMessage =>
+      'ATTENZIONE: Questa azione è irreversibile ed eliminerà permanentemente il tuo account e tutti i dati associati. Sei assolutamente sicuro di voler procedere?';
 
   @override
   String get accountDeletedSuccessfully => 'Account eliminato con successo.';
 
   @override
-  String get errorDeletingAccount => 'Errore durante l\'eliminazione dell\'account. Riprova.';
+  String get errorDeletingAccount =>
+      'Errore durante l\'eliminazione dell\'account. Riprova.';
 
   @override
-  String get errorDeleteAccountRequiresRecentLogin => 'L\'eliminazione dell\'account richiede un accesso recente. Effettua nuovamente l\'accesso.';
+  String get errorDeleteAccountRequiresRecentLogin =>
+      'L\'eliminazione dell\'account richiede un accesso recente. Effettua nuovamente l\'accesso.';
 
   @override
   String get saveChanges => 'Salva Modifiche';
@@ -66,13 +70,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get preferencesSavedSuccess => 'Preferenze salvate con successo.';
 
   @override
-  String get errorSavingPreferences => 'Errore nel salvataggio delle preferenze.';
+  String get errorSavingPreferences =>
+      'Errore nel salvataggio delle preferenze.';
 
   @override
-  String get errorLoadingPreferences => 'Errore nel caricamento delle preferenze.';
+  String get errorLoadingPreferences =>
+      'Errore nel caricamento delle preferenze.';
 
   @override
-  String get pleaseCorrectErrors => 'Per favore, correggi gli errori nel modulo.';
+  String get pleaseCorrectErrors =>
+      'Per favore, correggi gli errori nel modulo.';
 
   @override
   String get retry => 'Riprova';
@@ -93,7 +100,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get invalidNumberFormat => 'Inserisci un numero valido.';
 
   @override
-  String get caloriesOutOfRange => 'Le calorie devono essere comprese tra 500 e 10000.';
+  String get caloriesOutOfRange =>
+      'Le calorie devono essere comprese tra 500 e 10000.';
 
   @override
   String get dietaryNeeds => 'Esigenze Alimentari';
@@ -234,7 +242,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signUpDropdownText => 'Registrati come';
 
   @override
-  String get socialSignUpNotice => 'La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l\'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente.';
+  String get socialSignUpNotice =>
+      'La registrazione con un account social crea automaticamente un account utente normale. I nutrizionisti devono prima registrarsi con l\'email. Se un utente successivamente accede con un account social collegato alla stessa email, gli account verranno uniti automaticamente.';
 
   @override
   String get maleGender => 'Maschio';
@@ -368,7 +377,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectDialCode => 'Seleziona il prefisso telefonico del tuo paese';
 
   @override
-  String get noDialCodeSearchResults => 'Nessun risultato di ricerca corrisponde ai tuoi criteri';
+  String get noDialCodeSearchResults =>
+      'Nessun risultato di ricerca corrisponde ai tuoi criteri';
 
   @override
   String get af => 'Afghanistan';
@@ -1191,7 +1201,8 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get usernameRequirements => 'Il nome utente deve contenere solo caratteri alfanumerici e simboli.';
+  String get usernameRequirements =>
+      'Il nome utente deve contenere solo caratteri alfanumerici e simboli.';
 
   @override
   String get passwordRequirementsPreamble => 'La password deve includere:';
@@ -1246,7 +1257,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectTotp => 'App Autenticatore (TOTP)';
 
   @override
-  String get totpCodePrompt => 'Inserisci il codice dalla tua app Autenticatore registrata';
+  String get totpCodePrompt =>
+      'Inserisci il codice dalla tua app Autenticatore registrata';
 
   @override
   String get selectEmail => 'Email';
@@ -1275,13 +1287,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get totpStep3Title => 'Passo 3: Verifica il tuo codice';
 
   @override
-  String get totpStep1Body => 'Le app autenticatore generano codici monouso che possono essere utilizzati per verificare la tua identità';
+  String get totpStep1Body =>
+      'Le app autenticatore generano codici monouso che possono essere utilizzati per verificare la tua identità';
 
   @override
-  String get totpStep2Body => 'Apri l\'app Autenticatore e scansiona il codice QR o inserisci la chiave per ottenere il tuo codice di verifica';
+  String get totpStep2Body =>
+      'Apri l\'app Autenticatore e scansiona il codice QR o inserisci la chiave per ottenere il tuo codice di verifica';
 
   @override
-  String get totpStep3Body => 'Inserisci il codice a 6 cifre dalla tua app Autenticatore';
+  String get totpStep3Body =>
+      'Inserisci il codice a 6 cifre dalla tua app Autenticatore';
 
   @override
   String get confirmSignUp => 'Inserisci il tuo codice di conferma';
@@ -1296,10 +1311,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get confirmSignInNewPassword => 'Cambia la tua password per accedere';
 
   @override
-  String get continueSignInWithMfaSelection => 'Seleziona il tuo metodo di Autenticazione a Due Fattori preferito';
+  String get continueSignInWithMfaSelection =>
+      'Seleziona il tuo metodo di Autenticazione a Due Fattori preferito';
 
   @override
-  String get continueSignInWithTotpSetup => 'Abilita Autenticazione a Due Fattori';
+  String get continueSignInWithTotpSetup =>
+      'Abilita Autenticazione a Due Fattori';
 
   @override
   String get confirmSignInWithTotpMfaCode => 'Inserisci il tuo codice monouso';
@@ -1308,5 +1325,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get resetPassword => 'Invia Codice';
 
   @override
-  String get verifyUser => 'Il recupero dell\'account richiede informazioni di contatto verificate';
+  String get verifyUser =>
+      'Il recupero dell\'account richiede informazioni di contatto verificate';
 }

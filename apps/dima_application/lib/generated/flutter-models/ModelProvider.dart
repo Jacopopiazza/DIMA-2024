@@ -27,7 +27,9 @@ import 'NutritionistProfile.dart';
 import 'PlanDayCompletion.dart';
 import 'UserDetails.dart';
 import 'ChatMessageConnection.dart';
+import 'ChatMessagesResponse.dart';
 import 'ChatMetadataConnection.dart';
+import 'ChatResponse.dart';
 import 'DailyPlanData.dart';
 import 'Ingredient.dart';
 import 'Macros.dart';
@@ -36,6 +38,7 @@ import 'MealPlanConnection.dart';
 import 'MealPlanGenerationStatus.dart';
 import 'MealPlanList.dart';
 import 'MealPlanResponse.dart';
+import 'MealPlanResponseSubscription.dart';
 import 'MealWithStatus.dart';
 import 'NutritionistProfileConnection.dart';
 import 'PlanRequestPreferences.dart';
@@ -45,8 +48,10 @@ import 'UserSubscriptionStatus.dart';
 export 'AllergenEnum.dart';
 export 'ChatMessage.dart';
 export 'ChatMessageConnection.dart';
+export 'ChatMessagesResponse.dart';
 export 'ChatMetadata.dart';
 export 'ChatMetadataConnection.dart';
+export 'ChatResponse.dart';
 export 'DailyPlanData.dart';
 export 'ExerciseFrequency.dart';
 export 'Ingredient.dart';
@@ -59,6 +64,7 @@ export 'MealPlanGenerationStatus.dart';
 export 'MealPlanGenerationStatusValue.dart';
 export 'MealPlanList.dart';
 export 'MealPlanResponse.dart';
+export 'MealPlanResponseSubscription.dart';
 export 'MealPlanValidationStatus.dart';
 export 'MealWithStatus.dart';
 export 'NutritionistProfile.dart';
@@ -75,7 +81,7 @@ export 'WeekdayEnum.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "9213b1fcdcced2dfa1f7e47390794f5e";
+  String version = "66dae89fcf0c71ca226592afc34a3bde";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [
     ChatMessage.schema,
@@ -88,7 +94,9 @@ class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
   List<amplify_core.ModelSchema> customTypeSchemas = [
     ChatMessageConnection.schema,
+    ChatMessagesResponse.schema,
     ChatMetadataConnection.schema,
+    ChatResponse.schema,
     DailyPlanData.schema,
     Ingredient.schema,
     Macros.schema,
@@ -97,6 +105,7 @@ class ModelProvider implements amplify_core.ModelProviderInterface {
     MealPlanGenerationStatus.schema,
     MealPlanList.schema,
     MealPlanResponse.schema,
+    MealPlanResponseSubscription.schema,
     MealWithStatus.schema,
     NutritionistProfileConnection.schema,
     PlanRequestPreferences.schema,
