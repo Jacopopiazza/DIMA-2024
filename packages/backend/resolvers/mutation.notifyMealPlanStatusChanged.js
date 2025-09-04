@@ -8,7 +8,7 @@ export function request(ctx) {
   // Valida l'input
   const { input } = ctx.args;
 
-  if (!input || !input.mealPlanId || input.success === null) {
+  if (!input || !input.mealPlanId || input.success === null || !input.userId) {
     util.error(
       'Missing required fields in notification input',
       'ValidationException',
@@ -19,6 +19,7 @@ export function request(ctx) {
     mealPlanId: input.mealPlanId,
     success: input.success,
     message: input.message,
+    userId: input.userId,
   });
 
   // Non esegue nessuna operazione su database - è solo per triggerare la subscription
@@ -43,6 +44,7 @@ export function response(ctx) {
     mealPlanId: input.mealPlanId,
     success: input.success,
     message: input.message,
+    userId: input.userId,
   };
 
   console.log('Returning meal plan notification:', notification);

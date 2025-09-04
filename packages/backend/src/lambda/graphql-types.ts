@@ -32,63 +32,54 @@ export type Scalars = {
   AWSURL: { input: string; output: string };
 };
 
-/** Represents common food allergens based on EU FIC (Regulation (EU) No 1169/2011) and potentially others. */
 export enum AllergenEnum {
-  /** Celery and products thereof. */
   CELERY = 'CELERY',
-  /** Crustaceans and products thereof. */
   CRUSTACEANS = 'CRUSTACEANS',
-  /** Eggs and products thereof. */
   EGGS = 'EGGS',
-  /** Fish and products thereof. */
   FISH = 'FISH',
-  /** Cereals containing gluten, namely: wheat (such as spelt and khorasan wheat), rye, barley, oats or their hybridised strains, and products thereof. */
   GLUTEN_CEREALS = 'GLUTEN_CEREALS',
-  /** Lupin and products thereof. */
   LUPIN = 'LUPIN',
-  /** Milk and products thereof (including lactose). */
   MILK = 'MILK',
-  /** Molluscs and products thereof. */
   MOLLUSCS = 'MOLLUSCS',
-  /** Mustard and products thereof. */
   MUSTARD = 'MUSTARD',
-  /** Nuts, namely: almonds, hazelnuts, walnuts, cashews, pecan nuts, Brazil nuts, pistachio nuts, macadamia or Queensland nuts, and products thereof. */
   NUTS = 'NUTS',
-  /** Peanuts and products thereof. */
   PEANUTS = 'PEANUTS',
-  /** Sesame seeds and products thereof. */
   SESAME_SEEDS = 'SESAME_SEEDS',
-  /** Soybeans and products thereof. */
   SOYBEANS = 'SOYBEANS',
-  /** Sulphur dioxide and sulphites at concentrations of more than 10 mg/kg or 10 mg/litre in terms of the total SO2. */
   SULPHITES = 'SULPHITES',
 }
 
-/** Input for assigning a nutritionist to a specific meal plan. */
 export type AssignNutritionistInput = {
   mealPlanId: Scalars['ID']['input'];
   nutritionistId: Scalars['ID']['input'];
 };
 
-/** Represents a single message within a chat session. */
 export type ChatMessage = {
   __typename?: 'ChatMessage';
   chatId: Scalars['ID']['output'];
   messageContent: Scalars['String']['output'];
   messageId: Scalars['ID']['output'];
+  recipientId: Scalars['ID']['output'];
   senderId: Scalars['ID']['output'];
+  senderName?: Maybe<Scalars['String']['output']>;
   senderType: SenderType;
   sentAt: Scalars['AWSDateTime']['output'];
 };
 
-/** Connection type for paginated ChatMessage results. */
 export type ChatMessageConnection = {
   __typename?: 'ChatMessageConnection';
   items: Array<ChatMessage>;
   nextToken?: Maybe<Scalars['String']['output']>;
 };
 
-/** Metadata for a chat session between a user and a nutritionist regarding a meal plan. */
+export type ChatMessagesResponse = {
+  __typename?: 'ChatMessagesResponse';
+  count: Scalars['Int']['output'];
+  hasMore: Scalars['Boolean']['output'];
+  messages: Array<ChatMessage>;
+  oldestTimestamp?: Maybe<Scalars['String']['output']>;
+};
+
 export type ChatMetadata = {
   __typename?: 'ChatMetadata';
   chatId: Scalars['ID']['output'];
@@ -111,7 +102,12 @@ export type ChatMetadataConnection = {
   nextToken?: Maybe<Scalars['String']['output']>;
 };
 
-/** Input for creating a new meal plan directly. */
+export type ChatResponse = {
+  __typename?: 'ChatResponse';
+  message?: Maybe<ChatMessage>;
+  recipientId: Scalars['ID']['output'];
+};
+
 export type CreateMealPlanInput = {
   dailyPlan: DailyPlanDataInput;
   endDate: Scalars['AWSDate']['input'];
@@ -120,7 +116,6 @@ export type CreateMealPlanInput = {
   status?: InputMaybe<PlanStatus>;
 };
 
-/** Represents the Map<Weekday, List<MealObject>> structure for daily meals. */
 export type DailyPlanData = {
   __typename?: 'DailyPlanData';
   friday?: Maybe<Array<Meal>>;
@@ -132,7 +127,6 @@ export type DailyPlanData = {
   wednesday?: Maybe<Array<Meal>>;
 };
 
-/** Input for the map of daily meals. */
 export type DailyPlanDataInput = {
   friday?: InputMaybe<Array<MealInput>>;
   monday?: InputMaybe<Array<MealInput>>;
@@ -155,7 +149,6 @@ export enum ExerciseFrequency {
   TWICE_A_WEEK = 'TWICE_A_WEEK',
 }
 
-/** Represents a single ingredient within a meal. */
 export type Ingredient = {
   __typename?: 'Ingredient';
   amount: Scalars['Float']['output'];
@@ -164,7 +157,6 @@ export type Ingredient = {
   unit?: Maybe<Scalars['String']['output']>;
 };
 
-/** Input for a single ingredient within a meal. */
 export type IngredientInput = {
   amount: Scalars['Float']['input'];
   macros: MacrosInput;
@@ -176,7 +168,6 @@ export type ListNutritionistsFilter = {
   isAvailable?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** Represents macronutrient breakdown. */
 export type Macros = {
   __typename?: 'Macros';
   calories: Scalars['Float']['output'];
@@ -185,7 +176,6 @@ export type Macros = {
   proteins: Scalars['Float']['output'];
 };
 
-/** Input for macronutrient breakdown. */
 export type MacrosInput = {
   calories: Scalars['Float']['input'];
   carbohydrates: Scalars['Float']['input'];
@@ -193,14 +183,12 @@ export type MacrosInput = {
   proteins: Scalars['Float']['input'];
 };
 
-/** Input for marking a meal as completed for the current day. */
 export type MarkMealCompletedInput = {
   date?: InputMaybe<Scalars['AWSDate']['input']>;
   mealName: MealNameEnum;
   mealPlanId: Scalars['ID']['input'];
 };
 
-/** Represents a single meal within a day's plan. */
 export type Meal = {
   __typename?: 'Meal';
   ingredients: Array<Ingredient>;
@@ -210,7 +198,6 @@ export type Meal = {
   totalMacros: Macros;
 };
 
-/** Input for a single meal within a day's plan. */
 export type MealInput = {
   ingredients: Array<IngredientInput>;
   name: MealNameEnum;
@@ -248,7 +235,6 @@ export type MealPlanConnection = {
   nextToken?: Maybe<Scalars['String']['output']>;
 };
 
-/** Status result for the asynchronous meal plan generation mutation. */
 export type MealPlanGenerationStatus = {
   __typename?: 'MealPlanGenerationStatus';
   mealPlanId?: Maybe<Scalars['ID']['output']>;
@@ -263,7 +249,6 @@ export enum MealPlanGenerationStatusValue {
   PENDING = 'PENDING',
 }
 
-/** Represents a list of meal plans for the authenticated user. */
 export type MealPlanList = {
   __typename?: 'MealPlanList';
   activeMealPlan?: Maybe<Scalars['ID']['output']>;
@@ -271,7 +256,6 @@ export type MealPlanList = {
   nextToken?: Maybe<Scalars['String']['output']>;
 };
 
-/** The response after creating a meal plan. */
 export type MealPlanResponse = {
   __typename?: 'MealPlanResponse';
   mealPlanId: Scalars['ID']['output'];
@@ -279,11 +263,19 @@ export type MealPlanResponse = {
   success: Scalars['Boolean']['output'];
 };
 
-/** Input for the response of a meal plan operation. */
 export type MealPlanResponseInput = {
   mealPlanId: Scalars['ID']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
   success: Scalars['Boolean']['input'];
+  userId: Scalars['ID']['input'];
+};
+
+export type MealPlanResponseSubscription = {
+  __typename?: 'MealPlanResponseSubscription';
+  mealPlanId: Scalars['ID']['output'];
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+  userId: Scalars['ID']['output'];
 };
 
 export enum MealPlanValidationStatus {
@@ -292,14 +284,12 @@ export enum MealPlanValidationStatus {
   VALIDATED = 'VALIDATED',
 }
 
-/** Represents a Meal along with its completion status for the day */
 export type MealWithStatus = {
   __typename?: 'MealWithStatus';
   isCompleted: Scalars['Boolean']['output'];
   meal: Meal;
 };
 
-/** Input for modifying a meal plan assigned to a nutritionist. */
 export type ModifyAssignedMealPlanInput = {
   dailyPlan?: InputMaybe<DailyPlanDataInput>;
   planName?: InputMaybe<Scalars['String']['input']>;
@@ -307,45 +297,23 @@ export type ModifyAssignedMealPlanInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Assigns a nutritionist to a meal plan, initiating the chat capability. (Pro feature) */
   assignNutritionistToPlan?: Maybe<MealPlan>;
-  /**
-   * Directly creates a new meal plan.
-   * Typically used by nutritionists or for admin purposes.
-   */
   createMealPlan?: Maybe<MealPlanResponse>;
-  /** Deletes a meal plan. */
   deleteMealPlan?: Maybe<MealPlanResponse>;
-  /** Gets a meal plan by its ID. */
   getMealPlanById?: Maybe<MealPlan>;
-  /** Marks a meal as completed for today for the authenticated user. */
   markMealAsCompleted?: Maybe<PlanDayCompletion>;
-  /** Modifies a meal plan assigned to the nutritionist. */
   modifyAssignedMealPlan?: Maybe<MealPlanResponse>;
-  /** Modifies a meal plan. */
   modifyMealPlan?: Maybe<MealPlanResponse>;
-  /** Mutations solo per le notifiche (chiamate dalla notification lambda) */
-  notifyMealPlanStatusChanged?: Maybe<MealPlanResponse>;
-  /** Initiates the generation of a new meal plan, potentially overriding default preferences. Can be async. */
+  notifyMealPlanStatusChanged?: Maybe<MealPlanResponseSubscription>;
   requestNewMealPlan?: Maybe<MealPlanResponse>;
-  /** Requests validation of a meal plan by a nutritionist. */
   requestValidation?: Maybe<MealPlanResponse>;
-  /** Sends a message within a specific chat session. Resolver must check participation. */
-  sendChatMessage?: Maybe<ChatMessage>;
-  /** Sets a specific meal plan as the active one for the user. */
+  sendChatMessage?: Maybe<ChatResponse>;
   setActiveMealPlan?: Maybe<MealPlanResponse>;
-  /**
-   * Sets the complete list of completed meals for a specific plan on a specific date.
-   * Useful for bulk updates or syncing from an offline-first client.
-   */
   setPlanDayCompletion?: Maybe<PlanDayCompletion>;
-  /** Unmarks a meal as completed for today for the authenticated user. */
+  setUserSubscriptionStatus?: Maybe<UserSubscriptionStatus>;
   unmarkMealAsCompleted?: Maybe<PlanDayCompletion>;
-  /** Creates or updates the nutritionist profile for the authenticated nutritionist. */
   updateMyNutritionistProfile?: Maybe<NutritionistProfile>;
-  /** Updates details/preferences for the authenticated user. Replaces putUserPreferences. */
   updateUserDetails?: Maybe<UserDetails>;
-  /** Validates a meal plan. */
   validateMealPlan?: Maybe<MealPlanResponse>;
 };
 
@@ -404,6 +372,10 @@ export type MutationSetPlanDayCompletionArgs = {
   input: SetPlanDayCompletionInput;
 };
 
+export type MutationSetUserSubscriptionStatusArgs = {
+  subscriptionStatus: SubscriptionStatusEnum;
+};
+
 export type MutationUnmarkMealAsCompletedArgs = {
   input: UnmarkMealCompletedInput;
 };
@@ -420,7 +392,6 @@ export type MutationValidateMealPlanArgs = {
   input: ValidateMealPlanInput;
 };
 
-/** Represents public-facing details of a nutritionist. */
 export type NutritionistProfile = {
   __typename?: 'NutritionistProfile';
   bio?: Maybe<Scalars['String']['output']>;
@@ -439,7 +410,6 @@ export type NutritionistProfileConnection = {
   nextToken?: Maybe<Scalars['String']['output']>;
 };
 
-/** Represents the completion status of meals for a specific plan on a specific date. */
 export type PlanDayCompletion = {
   __typename?: 'PlanDayCompletion';
   completedMealNames: Array<MealNameEnum>;
@@ -449,7 +419,6 @@ export type PlanDayCompletion = {
   userId: Scalars['ID']['output'];
 };
 
-/** Input for specifying preferences when requesting a new meal plan. */
 export type PlanRequestPreferences = {
   __typename?: 'PlanRequestPreferences';
   allergies?: Maybe<Array<AllergenEnum>>;
@@ -464,7 +433,6 @@ export type PlanRequestPreferences = {
   weightKg: Scalars['Float']['output'];
 };
 
-/** Input for specifying preferences when requesting a new meal plan. */
 export type PlanRequestPreferencesInput = {
   allergies?: InputMaybe<Array<AllergenEnum>>;
   dailyMealsPreference?: InputMaybe<Scalars['Int']['input']>;
@@ -487,36 +455,25 @@ export enum PlanStatus {
 
 export type Query = {
   __typename?: 'Query';
-  /** Get the meal plan currently active for the user. */
   getActiveMealPlan?: Maybe<MealPlan>;
-  /** Gets messages for a specific chat session. Requires pagination. Resolver must check participation. */
-  getChatMessages?: Maybe<ChatMessageConnection>;
-  /** Gets a specific MealPlan by its ID. Resolver must verify ownership. */
+  getChatMessages?: Maybe<ChatMessagesResponse>;
   getMealPlanById?: Maybe<MealPlan>;
-  /** Fetches the NutritionistProfile for the authenticated nutritionist. */
   getMyNutritionistProfile?: Maybe<NutritionistProfile>;
-  /** Fetches the meal completion status for a specific plan on a specific date for the authenticated user. */
   getPlanDayCompletion?: Maybe<PlanDayCompletion>;
-  /** Fetches data needed for the 'Today' page: active plan's details for today and completion status. */
   getTodaysPlanAndStatus?: Maybe<TodaysPlan>;
-  /** Fetches the UserDetails (preferences, etc.) for the authenticated user. */
   getUserDetails?: Maybe<UserDetails>;
-  /** Lists chat sessions assigned to the authenticated nutritionist. Supports pagination. */
+  getUserSubscriptionStatus?: Maybe<UserSubscriptionStatus>;
   listMyAssignedChats?: Maybe<ChatMetadataConnection>;
-  /** Lists meal plans assigned to the authenticated nutritionist. Only meal plans with PENDING_REVIEW status are returned. Supports pagination. */
   listMyAssignedMealPlans?: Maybe<MealPlanList>;
-  /** Lists chat sessions for the authenticated user. Supports pagination. (Pro feature) */
   listMyChats?: Maybe<ChatMetadataConnection>;
-  /** Lists MealPlans for the authenticated user. Supports pagination. */
   listMyMealPlans?: Maybe<MealPlanList>;
-  /** Lists available nutritionists, potentially filterable. Supports pagination. (Pro feature?) */
   listNutritionists?: Maybe<NutritionistProfileConnection>;
 };
 
 export type QueryGetChatMessagesArgs = {
+  beforeTimestamp?: InputMaybe<Scalars['String']['input']>;
   chatId: Scalars['ID']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
-  nextToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type QueryGetMealPlanByIdArgs = {
@@ -554,13 +511,11 @@ export type QueryListNutritionistsArgs = {
   nextToken?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Input for requesting validation of a meal plan by a user. */
 export type RequestValidationInput = {
   mealPlanId: Scalars['ID']['input'];
   nutritionistId: Scalars['ID']['input'];
 };
 
-/** Input for sending a chat message. */
 export type SendMessageInput = {
   chatId: Scalars['ID']['input'];
   messageContent: Scalars['String']['input'];
@@ -571,7 +526,6 @@ export enum SenderType {
   USER = 'USER',
 }
 
-/** Input for setting the completion status of a meal plan for a specific day. Used to sync offline data. */
 export type SetPlanDayCompletionInput = {
   completedMealNames: Array<MealNameEnum>;
   date: Scalars['AWSDate']['input'];
@@ -580,11 +534,23 @@ export type SetPlanDayCompletionInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  /** Subscription notifica */
-  onMealPlanStatusChanged?: Maybe<MealPlanResponse>;
+  onMealPlanStatusChanged?: Maybe<MealPlanResponseSubscription>;
+  onNewChatMessageForUser?: Maybe<ChatResponse>;
 };
 
-/** Combined type for the Today page query result. */
+export type SubscriptionOnMealPlanStatusChangedArgs = {
+  userId: Scalars['ID']['input'];
+};
+
+export type SubscriptionOnNewChatMessageForUserArgs = {
+  recipientId: Scalars['ID']['input'];
+};
+
+export enum SubscriptionStatusEnum {
+  FREE = 'FREE',
+  PRO = 'PRO',
+}
+
 export type TodaysPlan = {
   __typename?: 'TodaysPlan';
   activePlanDetails?: Maybe<MealPlan>;
@@ -592,14 +558,12 @@ export type TodaysPlan = {
   todaysCompletion?: Maybe<PlanDayCompletion>;
 };
 
-/** Input for unmarking a meal as completed for the current day. */
 export type UnmarkMealCompletedInput = {
   date?: InputMaybe<Scalars['AWSDate']['input']>;
   mealName: MealNameEnum;
   mealPlanId: Scalars['ID']['input'];
 };
 
-/** Input for updating nutritionist profile. */
 export type UpdateNutritionistProfileInput = {
   bio?: InputMaybe<Scalars['String']['input']>;
   isAvailable?: InputMaybe<Scalars['Boolean']['input']>;
@@ -607,7 +571,6 @@ export type UpdateNutritionistProfileInput = {
   specialization?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Input for updating user preferences/details. */
 export type UpdateUserDetailsInput = {
   allergies?: InputMaybe<Array<AllergenEnum>>;
   dailyMealsPreference?: InputMaybe<Scalars['Int']['input']>;
@@ -618,7 +581,6 @@ export type UpdateUserDetailsInput = {
   weightKg?: InputMaybe<Scalars['Float']['input']>;
 };
 
-/** Represents user profile details and preferences stored in DynamoDB. */
 export type UserDetails = {
   __typename?: 'UserDetails';
   activeMealPlanId?: Maybe<Scalars['ID']['output']>;
@@ -634,7 +596,12 @@ export type UserDetails = {
   weightKg: Scalars['Float']['output'];
 };
 
-/** Input for validating a meal plan. */
+export type UserSubscriptionStatus = {
+  __typename?: 'UserSubscriptionStatus';
+  subscriptionStatus: SubscriptionStatusEnum;
+  userId: Scalars['ID']['output'];
+};
+
 export type ValidateMealPlanInput = {
   mealPlanId: Scalars['ID']['input'];
   validationStatus: MealPlanValidationStatus;

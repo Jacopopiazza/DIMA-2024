@@ -250,10 +250,18 @@ type MealPlanResponse @aws_iam @aws_cognito_user_pools {
   mealPlanId: ID!
 }
 
+type MealPlanResponseSubscription @aws_iam @aws_cognito_user_pools {
+  success: Boolean!
+  message: String
+  mealPlanId: ID!
+  userId: ID!
+}
+
 input MealPlanResponseInput {
   success: Boolean!
   message: String
   mealPlanId: ID!
+  userId: ID!
 }
 
 enum MealPlanValidationStatus {
@@ -473,8 +481,9 @@ type Mutation {
     @aws_auth(cognito_groups: ["USERS"])
   validateMealPlan(input: ValidateMealPlanInput!): MealPlanResponse
     @aws_auth(cognito_groups: ["NUTRITIONISTS"])
-  notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponse
-    @aws_iam
+  notifyMealPlanStatusChanged(
+    input: MealPlanResponseInput!
+  ): MealPlanResponseSubscription @aws_iam
   setUserSubscriptionStatus(
     subscriptionStatus: SubscriptionStatusEnum!
   ): UserSubscriptionStatus @aws_auth(cognito_groups: ["USERS"])
@@ -521,7 +530,7 @@ type Query {
 # How the Flutter app listens for the final result.
 # ---------------------------------------------------
 type Subscription {
-  onMealPlanStatusChanged: MealPlanResponse
+  onMealPlanStatusChanged(userId: ID!): MealPlanResponseSubscription
     @aws_subscribe(mutations: ["notifyMealPlanStatusChanged"])
     @aws_auth(cognito_groups: ["USERS"])
   onNewChatMessageForUser(recipientId: ID!): ChatResponse

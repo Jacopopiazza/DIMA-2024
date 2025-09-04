@@ -8,10 +8,16 @@ export function request(ctx) {
     util.unauthorized();
   }
 
-  const authenticatedUserId = ctx.identity.sub;
-  console.log(
-    `Setting up subscription filter for user: ${authenticatedUserId}`,
-  );
+  const sub = ctx.identity.sub;
+  const userId = ctx.args.recipientId;
+
+  if (!userId) {
+    util.error('userId argument is required for subscription filtering');
+  }
+
+  if (userId !== sub) {
+    util.unauthorized();
+  }
 
   // Per le subscription basta restituire un oggetto vuoto come payload
   return { payload: {} };
