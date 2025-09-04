@@ -9,8 +9,8 @@ export function request(ctx) {
     payload: {
       action: 'GET_USER_AND_NUTRITIONIST',
       userId: userId,
-      nutritionistId: nutritionistId
-    }
+      nutritionistId: nutritionistId,
+    },
   };
 }
 
@@ -18,16 +18,20 @@ export function response(ctx) {
   if (ctx.error) {
     // Log error but don't fail - use defaults
     console.error('Failed to fetch user details:', ctx.error);
-    ctx.stash.userGivenName = 'User';
-    ctx.stash.nutritionistGivenName = 'Nutritionist';
-  } else if (ctx.result) {
-    // Extract names from Lambda response
-    const result = JSON.parse(ctx.result);
-    ctx.stash.userGivenName = result.user?.givenName || 'User';
-    ctx.stash.userFamilyName = result.user?.familyName || '';
-    ctx.stash.nutritionistGivenName = result.nutritionist?.givenName || 'Nutritionist';
-    ctx.stash.nutritionistFamilyName = result.nutritionist?.familyName || '';
+    util.error('Failed to fetch user details');
   }
+
+  if (!ctx.result || !ctx.result.user || !ctx.result.nutritionist) {
+    console.error('Incomplete user details received:', ctx.result);
+    util.error('Incomplete user details received');
+  }
+
+  // Extract names from Lambda response
+  const result = ctx.result;
+  ctx.stash.userGivenName = result.user?.givenName;
+  ctx.stash.userFamilyName = result.user?.familyName;
+  ctx.stash.nutritionistGivenName = result.nutritionist?.givenName;
+  ctx.stash.nutritionistFamilyName = result.nutritionist?.familyName;
 
   return ctx.prev.result;
 }

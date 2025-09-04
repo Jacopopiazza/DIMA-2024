@@ -39,7 +39,7 @@ export function request(ctx) {
   const expressionValues = {
     ':updatedAt': now,
     ':validationStatus': 'PENDING_REVIEW',
-    ':nutritionistId': nutritionistId,
+    ':assignedNutritionistId': `NUTR#${nutritionistId}`,
   };
 
   // Add planName if provided
@@ -63,7 +63,7 @@ export function request(ctx) {
     },
     condition: {
       expression:
-        'attribute_exists(PK) AND attribute_exists(SK) AND assignedNutritionistId = :nutritionistId',
+        'attribute_exists(PK) AND attribute_exists(SK) AND assignedNutritionistId = :assignedNutritionistId',
     },
   };
 }

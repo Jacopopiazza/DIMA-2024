@@ -25,25 +25,38 @@ export class ChatStack extends Construct {
     // ============================================
     // 1. CREATE LAMBDA FOR COGNITO USER DETAILS
     // ============================================
-    this.getCognitoUserDetailsLambda = new NodejsFunction(this, 'GetCognitoUserDetails', {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      handler: 'handler',
-      entry: 'src/lambda/get-cognito-user-details-chat/index.ts', // TODO: SISTEMA PERCORSO
-      environment: {
-        USER_POOL_ID: props.userPool.userPoolId,
-        TABLE_NAME: props.table.tableName,
+    this.getCognitoUserDetailsLambda = new NodejsFunction(
+      this,
+      'GetCognitoUserDetails',
+      {
+        runtime: lambda.Runtime.NODEJS_22_X,
+        handler: 'handler',
+        entry: 'src/lambda/get-cognito-user-details-chat/index.ts', // TODO: SISTEMA PERCORSO
+        environment: {
+          USER_POOL_ID: props.userPool.userPoolId,
+          TABLE_NAME: props.table.tableName,
+        },
+        timeout: cdk.Duration.seconds(30),
+        memorySize: 128,
+        bundling: {
+          format: OutputFormat.ESM,
+          externalModules: [
+            '@aws-sdk/client-dynamodb',
+            '@aws-sdk/lib-dynamodb',
+            '@aws-sdk/client-cognito-identity-provider',
+          ],
+          minify: true,
+        },
       },
-      timeout: cdk.Duration.seconds(30),
-      memorySize: 128,
-      bundling: {
-        format: OutputFormat.ESM,
-        externalModules: ['@aws-sdk/client-dynamodb', '@aws-sdk/lib-dynamodb', '@aws-sdk/client-cognito-identity-provider'],
-        minify: true,
-      },
-    });
+    );
 
     // Grant Lambda permissions to read Cognito
-    props.userPool.grant(this.getCognitoUserDetailsLambda, 'cognito-idp:AdminGetUser', 'cognito-idp:ListUsers', 'cognito-idp:AdminListGroupsForUser');
+    props.userPool.grant(
+      this.getCognitoUserDetailsLambda,
+      'cognito-idp:AdminGetUser',
+      'cognito-idp:ListUsers',
+      'cognito-idp:AdminListGroupsForUser',
+    );
 
     // Se funziona, elimina questo tieni riga sopra
     /*this.getCognitoUserDetailsLambda.addToRolePolicy(
@@ -66,85 +79,133 @@ export class ChatStack extends Construct {
     // ============================================
     this.lambdaDataSource = props.api.addLambdaDataSource(
       'CognitoUserDataSource',
-      this.getCognitoUserDetailsLambda
+      this.getCognitoUserDetailsLambda,
     );
 
     // ============================================
     // 3. CREATE RESOLVER FUNCTIONS
     // ============================================
-    
-    // requestValidation Pipeline Functions
-    const updateMealPlanFn = new appsync.AppsyncFunction(this, 'UpdateMealPlanFn', {
-      api: props.api,
-      dataSource: props.dynamoDataSource,
-      name: 'UpdateMealPlanFunction',
-      code: appsync.Code.fromAsset('resolvers/mutation.requestValidation.updateMealPlan.js'),
-      runtime: appsync.FunctionRuntime.JS_1_0_0,
-    });
 
-    const fetchUserDetailsFn = new appsync.AppsyncFunction(this, 'FetchUserDetailsFn', {
-      api: props.api,
-      dataSource: this.lambdaDataSource,
-      name: 'FetchUserDetailsFunction',
-      code: appsync.Code.fromAsset('resolvers/mutation.requestValidation.fetchUserDetails.js'),
-      runtime: appsync.FunctionRuntime.JS_1_0_0,
-    });
+    // requestValidation Pipeline Functions
+    const updateMealPlanFn = new appsync.AppsyncFunction(
+      this,
+      'UpdateMealPlanFn',
+      {
+        api: props.api,
+        dataSource: props.dynamoDataSource,
+        name: 'UpdateMealPlanFunction',
+        code: appsync.Code.fromAsset(
+          'resolvers/mutation.requestValidation.updateMealPlan.js',
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
+
+    const fetchUserDetailsFn = new appsync.AppsyncFunction(
+      this,
+      'FetchUserDetailsFn',
+      {
+        api: props.api,
+        dataSource: this.lambdaDataSource,
+        name: 'FetchUserDetailsFunction',
+        code: appsync.Code.fromAsset(
+          'resolvers/mutation.requestValidation.fetchUserDetails.js',
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
 
     const createChatFn = new appsync.AppsyncFunction(this, 'CreateChatFn', {
       api: props.api,
       dataSource: props.dynamoDataSource,
       name: 'CreateChatFunction',
-      code: appsync.Code.fromAsset('resolvers/mutation.requestValidation.createChat.js'),
+      code: appsync.Code.fromAsset(
+        'resolvers/mutation.requestValidation.createChat.js',
+      ),
       runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
 
     // sendChatMessage Pipeline Functions
-    const verifyParticipantFn = new appsync.AppsyncFunction(this, 'VerifyParticipantFn', {
-      api: props.api,
-      dataSource: props.dynamoDataSource,
-      name: 'VerifyParticipantFunction',
-      code: appsync.Code.fromAsset('resolvers/mutation.sendChatMessage.verifyParticipant.js'),
-      runtime: appsync.FunctionRuntime.JS_1_0_0,
-    });
+    const verifyParticipantFn = new appsync.AppsyncFunction(
+      this,
+      'VerifyParticipantFn',
+      {
+        api: props.api,
+        dataSource: props.dynamoDataSource,
+        name: 'VerifyParticipantFunction',
+        code: appsync.Code.fromAsset(
+          'resolvers/mutation.sendChatMessage.verifyParticipant.js',
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
 
-    const createMessageFn = new appsync.AppsyncFunction(this, 'CreateMessageFn', {
-      api: props.api,
-      dataSource: props.dynamoDataSource,
-      name: 'CreateMessageFunction',
-      code: appsync.Code.fromAsset('resolvers/mutation.sendChatMessage.createMessage.js'),
-      runtime: appsync.FunctionRuntime.JS_1_0_0,
-    });
+    const createMessageFn = new appsync.AppsyncFunction(
+      this,
+      'CreateMessageFn',
+      {
+        api: props.api,
+        dataSource: props.dynamoDataSource,
+        name: 'CreateMessageFunction',
+        code: appsync.Code.fromAsset(
+          'resolvers/mutation.sendChatMessage.createMessage.js',
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
 
-    const updateChatMetadataFn = new appsync.AppsyncFunction(this, 'UpdateChatMetadataFn', {
-      api: props.api,
-      dataSource: props.dynamoDataSource,
-      name: 'UpdateChatMetadataFunction',
-      code: appsync.Code.fromAsset('resolvers/mutation.sendChatMessage.updateChatMetadata.js'),
-      runtime: appsync.FunctionRuntime.JS_1_0_0,
-    });
+    const updateChatMetadataFn = new appsync.AppsyncFunction(
+      this,
+      'UpdateChatMetadataFn',
+      {
+        api: props.api,
+        dataSource: props.dynamoDataSource,
+        name: 'UpdateChatMetadataFunction',
+        code: appsync.Code.fromAsset(
+          'resolvers/mutation.sendChatMessage.updateChatMetadata.js',
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
+
+    const validateAndPrepareFn = new appsync.AppsyncFunction(
+      this,
+      'ValidateAndPrepareFunction',
+      {
+        name: 'validateAndPrepareFunction',
+        api: props.api,
+        dataSource: props.dynamoDataSource, // Your DynamoDB data source
+        code: appsync.Code.fromAsset(
+          'resolvers/mutation.requestValidation.validateAndPrepare.js',
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
 
     // ============================================
     // 4. CREATE PIPELINE RESOLVERS
     // ============================================
-    
-    // requestValidation Pipeline (3 steps) - UPDATE EXISTING
+
+    // requestValidation Pipeline (4 steps) - UPDATE EXISTING
     new appsync.Resolver(this, 'RequestValidationResolver', {
       api: props.api,
       typeName: 'Mutation',
       fieldName: 'requestValidation',
+      // REORDERED: validation/preparation steps first, critical update last
       pipelineConfig: [
-        updateMealPlanFn,
+        validateAndPrepareFn,
         fetchUserDetailsFn,
         createChatFn,
+        updateMealPlanFn,
       ],
       code: appsync.Code.fromInline(`
-        export function request(ctx) {
-          return {};
-        }
-        export function response(ctx) {
-          return ctx.prev.result;
-        }
-      `),
+    export function request(ctx) {
+      return {};
+    }
+    export function response(ctx) {
+      return ctx.prev.result;
+    }
+  `),
       runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
 
@@ -172,7 +233,7 @@ export class ChatStack extends Construct {
     // ============================================
     // 5. CREATE UNIT RESOLVERS
     // ============================================
-    
+
     // Query resolvers
     new appsync.Resolver(this, 'GetChatMessagesResolver', {
       api: props.api,
@@ -201,29 +262,29 @@ export class ChatStack extends Construct {
       runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
 
-
     // ============================================
     // 6. SUBSCRIPTION RESOLVERS
     // ============================================
-    
+
     // Create None data source for subscriptions
     const noneDataSource = props.api.addNoneDataSource(
       'ChatSubscriptionNoneDataSource',
       {
         name: 'ChatSubscriptionNoneDataSource',
         description: 'None data source for chat subscriptions',
-      }
+      },
     );
-    
+
     // Global subscription for all user's chats
     new appsync.Resolver(this, 'OnNewChatMessageForUserResolver', {
       api: props.api,
       typeName: 'Subscription',
       fieldName: 'onNewChatMessageForUser',
       dataSource: noneDataSource,
-      code: appsync.Code.fromAsset('resolvers/subscription.onNewChatMessageForUser.js'),
+      code: appsync.Code.fromAsset(
+        'resolvers/subscription.onNewChatMessageForUser.js',
+      ),
       runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
-
   }
 }

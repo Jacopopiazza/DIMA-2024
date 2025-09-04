@@ -1,31 +1,7 @@
 import { util } from '@aws-appsync/utils';
 
 export function request(ctx) {
-  const { mealPlanId, nutritionistId } = ctx.args.input;
-
-  if (!ctx.identity || !ctx.identity.sub) {
-    util.unauthorized();
-  }
-
-  // Validate input
-  if (!mealPlanId) {
-    util.error('mealPlanId is required');
-  }
-
-  if (!nutritionistId) {
-    util.error('nutritionistId is required');
-  }
-
-  const userId = ctx.identity.sub;
-  const chatId = util.autoId();
-  const now = util.time.nowISO8601();
-
-  // Store in stash for next steps
-  ctx.stash.userId = userId;
-  ctx.stash.mealPlanId = mealPlanId;
-  ctx.stash.nutritionistId = nutritionistId;
-  ctx.stash.chatId = chatId;
-  ctx.stash.now = now;
+  const { userId, mealPlanId, nutritionistId, chatId, now } = ctx.stash;
 
   const pk = `USER#${userId}`;
   const sk = `PLAN#${mealPlanId}`;
@@ -39,36 +15,35 @@ export function request(ctx) {
         'updatedAt = :updatedAt, ' +
         'assignedNutritionistId = :assignedNutritionistId, ' +
         'chatId = :chatId, ' +
-        'nutritionistId = :nutritionistId, ' +
+        // 'nutritionistId = :nutritionistId, ' + Should be deprecated
         '#mealPlanId = :mealPlanId',
       expressionValues: util.dynamodb.toMapValues({
         ':validationStatus': 'PENDING_REVIEW',
         ':updatedAt': now,
-        ':assignedNutritionistId': nutritionistId,
+        ':assignedNutritionistId': `NUTR#${nutritionistId}`,
         ':chatId': chatId,
-        ':nutritionistId': nutritionistId,
-        ':mealPlanId': mealPlanId, // Ensure mealPlanId is stored
+        // ':nutritionistId': nutritionistId, Should be deprecated
+        ':mealPlanId': mealPlanId,
       }),
       expressionNames: {
-        '#mealPlanId': 'mealPlanId'
-      }
+        '#mealPlanId': 'mealPlanId',
+      },
     },
+    // Condition removed since we already validated in the first step
     condition: {
-      expression: 'attribute_exists(PK) AND attribute_exists(SK) AND attribute_not_exists(assignedNutritionistId)'
+      expression: 'attribute_exists(PK) AND attribute_exists(SK)',
     },
   };
 }
 
 export function response(ctx) {
   if (ctx.error) {
-    if (ctx.error.type === 'DynamoDB:ConditionalCheckFailedException') {
-      util.error('A nutritionist is already assigned to this meal plan', 'ValidationError');
-    }
     util.error(ctx.error.message, ctx.error.type);
   }
 
-  // Store the meal plan for the next step
-  ctx.stash.mealPlan = ctx.result;
-  ctx.stash.planName = ctx.result.planName || `Meal Plan`;
-  return ctx.result;
+  return {
+    success: true,
+    message: 'Validation request sent successfully and chat created',
+    mealPlanId: ctx.stash.mealPlanId,
+  };
 }

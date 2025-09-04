@@ -1,9 +1,9 @@
 import { util } from '@aws-appsync/utils';
 
 export function request(ctx) {
-    return {};
+  return {};
 }
 
 export function response(ctx) {
-    return {};
+  return {};
 }

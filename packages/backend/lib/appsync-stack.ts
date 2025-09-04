@@ -880,7 +880,6 @@ export class AppSyncApiStack extends cdk.Stack {
     // OTHER RESOLVERS WILL BE ADDED LATER
     // --------------------------------------------------------------------
 
-
     new ChatStack(this, 'ChatResolvers', {
       api: api,
       dynamoDataSource: tableDS,

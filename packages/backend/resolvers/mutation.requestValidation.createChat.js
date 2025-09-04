@@ -1,24 +1,24 @@
 import { util } from '@aws-appsync/utils';
 
 export function request(ctx) {
-  const { 
-    userId, 
-    mealPlanId, 
-    nutritionistId, 
-    chatId, 
+  const {
+    userId,
+    mealPlanId,
+    nutritionistId,
+    chatId,
     now,
     planName,
     userGivenName,
     userFamilyName,
     nutritionistGivenName,
-    nutritionistFamilyName
+    nutritionistFamilyName,
   } = ctx.stash;
 
   // Build full names
-  const userFullName = userFamilyName 
-    ? `${userGivenName} ${userFamilyName}` 
+  const userFullName = userFamilyName
+    ? `${userGivenName} ${userFamilyName}`
     : userGivenName;
-  
+
   const nutritionistFullName = nutritionistFamilyName
     ? `${nutritionistGivenName} ${nutritionistFamilyName}`
     : nutritionistGivenName;
@@ -45,14 +45,14 @@ export function request(ctx) {
 
   return {
     operation: 'PutItem',
-    key: util.dynamodb.toMapValues({ 
-      PK: chatMetadata.PK, 
-      SK: chatMetadata.SK 
+    key: util.dynamodb.toMapValues({
+      PK: chatMetadata.PK,
+      SK: chatMetadata.SK,
     }),
     attributeValues: util.dynamodb.toMapValues(chatMetadata),
     condition: {
-      expression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)'
-    }
+      expression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)',
+    },
   };
 }
 

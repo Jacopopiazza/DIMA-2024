@@ -772,5 +772,4 @@ type Subscription {
   onNewChatMessageForUser: ChatMessage
     @aws_subscribe(mutations: ["sendChatMessage"])
     @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
-
 }
