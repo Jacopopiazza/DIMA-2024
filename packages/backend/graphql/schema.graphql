@@ -49,6 +49,13 @@ type ChatResponse {
   message: ChatMessage
 }
 
+type ChatMessagesResponse {
+  messages: [ChatMessage!]!
+  oldestTimestamp: String # Use this for next beforeTimestamp
+  hasMore: Boolean!
+  count: Int!
+}
+
 type ChatMessage @model {
   chatId: ID!
   messageId: ID!
@@ -477,11 +484,6 @@ type Mutation {
 #       QUERIES
 # ===================
 type Query {
-  getChatMessages(
-    chatId: ID!
-    limit: Int
-    nextToken: String
-  ): ChatMessageConnection @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
   getMealPlanById(mealPlanId: ID!): MealPlan
     @aws_auth(cognito_groups: ["USERS"])
   getPlanDayCompletion(planId: ID!, date: AWSDate!): PlanDayCompletion
@@ -506,6 +508,12 @@ type Query {
     @aws_auth(cognito_groups: ["NUTRITIONISTS"])
   getUserSubscriptionStatus: UserSubscriptionStatus
     @aws_auth(cognito_groups: ["USERS"])
+
+  getChatMessages(
+    chatId: ID!
+    limit: Int = 20
+    beforeTimestamp: String # Only for loading older messages
+  ): ChatMessagesResponse @aws_auth(cognito_groups: ["NUTRITIONISTS", "USERS"])
 }
 
 # ---------------------------------------------------

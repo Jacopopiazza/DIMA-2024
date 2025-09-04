@@ -182,6 +182,34 @@ export class ChatStack extends Construct {
       },
     );
 
+    const verifyParticipantForChatFn = new appsync.AppsyncFunction(
+      this,
+      'verifyParticipantFunctionForChat',
+      {
+        api: props.api,
+        dataSource: props.dynamoDataSource,
+        name: 'verifyParticipantFunctionForChat',
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset(
+          'resolvers/query.getChatMessages.verifyParticipant.js',
+        ),
+      },
+    );
+
+    const loadChatMessagesFn = new appsync.AppsyncFunction(
+      this,
+      'LoadMessagesFunction',
+      {
+        api: props.api,
+        dataSource: props.dynamoDataSource,
+        name: 'loadMessagesFunction',
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        code: appsync.Code.fromAsset(
+          'resolvers/query.getChatMessages.loadMessages.js',
+        ),
+      },
+    );
+
     // ============================================
     // 4. CREATE PIPELINE RESOLVERS
     // ============================================
@@ -234,16 +262,6 @@ export class ChatStack extends Construct {
     // 5. CREATE UNIT RESOLVERS
     // ============================================
 
-    // Query resolvers
-    new appsync.Resolver(this, 'GetChatMessagesResolver', {
-      api: props.api,
-      typeName: 'Query',
-      fieldName: 'getChatMessages',
-      dataSource: props.dynamoDataSource,
-      code: appsync.Code.fromAsset('resolvers/query.getChatMessages.js'),
-      runtime: appsync.FunctionRuntime.JS_1_0_0,
-    });
-
     new appsync.Resolver(this, 'ListMyChatsResolver', {
       api: props.api,
       typeName: 'Query',
@@ -261,6 +279,32 @@ export class ChatStack extends Construct {
       code: appsync.Code.fromAsset('resolvers/query.listMyAssignedChats.js'),
       runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
+
+    // Create the pipeline resolver that connects both functions
+    const getChatMessagesResolver = new appsync.Resolver(
+      this,
+      'GetChatMessagesResolver',
+      {
+        api: props.api,
+        typeName: 'Query',
+        fieldName: 'getChatMessages',
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+        pipelineConfig: [verifyParticipantForChatFn, loadChatMessagesFn],
+        // Simple pipeline resolver code that just orchestrates the functions
+        code: appsync.Code.fromInline(`
+    // Pipeline resolver - orchestrates the verification and loading
+    export function request(ctx) {
+      // Pass the request to the first function
+      return {};
+    }
+    
+    export function response(ctx) {
+      // Return the result from the last function (loadMessages)
+      return ctx.prev.result;
+    }
+  `),
+      },
+    );
 
     // ============================================
     // 6. SUBSCRIPTION RESOLVERS
