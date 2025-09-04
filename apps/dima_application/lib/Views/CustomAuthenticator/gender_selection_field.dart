@@ -1,5 +1,4 @@
 import 'package:dima_application/Utils/gender_type_enum.dart';
-import 'package:dima_application/Utils/user_type_enum.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -58,28 +57,29 @@ class _GenderSelectionFieldState extends State<GenderSelectionField> {
         focusNode: _focusNode,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context)!.signUpDropdownText,
+          prefixIcon: const Icon(Icons.wc_rounded, size: 20),
           labelStyle: TextStyle(
             color: _isFocused ? colorScheme.primary : null,
             fontWeight: FontWeight.w500,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: colorScheme.outline),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: colorScheme.outline),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: colorScheme.primary, width: 2),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: colorScheme.error),
           ),
           filled: true,
-          fillColor: theme.scaffoldBackgroundColor,
+          fillColor: colorScheme.surface,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
@@ -110,7 +110,7 @@ class _GenderSelectionFieldState extends State<GenderSelectionField> {
           });
         },
         icon: Icon(Icons.arrow_drop_down, color: colorScheme.primary),
-        dropdownColor: theme.scaffoldBackgroundColor,
+        dropdownColor: colorScheme.surface,
         style: theme.textTheme.bodyMedium,
         validator: widget.isRequired
             ? (value) {
@@ -125,7 +125,7 @@ class _GenderSelectionFieldState extends State<GenderSelectionField> {
         isExpanded: true,
         // Ensure dropdown properly closes by handling tap events
         selectedItemBuilder: (BuildContext context) {
-          return UserTypeEnum.values.map<Widget>((UserTypeEnum item) {
+          return GenderTypeEnum.values.map<Widget>((GenderTypeEnum item) {
             return Container(
               alignment: Alignment.centerLeft,
               child: Text(

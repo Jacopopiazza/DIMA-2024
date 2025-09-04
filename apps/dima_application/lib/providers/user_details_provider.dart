@@ -36,13 +36,16 @@ class UserDetailsNotifier
   Future<void> _initialize() async {
     try {
       final userId = await ref.read(userIdProvider.future);
+      if (!mounted) return;
       if (userId != null) {
         await loadUserDetails(userId);
       } else {
         // If there's no user, we still need to resolve the state.
+        if (!mounted) return;
         state = AsyncValue.data((null, const Uuid().v4()));
       }
     } catch (error, stackTrace) {
+      if (!mounted) return;
       state = AsyncValue.error(error, stackTrace);
     }
   }
@@ -60,9 +63,11 @@ class UserDetailsNotifier
       final details = await service.getUserDetails(userId);
 
       // On success, update the state with the new data and a unique ID.
+      if (!mounted) return;
       state = AsyncValue.data((details, const Uuid().v4()));
     } catch (error, stackTrace) {
       // On error, report the error but keep the previous data.
+      if (!mounted) return;
       state = AsyncValue<(UserDetails?, String)>.error(error, stackTrace)
           .copyWithPrevious(previousState);
     }
@@ -77,7 +82,9 @@ class UserDetailsNotifier
     }
 
     // Optimistically update the UI, but REUSE the existing unique ID to prevent rebuild.
-    state = AsyncValue.data((updatedDetails, previousTuple.$2));
+    if (mounted) {
+      state = AsyncValue.data((updatedDetails, previousTuple.$2));
+    }
 
     try {
       final service = await ref.read(userDetailsServiceProvider);
@@ -85,17 +92,23 @@ class UserDetailsNotifier
 
       if (result != null) {
         // The optimistic update was correct. We can now assign a new ID to mark a "clean" state.
-        state = AsyncValue.data((result, const Uuid().v4()));
+        if (mounted) {
+          state = AsyncValue.data((result, const Uuid().v4()));
+        }
         return true;
       } else {
         // If update failed, revert to the previous state.
-        state = previousState;
+        if (mounted) {
+          state = previousState;
+        }
         return false;
       }
     } catch (error, stackTrace) {
       // If update failed, revert to previous state and show error
-      state = AsyncValue<(UserDetails?, String)>.error(error, stackTrace)
-          .copyWithPrevious(previousState);
+      if (mounted) {
+        state = AsyncValue<(UserDetails?, String)>.error(error, stackTrace)
+            .copyWithPrevious(previousState);
+      }
       return false;
     }
   }
@@ -115,7 +128,9 @@ class UserDetailsNotifier
       final success = await service.deleteAccount(userId);
       if (success) {
         // After deletion, set state to no user.
-        state = AsyncValue.data((null, const Uuid().v4()));
+        if (mounted) {
+          state = AsyncValue.data((null, const Uuid().v4()));
+        }
       }
       return success;
     } catch (e) {
@@ -126,6 +141,8 @@ class UserDetailsNotifier
   Future<void> signOut(String userId) async {
     final service = await ref.read(userDetailsServiceProvider);
     await service.signOut(userId);
-    state = AsyncValue.data((null, const Uuid().v4()));
+    if (mounted) {
+      state = AsyncValue.data((null, const Uuid().v4()));
+    }
   }
 }
