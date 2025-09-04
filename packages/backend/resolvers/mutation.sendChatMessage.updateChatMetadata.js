@@ -56,15 +56,5 @@ export function response(ctx) {
       : ctx.stash.chatMetadata.nutritionistGivenName;
 
   // Return enhanced message with recipient info for subscription
-  return {
-    chatId: ctx.stash.chatId,
-    messageId: ctx.stash.messageId,
-    senderId: ctx.stash.userId,
-    senderType: ctx.stash.senderType,
-    messageContent: ctx.stash.messageContent,
-    sentAt: ctx.stash.sentAt,
-    // Additional fields for subscription
-    senderName: senderName,
-    recipientId: ctx.stash.recipientId,
-  };
+  return { recipientId: ctx.stash.recipientId, message: message };
 }

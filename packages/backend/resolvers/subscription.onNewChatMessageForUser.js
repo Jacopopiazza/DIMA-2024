@@ -6,6 +6,18 @@ import { util } from '@aws-appsync/utils';
 
 export function request(ctx) {
   // No arguments needed - will filter by user ID
+
+  const userId = ctx.identity.sub;
+  const recipientId = ctx.args.recipientId;
+
+  if (!recipientId) {
+    util.error('recipientId argument is required for subscription filtering');
+  }
+
+  if (recipientId !== userId) {
+    util.unauthorized();
+  }
+
   return {
     payload: {},
   };

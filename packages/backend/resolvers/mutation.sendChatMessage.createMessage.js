@@ -1,5 +1,7 @@
 import { util } from '@aws-appsync/utils';
 
+// mutation.sendChatMessage.createMessage.js
+
 export function request(ctx) {
   const { chatId, messageContent } = ctx.args.input;
   const { userId, isNutritionist } = ctx.stash;

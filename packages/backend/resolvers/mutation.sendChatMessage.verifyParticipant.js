@@ -1,5 +1,7 @@
 import { util } from '@aws-appsync/utils';
 
+// mutation.sendChatMessage.verifyParticipant.js
+
 export function request(ctx) {
   const { chatId } = ctx.args.input;
   const userId = ctx.identity.sub;
