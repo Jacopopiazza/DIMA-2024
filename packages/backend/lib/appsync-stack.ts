@@ -467,22 +467,6 @@ export class AppSyncApiStack extends cdk.Stack {
       getCognitoUserDetails,
     );
 
-    ///
-    /// AppSync Function to check user subscription status
-    ///
-
-    const subscriptionCheckFunction = new appsync.AppsyncFunction(
-      this,
-      'SubscriptionCheckFunction',
-      {
-        name: 'subscriptionStatusCheck',
-        api: api,
-        dataSource: tableDS, // Reads from dynamoDB
-        code: appsync.Code.fromAsset('resolvers/function.isUserPro.js'),
-        runtime: appsync.FunctionRuntime.JS_1_0_0,
-      },
-    );
-
     // Create the pipeline functions
     const getCognitoDetailsFunction = new appsync.AppsyncFunction(
       this,

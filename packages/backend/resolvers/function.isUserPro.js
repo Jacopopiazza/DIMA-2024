@@ -12,22 +12,48 @@ export function request(ctx) {
     util.unauthorized();
   }
 
+  const groups = ctx.identity.groups || [];
+
+  const isNutritionist = groups.includes('NUTRITIONISTS');
+  ctx.stash.isNutritionist = isNutritionist;
+
+  // ✅ If NOT a NUTRITIONIST, skip DynamoDB query entirely
+  if (isNutritionist) {
+    console.log('Nutritionist user detected, skipping subscription check');
+    ctx.stash.isPro = true; // Nutritionists bypass restrictions
+    ctx.stash.subscriptionStatus = 'N/A';
+    return {
+      operation: 'GetItem',
+      key: util.dynamodb.toMapValues({ PK: 'DUMMY#0', SK: 'DUMMY#0' }),
+    }; // No request = skip resolver step
+  }
+
+  console.log('User detected starting subscription check...');
+
   const pk = `USER#${sub}`;
   const sk = `SUBSCRIPTION_STATUS`;
 
-  // Query DynamoDB for user subscription status
-  return {
+  const retValue = {
     operation: 'GetItem',
-    key: util.dynamodb.toMapValues({
-      PK: pk,
-      SK: sk,
-    }),
+    key: util.dynamodb.toMapValues({ PK: pk, SK: sk }),
   };
+
+  console.log('-------------------------');
+  console.log(retValue);
+  console.log('-------------------------');
+
+  return retValue;
 }
 
 export function response(ctx) {
+  // If we skipped the request step (nutritionists), just return
+  if (ctx.stash.isNutritionist) {
+    console.log('Nutritionist leaving the function...');
+    return {};
+  }
+
   const error = ctx.error;
-  const result = ctx.result;
+  const dynamoResult = ctx.result;
 
   if (error) {
     util.error('Failed to retrieve subscription status', 'SUBSCRIPTION_ERROR');
@@ -36,18 +62,20 @@ export function response(ctx) {
   let status = 'FREE'; // Default to FREE
 
   // Case 1: No DynamoDB record found at all
-  if (!result) {
+  if (!dynamoResult) {
     console.log(`No subscription record found for user. Defaulting to FREE.`);
+    util.error('No Result');
   }
   // Case 2: Record exists but no status field
-  else if (!result.status || !result.status.S) {
+  else if (!dynamoResult.status) {
     console.log(
       `Subscription record exists but no status field found. Defaulting to FREE.`,
     );
+    util.error('Empty result');
   }
   // Case 3: Record and status field exist
   else {
-    status = result.status.S;
+    status = dynamoResult.status;
     console.log(`Found subscription status: ${status}`);
   }
 
@@ -69,6 +97,14 @@ export function response(ctx) {
   // Store in stash for use in subsequent pipeline functions
   ctx.stash.subscriptionStatus = finalStatus;
   ctx.stash.isPro = isPro;
+
+  if (!isPro) {
+    console.log(`User is on FREE plan. Applying restrictions.`);
+    util.error(
+      'This feature requires a PRO subscription',
+      'SUBSCRIPTION_REQUIRED',
+    );
+  }
 
   return {};
 }

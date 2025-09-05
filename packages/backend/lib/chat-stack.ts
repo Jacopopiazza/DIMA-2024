@@ -86,6 +86,22 @@ export class ChatStack extends Construct {
     // 3. CREATE RESOLVER FUNCTIONS
     // ============================================
 
+    ///
+    /// AppSync Function to check user subscription status
+    ///
+
+    const subscriptionCheckFunction = new appsync.AppsyncFunction(
+      this,
+      'SubscriptionCheckFunction',
+      {
+        name: 'subscriptionStatusCheck',
+        api: props.api,
+        dataSource: props.dynamoDataSource, // Reads from dynamoDB
+        code: appsync.Code.fromAsset('resolvers/function.isUserPro.js'),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
+
     // requestValidation Pipeline Functions
     const updateMealPlanFn = new appsync.AppsyncFunction(
       this,
@@ -221,6 +237,7 @@ export class ChatStack extends Construct {
       fieldName: 'requestValidation',
       // REORDERED: validation/preparation steps first, critical update last
       pipelineConfig: [
+        subscriptionCheckFunction,
         validateAndPrepareFn,
         fetchUserDetailsFn,
         createChatFn,
@@ -243,6 +260,7 @@ export class ChatStack extends Construct {
       typeName: 'Mutation',
       fieldName: 'sendChatMessage',
       pipelineConfig: [
+        subscriptionCheckFunction,
         verifyParticipantFn,
         createMessageFn,
         updateChatMetadataFn,
