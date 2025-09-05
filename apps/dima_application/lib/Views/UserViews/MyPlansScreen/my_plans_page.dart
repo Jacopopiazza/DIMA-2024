@@ -2,10 +2,11 @@ import 'package:dima_application/Views/UserViews/MyPlansScreen/action_confirmati
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
+import 'package:dima_application/providers/subscription_status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../navigation/route_observer.dart';
 
+import '../../../navigation/route_observer.dart';
 import '../generate_meal_plan_page.dart';
 import 'modify_plan_name_dialog.dart';
 import 'read_meal_plan_page.dart';
@@ -1001,6 +1002,9 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   Widget _buildActionBottomSheet(BuildContext context, plan) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final subscriptionAsync = ref.watch(subscriptionStatusProvider);
+    final isPro = subscriptionAsync.valueOrNull?.$1.subscriptionStatus ==
+        SubscriptionStatusEnum.PRO;
 
     return Container(
       decoration: BoxDecoration(
@@ -1097,9 +1101,10 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 context,
                 Icons.person_add_rounded,
                 'Request Validation',
-                'Get nutritionist approval',
+                isPro ? 'Get nutritionist approval' : 'Pro feature',
                 Colors.orange,
                 () async {
+                  if (!isPro) return;
                   Navigator.pop(context);
                   await showDialog<void>(
                     context: context,
@@ -1118,6 +1123,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                     },
                   );
                 },
+                enabled: isPro,
               ),
           ],
         ),
@@ -1125,62 +1131,105 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     );
   }
 
-  Widget _buildActionButton(
-    BuildContext context,
-    IconData icon,
-    String title,
-    String subtitle,
-    Color color,
-    VoidCallback onPressed,
-  ) {
+  Widget _buildActionButton(BuildContext context, IconData icon, String title,
+      String subtitle, Color color, VoidCallback onPressed,
+      {bool enabled = true}) {
     final theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final bool isDisabled = !enabled;
+    final bool isProFeature =
+        isDisabled && subtitle.toLowerCase().contains('pro');
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
-        onTap: onPressed,
+        onTap: enabled ? onPressed : null,
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: enabled
+                ? color.withOpacity(0.1)
+                : colorScheme.surfaceVariant.withOpacity(0.7),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withOpacity(0.2)),
+            border: Border.all(
+                color: enabled
+                    ? color.withOpacity(0.2)
+                    : colorScheme.outline.withOpacity(0.5)),
           ),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color,
+                  color: enabled ? color : colorScheme.error,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: Colors.white, size: 20),
+                child: Icon(
+                  isDisabled ? Icons.block_rounded : icon,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: color,
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: enabled ? color : colorScheme.error,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (isProFeature) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: colorScheme.primary.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: colorScheme.primary.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Text(
+                              'PRO',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: colorScheme.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ]
+                      ],
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       subtitle,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: enabled
+                            ? theme.colorScheme.onSurfaceVariant
+                            : colorScheme.primary,
+                        fontWeight: isDisabled ? FontWeight.w700 : null,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
               Icon(
                 Icons.chevron_right_rounded,
-                color: color,
+                color: enabled ? color : colorScheme.error,
               ),
             ],
           ),
