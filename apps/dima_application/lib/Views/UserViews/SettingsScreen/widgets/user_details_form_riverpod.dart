@@ -94,6 +94,21 @@ class _UserDetailsFormRiverpodState
     }
   }
 
+  // Inline validation helpers for weight and height
+  bool? _isWeightValid() {
+    if (_weightController.text.isEmpty) return null;
+    final v = double.tryParse(_weightController.text);
+    if (v == null) return false;
+    return v >= 30 && v <= 300;
+  }
+
+  bool? _isHeightValid() {
+    if (_heightController.text.isEmpty) return null;
+    final v = double.tryParse(_heightController.text);
+    if (v == null) return false;
+    return v >= 50 && v <= 250;
+  }
+
   Future<void> _saveChanges() async {
     if (_isLoading) return;
 
@@ -108,15 +123,25 @@ class _UserDetailsFormRiverpodState
       return;
     }
 
+    // Validate weight range
+    final weightValid = _isWeightValid();
+    if (weightValid == false) {
+      _showErrorSnackBar('Weight must be between 30 and 300 kg');
+      return;
+    }
+
+    // Validate height range
+    final heightValid = _isHeightValid();
+    if (heightValid == false) {
+      _showErrorSnackBar('Height must be between 50 and 250 cm');
+      return;
+    }
+
     double? weightKg;
     double? heightCm;
 
     try {
       weightKg = double.parse(_weightController.text);
-      if (weightKg <= 0) {
-        _showErrorSnackBar('Weight must be greater than 0');
-        return;
-      }
     } catch (e) {
       _showErrorSnackBar('Please enter a valid weight');
       return;
@@ -124,10 +149,6 @@ class _UserDetailsFormRiverpodState
 
     try {
       heightCm = double.parse(_heightController.text);
-      if (heightCm <= 0) {
-        _showErrorSnackBar('Height must be greater than 0');
-        return;
-      }
     } catch (e) {
       _showErrorSnackBar('Please enter a valid height');
       return;
@@ -326,6 +347,21 @@ class _UserDetailsFormRiverpodState
                     icon: Icons.monitor_weight_outlined,
                     keyboardType: TextInputType.number,
                     colorScheme: colorScheme,
+                    helperText: 'Allowed: 30–300 kg',
+                    errorText: _isWeightValid() == false
+                        ? 'Weight must be between 30 and 300 kg'
+                        : null,
+                    suffixIcon: _isWeightValid() == null
+                        ? null
+                        : Icon(
+                            _isWeightValid() == true
+                                ? Icons.check_circle_rounded
+                                : Icons.error_outline_rounded,
+                            color: _isWeightValid() == true
+                                ? Colors.green
+                                : Colors.red,
+                            size: 20,
+                          ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -337,6 +373,21 @@ class _UserDetailsFormRiverpodState
                     icon: Icons.height_rounded,
                     keyboardType: TextInputType.number,
                     colorScheme: colorScheme,
+                    helperText: 'Allowed: 50–250 cm',
+                    errorText: _isHeightValid() == false
+                        ? 'Height must be between 50 and 250 cm'
+                        : null,
+                    suffixIcon: _isHeightValid() == null
+                        ? null
+                        : Icon(
+                            _isHeightValid() == true
+                                ? Icons.check_circle_rounded
+                                : Icons.error_outline_rounded,
+                            color: _isHeightValid() == true
+                                ? Colors.green
+                                : Colors.red,
+                            size: 20,
+                          ),
                   ),
                 ),
               ],
@@ -489,6 +540,9 @@ class _UserDetailsFormRiverpodState
     TextInputType? keyboardType,
     int maxLines = 1,
     required ColorScheme colorScheme,
+    String? helperText,
+    String? errorText,
+    Widget? suffixIcon,
   }) {
     return TextFormField(
       controller: controller,
@@ -500,6 +554,9 @@ class _UserDetailsFormRiverpodState
         hintText: hint,
         suffixText: suffix,
         prefixIcon: Icon(icon, size: 20),
+        suffixIcon: suffixIcon,
+        helperText: errorText == null ? helperText : null,
+        errorText: errorText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: colorScheme.outline),
