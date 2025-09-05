@@ -135,9 +135,19 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
         ref.read(mealPlanNotificationProvider.notifier).markAllAsRead();
 
         // Show user feedback (data is already being refreshed in background)
+        final isSuccess = latestNotification.success;
+        final detailMessage = latestNotification.message;
+        final displayText = isSuccess
+            ? (detailMessage.isNotEmpty
+                ? detailMessage
+                : 'New meal plan available!')
+            : 'Meal plan generation failed: ' +
+                (detailMessage.isNotEmpty ? detailMessage : 'Unknown error');
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   padding: const EdgeInsets.all(4),
@@ -146,26 +156,28 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Icon(
-                      latestNotification.success ? Icons.refresh : Icons.info,
+                      isSuccess
+                          ? Icons.check_circle_outline
+                          : Icons.error_outline,
                       color: Colors.white,
                       size: 16),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(latestNotification.success
-                      ? 'New meal plan available!'
-                      : 'Meal plan status updated.'),
+                  child: Text(
+                    displayText,
+                    softWrap: true,
+                  ),
                 ),
               ],
             ),
-            backgroundColor: latestNotification.success
-                ? Colors.green.shade600
-                : Colors.blue.shade600,
+            backgroundColor:
+                isSuccess ? Colors.green.shade600 : Colors.red.shade700,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -990,21 +1002,29 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   }
 
   void _openPlanDetails(BuildContext context, plan) {
+    // Compute values up-front to avoid using ref inside a widget that may outlive this State
+    final subscriptionAsync = ref.read(subscriptionStatusProvider);
+    final bool isPro = subscriptionAsync.valueOrNull?.$1.subscriptionStatus ==
+        SubscriptionStatusEnum.PRO;
+    final mealPlansNotifier = ref.read(mealPlansProvider.notifier);
     // Show bottom sheet with quick actions
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _buildActionBottomSheet(context, plan),
+      builder: (context) => _buildActionBottomSheet(
+        context,
+        plan,
+        isPro,
+        mealPlansNotifier,
+      ),
     );
   }
 
-  Widget _buildActionBottomSheet(BuildContext context, plan) {
+  Widget _buildActionBottomSheet(
+      BuildContext context, plan, bool isPro, MealPlansNotifier mealPlans) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final subscriptionAsync = ref.watch(subscriptionStatusProvider);
-    final isPro = subscriptionAsync.valueOrNull?.$1.subscriptionStatus ==
-        SubscriptionStatusEnum.PRO;
 
     return Container(
       decoration: BoxDecoration(
@@ -1082,9 +1102,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                       currentPlanName: plan.planName ?? 'Unnamed Plan',
                       mealPlanId: plan.mealPlanId,
                       onSave: (mealPlanId, newName) async {
-                        final success = await ref
-                            .read(mealPlansProvider.notifier)
-                            .modifyMealPlan(mealPlanId, newName);
+                        final success =
+                            await mealPlans.modifyMealPlan(mealPlanId, newName);
 
                         if (!success) {
                           throw Exception('Failed to update meal plan');
@@ -1112,13 +1131,11 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                       return SelectNutritionistDialog(
                         mealPlanId: plan.mealPlanId,
                         planName: plan.planName ?? 'Unnamed Plan',
-                        onLoadNutritionists: () => ref
-                            .read(mealPlansProvider.notifier)
-                            .listNutritionists(isAvailable: true),
+                        onLoadNutritionists: () =>
+                            mealPlans.listNutritionists(isAvailable: true),
                         onAssignNutritionist: (mealPlanId, nutritionistId) =>
-                            ref
-                                .read(mealPlansProvider.notifier)
-                                .requestValidation(mealPlanId, nutritionistId),
+                            mealPlans.requestValidation(
+                                mealPlanId, nutritionistId),
                       );
                     },
                   );

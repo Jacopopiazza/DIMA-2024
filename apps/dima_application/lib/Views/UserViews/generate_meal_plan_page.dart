@@ -219,6 +219,21 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     return prefs;
   }
 
+  // Inline validation helpers for override inputs
+  bool? _isWeightValid() {
+    if (_weightController.text.isEmpty) return null;
+    final v = double.tryParse(_weightController.text);
+    if (v == null) return false;
+    return v >= 30 && v <= 300;
+  }
+
+  bool? _isHeightValid() {
+    if (_heightController.text.isEmpty) return null;
+    final v = double.tryParse(_heightController.text);
+    if (v == null) return false;
+    return v >= 50 && v <= 250;
+  }
+
   /// Convert ExerciseFrequency enum to user-friendly display text
   String _getExerciseFrequencyDisplayText(ExerciseFrequency frequency) {
     switch (frequency) {
@@ -250,6 +265,40 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     setState(() {
       _isGenerating = true;
     });
+
+    // Validate override ranges if custom preferences are enabled
+    if (_useOverrides) {
+      final weight = _weightController.text.isNotEmpty
+          ? double.tryParse(_weightController.text)
+          : null;
+      final height = _heightController.text.isNotEmpty
+          ? double.tryParse(_heightController.text)
+          : null;
+
+      String? errorMsg;
+      if (weight != null && (weight < 30 || weight > 300)) {
+        errorMsg = 'Weight must be between 30 and 300 kg';
+      } else if (height != null && (height < 50 || height > 250)) {
+        errorMsg = 'Height must be between 50 and 250 cm';
+      }
+
+      if (errorMsg != null) {
+        setState(() {
+          _isGenerating = false;
+        });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMsg),
+              backgroundColor: Colors.red.shade600,
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+        return;
+      }
+    }
 
     final userDetailsAsync = ref.read(userDetailsProvider);
     final userDetails = userDetailsAsync.value?.$1;
@@ -837,6 +886,22 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 suffix: 'kg',
                 keyboardType: TextInputType.number,
                 colorScheme: colorScheme,
+                helperText: 'Allowed: 30–300 kg',
+                errorText: _isWeightValid() == false
+                    ? 'Weight must be between 30 and 300 kg'
+                    : null,
+                suffixIcon: _isWeightValid() == null
+                    ? null
+                    : Icon(
+                        _isWeightValid() == true
+                            ? Icons.check_circle_rounded
+                            : Icons.error_outline_rounded,
+                        color: _isWeightValid() == true
+                            ? Colors.green
+                            : Colors.red,
+                        size: 20,
+                      ),
+                onChanged: (_) => setState(() {}),
               ),
             ),
             const SizedBox(width: 16),
@@ -847,6 +912,22 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 suffix: 'cm',
                 keyboardType: TextInputType.number,
                 colorScheme: colorScheme,
+                helperText: 'Allowed: 50–250 cm',
+                errorText: _isHeightValid() == false
+                    ? 'Height must be between 50 and 250 cm'
+                    : null,
+                suffixIcon: _isHeightValid() == null
+                    ? null
+                    : Icon(
+                        _isHeightValid() == true
+                            ? Icons.check_circle_rounded
+                            : Icons.error_outline_rounded,
+                        color: _isHeightValid() == true
+                            ? Colors.green
+                            : Colors.red,
+                        size: 20,
+                      ),
+                onChanged: (_) => setState(() {}),
               ),
             ),
           ],
@@ -937,15 +1018,23 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     TextInputType? keyboardType,
     int maxLines = 1,
     required ColorScheme colorScheme,
+    String? helperText,
+    String? errorText,
+    Widget? suffixIcon,
+    ValueChanged<String>? onChanged,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       maxLines: maxLines,
+      onChanged: onChanged,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
         suffixText: suffix,
+        suffixIcon: suffixIcon,
+        helperText: errorText == null ? helperText : null,
+        errorText: errorText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: colorScheme.outline),
