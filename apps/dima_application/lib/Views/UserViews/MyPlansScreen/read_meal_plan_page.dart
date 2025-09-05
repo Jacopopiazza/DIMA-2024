@@ -939,19 +939,11 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         ),
         const SizedBox(height: 8),
         Text(
-          value,
+          '$value $unit',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             color: colorScheme.onSurface,
-          ),
-        ),
-        Text(
-          unit,
-          style: TextStyle(
-            fontSize: 11,
-            color: colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w500,
           ),
         ),
         Text(
