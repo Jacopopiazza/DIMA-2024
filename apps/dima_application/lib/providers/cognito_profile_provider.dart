@@ -51,6 +51,7 @@ class CognitoProfileNotifier
     try {
       await loadCognitoProfile();
     } catch (error, stackTrace) {
+      if (!mounted) return;
       state = AsyncValue.error(error, stackTrace);
     }
   }
@@ -59,8 +60,10 @@ class CognitoProfileNotifier
     print('[CognitoProfileNotifier] Loading cognito profile...');
     final previousState = state;
     // Set state to loading, but `copyWithPrevious` will keep the old data and set isRefreshing to true.
-    state = AsyncValue<(CognitoProfileData, String)>.loading()
-        .copyWithPrevious(previousState);
+    if (mounted) {
+      state = AsyncValue<(CognitoProfileData, String)>.loading()
+          .copyWithPrevious(previousState);
+    }
 
     try {
       final service = ref.read(cognitoProfileServiceProvider);
@@ -73,11 +76,13 @@ class CognitoProfileNotifier
 
       print('[CognitoProfileNotifier] Profile data loaded: $profileData');
       // On success, update the state with the new data and a unique ID.
+      if (!mounted) return;
       state = AsyncValue.data((profileData, const Uuid().v4()));
     } catch (error, stackTrace) {
       print('[CognitoProfileNotifier] Error loading profile: $error');
       print('[CognitoProfileNotifier] Stack trace: $stackTrace');
       // On error, report the error but keep the previous data.
+      if (!mounted) return;
       state = AsyncValue<(CognitoProfileData, String)>.error(error, stackTrace)
           .copyWithPrevious(previousState);
     }
@@ -106,7 +111,9 @@ class CognitoProfileNotifier
     // Optimistically update the UI, but REUSE the existing unique ID to prevent rebuild
     final updatedProfileData =
         previousTuple.$1.copyWith(userAttributes: updatedAttributes);
-    state = AsyncValue.data((updatedProfileData, previousTuple.$2));
+    if (mounted) {
+      state = AsyncValue.data((updatedProfileData, previousTuple.$2));
+    }
 
     try {
       final service = ref.read(cognitoProfileServiceProvider);
@@ -121,12 +128,16 @@ class CognitoProfileNotifier
       if (result) {
         print('[CognitoProfileNotifier] Profile attributes update successful');
         // The optimistic update was correct. We can now assign a new ID to mark a "clean" state.
-        state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
+        if (mounted) {
+          state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
+        }
         return true;
       } else {
         print('[CognitoProfileNotifier] Profile attributes update failed');
         // If update failed, revert to the previous state
-        state = previousState;
+        if (mounted) {
+          state = previousState;
+        }
         return false;
       }
     } catch (e, stackTrace) {
@@ -134,8 +145,10 @@ class CognitoProfileNotifier
       print('[CognitoProfileNotifier] Stack trace: $stackTrace');
 
       // If update failed, revert to previous state and show error
-      state = AsyncValue<(CognitoProfileData, String)>.error(e, stackTrace)
-          .copyWithPrevious(previousState);
+      if (mounted) {
+        state = AsyncValue<(CognitoProfileData, String)>.error(e, stackTrace)
+            .copyWithPrevious(previousState);
+      }
       return false;
     }
   }

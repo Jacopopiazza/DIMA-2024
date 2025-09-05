@@ -1,3 +1,5 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/Utils/localization_helpers.dart';
 import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
 import 'package:dima_application/generated/flutter-models/AllergenEnum.dart';
 import 'package:dima_application/generated/flutter-models/ExerciseFrequency.dart';
@@ -79,13 +81,35 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
           userDetails.openTextPreferences ?? '';
       _dailyMealsPreference = userDetails.dailyMealsPreference;
       _exerciseFrequency = userDetails.exerciseFrequency;
-      _selectedAllergies = (userDetails.allergies as List<dynamic>?)
-              ?.map((e) => AllergenEnum.values.firstWhere(
-                    (allergen) => allergen.name == e,
-                    orElse: () => AllergenEnum.GLUTEN_CEREALS,
-                  ))
-              .toList() ??
-          [];
+      final rawList =
+          (userDetails.allergies as List<dynamic>?) ?? const <dynamic>[];
+      safePrint('Debug: Raw allergies from userDetails: ' + rawList.toString());
+
+      final matchedAllergies = <AllergenEnum>[];
+      final unmatchedAllergies = <String>[];
+      for (final e in rawList) {
+        if (e is AllergenEnum) {
+          matchedAllergies.add(e);
+          continue;
+        }
+        final raw = e.toString();
+        final key = raw.contains('.') ? raw.split('.').last : raw;
+        final matches = AllergenEnum.values
+            .where((allergen) => allergen.name == key)
+            .toList();
+        if (matches.isNotEmpty) {
+          matchedAllergies.add(matches.first);
+        } else {
+          unmatchedAllergies.add(raw);
+        }
+      }
+      _selectedAllergies = matchedAllergies;
+      safePrint('Debug: Matched allergies: ' +
+          matchedAllergies.map((e) => e.name).toList().toString());
+      if (unmatchedAllergies.isNotEmpty) {
+        safePrint('Debug: Unmatched allergies (ignored): ' +
+            unmatchedAllergies.toString());
+      }
     } else {
       // Set reasonable defaults
       _weightController.text = '70';
@@ -98,12 +122,32 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     }
   }
 
+  bool _hasValidUserDetails(dynamic userDetails) {
+    if (userDetails == null) return false;
+    try {
+      return (userDetails.weightKg != null && userDetails.weightKg > 0) ||
+          (userDetails.heightCm != null && userDetails.heightCm > 0) ||
+          (userDetails.dailyMealsPreference != null &&
+              userDetails.dailyMealsPreference > 0) ||
+          (userDetails.allergies != null &&
+              (userDetails.allergies as List<dynamic>).isNotEmpty) ||
+          (userDetails.dietaryRestrictions != null &&
+              userDetails.dietaryRestrictions.isNotEmpty) ||
+          (userDetails.openTextPreferences != null &&
+              userDetails.openTextPreferences.isNotEmpty);
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Converts UserDetails to preferences format for meal plan creation
   Map<String, dynamic> _buildPreferencesFromUserDetails(dynamic userDetails) {
     if (_useOverrides) {
       return _buildOverridePreferences();
     }
-
+    if (userDetails == null) {
+      return <String, dynamic>{};
+    }
     final prefs = <String, dynamic>{};
 
     if (userDetails.weightKg != null) {
@@ -137,7 +181,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
 
     final locale = Localizations.localeOf(context);
     prefs['language'] = locale.languageCode;
-    print('Generated preferences: $prefs');
+    safePrint('Generated preferences: $prefs');
 
     return prefs;
   }
@@ -170,7 +214,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
 
     final locale = Localizations.localeOf(context);
     prefs['language'] = locale.languageCode;
-    print('Generated preferences: $prefs');
+    safePrint('Generated preferences: $prefs');
 
     return prefs;
   }
@@ -209,6 +253,25 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
 
     final userDetailsAsync = ref.read(userDetailsProvider);
     final userDetails = userDetailsAsync.value?.$1;
+    // Guard: require valid user details unless overrides are used
+    final hasDetails = _hasValidUserDetails(userDetails);
+    if (!hasDetails && !_useOverrides) {
+      setState(() {
+        _isGenerating = false;
+      });
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+              'Please complete your User Preferences in Settings before generating a plan.'),
+          backgroundColor: Colors.orange.shade700,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
     final preferences = _buildPreferencesFromUserDetails(userDetails);
 
     final success = await ref
@@ -530,7 +593,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SettingsScreenRiverpod(showBackButton: true),
+                    builder: (context) =>
+                        const SettingsScreenRiverpod(showBackButton: true),
                   ),
                 );
               },
@@ -935,75 +999,6 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     );
   }
 
-  Widget _buildAllergiesSelection(ColorScheme colorScheme, ThemeData theme) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colorScheme.outline.withOpacity(0.5)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Select any allergies you have:',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: AllergenEnum.values.map((allergen) {
-              final isSelected = _selectedAllergies.contains(allergen);
-              final allergenName = allergen.name
-                  .replaceAll('_', ' ')
-                  .toLowerCase()
-                  .split(' ')
-                  .map((word) => word.isEmpty
-                      ? ''
-                      : '${word[0].toUpperCase()}${word.substring(1)}')
-                  .join(' ');
-
-              return FilterChip(
-                label: Text(
-                  allergenName,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _selectedAllergies.add(allergen);
-                    } else {
-                      _selectedAllergies.remove(allergen);
-                    }
-                  });
-                },
-                backgroundColor: colorScheme.surface,
-                selectedColor: colorScheme.primary.withOpacity(0.2),
-                checkmarkColor: colorScheme.primary,
-                side: BorderSide(
-                  color: isSelected
-                      ? colorScheme.primary
-                      : colorScheme.outline.withOpacity(0.5),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildGenerateButton(ColorScheme colorScheme, ThemeData theme) {
     final isCustom = _useOverrides;
     final buttonColor = isCustom ? Colors.orange.shade600 : colorScheme.primary;
@@ -1048,6 +1043,67 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
           ),
           elevation: _isGenerating ? 0 : 4,
         ),
+      ),
+    );
+  }
+
+  Widget _buildAllergiesSelection(ColorScheme colorScheme, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colorScheme.outline.withOpacity(0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Select any allergies you have:',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: AllergenEnum.values.map((allergen) {
+              final isSelected = _selectedAllergies.contains(allergen);
+              final label = localizeAllergen(context, allergen);
+              return FilterChip(
+                label: Text(
+                  label,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      _selectedAllergies.add(allergen);
+                    } else {
+                      _selectedAllergies.remove(allergen);
+                    }
+                  });
+                },
+                backgroundColor: colorScheme.surface,
+                selectedColor: colorScheme.primary.withOpacity(0.2),
+                checkmarkColor: colorScheme.primary,
+                side: BorderSide(
+                  color: isSelected
+                      ? colorScheme.primary
+                      : colorScheme.outline.withOpacity(0.5),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
