@@ -1,6 +1,8 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Views/Common/image_picker_widget.dart';
+import 'package:dima_application/Views/Common/offline_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/nutritionist_home_screen.dart';
+import 'package:dima_application/services/connectivity_service.dart';
 import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
 
@@ -58,6 +60,29 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
 
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    // Check connectivity before attempting to save
+    final connectivityService = ConnectivityService();
+    final isConnected = await connectivityService.checkConnectivityManually();
+    
+    if (!isConnected) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                SizedBox(width: 8),
+                Text('No internet connection. Please check your connection and try again.'),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
       return;
     }
 
@@ -128,7 +153,8 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Scaffold(
+    return OfflineScreen(
+      child: Scaffold(
       appBar: AppBar(
         title: Text(
             widget.isFromSettings ? 'Edit Profile' : 'Complete Your Profile'),
@@ -310,6 +336,7 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

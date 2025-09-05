@@ -6,17 +6,11 @@ import '../nutritionist_read_meal_plan_page.dart';
 
 class ValidationMealPlanCard extends StatelessWidget {
   final MealPlan plan;
-  final VoidCallback? onValidate;
-  final VoidCallback? onModify;
-  final VoidCallback? onReject;
   final VoidCallback? onRefresh;
 
   const ValidationMealPlanCard({
     Key? key,
     required this.plan,
-    this.onValidate,
-    this.onModify,
-    this.onReject,
     this.onRefresh,
   }) : super(key: key);
 
@@ -122,8 +116,6 @@ class ValidationMealPlanCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isPendingReview =
         plan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW;
-    final isValidated =
-        plan.validationStatus == MealPlanValidationStatus.VALIDATED;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
@@ -175,57 +167,11 @@ class ValidationMealPlanCard extends StatelessWidget {
             ],
           ],
         ),
-        trailing: SizedBox(
-          width: 192, // Increased width to accommodate the new view button
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // View button - always available
-              SizedBox(
-                width: 48,
-                child: IconButton(
-                  icon: const Icon(Icons.visibility_rounded),
-                  color: theme.colorScheme.primary,
-                  tooltip: 'View meal plan',
-                  onPressed: () => _openNutritionistView(context),
-                ),
-              ),
-
-              // Validate/Check button
-              SizedBox(
-                width: 48,
-                child: IconButton(
-                  icon: Icon(isValidated ? Icons.check_circle : Icons.check),
-                  color: isValidated ? Colors.green : theme.colorScheme.primary,
-                  tooltip: isValidated ? 'Already validated' : 'Validate plan',
-                  onPressed:
-                      isPendingReview && !isValidated ? onValidate : null,
-                ),
-              ),
-
-              // Modify button
-              SizedBox(
-                width: 48,
-                child: IconButton(
-                  icon: const Icon(Icons.edit_note),
-                  color: theme.colorScheme.secondary,
-                  tooltip: 'Modify plan',
-                  onPressed: isPendingReview ? onModify : null,
-                ),
-              ),
-
-              // Reject button
-              SizedBox(
-                width: 48,
-                child: IconButton(
-                  icon: const Icon(Icons.close),
-                  color: theme.colorScheme.error,
-                  tooltip: 'Reject plan',
-                  onPressed: isPendingReview ? onReject : null,
-                ),
-              ),
-            ],
-          ),
+        trailing: IconButton(
+          icon: const Icon(Icons.visibility_rounded),
+          color: theme.colorScheme.primary,
+          tooltip: 'View meal plan',
+          onPressed: () => _openNutritionistView(context),
         ),
       ),
     );

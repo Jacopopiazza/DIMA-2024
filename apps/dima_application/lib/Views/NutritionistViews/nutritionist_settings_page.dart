@@ -1,9 +1,11 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/Views/Common/offline_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/enter_nutritionist_profile.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/availability_section.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/nutritionist_actions_section.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/nutritionist_profile_section.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/services/connectivity_service.dart';
 import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
 
@@ -72,11 +74,26 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
     });
 
     try {
+      // First check if we have internet connectivity
+      final connectivityService = ConnectivityService();
+      final isConnected = await connectivityService.checkConnectivityManually();
+      
+      if (!isConnected) {
+        // If no internet, don't proceed with profile validation
+        if (mounted) {
+          setState(() {
+            _checkingProfile = false;
+          });
+        }
+        return;
+      }
+
       final profile = await _profileService.getMyProfile();
       if (mounted) {
         final isValid = await _profileService.hasValidProfile();
         if (!isValid) {
-          // Redirect to profile creation page and prevent further interaction
+          // Only redirect to profile creation if we have internet connection
+          // This prevents the offline redirect issue
           await Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -203,13 +220,16 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
     final colorScheme = theme.colorScheme;
 
     if (_checkingProfile) {
-      return Scaffold(
-        backgroundColor: colorScheme.surface,
-        body: _buildLoadingState(colorScheme, theme),
+      return OfflineScreen(
+        child: Scaffold(
+          backgroundColor: colorScheme.surface,
+          body: _buildLoadingState(colorScheme, theme),
+        ),
       );
     }
 
-    return Scaffold(
+    return OfflineScreen(
+      child: Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: FadeTransition(
@@ -252,6 +272,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
             ),
           ),
         ),
+      ),
       ),
     );
   }

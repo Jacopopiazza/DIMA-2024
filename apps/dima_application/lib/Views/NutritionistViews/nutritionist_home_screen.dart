@@ -1,5 +1,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/Views/Common/offline_screen.dart';
+import 'package:dima_application/services/connectivity_service.dart';
 import 'package:flutter/material.dart';
 
 import 'nutritionist_settings_page.dart';
@@ -34,6 +36,23 @@ Future<void> signOutGlobally() async {
 class _NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
   int _selectedIndex = 0; // Start with the 'Validate Plans' tab (index 0)
 
+  @override
+  void initState() {
+    super.initState();
+    // Initialize connectivity service
+    _initializeConnectivity();
+  }
+
+  Future<void> _initializeConnectivity() async {
+    await ConnectivityService().initialize();
+  }
+
+  @override
+  void dispose() {
+    ConnectivityService().dispose();
+    super.dispose();
+  }
+
   // List of widgets to display based on the selected tab
   static final List<Widget> _widgetOptions = <Widget>[
     ValidatePlansPage(), // Index 0
@@ -50,14 +69,16 @@ class _NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Using SafeArea to avoid intrusions by system UI (like notches or status bars)
-      body: SafeArea(
-        // Display the widget corresponding to the currently selected index
-        child: _widgetOptions.elementAt(_selectedIndex),
+    return OfflineScreen(
+      child: Scaffold(
+        // Using SafeArea to avoid intrusions by system UI (like notches or status bars)
+        body: SafeArea(
+          // Display the widget corresponding to the currently selected index
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
+        // Use the helper method to build the bottom navigation bar
+        bottomNavigationBar: _buildBottomNavigationBar(),
       ),
-      // Use the helper method to build the bottom navigation bar
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
