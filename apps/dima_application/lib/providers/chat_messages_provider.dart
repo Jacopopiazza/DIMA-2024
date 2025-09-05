@@ -284,8 +284,25 @@ class ChatNotificationNotifier extends StateNotifier<ChatNotificationState> {
   void _initialize() {
     if (_isDisposed) return;
 
-    // Listen for background messages (messages for chats user is not actively in)
-    _chatService.onBackgroundMessage = _handleBackgroundMessage;
+    // Store any existing callback (GlobalChatNotificationHandler's)
+    final existingCallback = _chatService.onBackgroundMessage;
+
+    // Set up background message handler that calls both handlers
+    _chatService.onBackgroundMessage = (response) {
+      // Call our handler first (for notification state)
+      _handleBackgroundMessage(response);
+      
+      // Call existing handler if it exists (for popup notifications)
+      if (existingCallback != null) {
+        try {
+          existingCallback(response);
+        } catch (e) {
+          safePrint('[ChatNotificationNotifier] Error calling existing callback: $e');
+        }
+      }
+    };
+    
+    safePrint('[ChatNotificationNotifier] Callback setup complete. ExistingCallback was: ${existingCallback != null ? 'not null' : 'null'}');
   }
 
   void _handleBackgroundMessage(ChatResponse response) {

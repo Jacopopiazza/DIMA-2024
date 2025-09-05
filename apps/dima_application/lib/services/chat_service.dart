@@ -132,7 +132,7 @@ class ChatService {
         final chatResponse = _parseChatResponse(data);
 
         safePrint(
-            '[ChatService] Received chat message for chat: ${chatResponse.message?.chatId}');
+            '[ChatService] Received chat message for chat: ${chatResponse.message?.chatId}, text: ${chatResponse.message?.messageContent}');
 
         // Route message based on whether user is in the active chat
         if (_activeChatId != null &&
@@ -143,8 +143,7 @@ class ChatService {
         } else {
           // User is not in this chat, show as background notification
           onBackgroundMessage?.call(chatResponse);
-          safePrint(
-              '[ChatService] Message delivered as background notification');
+          safePrint('[ChatService] Message delivered as background notification');
         }
 
         _messageController!.add(chatResponse);

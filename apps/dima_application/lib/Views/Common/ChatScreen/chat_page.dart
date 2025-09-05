@@ -40,9 +40,11 @@ class _ChatPageState extends ConsumerState<ChatPage>
     _lastMessageCount = 0;
     _lastMessageId = null;
 
-    // Set this chat as active
+    // Set this chat as active and mark as read
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(activeChatProvider.notifier).setActiveChat(widget.chatId);
+      // Mark this chat as read to clear any notifications
+      ref.read(chatNotificationProvider.notifier).markChatAsRead(widget.chatId);
     });
   }
 

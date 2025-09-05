@@ -35,14 +35,48 @@ class _GlobalChatNotificationHandlerState
   void _setupChatNotifications() {
     final chatService = ChatService.instance;
 
-    // Set up background message handler for when user is not in the active chat
-    chatService.onBackgroundMessage = _handleBackgroundChatMessage;
+    // Store the existing callback (ChatNotificationNotifier's handler)  
+    final existingCallback = chatService.onBackgroundMessage;
+
+    // Set up background message handler that calls both handlers
+    chatService.onBackgroundMessage = (response) {
+      debugPrint('[GlobalChatNotificationHandler] Master callback invoked for message: ${response.message?.messageContent}');
+      
+      // Call the existing handler first (ChatNotificationNotifier)
+      if (existingCallback != null) {
+        try {
+          existingCallback(response);
+          debugPrint('[GlobalChatNotificationHandler] Existing callback called successfully');
+        } catch (e) {
+          debugPrint('[GlobalChatNotificationHandler] Error calling existing callback: $e');
+        }
+      } else {
+        debugPrint('[GlobalChatNotificationHandler] No existing callback found');
+      }
+      
+      // Then call our handler for the popup
+      try {
+        _handleBackgroundChatMessage(response);
+        debugPrint('[GlobalChatNotificationHandler] Popup handler called successfully');
+      } catch (e) {
+        debugPrint('[GlobalChatNotificationHandler] Error in popup handler: $e');
+      }
+    };
+    
+    debugPrint('[GlobalChatNotificationHandler] Master callback setup complete. ExistingCallback was: ${existingCallback != null ? 'not null' : 'null'}');
   }
 
   void _handleBackgroundChatMessage(ChatResponse response) {
-    if (_disposed || !mounted || response.message == null) return;
+    debugPrint('[GlobalChatNotificationHandler] _handleBackgroundChatMessage called');
+    debugPrint('[GlobalChatNotificationHandler] _disposed: $_disposed, mounted: $mounted');
+    
+    if (_disposed || !mounted || response.message == null) {
+      debugPrint('[GlobalChatNotificationHandler] Skipping - disposed/not mounted/no message');
+      return;
+    }
 
     final message = response.message!;
+    debugPrint('[GlobalChatNotificationHandler] Processing message: ${message.messageContent}');
 
     try {
       final notification = ChatNotificationData.fromChatMessage(message);
@@ -52,12 +86,19 @@ class _GlobalChatNotificationHandlerState
 
       // Show in-app notification only if widget is still active
       if (mounted && !_disposed) {
+        debugPrint('[GlobalChatNotificationHandler] Showing notification for: ${message.messageContent}');
         ChatNotificationManager.showChatNotification(
           context,
           notification,
-          onTap: () =>
-              _openChatFromNotification(message.chatId, message.senderName),
+          onTap: () {
+            // Hide the notification first
+            ChatNotificationManager.hide();
+            // Then open the chat
+            _openChatFromNotification(message.chatId, message.senderName);
+          },
         );
+      } else {
+        debugPrint('[GlobalChatNotificationHandler] Not showing notification - widget not ready');
       }
     } catch (e) {
       debugPrint(
