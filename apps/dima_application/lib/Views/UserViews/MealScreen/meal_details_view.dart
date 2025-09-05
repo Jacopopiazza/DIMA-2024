@@ -315,7 +315,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                 localizations.carbs)),
         Flexible(
             child: _buildNutritionItem(context,
-                totalMacros.fats.toStringAsFixed(1), 'g', localizations.carbs)),
+                totalMacros.fats.toStringAsFixed(1), 'g', localizations.fats)),
       ],
     );
   }
@@ -329,16 +329,11 @@ class MealDetailsDraggablePage extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          value,
+          '$value $unit',
           style: textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold, color: colorScheme.primary),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-        ),
-        Text(
-          unit,
-          style: textTheme.bodySmall?.copyWith(color: colorScheme.secondary),
-          maxLines: 1,
         ),
         const SizedBox(height: 4),
         Text(
