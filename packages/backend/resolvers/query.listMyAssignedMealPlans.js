@@ -44,7 +44,9 @@ export function response(ctx) {
 
   // Filter to only include meal plans that need validation (PENDING_REVIEW status)
   const pendingPlans = mappedItems.filter(
-    (plan) => plan.validationStatus === 'PENDING_REVIEW',
+    (plan) =>
+      plan.validationStatus === 'PENDING_REVIEW' ||
+      plan.validationStatus === 'VALIDATED',
   );
 
   return {

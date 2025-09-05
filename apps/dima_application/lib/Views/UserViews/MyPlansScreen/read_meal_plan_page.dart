@@ -1152,6 +1152,9 @@ class _ExpandableInstructionsState extends State<ExpandableInstructions> {
 
   @override
   Widget build(BuildContext context) {
+    // Simple heuristic: if instructions are longer than 200 characters, show expand/collapse
+    final isLong = widget.instructions.length > 200;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -1170,33 +1173,35 @@ class _ExpandableInstructionsState extends State<ExpandableInstructions> {
               height: 1.4,
             ),
           ),
-          const SizedBox(height: 8),
-          InkWell(
-            onTap: () => setState(() => _isExpanded = !_isExpanded),
-            borderRadius: BorderRadius.circular(6),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _isExpanded ? 'Show less' : 'Read more',
-                    style: TextStyle(
-                      color: widget.colorScheme.primary,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
+          if (isLong) ...[
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: () => setState(() => _isExpanded = !_isExpanded),
+              borderRadius: BorderRadius.circular(6),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _isExpanded ? 'Show less' : 'Read more',
+                      style: TextStyle(
+                        color: widget.colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    _isExpanded ? Icons.expand_less : Icons.expand_more,
-                    color: widget.colorScheme.primary,
-                    size: 16,
-                  ),
-                ],
+                    const SizedBox(width: 4),
+                    Icon(
+                      _isExpanded ? Icons.expand_less : Icons.expand_more,
+                      color: widget.colorScheme.primary,
+                      size: 16,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
         ],
       ),
     );
