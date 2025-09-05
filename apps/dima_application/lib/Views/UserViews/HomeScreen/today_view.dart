@@ -103,7 +103,8 @@ class TodayPage extends ConsumerWidget {
         onChoosePlan: () async {
           await Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const MyPlansPage(showBackButton: true)),
+            MaterialPageRoute(
+                builder: (_) => const MyPlansPage(showBackButton: true)),
           );
           if (context.mounted) {
             notifier.refreshData();
@@ -221,7 +222,8 @@ class TodayPage extends ConsumerWidget {
   }
 
   /// Builds error view
-  Widget _buildErrorView(BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
+  Widget _buildErrorView(
+      BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
     final config = _stateConfig[state.status];
     return Center(
       child: ErrorView(

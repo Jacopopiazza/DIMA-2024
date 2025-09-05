@@ -143,13 +143,15 @@ final todayPageProvider =
   // ADDITIONAL: Watch for meal plans list changes to catch deletions
   ref.listen(mealPlansProvider, (previous, next) {
     // Only trigger if we currently have an active plan loaded
-    if (notifier.state.mealPlanId != null && notifier.state.status != DataStatus.loading) {
+    if (notifier.state.mealPlanId != null &&
+        notifier.state.status != DataStatus.loading) {
       next.when(
         data: (currentPlans) {
           // Check if our current active plan still exists in the list
           final currentActivePlanId = notifier.state.mealPlanId;
-          final planStillExists = currentPlans.any((plan) => plan.mealPlanId == currentActivePlanId);
-          
+          final planStillExists = currentPlans
+              .any((plan) => plan.mealPlanId == currentActivePlanId);
+
           if (!planStillExists) {
             safePrint(
                 "[TodayPageProvider] Current active plan ($currentActivePlanId) no longer exists in plans list, refreshing...");
@@ -184,10 +186,12 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
   Future<bool> _hasNetworkConnection() async {
     try {
       final connectivityResult = await Connectivity().checkConnectivity();
-      final hasConnection = connectivityResult.contains(ConnectivityResult.mobile) ||
-                           connectivityResult.contains(ConnectivityResult.wifi) ||
-                           connectivityResult.contains(ConnectivityResult.ethernet);
-      safePrint("[TodayPageNotifier] Network connectivity: $hasConnection ($connectivityResult)");
+      final hasConnection =
+          connectivityResult.contains(ConnectivityResult.mobile) ||
+              connectivityResult.contains(ConnectivityResult.wifi) ||
+              connectivityResult.contains(ConnectivityResult.ethernet);
+      safePrint(
+          "[TodayPageNotifier] Network connectivity: $hasConnection ($connectivityResult)");
       return hasConnection;
     } catch (e) {
       safePrint("[TodayPageNotifier] Error checking connectivity: $e");
@@ -212,7 +216,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           .where()
           .userIdEqualTo(userId)
           .findFirst();
-      
+
       safePrint("[TodayPageNotifier] Cached active plan: $cached");
       return cached;
     } catch (e) {
@@ -222,7 +226,8 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
   }
 
   /// Caches the active plan state (or lack thereof) to Isar
-  Future<void> _cacheActivePlan(String? activePlanId, {required bool confirmedFromServer}) async {
+  Future<void> _cacheActivePlan(String? activePlanId,
+      {required bool confirmedFromServer}) async {
     try {
       final userId = _getCurrentUserId();
       if (userId == null) return;
@@ -256,71 +261,84 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
   /// Returns a tuple of (activePlanId, wasFromCache, networkError)
   Future<(String?, bool, bool)> _getActiveMealPlanIdSmart() async {
     safePrint("[TodayPageNotifier] Smart active plan ID detection starting...");
-    
+
     // 1. First check network connectivity
     final hasNetwork = await _hasNetworkConnection();
-    
+
     if (!hasNetwork) {
       safePrint("[TodayPageNotifier] No network - checking cache...");
-      
+
       // Check our local cache
       final cached = await _getCachedActivePlan();
       if (cached != null && cached.isUsable) {
-        safePrint("[TodayPageNotifier] Using cached active plan: ${cached.activeMealPlanId}");
-        return (cached.activeMealPlanId, true, true); // fromCache=true, networkError=true
+        safePrint(
+            "[TodayPageNotifier] Using cached active plan: ${cached.activeMealPlanId}");
+        return (
+          cached.activeMealPlanId,
+          true,
+          true
+        ); // fromCache=true, networkError=true
       }
-      
+
       safePrint("[TodayPageNotifier] No network and no usable cache");
       return (null, false, true); // No plan, not from cache, network error
     }
-    
+
     // 2. We have network - try to get fresh data from provider
     safePrint("[TodayPageNotifier] Network available - getting fresh data...");
-    
+
     // Try provider first (might have fresh data)
     final activePlanId = _ref.read(activeMealPlanIdProvider);
     if (activePlanId != null) {
-      safePrint("[TodayPageNotifier] Got active plan from provider: $activePlanId");
+      safePrint(
+          "[TodayPageNotifier] Got active plan from provider: $activePlanId");
       await _cacheActivePlan(activePlanId, confirmedFromServer: true);
       return (activePlanId, false, false); // Fresh data
     }
-    
+
     // Try meal plans provider
     final mealPlansAsync = _ref.read(mealPlansProvider);
     final currentActivePlanId = mealPlansAsync.when(
-      data: (plans) => _ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId,
+      data: (plans) =>
+          _ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId,
       loading: () => null,
       error: (error, stack) => null,
     );
-    
+
     if (currentActivePlanId != null) {
-      safePrint("[TodayPageNotifier] Got active plan from meal plans cache: $currentActivePlanId");
+      safePrint(
+          "[TodayPageNotifier] Got active plan from meal plans cache: $currentActivePlanId");
       await _cacheActivePlan(currentActivePlanId, confirmedFromServer: true);
       return (currentActivePlanId, false, false); // Fresh data
     }
-    
+
     // 3. Need to fetch from server
     try {
       safePrint("[TodayPageNotifier] Fetching fresh meal plans...");
       await _ref.read(mealPlansProvider.notifier).listMyMealPlans();
-      final freshActivePlanId = _ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId;
-      
+      final freshActivePlanId =
+          _ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId;
+
       // Cache the result (even if null - server confirmed no active plan)
       await _cacheActivePlan(freshActivePlanId, confirmedFromServer: true);
-      
+
       safePrint("[TodayPageNotifier] Fresh active plan ID: $freshActivePlanId");
       return (freshActivePlanId, false, false); // Fresh data
-      
     } catch (e) {
       safePrint("[TodayPageNotifier] Network request failed: $e");
-      
+
       // Network request failed - try cache as fallback
       final cached = await _getCachedActivePlan();
       if (cached != null && cached.isUsable) {
-        safePrint("[TodayPageNotifier] Network failed, using cached: ${cached.activeMealPlanId}");
-        return (cached.activeMealPlanId, true, true); // fromCache=true, networkError=true
+        safePrint(
+            "[TodayPageNotifier] Network failed, using cached: ${cached.activeMealPlanId}");
+        return (
+          cached.activeMealPlanId,
+          true,
+          true
+        ); // fromCache=true, networkError=true
       }
-      
+
       safePrint("[TodayPageNotifier] Network failed and no usable cache");
       return (null, false, true); // No plan, not from cache, network error
     }
@@ -362,21 +380,24 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
 
     try {
       // 1. Smart active plan ID detection with network awareness
-      final (activePlanId, wasFromCache, hasNetworkError) = await _getActiveMealPlanIdSmart();
+      final (activePlanId, wasFromCache, hasNetworkError) =
+          await _getActiveMealPlanIdSmart();
       chosenPlanId = activePlanId;
 
       if (chosenPlanId == null || chosenPlanId.isEmpty) {
-        safePrint("[TodayPageNotifier] No active meal plan ID found. FromCache: $wasFromCache, NetworkError: $hasNetworkError");
+        safePrint(
+            "[TodayPageNotifier] No active meal plan ID found. FromCache: $wasFromCache, NetworkError: $hasNetworkError");
         if (!mounted) return;
-        
+
         // Determine appropriate error state and message
         DataStatus errorStatus;
         String errorMsg;
-        
+
         if (hasNetworkError && !wasFromCache) {
           // Network is down and no cache - this is a network error, not "no plan"
           errorStatus = DataStatus.errorNetwork;
-          errorMsg = "Unable to connect to server. Please check your internet connection.";
+          errorMsg =
+              "Unable to connect to server. Please check your internet connection.";
         } else if (hasNetworkError && wasFromCache) {
           // This case shouldn't happen (if wasFromCache=true, activePlanId shouldn't be null)
           // But handle it just in case
@@ -387,7 +408,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
           errorStatus = DataStatus.errorNoPlan;
           errorMsg = "No meal plan selected. Please choose one in settings.";
         }
-        
+
         state = state.copyWith(
           status: errorStatus,
           clearTodaysMeals: true,
@@ -401,10 +422,11 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
         );
         return;
       }
-      
+
       // We have an active plan ID - determine if we should show cached data indicator
       if (wasFromCache && hasNetworkError) {
-        safePrint("[TodayPageNotifier] Using cached active plan due to network issues: $chosenPlanId");
+        safePrint(
+            "[TodayPageNotifier] Using cached active plan due to network issues: $chosenPlanId");
       }
       safePrint(
           "[TodayPageNotifier] User has plan ID: $chosenPlanId. Fetching via MealPlansService...");
@@ -421,7 +443,9 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
         }
 
         // SUCCESS: Data is fresh from the network (or cached if network issues)
-        finalStatus = (wasFromCache && hasNetworkError) ? DataStatus.errorNetworkWithCache : DataStatus.loadedOnline;
+        finalStatus = (wasFromCache && hasNetworkError)
+            ? DataStatus.errorNetworkWithCache
+            : DataStatus.loadedOnline;
         // Try to get a meaningful timestamp (e.g., when it was last updated on backend)
         // Fallback to now if updatedAt is null
         planFetchTime =

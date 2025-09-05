@@ -7,21 +7,21 @@ part 'active_plan_cache.g.dart';
 @Collection()
 class ActivePlanCache {
   Id id = Isar.autoIncrement;
-  
+
   /// The user ID this cache belongs to
   @Index()
   String? userId;
-  
+
   /// The last known active meal plan ID (null if confirmed no active plan)
   String? activeMealPlanId;
-  
+
   /// When this active plan state was last confirmed from the server
   DateTime lastConfirmedAt;
-  
-  /// Whether the server confirmed there is no active plan (true) 
+
+  /// Whether the server confirmed there is no active plan (true)
   /// or if we just couldn't reach the server (false)
   bool confirmedNoActivePlan;
-  
+
   /// When this cache entry was created/updated
   DateTime updatedAt;
 
@@ -79,7 +79,7 @@ class ActivePlanCache {
   @override
   String toString() {
     return 'ActivePlanCache(userId: $userId, activePlanId: $activeMealPlanId, '
-           'confirmedNoActivePlan: $confirmedNoActivePlan, lastConfirmed: $lastConfirmedAt, '
-           'isFresh: $isFresh, isUsable: $isUsable)';
+        'confirmedNoActivePlan: $confirmedNoActivePlan, lastConfirmed: $lastConfirmedAt, '
+        'isFresh: $isFresh, isUsable: $isUsable)';
   }
 }

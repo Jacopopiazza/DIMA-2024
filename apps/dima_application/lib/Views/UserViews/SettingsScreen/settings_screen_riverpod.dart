@@ -13,8 +13,9 @@ import 'widgets/actions_section_riverpod.dart';
 
 class SettingsScreenRiverpod extends ConsumerStatefulWidget {
   final bool showBackButton;
-  
-  const SettingsScreenRiverpod({Key? key, this.showBackButton = false}) : super(key: key);
+
+  const SettingsScreenRiverpod({Key? key, this.showBackButton = false})
+      : super(key: key);
 
   @override
   ConsumerState<SettingsScreenRiverpod> createState() =>
@@ -60,7 +61,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
 
   // RouteObserver methods - currently not used for auto-refresh
   // These are kept for potential future implementation of proper app lifecycle detection
-  
+
   @override
   void didPushNext() {
     print('[SettingsScreen] Navigation away detected (auto-refresh disabled)');
@@ -76,9 +77,10 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
   void _checkAndRefreshIfStale() {
     // TEMPORARILY DISABLED: Auto-refresh disabled to prevent data loss
     // Only refresh manually via pull-to-refresh gesture
-    print('[SettingsScreen] Auto-refresh disabled - use pull-to-refresh to update data');
+    print(
+        '[SettingsScreen] Auto-refresh disabled - use pull-to-refresh to update data');
     return;
-    
+
     // TODO: Implement proper app lifecycle detection for real app close/reopen
     // Current issue: Can't reliably distinguish between modal dialogs and real navigation
     // Risk: Users lose unsaved form data due to automatic refresh
@@ -87,30 +89,32 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
   void _refreshAllData() {
     try {
       print('[SettingsScreen] Refreshing all data for settings page...');
-      
+
       // For settings page, we need fresh user data, so invalidation is appropriate
       // This ensures we get the latest user details, profile, and subscription status
-      
+
       // Refresh cognito profile
       ref.read(cognitoProfileProvider.notifier).refresh();
       print('[SettingsScreen] Cognito profile refresh initiated');
-      
+
       // Refresh user details for current user
       ref.read(userIdProvider.future).then((userId) {
         if (userId != null) {
           ref.read(userDetailsProvider.notifier).loadUserDetails(userId);
-          print('[SettingsScreen] User details refresh initiated for user: $userId');
+          print(
+              '[SettingsScreen] User details refresh initiated for user: $userId');
         } else {
-          print('[SettingsScreen] No user ID found, skipping user details refresh');
+          print(
+              '[SettingsScreen] No user ID found, skipping user details refresh');
         }
       }).catchError((error) {
         print('[SettingsScreen] Error getting user ID for refresh: $error');
       });
-      
+
       // Refresh subscription status
       ref.read(subscriptionStatusProvider.notifier).refresh();
       print('[SettingsScreen] Subscription status refresh initiated');
-      
+
       print('[SettingsScreen] All settings data refresh tasks completed');
     } catch (e) {
       print('[SettingsScreen] Error refreshing settings data: $e');
@@ -141,164 +145,171 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
         children: [
           SafeArea(
             child: userIdAsync.when(
-          loading: () => _buildLoadingState(colorScheme, theme),
-          error: (error, stackTrace) =>
-              _buildErrorState(error.toString(), colorScheme, theme),
-          data: (userId) {
-            if (userId == null) {
-              return _buildNotSignedInState(colorScheme, theme);
-            }
+              loading: () => _buildLoadingState(colorScheme, theme),
+              error: (error, stackTrace) =>
+                  _buildErrorState(error.toString(), colorScheme, theme),
+              data: (userId) {
+                if (userId == null) {
+                  return _buildNotSignedInState(colorScheme, theme);
+                }
 
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    final refreshTasks = <Future<void>>[];
-                    refreshTasks.add(
-                        ref.read(cognitoProfileProvider.notifier).refresh());
-                    refreshTasks.add(ref
-                        .read(userDetailsProvider.notifier)
-                        .loadUserDetails(userId));
-                    refreshTasks.add(ref
-                        .read(subscriptionStatusProvider.notifier)
-                        .refresh());
-                    await Future.wait(refreshTasks);
-                  },
-                  backgroundColor: colorScheme.surface,
-                  color: colorScheme.primary,
-                  child: GestureDetector(
-                    onTap: () => FocusScope.of(context).unfocus(),
-                    behavior: HitTestBehavior.opaque,
-                    child: ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.all(16.0),
-                      children: [
-                      // Header section
-                      _buildHeaderSection(colorScheme, theme),
-                      const SizedBox(height: 32),
+                return FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        final refreshTasks = <Future<void>>[];
+                        refreshTasks.add(ref
+                            .read(cognitoProfileProvider.notifier)
+                            .refresh());
+                        refreshTasks.add(ref
+                            .read(userDetailsProvider.notifier)
+                            .loadUserDetails(userId));
+                        refreshTasks.add(ref
+                            .read(subscriptionStatusProvider.notifier)
+                            .refresh());
+                        await Future.wait(refreshTasks);
+                      },
+                      backgroundColor: colorScheme.surface,
+                      color: colorScheme.primary,
+                      child: GestureDetector(
+                        onTap: () => FocusScope.of(context).unfocus(),
+                        behavior: HitTestBehavior.opaque,
+                        child: ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(16.0),
+                          children: [
+                            // Header section
+                            _buildHeaderSection(colorScheme, theme),
+                            const SizedBox(height: 32),
 
-                      subscriptionStatusAsync.when(
-                        skipLoadingOnRefresh: true,
-                        loading: () => _buildSectionLoadingState(
-                            colorScheme, 'Loading subscription...'),
-                        error: (error, stackTrace) =>
-                            _buildSubscriptionSectionErrorState(colorScheme, theme),
-                        data: (data) {
-                          final subscriptionData = data.$1;
-                          final uniqueId = data.$2;
+                            subscriptionStatusAsync.when(
+                              skipLoadingOnRefresh: true,
+                              loading: () => _buildSectionLoadingState(
+                                  colorScheme, 'Loading subscription...'),
+                              error: (error, stackTrace) =>
+                                  _buildSubscriptionSectionErrorState(
+                                      colorScheme, theme),
+                              data: (data) {
+                                final subscriptionData = data.$1;
+                                final uniqueId = data.$2;
 
-                          return Column(
-                            children: [
-                              ProSubscriptionSectionRiverpod(
-                                key: ValueKey('subscription_status_$uniqueId'),
-                                subscriptionStatus:
-                                    subscriptionData.subscriptionStatus,
-                                onSubscribe: () async {
-                                  return await ref
-                                      .read(subscriptionStatusProvider.notifier)
-                                      .subscribe();
-                                },
-                                onUnsubscribe: () async {
-                                  return await ref
-                                      .read(subscriptionStatusProvider.notifier)
-                                      .unsubscribe();
-                                },
-                              ),
-                              const SizedBox(height: 24),
-                            ],
-                          );
-                        },
+                                return Column(
+                                  children: [
+                                    ProSubscriptionSectionRiverpod(
+                                      key: ValueKey(
+                                          'subscription_status_$uniqueId'),
+                                      subscriptionStatus:
+                                          subscriptionData.subscriptionStatus,
+                                      onSubscribe: () async {
+                                        return await ref
+                                            .read(subscriptionStatusProvider
+                                                .notifier)
+                                            .subscribe();
+                                      },
+                                      onUnsubscribe: () async {
+                                        return await ref
+                                            .read(subscriptionStatusProvider
+                                                .notifier)
+                                            .unsubscribe();
+                                      },
+                                    ),
+                                    const SizedBox(height: 24),
+                                  ],
+                                );
+                              },
+                            ),
+
+                            // Cognito profile section
+                            cognitoProfileAsync.when(
+                              skipLoadingOnRefresh: true,
+                              loading: () => _buildSectionLoadingState(
+                                  colorScheme, 'Loading profile...'),
+                              error: (error, stackTrace) =>
+                                  _buildNoProfileState(colorScheme, theme),
+                              data: (data) {
+                                final profileData = data.$1;
+                                final uniqueId = data.$2;
+
+                                return Column(
+                                  children: [
+                                    // User Profile Section
+                                    UserProfileSectionRiverpod(
+                                      key: ValueKey('profile_$uniqueId'),
+                                      profileData: profileData,
+                                      uniqueId: uniqueId,
+                                      onUpdateProfile: ({
+                                        String? givenName,
+                                        String? familyName,
+                                        String? gender,
+                                        String? birthdate,
+                                      }) async {
+                                        return await ref
+                                            .read(
+                                                cognitoProfileProvider.notifier)
+                                            .updateUserProfileAttributes(
+                                              gender: gender,
+                                              birthdate: birthdate,
+                                            );
+                                      },
+                                    ),
+                                    const SizedBox(height: 24),
+                                  ],
+                                );
+                              },
+                            ),
+
+                            // User details section
+                            userDetailsAsync.when(
+                              skipLoadingOnRefresh: true,
+                              loading: () => _buildSectionLoadingState(
+                                  colorScheme, 'Loading preferences...'),
+                              error: (error, stackTrace) =>
+                                  _buildSectionErrorState(colorScheme, theme),
+                              data: (data) {
+                                final userDetails = data.$1;
+                                final uniqueId = data.$2;
+
+                                return Column(
+                                  children: [
+                                    UserDetailsFormRiverpod(
+                                      key: ValueKey('details_$uniqueId'),
+                                      userDetails: userDetails,
+                                      onUpdate: (updatedDetails) async {
+                                        return await ref
+                                            .read(userDetailsProvider.notifier)
+                                            .updateUserDetails(updatedDetails);
+                                      },
+                                    ),
+                                    const SizedBox(height: 24),
+                                    PasswordChangeFormRiverpod(
+                                      onChangePassword:
+                                          (oldPassword, newPassword) async {
+                                        return await ref
+                                            .read(userDetailsProvider.notifier)
+                                            .changePassword(
+                                                oldPassword, newPassword);
+                                      },
+                                    ),
+                                    const SizedBox(height: 24),
+                                    ActionsSectionRiverpod(userId: userId),
+                                    const SizedBox(height: 24),
+                                    DangerZoneSectionRiverpod(userId: userId),
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 32),
+                          ],
+                        ),
                       ),
-
-                      // Cognito profile section
-                      cognitoProfileAsync.when(
-                        skipLoadingOnRefresh: true,
-                        loading: () => _buildSectionLoadingState(
-                            colorScheme, 'Loading profile...'),
-                        error: (error, stackTrace) =>
-                            _buildNoProfileState(colorScheme, theme),
-                        data: (data) {
-                          final profileData = data.$1;
-                          final uniqueId = data.$2;
-
-                          return Column(
-                            children: [
-                              // User Profile Section
-                              UserProfileSectionRiverpod(
-                                key: ValueKey('profile_$uniqueId'),
-                                profileData: profileData,
-                                uniqueId: uniqueId,
-                                onUpdateProfile: ({
-                                  String? givenName,
-                                  String? familyName,
-                                  String? gender,
-                                  String? birthdate,
-                                }) async {
-                                  return await ref
-                                      .read(cognitoProfileProvider.notifier)
-                                      .updateUserProfileAttributes(
-                                        gender: gender,
-                                        birthdate: birthdate,
-                                      );
-                                },
-                              ),
-                              const SizedBox(height: 24),
-                            ],
-                          );
-                        },
-                      ),
-
-                      // User details section
-                      userDetailsAsync.when(
-                        skipLoadingOnRefresh: true,
-                        loading: () => _buildSectionLoadingState(
-                            colorScheme, 'Loading preferences...'),
-                        error: (error, stackTrace) =>
-                            _buildSectionErrorState(colorScheme, theme),
-                        data: (data) {
-                          final userDetails = data.$1;
-                          final uniqueId = data.$2;
-
-                          return Column(
-                            children: [
-                              UserDetailsFormRiverpod(
-                                key: ValueKey('details_$uniqueId'),
-                                userDetails: userDetails,
-                                onUpdate: (updatedDetails) async {
-                                  return await ref
-                                      .read(userDetailsProvider.notifier)
-                                      .updateUserDetails(updatedDetails);
-                                },
-                              ),
-                              const SizedBox(height: 24),
-                              PasswordChangeFormRiverpod(
-                                onChangePassword:
-                                    (oldPassword, newPassword) async {
-                                  return await ref
-                                      .read(userDetailsProvider.notifier)
-                                      .changePassword(oldPassword, newPassword);
-                                },
-                              ),
-                              const SizedBox(height: 24),
-                              ActionsSectionRiverpod(userId: userId),
-                              const SizedBox(height: 24),
-                              DangerZoneSectionRiverpod(userId: userId),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 32),
-                    ],
                     ),
                   ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+                );
+              },
+            ),
+          ),
           // Floating back button positioned on top
           if (widget.showBackButton)
             Positioned(
@@ -624,7 +635,8 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
     ]);
   }
 
-  Widget _buildSubscriptionSectionErrorState(ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildSubscriptionSectionErrorState(
+      ColorScheme colorScheme, ThemeData theme) {
     return Column(children: [
       Container(
         padding: const EdgeInsets.all(24),

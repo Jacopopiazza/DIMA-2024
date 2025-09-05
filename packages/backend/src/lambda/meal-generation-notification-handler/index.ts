@@ -6,7 +6,7 @@ import { SignatureV4 } from '@aws-sdk/signature-v4';
 import { Sha256 } from '@aws-crypto/sha256-js';
 import { HttpRequest } from '@aws-sdk/protocol-http';
 import fetch from 'node-fetch';
-import { MealPlanResponse } from '../graphql-types';
+import { MealPlanResponseSubscription } from '../graphql-types';
 
 // Variabili ambiente
 const { APPSYNC_API_URL, AWS_REGION } = process.env;
@@ -215,7 +215,7 @@ export const handler: SNSHandler = async (event: SNSEvent) => {
       console.log('Parsed SNS message:', JSON.stringify(snsMessage));
 
       // Determina lo status basato sul tipo di messaggio SNS
-      let notification: MealPlanResponse;
+      let notification: MealPlanResponseSubscription;
       let status: string;
       let error: string | null = null;
 
@@ -226,6 +226,7 @@ export const handler: SNSHandler = async (event: SNSEvent) => {
             success: true,
             message: 'Meal plan created successfully.',
             mealPlanId: snsMessage.mealPlanId,
+            userId: snsMessage.userId,
           };
           break;
         case 'MEAL_PLAN_FAILED':
@@ -235,6 +236,7 @@ export const handler: SNSHandler = async (event: SNSEvent) => {
             success: false,
             message: error,
             mealPlanId: snsMessage.mealPlanId,
+            userId: snsMessage.userId,
           };
           break;
         default:
@@ -255,6 +257,7 @@ export const handler: SNSHandler = async (event: SNSEvent) => {
               success
               message
               mealPlanId
+              userId
             }
           }
         `,

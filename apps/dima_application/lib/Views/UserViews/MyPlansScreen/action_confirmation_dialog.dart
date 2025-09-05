@@ -10,17 +10,16 @@ class ActionConfirmationDialog extends StatefulWidget {
   final IconData? actionIcon;
   final Future<void> Function() onConfirm;
 
-  const ActionConfirmationDialog({
-    super.key,
-    required this.title,
-    required this.content,
-    required this.actionLabel,
-    required this.onConfirm,
-    this.actionColor,
-    this.actionIcon,
-    this.textColor,
-    this.actionTextColor
-  });
+  const ActionConfirmationDialog(
+      {super.key,
+      required this.title,
+      required this.content,
+      required this.actionLabel,
+      required this.onConfirm,
+      this.actionColor,
+      this.actionIcon,
+      this.textColor,
+      this.actionTextColor});
 
   @override
   State<ActionConfirmationDialog> createState() =>
@@ -60,7 +59,6 @@ class _ActionConfirmationDialogState extends State<ActionConfirmationDialog> {
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -71,7 +69,9 @@ class _ActionConfirmationDialogState extends State<ActionConfirmationDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-          child: Text('Cancel', style: TextStyle(color: widget.textColor ?? colorScheme.onSurface)),
+          child: Text('Cancel',
+              style:
+                  TextStyle(color: widget.textColor ?? colorScheme.onSurface)),
         ),
         FilledButton.icon(
           onPressed: _isLoading ? null : _handleAction,
@@ -85,11 +85,17 @@ class _ActionConfirmationDialogState extends State<ActionConfirmationDialog> {
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onSurface),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(colorScheme.onSurface),
                   ),
                 )
-              : Icon(widget.actionIcon ?? Icons.check, color: widget.actionTextColor ?? colorScheme.onPrimary),
-          label: Text(widget.actionLabel, style: TextStyle(color: _isLoading ? colorScheme.onSurface : widget.actionTextColor ?? colorScheme.onPrimary)),
+              : Icon(widget.actionIcon ?? Icons.check,
+                  color: widget.actionTextColor ?? colorScheme.onPrimary),
+          label: Text(widget.actionLabel,
+              style: TextStyle(
+                  color: _isLoading
+                      ? colorScheme.onSurface
+                      : widget.actionTextColor ?? colorScheme.onPrimary)),
         ),
       ],
     );

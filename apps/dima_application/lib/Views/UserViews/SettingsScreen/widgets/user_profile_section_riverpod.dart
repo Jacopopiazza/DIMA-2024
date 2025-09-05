@@ -257,8 +257,8 @@ class _UserProfileSectionRiverpodState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              // Header
-              Row(
+            // Header
+            Row(
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
@@ -499,10 +499,9 @@ class _UserProfileSectionRiverpodState
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, size: 20),
-        suffixIcon: readOnly 
-            ? Icon(Icons.lock_outline_rounded, 
-                size: 16, 
-                color: colorScheme.onSurface.withOpacity(0.5))
+        suffixIcon: readOnly
+            ? Icon(Icons.lock_outline_rounded,
+                size: 16, color: colorScheme.onSurface.withOpacity(0.5))
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -521,13 +520,13 @@ class _UserProfileSectionRiverpodState
           borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
         ),
         filled: true,
-        fillColor: readOnly 
+        fillColor: readOnly
             ? colorScheme.surfaceContainerHighest
             : colorScheme.surface,
         contentPadding:
             const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
       ),
-      style: readOnly 
+      style: readOnly
           ? TextStyle(color: colorScheme.onSurface.withOpacity(0.7))
           : null,
       validator: validator,

@@ -55,7 +55,8 @@ class NotificationState {
 /// Notifier for handling meal plan notifications
 class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
   final MealPlanSubscriptionService _subscriptionService;
-  final StateNotifierProviderRef<MealPlanNotificationNotifier, NotificationState> _ref;
+  final StateNotifierProviderRef<MealPlanNotificationNotifier,
+      NotificationState> _ref;
   StreamSubscription<MealPlanResponse>? _notificationSubscription;
 
   MealPlanNotificationNotifier(this._subscriptionService, this._ref)
@@ -74,13 +75,16 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
           _subscriptionService.notificationStream.listen(
         _handleMealPlanResponse,
         onError: (error) {
-          safePrint('[MealPlanNotificationNotifier] Error in notification stream: $error');
+          safePrint(
+              '[MealPlanNotificationNotifier] Error in notification stream: $error');
         },
       );
 
-      safePrint('[MealPlanNotificationNotifier] Meal plan notification system initialized');
+      safePrint(
+          '[MealPlanNotificationNotifier] Meal plan notification system initialized');
     } catch (e) {
-      safePrint('[MealPlanNotificationNotifier] Error initializing notifications: $e');
+      safePrint(
+          '[MealPlanNotificationNotifier] Error initializing notifications: $e');
     }
   }
 
@@ -101,7 +105,8 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
       hasUnreadNotifications: true,
     );
 
-    safePrint('[MealPlanNotificationNotifier] New meal plan notification: ${notification.message}');
+    safePrint(
+        '[MealPlanNotificationNotifier] New meal plan notification: ${notification.message}');
   }
 
   /// Mark all notifications as read
@@ -114,6 +119,23 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
     state = const NotificationState();
   }
 
+  /// Restart the notification system (useful when user changes)
+  Future<void> restart() async {
+    safePrint('[MealPlanNotificationNotifier] Restarting notification system...');
+    
+    // Stop existing subscription
+    await _notificationSubscription?.cancel();
+    _notificationSubscription = null;
+    
+    // Clear notifications
+    state = const NotificationState();
+    
+    // Restart the system
+    await _initializeNotifications();
+    
+    safePrint('[MealPlanNotificationNotifier] Notification system restarted');
+  }
+
   /// Get unread notification count
   int get unreadCount =>
       state.hasUnreadNotifications ? state.notifications.length : 0;
@@ -124,9 +146,13 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
 
   @override
   void dispose() {
+    safePrint('[MealPlanNotificationNotifier] Disposing notification provider...');
     _notificationSubscription?.cancel();
     _subscriptionService.dispose();
+    // Clear all notifications on disposal
+    state = const NotificationState();
     super.dispose();
+    safePrint('[MealPlanNotificationNotifier] Notification provider disposed');
   }
 }
 
@@ -136,7 +162,7 @@ final mealPlanSubscriptionServiceProvider =
   return MealPlanSubscriptionService();
 });
 
-/// Provider for meal plan notifications  
+/// Provider for meal plan notifications
 final mealPlanNotificationProvider =
     StateNotifierProvider<MealPlanNotificationNotifier, NotificationState>(
         (ref) {
@@ -153,8 +179,9 @@ final globalNotificationHandler = Provider<void>((ref) {
       // Perform background refresh when notifications arrive
       final mealPlansNotifier = ref.read(mealPlansProvider.notifier);
       mealPlansNotifier.backgroundRefresh();
-      
-      safePrint('[GlobalNotificationHandler] Background refresh triggered due to notification');
+
+      safePrint(
+          '[GlobalNotificationHandler] Background refresh triggered due to notification');
     }
   });
 });

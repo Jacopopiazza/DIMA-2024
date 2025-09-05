@@ -367,7 +367,8 @@ class _ProgressCardState extends State<ProgressCard>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0), // Rounded corners
           side: BorderSide(
-            color: colorScheme.outline.withAlpha(76), // Subtle border color (30% opacity)
+            color: colorScheme.outline
+                .withAlpha(76), // Subtle border color (30% opacity)
             width: 0.5, // Thin border width
           ),
         ),
@@ -412,7 +413,8 @@ class _ProgressCardState extends State<ProgressCard>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0), // Rounded corners
         side: BorderSide(
-          color: colorScheme.outline.withAlpha(76), // Subtle border color (30% opacity)
+          color: colorScheme.outline
+              .withAlpha(76), // Subtle border color (30% opacity)
           width: 0.5, // Thin border width
         ),
       ),
@@ -445,7 +447,8 @@ class _ProgressCardState extends State<ProgressCard>
                         localizations.calories,
                         style: TextStyle(
                           color: secondaryTextColor,
-                          fontSize: MediaQuery.of(context).size.width < 375 ? 14 : 16,
+                          fontSize:
+                              MediaQuery.of(context).size.width < 375 ? 14 : 16,
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -455,14 +458,19 @@ class _ProgressCardState extends State<ProgressCard>
                           Icon(
                             Icons.local_fire_department_rounded,
                             color: fatColor,
-                            size: MediaQuery.of(context).size.width < 375 ? 18 : 20,
+                            size: MediaQuery.of(context).size.width < 375
+                                ? 18
+                                : 20,
                           ),
                           const SizedBox(width: 4),
                           Flexible(
                             child: Text(
                               widget.calories!,
                               style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.width < 375 ? 16 : 18,
+                                fontSize:
+                                    MediaQuery.of(context).size.width < 375
+                                        ? 16
+                                        : 18,
                                 fontWeight: FontWeight.bold,
                                 color: textColor,
                               ),
@@ -484,17 +492,21 @@ class _ProgressCardState extends State<ProgressCard>
                 builder: (context, constraints) {
                   final mediaQuery = MediaQuery.of(context);
                   final screenWidth = mediaQuery.size.width;
-                  
+
                   // Available space for indicators (full height now!)
                   final double availableWidth = constraints.maxWidth;
                   final double availableHeight = constraints.maxHeight;
-                  
+
                   // Enhanced screen size detection with width constraints
-                  final bool isVerySmallScreen = screenWidth < 375; // iPhone SE, iPhone 13 mini
-                  final bool isSmallScreen = screenWidth < 390; // Standard small category
-                  final bool isCompactDevice = availableWidth < 200; // Tight space
-                  final bool isVeryCompactDevice = availableWidth < 180; // Very tight space
-                  
+                  final bool isVerySmallScreen =
+                      screenWidth < 375; // iPhone SE, iPhone 13 mini
+                  final bool isSmallScreen =
+                      screenWidth < 390; // Standard small category
+                  final bool isCompactDevice =
+                      availableWidth < 200; // Tight space
+                  final bool isVeryCompactDevice =
+                      availableWidth < 180; // Very tight space
+
                   // More aggressive spacing reduction for small screens
                   double minSpacing, rightPadding;
                   if (isVeryCompactDevice) {
@@ -513,13 +525,14 @@ class _ProgressCardState extends State<ProgressCard>
                     minSpacing = 8.0;
                     rightPadding = 8.0;
                   }
-                  
+
                   final double totalSpacing = (2 * minSpacing) + rightPadding;
-                  final double availableForCircles = availableWidth - totalSpacing;
-                  
+                  final double availableForCircles =
+                      availableWidth - totalSpacing;
+
                   // More conservative width-based calculation
                   final double rawWidthDiameter = availableForCircles / 3;
-                  
+
                   // Apply screen-specific limits with safety margin
                   double maxWidthDiameter, minWidthDiameter;
                   if (isVeryCompactDevice) {
@@ -538,31 +551,53 @@ class _ProgressCardState extends State<ProgressCard>
                     maxWidthDiameter = 65.0;
                     minWidthDiameter = 28.0;
                   }
-                  
-                  final double widthBasedDiameter = rawWidthDiameter.clamp(minWidthDiameter, maxWidthDiameter);
-                  
+
+                  final double widthBasedDiameter = rawWidthDiameter.clamp(
+                      minWidthDiameter, maxWidthDiameter);
+
                   // Height-based calculation with screen-specific limits
-                  double heightMultiplier = isVeryCompactDevice ? 0.6 : (isCompactDevice ? 0.65 : (isVerySmallScreen ? 0.7 : (isSmallScreen ? 0.75 : 0.8)));
-                  double maxHeightDiameter = isVeryCompactDevice ? 45.0 : (isCompactDevice ? 50.0 : (isVerySmallScreen ? 55.0 : (isSmallScreen ? 60.0 : 70.0)));
-                  double minHeightDiameter = isVeryCompactDevice ? 18.0 : (isCompactDevice ? 20.0 : (isVerySmallScreen ? 22.0 : (isSmallScreen ? 25.0 : 28.0)));
-                  
-                  final double heightBasedDiameter = (availableHeight * heightMultiplier).clamp(minHeightDiameter, maxHeightDiameter);
-                  
+                  double heightMultiplier = isVeryCompactDevice
+                      ? 0.6
+                      : (isCompactDevice
+                          ? 0.65
+                          : (isVerySmallScreen
+                              ? 0.7
+                              : (isSmallScreen ? 0.75 : 0.8)));
+                  double maxHeightDiameter = isVeryCompactDevice
+                      ? 45.0
+                      : (isCompactDevice
+                          ? 50.0
+                          : (isVerySmallScreen
+                              ? 55.0
+                              : (isSmallScreen ? 60.0 : 70.0)));
+                  double minHeightDiameter = isVeryCompactDevice
+                      ? 18.0
+                      : (isCompactDevice
+                          ? 20.0
+                          : (isVerySmallScreen
+                              ? 22.0
+                              : (isSmallScreen ? 25.0 : 28.0)));
+
+                  final double heightBasedDiameter =
+                      (availableHeight * heightMultiplier)
+                          .clamp(minHeightDiameter, maxHeightDiameter);
+
                   // Use the smaller of the two to ensure it fits, with additional safety margin
-                  double diameter = [widthBasedDiameter, heightBasedDiameter].reduce((a, b) => a < b ? a : b);
-                  
+                  double diameter = [widthBasedDiameter, heightBasedDiameter]
+                      .reduce((a, b) => a < b ? a : b);
+
                   // Apply safety margin to prevent overflow
                   diameter = diameter * 0.98; // 2% safety margin
-                  
+
                   final double radius = diameter / 2.0;
-                  
+
                   // Calculate sizes based on radius with screen-specific adjustments
                   final double lineWidth = (radius * 0.15).clamp(1.5, 6.0);
-                  
+
                   // Font sizes optimized for screen categories with more granular control
                   double centerFontSize = radius * 0.32;
                   double labelFontSize;
-                  
+
                   if (isVeryCompactDevice) {
                     centerFontSize = centerFontSize.clamp(6.0, 9.0);
                     labelFontSize = (centerFontSize * 0.85).clamp(5.0, 7.5);
@@ -579,7 +614,7 @@ class _ProgressCardState extends State<ProgressCard>
                     centerFontSize = centerFontSize.clamp(9.0, 14.0);
                     labelFontSize = (centerFontSize * 0.85).clamp(7.5, 12.0);
                   }
-                  
+
                   // Position indicators towards the right
                   return Align(
                     alignment: Alignment.centerRight,

@@ -9,6 +9,7 @@ import 'cognito_profile_provider.dart';
 import 'meal_plans_provider.dart';
 import 'subscription_status_provider.dart';
 import 'today_page_provider.dart';
+import 'meal_plan_notification_provider.dart';
 
 /// Enum representing different authentication states
 enum AuthState {
@@ -19,7 +20,8 @@ enum AuthState {
 }
 
 /// Provider that listens to Amplify Auth Hub events
-final authStateProvider = StateNotifierProvider<AuthStateNotifier, AuthState>((ref) {
+final authStateProvider =
+    StateNotifierProvider<AuthStateNotifier, AuthState>((ref) {
   return AuthStateNotifier(ref);
 });
 
@@ -34,7 +36,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
 
   Future<void> _initialize() async {
     print('[AuthStateProvider] Initializing auth state listener...');
-    
+
     // Check current auth status
     try {
       final session = await Amplify.Auth.fetchAuthSession();
@@ -52,7 +54,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
 
   void _handleAuthEvent(AuthHubEvent event) {
     print('[AuthStateProvider] Auth event received: ${event.type}');
-    
+
     switch (event.type) {
       case AuthHubEventType.signedIn:
         print('[AuthStateProvider] User signed in - resetting to fresh state');
@@ -60,19 +62,19 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
         // Optionally trigger data refresh for new user
         _onUserSignedIn();
         break;
-        
+
       case AuthHubEventType.signedOut:
         print('[AuthStateProvider] User signed out - clearing all cached data');
         state = AuthState.signedOut;
         _onUserSignedOut();
         break;
-        
+
       case AuthHubEventType.sessionExpired:
         print('[AuthStateProvider] Session expired - treating as sign out');
         state = AuthState.signedOut;
         _onUserSignedOut();
         break;
-        
+
       default:
         print('[AuthStateProvider] Other auth event: ${event.type}');
         break;
@@ -80,7 +82,8 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
   }
 
   void _onUserSignedIn() {
-    print('[AuthStateProvider] Processing sign-in: refreshing providers for new user...');
+    print(
+        '[AuthStateProvider] Processing sign-in: refreshing providers for new user...');
     // Note: We refresh providers for the new user, but we don't need to clear them
     // since each provider handles user-specific data through userIdProvider
     Future.microtask(() {
@@ -91,7 +94,8 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
   }
 
   void _onUserSignedOut() {
-    print('[AuthStateProvider] Processing sign-out: invalidating all user data...');
+    print(
+        '[AuthStateProvider] Processing sign-out: invalidating all user data...');
     // Clear/reset all user-related providers when user signs out
     Future.microtask(() {
       if (mounted) {
@@ -104,10 +108,10 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     try {
       // Refresh critical providers for new user session
       print('[AuthStateProvider] Refreshing providers for new user session...');
-      
+
       // For sign-in, we need to invalidate userIdProvider to detect new user
       ref.invalidate(userIdProvider);
-      
+
       // For other providers, try to use refresh methods to preserve state
       try {
         final todayNotifier = ref.read(todayPageProvider.notifier);
@@ -115,19 +119,20 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       } catch (e) {
         ref.invalidate(todayPageProvider);
       }
-      
+
       try {
         final mealPlansNotifier = ref.read(mealPlansProvider.notifier);
         mealPlansNotifier.backgroundRefresh();
       } catch (e) {
         ref.invalidate(mealPlansProvider);
       }
-      
+
       // These need to be invalidated to load new user data
       ref.invalidate(userDetailsProvider);
       ref.invalidate(cognitoProfileProvider);
       ref.invalidate(subscriptionStatusProvider);
-      
+      ref.invalidate(mealPlanNotificationProvider);
+
       print('[AuthStateProvider] All providers refreshed for new user');
     } catch (e) {
       print('[AuthStateProvider] Error refreshing providers: $e');
@@ -137,15 +142,17 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
   void _invalidateAllProviders() {
     try {
       // Invalidate all user-related providers to clear cached data
-      print('[AuthStateProvider] Invalidating all providers due to sign-out...');
-      
+      print(
+          '[AuthStateProvider] Invalidating all providers due to sign-out...');
+
       ref.invalidate(userIdProvider);
       ref.invalidate(userDetailsProvider);
       ref.invalidate(cognitoProfileProvider);
       ref.invalidate(mealPlansProvider);
       ref.invalidate(subscriptionStatusProvider);
       ref.invalidate(todayPageProvider);
-      
+      ref.invalidate(mealPlanNotificationProvider);
+
       print('[AuthStateProvider] All providers invalidated');
     } catch (e) {
       print('[AuthStateProvider] Error invalidating providers: $e');
@@ -159,4 +166,3 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     super.dispose();
   }
 }
-

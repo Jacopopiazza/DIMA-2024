@@ -29,7 +29,9 @@ class ChatMessage extends amplify_core.Model {
   final String? _chatId;
   final String? _messageContent;
   final String? _messageId;
+  final String? _recipientId;
   final String? _senderId;
+  final String? _senderName;
   final SenderType? _senderType;
   final amplify_core.TemporalDateTime? _sentAt;
   final amplify_core.TemporalDateTime? _createdAt;
@@ -86,6 +88,19 @@ class ChatMessage extends amplify_core.Model {
     }
   }
 
+  String get recipientId {
+    try {
+      return _recipientId!;
+    } catch (e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
+    }
+  }
+
   String get senderId {
     try {
       return _senderId!;
@@ -97,6 +112,10 @@ class ChatMessage extends amplify_core.Model {
               .codeGenRequiredFieldForceCastRecoverySuggestion,
           underlyingException: e.toString());
     }
+  }
+
+  String? get senderName {
+    return _senderName;
   }
 
   SenderType get senderType {
@@ -138,7 +157,9 @@ class ChatMessage extends amplify_core.Model {
       required chatId,
       required messageContent,
       required messageId,
+      required recipientId,
       required senderId,
+      senderName,
       required senderType,
       required sentAt,
       createdAt,
@@ -146,7 +167,9 @@ class ChatMessage extends amplify_core.Model {
       : _chatId = chatId,
         _messageContent = messageContent,
         _messageId = messageId,
+        _recipientId = recipientId,
         _senderId = senderId,
+        _senderName = senderName,
         _senderType = senderType,
         _sentAt = sentAt,
         _createdAt = createdAt,
@@ -157,7 +180,9 @@ class ChatMessage extends amplify_core.Model {
       required String chatId,
       required String messageContent,
       required String messageId,
+      required String recipientId,
       required String senderId,
+      String? senderName,
       required SenderType senderType,
       required amplify_core.TemporalDateTime sentAt}) {
     return ChatMessage._internal(
@@ -165,7 +190,9 @@ class ChatMessage extends amplify_core.Model {
         chatId: chatId,
         messageContent: messageContent,
         messageId: messageId,
+        recipientId: recipientId,
         senderId: senderId,
+        senderName: senderName,
         senderType: senderType,
         sentAt: sentAt);
   }
@@ -182,7 +209,9 @@ class ChatMessage extends amplify_core.Model {
         _chatId == other._chatId &&
         _messageContent == other._messageContent &&
         _messageId == other._messageId &&
+        _recipientId == other._recipientId &&
         _senderId == other._senderId &&
+        _senderName == other._senderName &&
         _senderType == other._senderType &&
         _sentAt == other._sentAt;
   }
@@ -199,7 +228,9 @@ class ChatMessage extends amplify_core.Model {
     buffer.write("chatId=" + "$_chatId" + ", ");
     buffer.write("messageContent=" + "$_messageContent" + ", ");
     buffer.write("messageId=" + "$_messageId" + ", ");
+    buffer.write("recipientId=" + "$_recipientId" + ", ");
     buffer.write("senderId=" + "$_senderId" + ", ");
+    buffer.write("senderName=" + "$_senderName" + ", ");
     buffer.write("senderType=" +
         (_senderType != null
             ? amplify_core.enumToString(_senderType)!
@@ -221,7 +252,9 @@ class ChatMessage extends amplify_core.Model {
       {String? chatId,
       String? messageContent,
       String? messageId,
+      String? recipientId,
       String? senderId,
+      String? senderName,
       SenderType? senderType,
       amplify_core.TemporalDateTime? sentAt}) {
     return ChatMessage._internal(
@@ -229,7 +262,9 @@ class ChatMessage extends amplify_core.Model {
         chatId: chatId ?? this.chatId,
         messageContent: messageContent ?? this.messageContent,
         messageId: messageId ?? this.messageId,
+        recipientId: recipientId ?? this.recipientId,
         senderId: senderId ?? this.senderId,
+        senderName: senderName ?? this.senderName,
         senderType: senderType ?? this.senderType,
         sentAt: sentAt ?? this.sentAt);
   }
@@ -238,7 +273,9 @@ class ChatMessage extends amplify_core.Model {
       {ModelFieldValue<String>? chatId,
       ModelFieldValue<String>? messageContent,
       ModelFieldValue<String>? messageId,
+      ModelFieldValue<String>? recipientId,
       ModelFieldValue<String>? senderId,
+      ModelFieldValue<String?>? senderName,
       ModelFieldValue<SenderType>? senderType,
       ModelFieldValue<amplify_core.TemporalDateTime>? sentAt}) {
     return ChatMessage._internal(
@@ -247,7 +284,9 @@ class ChatMessage extends amplify_core.Model {
         messageContent:
             messageContent == null ? this.messageContent : messageContent.value,
         messageId: messageId == null ? this.messageId : messageId.value,
+        recipientId: recipientId == null ? this.recipientId : recipientId.value,
         senderId: senderId == null ? this.senderId : senderId.value,
+        senderName: senderName == null ? this.senderName : senderName.value,
         senderType: senderType == null ? this.senderType : senderType.value,
         sentAt: sentAt == null ? this.sentAt : sentAt.value);
   }
@@ -257,7 +296,9 @@ class ChatMessage extends amplify_core.Model {
         _chatId = json['chatId'],
         _messageContent = json['messageContent'],
         _messageId = json['messageId'],
+        _recipientId = json['recipientId'],
         _senderId = json['senderId'],
+        _senderName = json['senderName'],
         _senderType = amplify_core.enumFromString<SenderType>(
             json['senderType'], SenderType.values),
         _sentAt = json['sentAt'] != null
@@ -275,7 +316,9 @@ class ChatMessage extends amplify_core.Model {
         'chatId': _chatId,
         'messageContent': _messageContent,
         'messageId': _messageId,
+        'recipientId': _recipientId,
         'senderId': _senderId,
+        'senderName': _senderName,
         'senderType': amplify_core.enumToString(_senderType),
         'sentAt': _sentAt?.format(),
         'createdAt': _createdAt?.format(),
@@ -287,7 +330,9 @@ class ChatMessage extends amplify_core.Model {
         'chatId': _chatId,
         'messageContent': _messageContent,
         'messageId': _messageId,
+        'recipientId': _recipientId,
         'senderId': _senderId,
+        'senderName': _senderName,
         'senderType': _senderType,
         'sentAt': _sentAt,
         'createdAt': _createdAt,
@@ -302,7 +347,9 @@ class ChatMessage extends amplify_core.Model {
   static final MESSAGECONTENT =
       amplify_core.QueryField(fieldName: "messageContent");
   static final MESSAGEID = amplify_core.QueryField(fieldName: "messageId");
+  static final RECIPIENTID = amplify_core.QueryField(fieldName: "recipientId");
   static final SENDERID = amplify_core.QueryField(fieldName: "senderId");
+  static final SENDERNAME = amplify_core.QueryField(fieldName: "senderName");
   static final SENDERTYPE = amplify_core.QueryField(fieldName: "senderType");
   static final SENTAT = amplify_core.QueryField(fieldName: "sentAt");
   static var schema = amplify_core.Model.defineSchema(
@@ -331,8 +378,20 @@ class ChatMessage extends amplify_core.Model {
             amplify_core.ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+        key: ChatMessage.RECIPIENTID,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
         key: ChatMessage.SENDERID,
         isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+        key: ChatMessage.SENDERNAME,
+        isRequired: false,
         ofType: amplify_core.ModelFieldType(
             amplify_core.ModelFieldTypeEnum.string)));
 

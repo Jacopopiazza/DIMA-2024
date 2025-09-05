@@ -13,7 +13,7 @@ import 'select_nutritionist_dialog.dart';
 
 class MyPlansPage extends ConsumerStatefulWidget {
   final bool showBackButton;
-  
+
   const MyPlansPage({super.key, this.showBackButton = false});
 
   @override
@@ -175,63 +175,65 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       body: Stack(
         children: [
           plansAsync.when(
-        data: (plans) {
-          final activePlanId = ref.watch(activeMealPlanIdProvider);
-          String? resolvedActivePlanId = activePlanId;
-          if (resolvedActivePlanId == null && plans.isNotEmpty) {
-            final activeByStatus =
-                plans.where((p) => p.status == PlanStatus.ACTIVE).firstOrNull;
-            resolvedActivePlanId = activeByStatus?.mealPlanId;
-          }
+            data: (plans) {
+              final activePlanId = ref.watch(activeMealPlanIdProvider);
+              String? resolvedActivePlanId = activePlanId;
+              if (resolvedActivePlanId == null && plans.isNotEmpty) {
+                final activeByStatus = plans
+                    .where((p) => p.status == PlanStatus.ACTIVE)
+                    .firstOrNull;
+                resolvedActivePlanId = activeByStatus?.mealPlanId;
+              }
 
-          // Avvolgiamo TUTTO con RefreshIndicator, anche l'empty state
-          return RefreshIndicator(
-            onRefresh: _refreshPlans,
-            backgroundColor: colorScheme.surface,
-            color: colorScheme.primary,
-            child: plans.isEmpty
-                ? _buildEmptyState(context, colorScheme)
-                : ListView.builder(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    itemCount: plans.length,
-                    itemBuilder: (context, index) {
-                      final plan = plans[index];
-                      final isActive = plan.mealPlanId == resolvedActivePlanId;
-                      return _buildMealPlanCard(
-                          context, plan, isActive, colorScheme, theme);
-                    },
+              // Avvolgiamo TUTTO con RefreshIndicator, anche l'empty state
+              return RefreshIndicator(
+                onRefresh: _refreshPlans,
+                backgroundColor: colorScheme.surface,
+                color: colorScheme.primary,
+                child: plans.isEmpty
+                    ? _buildEmptyState(context, colorScheme)
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        itemCount: plans.length,
+                        itemBuilder: (context, index) {
+                          final plan = plans[index];
+                          final isActive =
+                              plan.mealPlanId == resolvedActivePlanId;
+                          return _buildMealPlanCard(
+                              context, plan, isActive, colorScheme, theme);
+                        },
+                      ),
+              );
+            },
+            loading: () => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: CircularProgressIndicator(
+                      color: colorScheme.primary,
+                      strokeWidth: 3,
+                    ),
                   ),
-          );
-        },
-        loading: () => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: CircularProgressIndicator(
-                  color: colorScheme.primary,
-                  strokeWidth: 3,
-                ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Loading your meal plans...',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 24),
-              Text(
-                'Loading your meal plans...',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
+            ),
+            error: (e, st) =>
+                _buildErrorState(context, e.toString(), colorScheme, theme),
           ),
-        ),
-        error: (e, st) =>
-            _buildErrorState(context, e.toString(), colorScheme, theme),
-      ),
           // Floating back button positioned on top
           if (widget.showBackButton)
             Positioned(

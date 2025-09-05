@@ -4,16 +4,15 @@ schema {
   subscription: Subscription
 }
 
-#  ===================
-#     OBJECT TYPES
-# ===================
 type ChatMessage @model {
   chatId: ID!
   messageContent: String!
-  #  From PK
   messageId: ID!
-  #  From SK (e.g., MSG#timestamp)
+  #  Populated from Cognito
+  recipientId: ID!
   senderId: ID!
+  #  Add these for better UX in the subscription
+  senderName: String
   senderType: SenderType!
   sentAt: AWSDateTime!
 }
@@ -21,6 +20,14 @@ type ChatMessage @model {
 type ChatMessageConnection {
   items: [ChatMessage!]!
   nextToken: String
+}
+
+type ChatMessagesResponse {
+  count: Int!
+  #  Use this for next beforeTimestamp
+  hasMore: Boolean!
+  messages: [ChatMessage!]!
+  oldestTimestamp: String
 }
 
 type ChatMetadata @model {
@@ -44,6 +51,14 @@ type ChatMetadata @model {
 type ChatMetadataConnection {
   items: [ChatMetadata!]!
   nextToken: String
+}
+
+#  ===================
+#     OBJECT TYPES
+# ===================
+type ChatResponse {
+  message: ChatMessage
+  recipientId: ID!
 }
 
 type DailyPlanData {
@@ -121,6 +136,13 @@ type MealPlanResponse @aws_cognito_user_pools @aws_iam {
   success: Boolean!
 }
 
+type MealPlanResponseSubscription @aws_cognito_user_pools @aws_iam {
+  mealPlanId: ID!
+  message: String
+  success: Boolean!
+  userId: ID!
+}
+
 type MealWithStatus {
   isCompleted: Boolean!
   meal: Meal!
@@ -137,10 +159,10 @@ type Mutation {
   markMealAsCompleted(input: MarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   modifyAssignedMealPlan(input: ModifyAssignedMealPlanInput!, mealPlanId: ID!, userId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
-  notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponse @aws_iam
+  notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponseSubscription @aws_iam
   requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   requestValidation(input: RequestValidationInput!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
-  sendChatMessage(input: SendMessageInput!): ChatMessage @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
+  sendChatMessage(input: SendMessageInput!): ChatResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   setActiveMealPlan(mealPlanId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   setPlanDayCompletion(input: SetPlanDayCompletionInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   setUserSubscriptionStatus(subscriptionStatus: SubscriptionStatusEnum!): UserSubscriptionStatus @aws_auth(cognito_groups : ["USERS"])
@@ -200,7 +222,7 @@ type PlanRequestPreferences {
 # ===================
 type Query {
   getActiveMealPlan: MealPlan @aws_auth(cognito_groups : ["USERS"])
-  getChatMessages(chatId: ID!, limit: Int, nextToken: String): ChatMessageConnection @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
+  getChatMessages(beforeTimestamp: String, chatId: ID!, limit: Int): ChatMessagesResponse @aws_auth(cognito_groups : ["NUTRITIONISTS", "USERS"])
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS"])
   getMyNutritionistProfile: NutritionistProfile @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
@@ -219,7 +241,8 @@ type Query {
 # How the Flutter app listens for the final result.
 # ---------------------------------------------------
 type Subscription {
-  onMealPlanStatusChanged: MealPlanResponse @aws_auth(cognito_groups : ["USERS"]) @aws_subscribe(mutations : ["notifyMealPlanStatusChanged"])
+  onMealPlanStatusChanged(userId: ID!): MealPlanResponseSubscription @aws_auth(cognito_groups : ["USERS"]) @aws_subscribe(mutations : ["notifyMealPlanStatusChanged"])
+  onNewChatMessageForUser(recipientId: ID!): ChatResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"]) @aws_subscribe(mutations : ["sendChatMessage"])
 }
 
 type TodaysPlan {
@@ -397,6 +420,7 @@ input MealPlanResponseInput {
   mealPlanId: ID!
   message: String
   success: Boolean!
+  userId: ID!
 }
 
 input ModifyAssignedMealPlanInput {
