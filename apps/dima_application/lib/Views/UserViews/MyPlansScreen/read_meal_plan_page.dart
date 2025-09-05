@@ -1,6 +1,7 @@
 import 'package:dima_application/Utils/localization_helpers.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/services/meal_plans_service.dart';
+import 'package:dima_application/Views/Common/ChatScreen/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -131,6 +132,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           ),
         ],
       ),
+      // Chat button - only show if chatId is available
+      floatingActionButton: _buildChatButton(colorScheme),
     );
   }
 
@@ -1068,6 +1071,64 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         .split('_')
         .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
         .join(' ');
+  }
+
+  Widget? _buildChatButton(ColorScheme colorScheme) {
+    // Only show chat button if meal plan has chatId
+    if (_mealPlan?.chatId == null || _mealPlan!.chatId!.isEmpty) {
+      return null;
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primary,
+            colorScheme.primary.withOpacity(0.8),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: FloatingActionButton.extended(
+        onPressed: _openChat,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        icon: Icon(
+          Icons.chat_bubble_rounded,
+          color: colorScheme.onPrimary,
+        ),
+        label: Text(
+          'Chat with Nutritionist',
+          style: TextStyle(
+            color: colorScheme.onPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openChat() {
+    if (_mealPlan?.chatId != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ChatPage(
+            key: UniqueKey(),
+            chatId: _mealPlan!.chatId!,
+            title: 'Chat - ${_mealPlan!.planName ?? 'Meal Plan'}',
+          ),
+        ),
+      );
+    }
   }
 }
 

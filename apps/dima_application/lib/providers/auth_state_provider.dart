@@ -10,6 +10,8 @@ import 'meal_plans_provider.dart';
 import 'subscription_status_provider.dart';
 import 'today_page_provider.dart';
 import 'meal_plan_notification_provider.dart';
+import 'chat_messages_provider.dart';
+import 'package:dima_application/services/chat_service.dart';
 
 /// Enum representing different authentication states
 enum AuthState {
@@ -40,8 +42,24 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     // Check current auth status
     try {
       final session = await Amplify.Auth.fetchAuthSession();
-      state = session.isSignedIn ? AuthState.signedIn : AuthState.signedOut;
-      print('[AuthStateProvider] Initial auth state: $state');
+      if (session.isSignedIn) {
+        state = AuthState.signedIn;
+        print(
+            '[AuthStateProvider] Initial auth state: signed in - starting chat service');
+
+        // Start chat service for already signed-in user
+        try {
+          await ChatService.instance.startListening();
+          print(
+              '[AuthStateProvider] Chat service started for existing session');
+        } catch (e) {
+          print(
+              '[AuthStateProvider] Error starting chat service for existing session: $e');
+        }
+      } else {
+        state = AuthState.signedOut;
+        print('[AuthStateProvider] Initial auth state: signed out');
+      }
     } catch (e) {
       print('[AuthStateProvider] Error checking initial auth state: $e');
       state = AuthState.signedOut;
@@ -86,8 +104,16 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
         '[AuthStateProvider] Processing sign-in: refreshing providers for new user...');
     // Note: We refresh providers for the new user, but we don't need to clear them
     // since each provider handles user-specific data through userIdProvider
-    Future.microtask(() {
+    Future.microtask(() async {
       if (mounted) {
+        // Start chat service for new user session
+        try {
+          await ChatService.instance.startListening();
+          print('[AuthStateProvider] Chat service started for new user');
+        } catch (e) {
+          print('[AuthStateProvider] Error starting chat service: $e');
+        }
+
         _refreshAllProviders();
       }
     });
@@ -97,8 +123,16 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     print(
         '[AuthStateProvider] Processing sign-out: invalidating all user data...');
     // Clear/reset all user-related providers when user signs out
-    Future.microtask(() {
+    Future.microtask(() async {
       if (mounted) {
+        // Stop chat service when user signs out
+        try {
+          await ChatService.instance.stopListening();
+          print('[AuthStateProvider] Chat service stopped for signed out user');
+        } catch (e) {
+          print('[AuthStateProvider] Error stopping chat service: $e');
+        }
+
         _invalidateAllProviders();
       }
     });
@@ -132,6 +166,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       ref.invalidate(cognitoProfileProvider);
       ref.invalidate(subscriptionStatusProvider);
       ref.invalidate(mealPlanNotificationProvider);
+      ref.invalidate(chatNotificationProvider);
 
       print('[AuthStateProvider] All providers refreshed for new user');
     } catch (e) {
@@ -152,6 +187,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       ref.invalidate(subscriptionStatusProvider);
       ref.invalidate(todayPageProvider);
       ref.invalidate(mealPlanNotificationProvider);
+      ref.invalidate(chatNotificationProvider);
 
       print('[AuthStateProvider] All providers invalidated');
     } catch (e) {

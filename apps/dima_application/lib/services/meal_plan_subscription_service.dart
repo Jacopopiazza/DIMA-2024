@@ -10,13 +10,14 @@ class MealPlanSubscriptionService {
   String? _currentUserId;
 
   // Stream pubblico per ascoltare le notifiche
-  Stream<MealPlanResponse> get notificationStream => 
+  Stream<MealPlanResponse> get notificationStream =>
       _controller?.stream ?? const Stream.empty();
 
   // Avvia la subscription
   Future<void> startListening() async {
     try {
-      print("[MealPlanSubscriptionService] 🔍 Starting meal plan subscription...");
+      print(
+          "[MealPlanSubscriptionService] 🔍 Starting meal plan subscription...");
 
       // ALWAYS clean up existing resources first
       await _cleanupResources();
@@ -84,17 +85,17 @@ class MealPlanSubscriptionService {
   // Clean up all existing resources
   Future<void> _cleanupResources() async {
     print("[MealPlanSubscriptionService] 🧹 Cleaning up existing resources...");
-    
+
     // Cancel existing subscription
     await _subscription?.cancel();
     _subscription = null;
-    
+
     // Close existing controller if it exists
     if (_controller != null && !_controller!.isClosed) {
       await _controller!.close();
     }
     _controller = null;
-    
+
     print("[MealPlanSubscriptionService] ✅ Cleanup completed");
   }
 
@@ -103,7 +104,8 @@ class MealPlanSubscriptionService {
     try {
       // Simple check - if no controller, ignore
       if (_controller == null || _controller!.isClosed) {
-        safePrint('[MealPlanSubscriptionService] No active controller, ignoring subscription data');
+        safePrint(
+            '[MealPlanSubscriptionService] No active controller, ignoring subscription data');
         return;
       }
 

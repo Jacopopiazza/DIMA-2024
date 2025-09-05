@@ -3,6 +3,7 @@ import 'package:dima_application/Views/CustomAuthenticator/custom_sign_in.dart';
 import 'package:dima_application/Views/CustomAuthenticator/custom_sign_up.dart';
 import 'package:dima_application/Views/CustomAuthenticator/localized_button_resolver.dart';
 import 'package:dima_application/Views/UserTypeRouter/user_type_router.dart';
+import 'package:dima_application/Views/Common/global_chat_notification_handler.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/navigation/route_observer.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,9 @@ class CustomizedAuthenticator extends StatelessWidget {
           supportedLocales: AppLocalizations.supportedLocales,
 
           // Adjust your home/route configuration as needed
-          home: const UserTypeRouter()),
+          home: const GlobalChatNotificationHandler(
+            child: UserTypeRouter(),
+          )),
     );
   }
 }
