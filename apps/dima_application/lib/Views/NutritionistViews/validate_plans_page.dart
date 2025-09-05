@@ -46,11 +46,12 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
       // Check connectivity first
       final connectivityService = ConnectivityService();
       final isConnected = await connectivityService.checkConnectivityManually();
-      
+
       if (!isConnected) {
         if (mounted) {
           setState(() {
-            _errorMessage = 'No internet connection. Please check your connection and try again.';
+            _errorMessage =
+                'No internet connection. Please check your connection and try again.';
             _isLoading = false;
           });
         }
@@ -78,7 +79,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
   Widget _buildLoadingState(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -110,39 +111,39 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
   Widget build(BuildContext context) {
     return OfflineScreen(
       child: Scaffold(
-      body: _isLoading
-          ? _buildLoadingState(context)
-          : _errorMessage != null
-              ? ValidationErrorState(
-                  errorMessage: _errorMessage!,
-                  onRetry: _loadAssignedMealPlans,
-                )
-              : _assignedMealPlans.isEmpty
-                  ? ValidationEmptyState(
-                      onRefresh: _loadAssignedMealPlans,
-                    )
-                  : RefreshIndicator(
-                      displacement: 60.0,
-                      color: Theme.of(context).colorScheme.primary,
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                      onRefresh: _loadAssignedMealPlans,
-                      child: ListView.builder(
-                        physics: const AlwaysScrollableScrollPhysics(
-                          parent: BouncingScrollPhysics(),
+        body: _isLoading
+            ? _buildLoadingState(context)
+            : _errorMessage != null
+                ? ValidationErrorState(
+                    errorMessage: _errorMessage!,
+                    onRetry: _loadAssignedMealPlans,
+                  )
+                : _assignedMealPlans.isEmpty
+                    ? ValidationEmptyState(
+                        onRefresh: _loadAssignedMealPlans,
+                      )
+                    : RefreshIndicator(
+                        displacement: 60.0,
+                        color: Theme.of(context).colorScheme.primary,
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                        onRefresh: _loadAssignedMealPlans,
+                        child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(
+                            parent: BouncingScrollPhysics(),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          itemCount: _assignedMealPlans.length,
+                          itemBuilder: (context, index) {
+                            final plan = _assignedMealPlans[index];
+                            return ValidationMealPlanCard(
+                              plan: plan,
+                              onRefresh: _loadAssignedMealPlans,
+                            );
+                          },
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        itemCount: _assignedMealPlans.length,
-                        itemBuilder: (context, index) {
-                          final plan = _assignedMealPlans[index];
-                          return ValidationMealPlanCard(
-                            plan: plan,
-                            onRefresh: _loadAssignedMealPlans,
-                          );
-                        },
                       ),
-                    ),
       ),
     );
   }

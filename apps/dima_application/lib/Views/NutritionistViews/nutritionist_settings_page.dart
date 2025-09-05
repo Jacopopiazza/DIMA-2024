@@ -27,7 +27,7 @@ class NutritionistSettingsPage extends StatefulWidget {
       _NutritionistSettingsPageState();
 }
 
-class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> 
+class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
     with SingleTickerProviderStateMixin {
   final NutritionistProfileService _profileService =
       NutritionistProfileService();
@@ -40,7 +40,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
   String? _profilePictureUrl;
   bool _isAvailable = true;
   bool _isSaving = false;
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -77,7 +77,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
       // First check if we have internet connectivity
       final connectivityService = ConnectivityService();
       final isConnected = await connectivityService.checkConnectivityManually();
-      
+
       if (!isConnected) {
         // If no internet, don't proceed with profile validation
         if (mounted) {
@@ -230,49 +230,49 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
 
     return OfflineScreen(
       child: Scaffold(
-      backgroundColor: colorScheme.surface,
-      body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: RefreshIndicator(
-              onRefresh: _loadProfile,
-              backgroundColor: colorScheme.surface,
-              color: colorScheme.primary,
-              child: GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(),
-                behavior: HitTestBehavior.opaque,
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(16.0),
-                  children: [
-                    // Header section
-                    _buildHeaderSection(colorScheme, theme),
-                    const SizedBox(height: 32),
+        backgroundColor: colorScheme.surface,
+        body: SafeArea(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: RefreshIndicator(
+                onRefresh: _loadProfile,
+                backgroundColor: colorScheme.surface,
+                color: colorScheme.primary,
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  behavior: HitTestBehavior.opaque,
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(16.0),
+                    children: [
+                      // Header section
+                      _buildHeaderSection(colorScheme, theme),
+                      const SizedBox(height: 32),
 
-                    // Profile Section (styled as card)
-                    _buildProfileSection(colorScheme, theme),
-                    const SizedBox(height: 24),
+                      // Profile Section (styled as card)
+                      _buildProfileSection(colorScheme, theme),
+                      const SizedBox(height: 24),
 
-                    // Edit Form Section (styled as card)
-                    _buildEditFormSection(colorScheme, theme),
-                    const SizedBox(height: 24),
+                      // Edit Form Section (styled as card)
+                      _buildEditFormSection(colorScheme, theme),
+                      const SizedBox(height: 24),
 
-                    // Availability Section (wrapped in card style)
-                    _buildAvailabilitySection(colorScheme, theme),
-                    const SizedBox(height: 24),
+                      // Availability Section (wrapped in card style)
+                      _buildAvailabilitySection(colorScheme, theme),
+                      const SizedBox(height: 24),
 
-                    // Actions Section (wrapped in card style)
-                    _buildActionsSection(colorScheme, theme),
-                    const SizedBox(height: 32),
-                  ],
+                      // Actions Section (wrapped in card style)
+                      _buildActionsSection(colorScheme, theme),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -489,7 +489,8 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                               width: 16,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
                           : const Icon(Icons.save_rounded),

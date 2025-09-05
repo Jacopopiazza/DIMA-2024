@@ -9,18 +9,19 @@ class ConnectivityService {
 
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
-  
+
   bool _isConnected = false;
   bool get isConnected => _isConnected;
 
-  final StreamController<bool> _connectionController = StreamController<bool>.broadcast();
+  final StreamController<bool> _connectionController =
+      StreamController<bool>.broadcast();
   Stream<bool> get connectionStream => _connectionController.stream;
 
   /// Initialize the connectivity service
   Future<void> initialize() async {
     // Check initial connectivity
     await _checkConnectivity();
-    
+
     // Listen for connectivity changes
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
       (List<ConnectivityResult> results) async {
@@ -32,14 +33,14 @@ class ConnectivityService {
   /// Check current connectivity status
   Future<void> _checkConnectivity() async {
     try {
-      final List<ConnectivityResult> connectivityResults = await _connectivity.checkConnectivity();
-      
+      final List<ConnectivityResult> connectivityResults =
+          await _connectivity.checkConnectivity();
+
       // Check if we have any connection type
-      bool hasConnection = connectivityResults.any((result) => 
-        result == ConnectivityResult.wifi || 
-        result == ConnectivityResult.mobile ||
-        result == ConnectivityResult.ethernet
-      );
+      bool hasConnection = connectivityResults.any((result) =>
+          result == ConnectivityResult.wifi ||
+          result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.ethernet);
 
       if (hasConnection) {
         // Double-check with actual internet access

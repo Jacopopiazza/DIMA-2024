@@ -66,7 +66,7 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
     // Check connectivity before attempting to save
     final connectivityService = ConnectivityService();
     final isConnected = await connectivityService.checkConnectivityManually();
-    
+
     if (!isConnected) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +75,8 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
               children: [
                 Icon(Icons.wifi_off, color: Colors.white, size: 16),
                 SizedBox(width: 8),
-                Text('No internet connection. Please check your connection and try again.'),
+                Text(
+                    'No internet connection. Please check your connection and try again.'),
               ],
             ),
             backgroundColor: Colors.red,
@@ -155,188 +156,190 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
 
     return OfflineScreen(
       child: Scaffold(
-      appBar: AppBar(
-        title: Text(
-            widget.isFromSettings ? 'Edit Profile' : 'Complete Your Profile'),
-        automaticallyImplyLeading:
-            widget.isFromSettings, // Allow back navigation from settings
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Profile Information Section
-              Container(
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? theme.colorScheme.primary.withOpacity(0.1)
-                      : theme.colorScheme.primary.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: theme.colorScheme.primary
-                        .withOpacity(isDark ? 0.3 : 0.2),
-                    width: 1,
+        appBar: AppBar(
+          title: Text(
+              widget.isFromSettings ? 'Edit Profile' : 'Complete Your Profile'),
+          automaticallyImplyLeading:
+              widget.isFromSettings, // Allow back navigation from settings
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Profile Information Section
+                Container(
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : theme.colorScheme.primary.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: theme.colorScheme.primary
+                          .withOpacity(isDark ? 0.3 : 0.2),
+                      width: 1,
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.medical_services,
-                            color: theme.colorScheme.primary,
-                            size: 28,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Profile Information',
-                            style: theme.textTheme.titleLarge,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Welcome! Please complete your nutritionist profile',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Specialization
-                      TextFormField(
-                        controller: _specializationController,
-                        decoration: const InputDecoration(
-                          labelText: 'Specialization',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.work),
-                          hintText: 'e.g., Sports Nutrition, Weight Management',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter your specialization';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Bio
-                      TextFormField(
-                        controller: _bioController,
-                        decoration: const InputDecoration(
-                          labelText: 'Bio',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.description),
-                          hintText:
-                              'Tell clients about your expertise and approach',
-                        ),
-                        maxLines: 4,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter your bio';
-                          }
-                          if (value.trim().length < 50) {
-                            return 'Bio should be at least 50 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Profile Picture Section
-                      Center(
-                        child: Column(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            Text(
-                              'Profile Picture',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                            Icon(
+                              Icons.medical_services,
+                              color: theme.colorScheme.primary,
+                              size: 28,
                             ),
-                            const SizedBox(height: 12),
-                            ImagePickerWidget(
-                              initialImageUrl: _profilePictureUrl,
-                              onImageChanged: (url) {
-                                setState(() {
-                                  _profilePictureUrl = url;
-                                  _profilePictureUrlController.text = url ?? '';
-                                });
-                              },
-                              size: 120,
-                              enabled: !_isLoading,
-                            ),
-                            const SizedBox(height: 8),
+                            const SizedBox(width: 8),
                             Text(
-                              'Tap to upload a profile picture',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
+                              'Profile Information',
+                              style: theme.textTheme.titleLarge,
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Availability Toggle
-                      SwitchListTile(
-                        title: const Text('Available for new clients'),
-                        subtitle:
-                            const Text('Clients can request your services'),
-                        value: _isAvailable,
-                        onChanged: (value) {
-                          setState(() {
-                            _isAvailable = value;
-                          });
-                        },
-                        secondary: const Icon(Icons.visibility),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Save Button
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: _isLoading ? null : _saveProfile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.colorScheme.primary,
-                            foregroundColor: theme.colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            elevation: 2,
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Welcome! Please complete your nutritionist profile',
+                          style: TextStyle(
+                            fontSize: 16,
                           ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                  ),
-                                )
-                              : Text(
-                                  widget.isFromSettings
-                                      ? 'Update Profile'
-                                      : 'Save Profile',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 24),
+
+                        // Specialization
+                        TextFormField(
+                          controller: _specializationController,
+                          decoration: const InputDecoration(
+                            labelText: 'Specialization',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.work),
+                            hintText:
+                                'e.g., Sports Nutrition, Weight Management',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Please enter your specialization';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Bio
+                        TextFormField(
+                          controller: _bioController,
+                          decoration: const InputDecoration(
+                            labelText: 'Bio',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.description),
+                            hintText:
+                                'Tell clients about your expertise and approach',
+                          ),
+                          maxLines: 4,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Please enter your bio';
+                            }
+                            if (value.trim().length < 50) {
+                              return 'Bio should be at least 50 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Profile Picture Section
+                        Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                'Profile Picture',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              ImagePickerWidget(
+                                initialImageUrl: _profilePictureUrl,
+                                onImageChanged: (url) {
+                                  setState(() {
+                                    _profilePictureUrl = url;
+                                    _profilePictureUrlController.text =
+                                        url ?? '';
+                                  });
+                                },
+                                size: 120,
+                                enabled: !_isLoading,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Tap to upload a profile picture',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Availability Toggle
+                        SwitchListTile(
+                          title: const Text('Available for new clients'),
+                          subtitle:
+                              const Text('Clients can request your services'),
+                          value: _isAvailable,
+                          onChanged: (value) {
+                            setState(() {
+                              _isAvailable = value;
+                            });
+                          },
+                          secondary: const Icon(Icons.visibility),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Save Button
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: _isLoading ? null : _saveProfile,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: theme.colorScheme.primary,
+                              foregroundColor: theme.colorScheme.onPrimary,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 32, vertical: 16),
+                              elevation: 2,
+                            ),
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : Text(
+                                    widget.isFromSettings
+                                        ? 'Update Profile'
+                                        : 'Save Profile',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }

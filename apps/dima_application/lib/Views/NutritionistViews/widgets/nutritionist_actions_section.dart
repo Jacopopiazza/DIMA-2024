@@ -151,7 +151,8 @@ class NutritionistActionsSection extends StatelessWidget {
             const Text('Sign Out'),
           ],
         ),
-        content: const Text('Are you sure you want to sign out of your nutritionist account?'),
+        content: const Text(
+            'Are you sure you want to sign out of your nutritionist account?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -196,7 +197,7 @@ class NutritionistActionsSection extends StatelessWidget {
 
         const SizedBox(height: 24),
 
-        // Danger Zone Section (matching user settings expandable style) 
+        // Danger Zone Section (matching user settings expandable style)
         _NutritionistDangerZone(
           onDeleteAccount: () => _showDeleteConfirmation(context),
         ),
@@ -279,7 +280,8 @@ class _NutritionistDangerZone extends StatefulWidget {
   });
 
   @override
-  State<_NutritionistDangerZone> createState() => _NutritionistDangerZoneState();
+  State<_NutritionistDangerZone> createState() =>
+      _NutritionistDangerZoneState();
 }
 
 class _NutritionistDangerZoneState extends State<_NutritionistDangerZone>

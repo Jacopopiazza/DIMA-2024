@@ -1,6 +1,7 @@
 import 'package:dima_application/Utils/localization_helpers.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
+import 'package:dima_application/services/client_details_service.dart';
 import 'package:dima_application/Views/Common/ChatScreen/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,21 +17,31 @@ class NutritionistReadMealPlanPage extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<NutritionistReadMealPlanPage> createState() => _NutritionistReadMealPlanPageState();
+  ConsumerState<NutritionistReadMealPlanPage> createState() =>
+      _NutritionistReadMealPlanPageState();
 }
 
-class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadMealPlanPage>
+class _NutritionistReadMealPlanPageState
+    extends ConsumerState<NutritionistReadMealPlanPage>
     with TickerProviderStateMixin {
   bool _isDailyPlanExpanded = true;
   bool _isMetadataExpanded = false;
+  bool _isClientDetailsExpanded = false;
   bool _isEditing = false;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
-  
+
   // Editing state
   Map<String, List<Meal>> _editedMeals = {};
-  final Map<String, Map<int, TextEditingController>> _recipeNameControllers = {};
+  final Map<String, Map<int, TextEditingController>> _recipeNameControllers =
+      {};
   final Map<String, Map<int, TextEditingController>> _recipeControllers = {};
+
+  // Client details state
+  final ClientDetailsService _clientDetailsService = ClientDetailsService();
+  UserDetails? _clientDetails;
+  bool _isLoadingClientDetails = false;
+  String? _clientDetailsError;
 
   @override
   void initState() {
@@ -47,6 +58,7 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
       curve: Curves.easeInOut,
     ));
     _initializeEditingState();
+    _loadClientDetails();
     _fadeController.forward();
   }
 
@@ -72,7 +84,6 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     _recipeControllers.clear();
   }
 
-
   void _initializeEditingState() {
     if (widget.mealPlan.dailyPlan != null) {
       final dailyPlan = widget.mealPlan.dailyPlan!;
@@ -93,10 +104,12 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
         final meals = entry.value;
         _recipeNameControllers[dayKey] = {};
         _recipeControllers[dayKey] = {};
-        
+
         for (int i = 0; i < meals.length; i++) {
-          _recipeNameControllers[dayKey]![i] = TextEditingController(text: meals[i].recipeName ?? '');
-          _recipeControllers[dayKey]![i] = TextEditingController(text: meals[i].recipe ?? '');
+          _recipeNameControllers[dayKey]![i] =
+              TextEditingController(text: meals[i].recipeName ?? '');
+          _recipeControllers[dayKey]![i] =
+              TextEditingController(text: meals[i].recipe ?? '');
         }
       }
     }
@@ -106,6 +119,36 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     setState(() {
       _isEditing = !_isEditing;
     });
+  }
+
+  /// Load client details for the meal plan owner
+  Future<void> _loadClientDetails() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isLoadingClientDetails = true;
+      _clientDetailsError = null;
+    });
+
+    try {
+      final clientDetails =
+          await _clientDetailsService.getClientDetails(widget.mealPlan.userId);
+      if (mounted) {
+        setState(() {
+          _clientDetails = clientDetails;
+          _isLoadingClientDetails = false;
+          _clientDetailsError =
+              clientDetails == null ? 'Unable to load client details' : null;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingClientDetails = false;
+          _clientDetailsError = 'Error loading client details: $e';
+        });
+      }
+    }
   }
 
   Future<void> _validateMealPlan() async {
@@ -119,16 +162,18 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     if (confirmed != true) return;
 
     try {
-      final success = await ref.read(mealPlansProvider.notifier).validateMealPlan(
-        widget.mealPlan.mealPlanId,
-        widget.mealPlan.assignedNutritionistId ?? '',
-        'VALIDATED',
-      );
+      final success =
+          await ref.read(mealPlansProvider.notifier).validateMealPlan(
+                widget.mealPlan.mealPlanId,
+                widget.mealPlan.assignedNutritionistId ?? '',
+                'VALIDATED',
+              );
 
       if (mounted) {
         if (success) {
           _showSnackBar('Meal plan validated successfully!', Colors.green);
-          Navigator.of(context).pop(true); // Return true to indicate changes were made
+          Navigator.of(context)
+              .pop(true); // Return true to indicate changes were made
         } else {
           _showSnackBar('Failed to validate meal plan', Colors.red);
         }
@@ -151,16 +196,18 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     if (confirmed != true) return;
 
     try {
-      final success = await ref.read(mealPlansProvider.notifier).validateMealPlan(
-        widget.mealPlan.mealPlanId,
-        widget.mealPlan.assignedNutritionistId ?? '',
-        'NOT_VALIDATED',
-      );
+      final success =
+          await ref.read(mealPlansProvider.notifier).validateMealPlan(
+                widget.mealPlan.mealPlanId,
+                widget.mealPlan.assignedNutritionistId ?? '',
+                'NOT_VALIDATED',
+              );
 
       if (mounted) {
         if (success) {
           _showSnackBar('Meal plan rejected', Colors.orange);
-          Navigator.of(context).pop(true); // Return true to indicate changes were made
+          Navigator.of(context)
+              .pop(true); // Return true to indicate changes were made
         } else {
           _showSnackBar('Failed to reject meal plan', Colors.red);
         }
@@ -180,11 +227,11 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
       for (final entry in _editedMeals.entries) {
         final dayKey = entry.key;
         final meals = entry.value;
-        
+
         for (int i = 0; i < meals.length; i++) {
           final nameController = _recipeNameControllers[dayKey]?[i];
           final recipeController = _recipeControllers[dayKey]?[i];
-          
+
           if (nameController != null && recipeController != null) {
             meals[i] = Meal(
               name: meals[i].name,
@@ -197,7 +244,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
         }
       }
 
-      final success = await ref.read(mealPlansProvider.notifier).modifyAssignedMealPlan(
+      final success =
+          await ref.read(mealPlansProvider.notifier).modifyAssignedMealPlan(
         widget.mealPlan.mealPlanId,
         widget.mealPlan.userId,
         {'dailyPlan': _editedMeals},
@@ -209,7 +257,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
           setState(() {
             _isEditing = false;
           });
-          Navigator.of(context).pop(true); // Return true to indicate changes were made
+          Navigator.of(context)
+              .pop(true); // Return true to indicate changes were made
         } else {
           _showSnackBar('Failed to save meal plan', Colors.red);
         }
@@ -221,7 +270,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     }
   }
 
-  Future<bool?> _showConfirmationDialog(String title, String content, String actionText, Color actionColor) {
+  Future<bool?> _showConfirmationDialog(
+      String title, String content, String actionText, Color actionColor) {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -329,7 +379,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
       mainAxisSize: MainAxisSize.min,
       children: [
         // Edit/Save button - only show when plan is in pending review
-        if (widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW)
+        if (widget.mealPlan.validationStatus ==
+            MealPlanValidationStatus.PENDING_REVIEW)
           Container(
             decoration: BoxDecoration(
               color: colorScheme.surface.withOpacity(0.9),
@@ -361,7 +412,9 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
               ),
             ),
           ),
-        if (_isEditing && widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW) ...[
+        if (_isEditing &&
+            widget.mealPlan.validationStatus ==
+                MealPlanValidationStatus.PENDING_REVIEW) ...[
           const SizedBox(width: 8),
           Container(
             decoration: BoxDecoration(
@@ -400,7 +453,9 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
             ),
           ),
         ],
-        if (!_isEditing && widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW) ...[
+        if (!_isEditing &&
+            widget.mealPlan.validationStatus ==
+                MealPlanValidationStatus.PENDING_REVIEW) ...[
           const SizedBox(width: 8),
           // Validate button
           Container(
@@ -482,6 +537,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
           children: [
             _buildMetadataSection(theme, colorScheme),
             const SizedBox(height: 16),
+            _buildClientDetailsSection(theme, colorScheme),
+            const SizedBox(height: 16),
             _buildDailyPlanSection(theme, colorScheme),
             const SizedBox(height: 100), // Bottom padding for FAB
           ],
@@ -490,6 +547,295 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     );
   }
 
+  Widget _buildClientDetailsSection(ThemeData theme, ColorScheme colorScheme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Theme(
+        data: theme.copyWith(
+          dividerColor: Colors.transparent,
+        ),
+        child: ExpansionTile(
+          initiallyExpanded: _isClientDetailsExpanded,
+          onExpansionChanged: (expanded) =>
+              setState(() => _isClientDetailsExpanded = expanded),
+          leading: Icon(
+            Icons.person_rounded,
+            color: colorScheme.primary,
+            size: 20,
+          ),
+          title: Text(
+            'Client Details',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          subtitle: _isLoadingClientDetails
+              ? Text(
+                  'Loading client information...',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                )
+              : _clientDetailsError != null
+                  ? Text(
+                      _clientDetailsError!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.error,
+                      ),
+                    )
+                  : _clientDetails != null
+                      ? Text(
+                          'Health profile and preferences',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        )
+                      : Text(
+                          'No client details available',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+          children: [
+            if (_isLoadingClientDetails)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      CircularProgressIndicator(
+                        color: colorScheme.primary,
+                        strokeWidth: 2,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Loading client details...',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else if (_clientDetailsError != null)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: colorScheme.error,
+                      size: 32,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _clientDetailsError!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.error,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton.icon(
+                      onPressed: _loadClientDetails,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              )
+            else if (_clientDetails != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildClientDetailsContent(theme, colorScheme),
+                  ],
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'No client details available',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClientDetailsContent(ThemeData theme, ColorScheme colorScheme) {
+    if (_clientDetails == null) return const SizedBox.shrink();
+
+    final bmi = ClientDetailsService.calculateBMI(
+        _clientDetails!.heightCm, _clientDetails!.weightKg);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Physical Information Section
+        _buildDetailsSubsection(
+          theme,
+          colorScheme,
+          'Physical Information',
+          Icons.fitness_center_rounded,
+          [
+            if (_clientDetails!.heightCm != null)
+              _buildDetailRow('Height',
+                  '${_clientDetails!.heightCm!.toStringAsFixed(0)} cm'),
+            if (_clientDetails!.weightKg != null)
+              _buildDetailRow('Weight',
+                  '${_clientDetails!.weightKg!.toStringAsFixed(1)} kg'),
+            if (bmi != null)
+              _buildDetailRow('BMI',
+                  '${bmi.toStringAsFixed(1)} (${ClientDetailsService.getBMICategory(bmi)})'),
+            _buildDetailRow(
+                'Exercise Frequency',
+                ClientDetailsService.formatExerciseFrequency(
+                    _clientDetails!.exerciseFrequency)),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        // Dietary Information Section
+        _buildDetailsSubsection(
+          theme,
+          colorScheme,
+          'Dietary Information',
+          Icons.restaurant_rounded,
+          [
+            _buildDetailRow('Daily Meals Preference',
+                '${_clientDetails!.dailyMealsPreference} meals per day'),
+            _buildDetailRow(
+                'Allergies',
+                ClientDetailsService.formatAllergies(
+                    _clientDetails!.allergies)),
+            if (_clientDetails!.dietaryRestrictions?.isNotEmpty == true)
+              _buildDetailRow(
+                  'Dietary Restrictions', _clientDetails!.dietaryRestrictions!),
+            if (_clientDetails!.openTextPreferences?.isNotEmpty == true)
+              _buildDetailRow('Additional Preferences',
+                  _clientDetails!.openTextPreferences!),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        // Account Information Section
+        _buildDetailsSubsection(
+          theme,
+          colorScheme,
+          'Account Information',
+          Icons.info_rounded,
+          [
+            if (_clientDetails!.createdAt != null)
+              _buildDetailRow(
+                  'Account Created',
+                  DateFormat('MMM dd, yyyy').format(
+                      _clientDetails!.createdAt!.getDateTimeInUtc().toLocal())),
+            if (_clientDetails!.updatedAt != null)
+              _buildDetailRow(
+                  'Last Updated',
+                  DateFormat('MMM dd, yyyy HH:mm').format(
+                      _clientDetails!.updatedAt!.getDateTimeInUtc().toLocal())),
+            if (_clientDetails!.activeMealPlanId != null)
+              _buildDetailRow('Active Plan ID',
+                  _clientDetails!.activeMealPlanId!.substring(0, 8) + '...'),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailsSubsection(ThemeData theme, ColorScheme colorScheme,
+      String title, IconData icon, List<Widget> children) {
+    if (children.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: children,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildMetadataSection(ThemeData theme, ColorScheme colorScheme) {
     return Container(
@@ -553,12 +899,15 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
                   const SizedBox(height: 8),
                   _buildInfoRow('Plan Name',
                       widget.mealPlan.planName ?? 'Unnamed Plan', colorScheme),
-                  _buildInfoRow('Plan ID', widget.mealPlan.mealPlanId, colorScheme),
+                  _buildInfoRow(
+                      'Plan ID', widget.mealPlan.mealPlanId, colorScheme),
                   if (widget.mealPlan.generatedAt != null)
                     _buildInfoRow(
                       'Generated',
                       DateFormat('MMM dd, yyyy HH:mm').format(
-                        widget.mealPlan.generatedAt!.getDateTimeInUtc().toLocal(),
+                        widget.mealPlan.generatedAt!
+                            .getDateTimeInUtc()
+                            .toLocal(),
                       ),
                       colorScheme,
                     ),
@@ -698,11 +1047,12 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
           subtitle: Text(
             dailyPlan == null
                 ? 'No meal plan data available'
-                : _isEditing 
-                  ? '7-day meal schedule (Editing)'
-                  : widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW
-                    ? '7-day meal schedule (View/Edit)'
-                    : '7-day meal schedule (View Only)',
+                : _isEditing
+                    ? '7-day meal schedule (Editing)'
+                    : widget.mealPlan.validationStatus ==
+                            MealPlanValidationStatus.PENDING_REVIEW
+                        ? '7-day meal schedule (View/Edit)'
+                        : '7-day meal schedule (View Only)',
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -738,13 +1088,20 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
                   children: [
                     const Divider(),
                     const SizedBox(height: 16),
-                    _buildDayMeals('Monday', 'monday', _editedMeals['monday'] ?? [], colorScheme),
-                    _buildDayMeals('Tuesday', 'tuesday', _editedMeals['tuesday'] ?? [], colorScheme),
-                    _buildDayMeals('Wednesday', 'wednesday', _editedMeals['wednesday'] ?? [], colorScheme),
-                    _buildDayMeals('Thursday', 'thursday', _editedMeals['thursday'] ?? [], colorScheme),
-                    _buildDayMeals('Friday', 'friday', _editedMeals['friday'] ?? [], colorScheme),
-                    _buildDayMeals('Saturday', 'saturday', _editedMeals['saturday'] ?? [], colorScheme),
-                    _buildDayMeals('Sunday', 'sunday', _editedMeals['sunday'] ?? [], colorScheme),
+                    _buildDayMeals('Monday', 'monday',
+                        _editedMeals['monday'] ?? [], colorScheme),
+                    _buildDayMeals('Tuesday', 'tuesday',
+                        _editedMeals['tuesday'] ?? [], colorScheme),
+                    _buildDayMeals('Wednesday', 'wednesday',
+                        _editedMeals['wednesday'] ?? [], colorScheme),
+                    _buildDayMeals('Thursday', 'thursday',
+                        _editedMeals['thursday'] ?? [], colorScheme),
+                    _buildDayMeals('Friday', 'friday',
+                        _editedMeals['friday'] ?? [], colorScheme),
+                    _buildDayMeals('Saturday', 'saturday',
+                        _editedMeals['saturday'] ?? [], colorScheme),
+                    _buildDayMeals('Sunday', 'sunday',
+                        _editedMeals['sunday'] ?? [], colorScheme),
                   ],
                 ),
               ),
@@ -754,7 +1111,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     );
   }
 
-  Widget _buildDayMeals(String dayName, String dayKey, List<Meal> meals, ColorScheme colorScheme) {
+  Widget _buildDayMeals(String dayName, String dayKey, List<Meal> meals,
+      ColorScheme colorScheme) {
     final isToday = DateFormat('EEEE').format(DateTime.now()) == dayName;
 
     return Container(
@@ -853,7 +1211,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
                 children: meals
                     .asMap()
                     .entries
-                    .map((entry) => _buildMeal(dayKey, entry.key, entry.value, colorScheme))
+                    .map((entry) =>
+                        _buildMeal(dayKey, entry.key, entry.value, colorScheme))
                     .toList(),
               ),
             ),
@@ -862,7 +1221,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     );
   }
 
-  Widget _buildMeal(String dayKey, int mealIndex, Meal meal, ColorScheme colorScheme) {
+  Widget _buildMeal(
+      String dayKey, int mealIndex, Meal meal, ColorScheme colorScheme) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
@@ -899,7 +1259,9 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
               size: 20,
             ),
           ),
-          title: (_isEditing && widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW)
+          title: (_isEditing &&
+                  widget.mealPlan.validationStatus ==
+                      MealPlanValidationStatus.PENDING_REVIEW)
               ? TextField(
                   controller: _recipeNameControllers[dayKey]?[mealIndex],
                   style: TextStyle(
@@ -936,7 +1298,9 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
                     _buildSectionHeader(
                         'Instructions', Icons.list_alt_rounded, colorScheme),
                     const SizedBox(height: 8),
-                    (_isEditing && widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW)
+                    (_isEditing &&
+                            widget.mealPlan.validationStatus ==
+                                MealPlanValidationStatus.PENDING_REVIEW)
                         ? TextField(
                             controller: _recipeControllers[dayKey]?[mealIndex],
                             maxLines: 4,
@@ -949,7 +1313,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
                               isDense: true,
                             ),
                           )
-                        : _buildExpandableInstructions(meal.recipe!, colorScheme),
+                        : _buildExpandableInstructions(
+                            meal.recipe!, colorScheme),
                     const SizedBox(height: 16),
                   ],
                   _buildSectionHeader('Nutrition Information',
@@ -971,7 +1336,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     );
   }
 
-  Widget _buildExpandableInstructions(String instructions, ColorScheme colorScheme) {
+  Widget _buildExpandableInstructions(
+      String instructions, ColorScheme colorScheme) {
     final isLong = instructions.length > 150;
 
     if (!isLong) {
@@ -997,7 +1363,8 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon, ColorScheme colorScheme) {
+  Widget _buildSectionHeader(
+      String title, IconData icon, ColorScheme colorScheme) {
     return Row(
       children: [
         Icon(

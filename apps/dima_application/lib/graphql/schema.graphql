@@ -223,6 +223,7 @@ type PlanRequestPreferences {
 type Query {
   getActiveMealPlan: MealPlan @aws_auth(cognito_groups : ["USERS"])
   getChatMessages(beforeTimestamp: String, chatId: ID!, limit: Int): ChatMessagesResponse @aws_auth(cognito_groups : ["NUTRITIONISTS", "USERS"])
+  getClientDetails(userId: ID!): UserDetails @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS"])
   getMyNutritionistProfile: NutritionistProfile @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])

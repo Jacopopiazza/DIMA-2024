@@ -78,7 +78,7 @@ class ValidationMealPlanCard extends StatelessWidget {
         ),
       ),
     );
-    
+
     // If changes were made (result is true), trigger refresh
     if (result == true && onRefresh != null) {
       onRefresh!();
@@ -171,12 +171,14 @@ class ValidationMealPlanCard extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: _getPlanStatusColor(plan.validationStatus, colorScheme),
+                    color:
+                        _getPlanStatusColor(plan.validationStatus, colorScheme),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     _getPlanStatusIcon(plan.validationStatus),
-                    color: _getPlanStatusIconColor(plan.validationStatus, colorScheme),
+                    color: _getPlanStatusIconColor(
+                        plan.validationStatus, colorScheme),
                     size: 24,
                   ),
                 ),
@@ -205,7 +207,8 @@ class ValidationMealPlanCard extends StatelessWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          _buildValidationChip(plan.validationStatus, colorScheme, theme),
+                          _buildValidationChip(
+                              plan.validationStatus, colorScheme, theme),
                           const SizedBox(width: 8),
                           Text(
                             'Plan ID: ${plan.mealPlanId.substring(0, 8)}...',

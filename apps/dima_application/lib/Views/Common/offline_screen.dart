@@ -3,7 +3,7 @@ import 'package:dima_application/services/connectivity_service.dart';
 
 class OfflineScreen extends StatefulWidget {
   final Widget child;
-  
+
   const OfflineScreen({
     super.key,
     required this.child,
@@ -13,11 +13,12 @@ class OfflineScreen extends StatefulWidget {
   State<OfflineScreen> createState() => _OfflineScreenState();
 }
 
-class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateMixin {
+class _OfflineScreenState extends State<OfflineScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  
+
   bool _isRetrying = false;
 
   @override
@@ -31,7 +32,7 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -39,7 +40,7 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
       parent: _animationController,
       curve: Curves.easeOut,
     ));
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
@@ -47,7 +48,7 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
       parent: _animationController,
       curve: Curves.easeOutCubic,
     ));
-    
+
     _animationController.forward();
   }
 
@@ -59,16 +60,16 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
 
   Future<void> _retryConnection() async {
     setState(() => _isRetrying = true);
-    
+
     // Check connectivity
     final connectivityService = ConnectivityService();
     final isConnected = await connectivityService.checkConnectivityManually();
-    
+
     await Future.delayed(const Duration(seconds: 1)); // Brief delay for UX
-    
+
     if (mounted) {
       setState(() => _isRetrying = false);
-      
+
       if (isConnected) {
         // Connection restored - the StreamBuilder will handle the UI update
         ScaffoldMessenger.of(context).showSnackBar(
@@ -82,7 +83,8 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
             ),
             backgroundColor: Colors.green.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             duration: const Duration(seconds: 2),
           ),
         );
@@ -98,7 +100,8 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
             ),
             backgroundColor: Colors.red.shade600,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             duration: const Duration(seconds: 2),
           ),
         );
@@ -113,11 +116,11 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
       initialData: ConnectivityService().isConnected,
       builder: (context, snapshot) {
         final isConnected = snapshot.data ?? false;
-        
+
         if (isConnected) {
           return widget.child;
         }
-        
+
         return _buildOfflineUI(context);
       },
     );
@@ -164,9 +167,9 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
                         color: colorScheme.error,
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Title
                     Text(
                       'No Internet Connection',
@@ -176,9 +179,9 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Description
                     Text(
                       'This app requires an internet connection to function properly. Please check your connection and try again.',
@@ -188,9 +191,9 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    
+
                     const SizedBox(height: 48),
-                    
+
                     // Connection tips
                     Container(
                       padding: const EdgeInsets.all(20),
@@ -226,24 +229,25 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Retry button
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton.icon(
                         onPressed: _isRetrying ? null : _retryConnection,
-                        icon: _isRetrying 
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : const Icon(Icons.refresh_rounded),
+                        icon: _isRetrying
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : const Icon(Icons.refresh_rounded),
                         label: Text(_isRetrying ? 'Checking...' : 'Try Again'),
                         style: FilledButton.styleFrom(
                           backgroundColor: colorScheme.primary,
@@ -272,31 +276,33 @@ class _OfflineScreenState extends State<OfflineScreen> with TickerProviderStateM
       'Restart your router or mobile data',
     ];
 
-    return tips.map((tip) => Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 4,
-            height: 4,
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              color: colorScheme.primary,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              tip,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+    return tips
+        .map((tip) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 4,
+                    height: 4,
+                    margin: const EdgeInsets.only(top: 8),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      tip,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
-    )).toList();
+            ))
+        .toList();
   }
 }

@@ -143,7 +143,8 @@ class ChatService {
         } else {
           // User is not in this chat, show as background notification
           onBackgroundMessage?.call(chatResponse);
-          safePrint('[ChatService] Message delivered as background notification');
+          safePrint(
+              '[ChatService] Message delivered as background notification');
         }
 
         _messageController!.add(chatResponse);
