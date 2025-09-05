@@ -328,39 +328,40 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Edit/Save button
-        Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surface.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.shadow.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-            border: Border.all(
-              color: colorScheme.outline.withOpacity(0.1),
-            ),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: _isEditing ? _saveMealPlan : _toggleEditMode,
+        // Edit/Save button - only show when plan is in pending review
+        if (widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW)
+          Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surface.withOpacity(0.9),
               borderRadius: BorderRadius.circular(16),
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                child: Icon(
-                  _isEditing ? Icons.save_rounded : Icons.edit_rounded,
-                  color: _isEditing ? Colors.green : colorScheme.primary,
-                  size: 20,
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.shadow.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+              border: Border.all(
+                color: colorScheme.outline.withOpacity(0.1),
+              ),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _isEditing ? _saveMealPlan : _toggleEditMode,
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  child: Icon(
+                    _isEditing ? Icons.save_rounded : Icons.edit_rounded,
+                    color: _isEditing ? Colors.green : colorScheme.primary,
+                    size: 20,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        if (_isEditing) ...[
+        if (_isEditing && widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW) ...[
           const SizedBox(width: 8),
           Container(
             decoration: BoxDecoration(
@@ -699,7 +700,9 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
                 ? 'No meal plan data available'
                 : _isEditing 
                   ? '7-day meal schedule (Editing)'
-                  : '7-day meal schedule (View/Edit)',
+                  : widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW
+                    ? '7-day meal schedule (View/Edit)'
+                    : '7-day meal schedule (View Only)',
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -896,7 +899,7 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
               size: 20,
             ),
           ),
-          title: _isEditing 
+          title: (_isEditing && widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW)
               ? TextField(
                   controller: _recipeNameControllers[dayKey]?[mealIndex],
                   style: TextStyle(
@@ -933,7 +936,7 @@ class _NutritionistReadMealPlanPageState extends ConsumerState<NutritionistReadM
                     _buildSectionHeader(
                         'Instructions', Icons.list_alt_rounded, colorScheme),
                     const SizedBox(height: 8),
-                    _isEditing
+                    (_isEditing && widget.mealPlan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW)
                         ? TextField(
                             controller: _recipeControllers[dayKey]?[mealIndex],
                             maxLines: 4,

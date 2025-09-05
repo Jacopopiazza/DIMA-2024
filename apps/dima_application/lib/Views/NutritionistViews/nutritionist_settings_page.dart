@@ -25,7 +25,8 @@ class NutritionistSettingsPage extends StatefulWidget {
       _NutritionistSettingsPageState();
 }
 
-class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> {
+class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> 
+    with SingleTickerProviderStateMixin {
   final NutritionistProfileService _profileService =
       NutritionistProfileService();
   NutritionistProfile? _currentProfile;
@@ -37,10 +38,29 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> {
   String? _profilePictureUrl;
   bool _isAvailable = true;
   bool _isSaving = false;
+  
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutCubic,
+    ));
+    _animationController.forward();
     _loadProfile();
   }
 
@@ -170,211 +190,347 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> {
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    _specializationController.dispose();
+    _bioController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final Future<String?> user = fetchCurrentUser();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     if (_checkingProfile) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: colorScheme.surface,
+        body: _buildLoadingState(colorScheme, theme),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-      ),
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: RefreshIndicator(
-          displacement: 60.0,
-          color: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          onRefresh: _loadProfile,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return ListView(
-                physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics(),
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: SlideTransition(
+            position: _slideAnimation,
+            child: RefreshIndicator(
+              onRefresh: _loadProfile,
+              backgroundColor: colorScheme.surface,
+              color: colorScheme.primary,
+              child: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                behavior: HitTestBehavior.opaque,
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16.0),
+                  children: [
+                    // Header section
+                    _buildHeaderSection(colorScheme, theme),
+                    const SizedBox(height: 32),
+
+                    // Profile Section (styled as card)
+                    _buildProfileSection(colorScheme, theme),
+                    const SizedBox(height: 24),
+
+                    // Edit Form Section (styled as card)
+                    _buildEditFormSection(colorScheme, theme),
+                    const SizedBox(height: 24),
+
+                    // Availability Section (wrapped in card style)
+                    _buildAvailabilitySection(colorScheme, theme),
+                    const SizedBox(height: 24),
+
+                    // Actions Section (wrapped in card style)
+                    _buildActionsSection(colorScheme, theme),
+                    const SizedBox(height: 32),
+                  ],
                 ),
-                children: [
-                  ConstrainedBox(
-                    constraints:
-                        BoxConstraints(minHeight: constraints.maxHeight),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Profile Section
-                          FutureBuilder<String?>(
-                            future: user,
-                            builder: (context, snapshot) {
-                              return Center(
-                                child: NutritionistProfileSection(
-                                  profile: _currentProfile,
-                                  onEditProfile: null,
-                                ),
-                              );
-                            },
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // Inline Edit Form as a styled section
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Theme.of(context)
-                                      .colorScheme
-                                      .secondary
-                                      .withOpacity(0.1)
-                                  : Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withOpacity(0.05),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? 0.3
-                                        : 0.2),
-                                width: 1,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(Icons.manage_accounts,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary),
-                                      const SizedBox(width: 8),
-                                      Text('Edit Profile',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        TextFormField(
-                                          controller: _specializationController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Specialization',
-                                            border: OutlineInputBorder(),
-                                            prefixIcon: Icon(Icons.work),
-                                          ),
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.trim().isEmpty) {
-                                              return 'Please enter your specialization';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        const SizedBox(height: 16),
-                                        TextFormField(
-                                          controller: _bioController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Bio',
-                                            border: OutlineInputBorder(),
-                                            prefixIcon: Icon(Icons.description),
-                                          ),
-                                          maxLines: 4,
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.trim().isEmpty) {
-                                              return 'Please enter your bio';
-                                            }
-                                            if (value.trim().length < 50) {
-                                              return 'Bio should be at least 50 characters';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        const SizedBox(height: 16),
-                                        SwitchListTile(
-                                          title: const Text(
-                                              'Available for new clients'),
-                                          subtitle: const Text(
-                                              'Clients can request your services'),
-                                          value: _isAvailable,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _isAvailable = value;
-                                            });
-                                          },
-                                          secondary:
-                                              const Icon(Icons.visibility),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: FilledButton.icon(
-                                            onPressed: _isSaving
-                                                ? null
-                                                : _saveInlineProfile,
-                                            icon: _isSaving
-                                                ? const SizedBox(
-                                                    height: 16,
-                                                    width: 16,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                      valueColor:
-                                                          AlwaysStoppedAnimation<
-                                                                  Color>(
-                                                              Colors.white),
-                                                    ),
-                                                  )
-                                                : const Icon(Icons.save),
-                                            label: Text(_isSaving
-                                                ? 'Saving...'
-                                                : 'Save Changes'),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // Availability Section
-                          AvailabilitySection(
-                            profile: _currentProfile,
-                            onAvailabilityChanged: _updateAvailability,
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // Actions and Danger Zone
-                          const NutritionistActionsSection(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildLoadingState(ColorScheme colorScheme, ThemeData theme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: CircularProgressIndicator(
+              color: colorScheme.primary,
+              strokeWidth: 3,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Loading nutritionist settings...',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderSection(ColorScheme colorScheme, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primary.withOpacity(0.1),
+            colorScheme.primary.withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.medical_services_rounded,
+              size: 32,
+              color: colorScheme.onPrimary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Nutritionist Settings',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Manage your professional profile, availability, and account settings.',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileSection(ColorScheme colorScheme, ThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.account_circle_rounded,
+                  color: colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Profile Information',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: NutritionistProfileSection(
+                profile: _currentProfile,
+                onEditProfile: null,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditFormSection(ColorScheme colorScheme, ThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.edit_rounded,
+                  color: colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Edit Professional Details',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextFormField(
+                    controller: _specializationController,
+                    decoration: const InputDecoration(
+                      labelText: 'Specialization',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.work_rounded),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter your specialization';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _bioController,
+                    decoration: const InputDecoration(
+                      labelText: 'Professional Bio',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.description_rounded),
+                    ),
+                    maxLines: 4,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter your bio';
+                      }
+                      if (value.trim().length < 50) {
+                        return 'Bio should be at least 50 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FilledButton.icon(
+                      onPressed: _isSaving ? null : _saveInlineProfile,
+                      icon: _isSaving
+                          ? const SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Icon(Icons.save_rounded),
+                      label: Text(_isSaving ? 'Saving...' : 'Save Changes'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvailabilitySection(ColorScheme colorScheme, ThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.schedule_rounded,
+                  color: colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Availability Settings',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            AvailabilitySection(
+              profile: _currentProfile,
+              onAvailabilityChanged: _updateAvailability,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionsSection(ColorScheme colorScheme, ThemeData theme) {
+    return const NutritionistActionsSection();
   }
 }
