@@ -499,6 +499,8 @@ type Query {
     @aws_auth(cognito_groups: ["USERS"])
   getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups: ["USERS"])
   getUserDetails: UserDetails @aws_auth(cognito_groups: ["USERS"])
+  getClientDetails(userId: ID!): UserDetails
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
   getMyNutritionistProfile: NutritionistProfile
     @aws_auth(cognito_groups: ["NUTRITIONISTS"])
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection

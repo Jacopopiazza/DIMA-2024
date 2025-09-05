@@ -76,6 +76,14 @@ export class AppSyncApiStack extends cdk.Stack {
       ),
     });
 
+    // JS Resolver for Query.getClientDetails (for Nutritionists)
+    tableDS.createResolver('QueryGetClientDetailsResolver', {
+      typeName: 'Query',
+      fieldName: 'getClientDetails',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('resolvers/query.getClientDetails.js'),
+    });
+
     // ====================================================================
     //         PIPELINE RESOLVER for Query.getTodaysPlanAndStatus
     // ====================================================================
