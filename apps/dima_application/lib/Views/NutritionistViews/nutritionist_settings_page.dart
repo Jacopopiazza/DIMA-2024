@@ -30,6 +30,13 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> {
       NutritionistProfileService();
   NutritionistProfile? _currentProfile;
   bool _checkingProfile = true;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _specializationController =
+      TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
+  String? _profilePictureUrl;
+  bool _isAvailable = true;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -61,6 +68,10 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> {
           setState(() {
             _currentProfile = profile;
             _checkingProfile = false;
+            _specializationController.text = profile?.specialization ?? '';
+            _bioController.text = profile?.bio ?? '';
+            _profilePictureUrl = profile?.profilePictureUrl;
+            _isAvailable = profile?.isAvailable ?? true;
           });
         }
       }
@@ -74,17 +85,46 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> {
     }
   }
 
-  Future<void> _editProfile() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            const EnterNutritionistProfile(isFromSettings: true),
-      ),
-    );
-    if (result == true && mounted) {
-      // Refresh profile data after editing
-      _loadProfile();
+  Future<void> _saveInlineProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      _isSaving = true;
+    });
+    try {
+      final updatedProfile = await _profileService.updateMyProfile(
+        specialization: _specializationController.text.trim(),
+        bio: _bioController.text.trim(),
+        profilePictureUrl: _profilePictureUrl,
+        isAvailable: _isAvailable,
+      );
+      if (updatedProfile != null && mounted) {
+        setState(() {
+          _currentProfile = updatedProfile;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile updated successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error updating profile: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
     }
   }
 
@@ -168,13 +208,149 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage> {
                           FutureBuilder<String?>(
                             future: user,
                             builder: (context, snapshot) {
-                              final username = snapshot.data;
-                              return NutritionistProfileSection(
-                                profile: _currentProfile,
-                                username: username,
-                                onEditProfile: _editProfile,
+                              return Center(
+                                child: NutritionistProfileSection(
+                                  profile: _currentProfile,
+                                  onEditProfile: null,
+                                ),
                               );
                             },
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Inline Edit Form as a styled section
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.1)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? 0.3
+                                        : 0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(Icons.manage_accounts,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                      const SizedBox(width: 8),
+                                      Text('Edit Profile',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        TextFormField(
+                                          controller: _specializationController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Specialization',
+                                            border: OutlineInputBorder(),
+                                            prefixIcon: Icon(Icons.work),
+                                          ),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.trim().isEmpty) {
+                                              return 'Please enter your specialization';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        const SizedBox(height: 16),
+                                        TextFormField(
+                                          controller: _bioController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Bio',
+                                            border: OutlineInputBorder(),
+                                            prefixIcon: Icon(Icons.description),
+                                          ),
+                                          maxLines: 4,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.trim().isEmpty) {
+                                              return 'Please enter your bio';
+                                            }
+                                            if (value.trim().length < 50) {
+                                              return 'Bio should be at least 50 characters';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        const SizedBox(height: 16),
+                                        SwitchListTile(
+                                          title: const Text(
+                                              'Available for new clients'),
+                                          subtitle: const Text(
+                                              'Clients can request your services'),
+                                          value: _isAvailable,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isAvailable = value;
+                                            });
+                                          },
+                                          secondary:
+                                              const Icon(Icons.visibility),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: FilledButton.icon(
+                                            onPressed: _isSaving
+                                                ? null
+                                                : _saveInlineProfile,
+                                            icon: _isSaving
+                                                ? const SizedBox(
+                                                    height: 16,
+                                                    width: 16,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                              Colors.white),
+                                                    ),
+                                                  )
+                                                : const Icon(Icons.save),
+                                            label: Text(_isSaving
+                                                ? 'Saving...'
+                                                : 'Save Changes'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
 
                           const SizedBox(height: 24),

@@ -5,14 +5,12 @@ import '../../Common/network_image_with_retry.dart';
 
 class NutritionistProfileSection extends StatelessWidget {
   final NutritionistProfile? profile;
-  final String? username;
-  final VoidCallback onEditProfile;
+  final VoidCallback? onEditProfile;
 
   const NutritionistProfileSection({
     Key? key,
     required this.profile,
-    required this.username,
-    required this.onEditProfile,
+    this.onEditProfile,
   }) : super(key: key);
 
   @override
@@ -34,6 +32,7 @@ class NutritionistProfileSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Profile Picture with auto-retry for expired URLs
             CircleAvatar(
@@ -84,17 +83,6 @@ class NutritionistProfileSection extends StatelessWidget {
                     ),
             ),
             const SizedBox(height: 16),
-
-            // Username
-            if (username != null)
-              Text(
-                username!,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
-              ),
 
             // Full Name
             if (profile != null &&
@@ -154,23 +142,24 @@ class NutritionistProfileSection extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Edit Profile Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: onEditProfile,
-                icon: const Icon(Icons.edit),
-                label: const Text('Edit Profile'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            // Edit Profile Button (optional)
+            if (onEditProfile != null)
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: onEditProfile,
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Edit Profile'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
