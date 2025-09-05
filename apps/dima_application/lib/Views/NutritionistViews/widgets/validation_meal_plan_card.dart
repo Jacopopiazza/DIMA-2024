@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../generated/flutter-models/ModelProvider.dart';
+import '../nutritionist_read_meal_plan_page.dart';
 
 class ValidationMealPlanCard extends StatelessWidget {
   final MealPlan plan;
   final VoidCallback? onValidate;
   final VoidCallback? onModify;
   final VoidCallback? onReject;
+  final VoidCallback? onRefresh;
 
   const ValidationMealPlanCard({
     Key? key,
@@ -15,6 +17,7 @@ class ValidationMealPlanCard extends StatelessWidget {
     this.onValidate,
     this.onModify,
     this.onReject,
+    this.onRefresh,
   }) : super(key: key);
 
   Widget _buildValidationStatusIndicator(BuildContext context) {
@@ -99,6 +102,21 @@ class ValidationMealPlanCard extends StatelessWidget {
     }
   }
 
+  void _openNutritionistView(BuildContext context) async {
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (context) => NutritionistReadMealPlanPage(
+          mealPlan: plan,
+        ),
+      ),
+    );
+    
+    // If changes were made (result is true), trigger refresh
+    if (result == true && onRefresh != null) {
+      onRefresh!();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -158,10 +176,21 @@ class ValidationMealPlanCard extends StatelessWidget {
           ],
         ),
         trailing: SizedBox(
-          width: 150, // Reduced width since we removed the view button
+          width: 192, // Increased width to accommodate the new view button
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // View button - always available
+              SizedBox(
+                width: 48,
+                child: IconButton(
+                  icon: const Icon(Icons.visibility_rounded),
+                  color: theme.colorScheme.primary,
+                  tooltip: 'View meal plan',
+                  onPressed: () => _openNutritionistView(context),
+                ),
+              ),
+
               // Validate/Check button
               SizedBox(
                 width: 48,

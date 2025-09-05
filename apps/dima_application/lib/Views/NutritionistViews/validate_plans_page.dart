@@ -361,6 +361,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
                             onValidate: () => _validateMealPlan(plan),
                             onModify: () => _showModifyPlanDialog(plan),
                             onReject: () => _rejectMealPlan(plan),
+                            onRefresh: _loadAssignedMealPlans,
                           );
                         },
                       ),
