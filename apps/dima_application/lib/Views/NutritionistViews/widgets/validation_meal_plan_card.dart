@@ -14,86 +14,60 @@ class ValidationMealPlanCard extends StatelessWidget {
     this.onRefresh,
   }) : super(key: key);
 
-  Widget _buildValidationStatusIndicator(BuildContext context) {
-    final theme = Theme.of(context);
+  /// Validation status configuration matching user styling
+  static const Map<MealPlanValidationStatus, Map<String, dynamic>>
+      _validationConfig = {
+    MealPlanValidationStatus.VALIDATED: {
+      'icon': Icons.verified_rounded,
+      'label': 'Validated',
+      'color': Colors.green,
+    },
+    MealPlanValidationStatus.PENDING_REVIEW: {
+      'icon': Icons.pending_rounded,
+      'label': 'Pending Review',
+      'color': Colors.orange,
+    },
+    MealPlanValidationStatus.NOT_VALIDATED: {
+      'icon': Icons.help_outline_rounded,
+      'label': 'Not Validated',
+      'color': null, // Use theme colors
+    },
+  };
 
-    switch (plan.validationStatus) {
-      case MealPlanValidationStatus.VALIDATED:
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.green.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.green.withOpacity(0.3)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.check_circle, color: Colors.green, size: 16),
-              const SizedBox(width: 4),
-              Text(
-                'Validated',
-                style: TextStyle(
-                  color: Colors.green.shade700,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        );
-      case MealPlanValidationStatus.PENDING_REVIEW:
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.orange.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.orange.withOpacity(0.3)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.pending, color: Colors.orange, size: 16),
-              const SizedBox(width: 4),
-              Text(
-                'Pending Review',
-                style: TextStyle(
-                  color: Colors.orange.shade700,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        );
-      case MealPlanValidationStatus.NOT_VALIDATED:
-      default:
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.outline.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-            border:
-                Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.help_outline,
-                  color: theme.colorScheme.outline, size: 16),
-              const SizedBox(width: 4),
-              Text(
-                'Not Validated',
-                style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        );
+  Widget _buildValidationChip(MealPlanValidationStatus? validationStatus,
+      ColorScheme colorScheme, ThemeData theme) {
+    if (validationStatus == null ||
+        !_validationConfig.containsKey(validationStatus)) {
+      return const SizedBox.shrink();
     }
+
+    final config = _validationConfig[validationStatus]!;
+    final baseColor = config['color'] as MaterialColor?;
+    final backgroundColor =
+        baseColor?.shade100 ?? colorScheme.surfaceContainerHigh;
+    final foregroundColor = baseColor?.shade800 ?? colorScheme.onSurfaceVariant;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(config['icon'], size: 14, color: foregroundColor),
+          const SizedBox(width: 4),
+          Text(
+            config['label'],
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: foregroundColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _openNutritionistView(BuildContext context) async {
@@ -111,67 +85,170 @@ class ValidationMealPlanCard extends StatelessWidget {
     }
   }
 
+  Color _getPlanStatusColor(
+      MealPlanValidationStatus? validationStatus, ColorScheme colorScheme) {
+    switch (validationStatus) {
+      case MealPlanValidationStatus.VALIDATED:
+        return Colors.green.shade600;
+      case MealPlanValidationStatus.PENDING_REVIEW:
+        return Colors.orange.shade600;
+      case MealPlanValidationStatus.NOT_VALIDATED:
+      default:
+        return colorScheme.surfaceContainerHigh;
+    }
+  }
+
+  IconData _getPlanStatusIcon(MealPlanValidationStatus? validationStatus) {
+    switch (validationStatus) {
+      case MealPlanValidationStatus.VALIDATED:
+        return Icons.verified_rounded;
+      case MealPlanValidationStatus.PENDING_REVIEW:
+        return Icons.pending_rounded;
+      case MealPlanValidationStatus.NOT_VALIDATED:
+      default:
+        return Icons.assignment_outlined;
+    }
+  }
+
+  Color _getPlanStatusIconColor(
+      MealPlanValidationStatus? validationStatus, ColorScheme colorScheme) {
+    switch (validationStatus) {
+      case MealPlanValidationStatus.VALIDATED:
+      case MealPlanValidationStatus.PENDING_REVIEW:
+        return Colors.white;
+      case MealPlanValidationStatus.NOT_VALIDATED:
+      default:
+        return colorScheme.onSurfaceVariant;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isPendingReview =
         plan.validationStatus == MealPlanValidationStatus.PENDING_REVIEW;
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
-      elevation: isPendingReview ? 4.0 : 2.0,
-      color:
-          isPendingReview ? theme.colorScheme.primary.withOpacity(0.08) : null,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        side: isPendingReview
-            ? BorderSide(
-                color: theme.colorScheme.primary.withOpacity(0.3), width: 1.5)
-            : BorderSide.none,
-      ),
-      child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                plan.planName ?? 'Unnamed Plan',
-                style: isPendingReview
-                    ? TextStyle(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      )
-                    : theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-              ),
-            ),
-            _buildValidationStatusIndicator(context),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Text('Plan ID: ${plan.mealPlanId}'),
-            if (plan.generatedAt != null) ...[
-              const SizedBox(height: 2),
-              Text(
-                'Generated: ${DateFormat('MMM dd, yyyy').format(plan.generatedAt!.getDateTimeInUtc().toLocal())}',
-                style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: 12,
-                ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () => _openNutritionistView(context),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: isPendingReview
+                ? LinearGradient(
+                    colors: [
+                      colorScheme.primary.withOpacity(0.1),
+                      colorScheme.primary.withOpacity(0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : null,
+            color: isPendingReview
+                ? null
+                : colorScheme.surfaceContainerHighest.withOpacity(0.7),
+            borderRadius: BorderRadius.circular(16),
+            border: isPendingReview
+                ? Border.all(
+                    color: colorScheme.primary.withOpacity(0.3), width: 1.5)
+                : null,
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.shadow.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
-          ],
-        ),
-        trailing: IconButton(
-          icon: const Icon(Icons.visibility_rounded),
-          color: theme.colorScheme.primary,
-          tooltip: 'View meal plan',
-          onPressed: () => _openNutritionistView(context),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                // Status indicator & icon
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: _getPlanStatusColor(plan.validationStatus, colorScheme),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    _getPlanStatusIcon(plan.validationStatus),
+                    color: _getPlanStatusIconColor(plan.validationStatus, colorScheme),
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 16),
+
+                // Plan info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              plan.planName ?? 'Unnamed Plan',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: isPendingReview
+                                    ? colorScheme.primary
+                                    : colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          _buildValidationChip(plan.validationStatus, colorScheme, theme),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Plan ID: ${plan.mealPlanId.substring(0, 8)}...',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          const Spacer(),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            color: colorScheme.onSurfaceVariant,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                      if (plan.generatedAt != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          'Created: ${DateFormat('MMM dd, yyyy').format(plan.generatedAt!.getDateTimeInUtc().toLocal())}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                      // Add last updated date if available
+                      if (plan.updatedAt != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          'Updated: ${DateFormat('MMM dd, yyyy HH:mm').format(plan.updatedAt!.getDateTimeInUtc().toLocal())}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

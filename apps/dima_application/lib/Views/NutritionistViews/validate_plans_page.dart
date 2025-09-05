@@ -75,13 +75,43 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     }
   }
 
+  Widget _buildLoadingState(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: CircularProgressIndicator(
+              color: colorScheme.primary,
+              strokeWidth: 3,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Loading meal plansr...',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return OfflineScreen(
       child: Scaffold(
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? _buildLoadingState(context)
           : _errorMessage != null
               ? ValidationErrorState(
                   errorMessage: _errorMessage!,
@@ -101,7 +131,8 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
                         physics: const AlwaysScrollableScrollPhysics(
                           parent: BouncingScrollPhysics(),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         itemCount: _assignedMealPlans.length,
                         itemBuilder: (context, index) {
                           final plan = _assignedMealPlans[index];
