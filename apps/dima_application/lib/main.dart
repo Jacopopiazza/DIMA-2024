@@ -12,6 +12,9 @@ import 'package:dima_application/models/UserDetails/user_details_cache.dart';
 import 'package:dima_application/providers/isar_provider.dart';
 import 'package:dima_application/providers/auth_state_provider.dart';
 import 'package:dima_application/providers/app_lifecycle_provider.dart';
+// Add chat imports
+import 'package:dima_application/services/chat_service.dart';
+import 'package:dima_application/providers/chat_notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -68,16 +71,93 @@ Future<void> main() async {
   }
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
+  GlobalChatSubscriptionService? _chatService;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    // Initialize chat service after auth is configured
+    _initializeChatService();
+  }
+
+  Future<void> _initializeChatService() async {
+    try {
+      // Wait a bit to ensure auth is ready
+      await Future.delayed(const Duration(seconds: 1));
+
+      // Check if user is authenticated
+      final authSession = await Amplify.Auth.fetchAuthSession();
+      if (authSession.isSignedIn) {
+        _chatService = GlobalChatSubscriptionService();
+        await _chatService!.initialize();
+
+        // Set up notification handler
+        _chatService!.onNewMessage = (notification) {
+          // Show notification using the provider
+          ref
+              .read(chatNotificationProvider.notifier)
+              .showNotification(notification);
+        };
+
+        safePrint('Chat service initialized successfully');
+      }
+    } catch (e) {
+      safePrint('Error initializing chat service: $e');
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Handle app lifecycle changes
+    if (state == AppLifecycleState.resumed) {
+      // App came to foreground - reconnect if needed
+      if (_chatService == null) {
+        _initializeChatService();
+      }
+    } else if (state == AppLifecycleState.paused) {
+      // App went to background
+      safePrint('App paused - chat subscription active in background');
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _chatService?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Initialize the auth state provider early to start listening for auth events
     ref.watch(authStateProvider);
 
     // Initialize the app lifecycle provider to handle background/foreground detection
     ref.watch(appLifecycleProvider);
+
+    // Listen to auth state changes to reinitialize chat when user logs in
+    final authStateAsyncProvider = authStateProvider
+        .select((state) => AsyncValue.data(state == AuthState.signedIn));
+    ref.listen<AsyncValue<bool>>(authStateAsyncProvider, (previous, next) {
+      next.whenData((isAuthenticated) {
+        if (isAuthenticated && _chatService == null) {
+          _initializeChatService();
+        } else if (!isAuthenticated && _chatService != null) {
+          _chatService?.dispose();
+          _chatService = null;
+        }
+      });
+    });
 
     return CustomizedAuthenticator();
   }

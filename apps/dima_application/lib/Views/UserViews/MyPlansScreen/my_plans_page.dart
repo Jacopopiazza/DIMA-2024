@@ -10,6 +10,7 @@ import '../generate_meal_plan_page.dart';
 import 'modify_plan_name_dialog.dart';
 import 'read_meal_plan_page.dart';
 import 'select_nutritionist_dialog.dart';
+import '../ChatScreen/chat_screen.dart';
 
 class MyPlansPage extends ConsumerStatefulWidget {
   final bool showBackButton;
@@ -520,6 +521,10 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
         plan.status == PlanStatus.IN_PROGRESS;
     final bool isFailed = plan.status == PlanStatus.FAILED;
 
+    // Note: Chat functionality not available in list view (LightMealPlan)
+    // Chat access requires navigating to detailed view
+    final bool hasChat = false;
+
     return Row(
       children: [
         // Status indicator & icon
@@ -587,6 +592,30 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                     _buildValidationChip(
                         plan.validationStatus, colorScheme, theme),
                   const Spacer(),
+                  // Add chat icon if chat exists
+                  if (hasChat) ...[
+                    InkWell(
+                      onTap: () => _openChat(context, plan),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Badge(
+                          isLabelVisible: _hasUnreadMessages(plan),
+                          backgroundColor: Colors.red,
+                          child: Icon(
+                            Icons.chat_bubble_outline_rounded,
+                            color: colorScheme.primary,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   Icon(
                     isGenerating
                         ? Icons.hourglass_empty_rounded
@@ -604,6 +633,38 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
           ),
         ),
       ],
+    );
+  }
+
+//Add this helper method to check for unread messages
+  bool _hasUnreadMessages(plan) {
+    // You can implement logic here to check if there are unread messages
+    // For now, returning false as placeholder
+    return false;
+  }
+
+// Add this method to open the chat
+  void _openChat(BuildContext context, plan) {
+    if (plan.chatId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No chat available for this plan'),
+          backgroundColor: Colors.orange.shade600,
+        ),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(
+          chatId: plan.chatId,
+          mealPlanId: plan.mealPlanId,
+          planName: plan.planName ?? 'Meal Plan',
+          otherPartyName: 'Nutritionist', // You can fetch the actual name
+        ),
+      ),
     );
   }
 
@@ -1001,6 +1062,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   Widget _buildActionBottomSheet(BuildContext context, plan) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    // Note: Chat functionality not available from list view (LightMealPlan)
+    final hasChat = false;
 
     return Container(
       decoration: BoxDecoration(
@@ -1063,6 +1126,21 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 );
               },
             ),
+
+            // Add chat button if available
+            if (hasChat)
+              _buildActionButton(
+                context,
+                Icons.chat_bubble_outline_rounded,
+                'Chat with Nutritionist',
+                'Discuss your meal plan',
+                Colors.blue,
+                () {
+                  Navigator.pop(context);
+                  _openChat(context, plan);
+                },
+              ),
+
             _buildActionButton(
               context,
               Icons.edit_rounded,
@@ -1091,8 +1169,11 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 );
               },
             ),
+
             if (plan.status != PlanStatus.FAILED &&
-                plan.validationStatus == MealPlanValidationStatus.NOT_VALIDATED)
+                plan.validationStatus ==
+                    MealPlanValidationStatus.NOT_VALIDATED &&
+                !hasChat)
               _buildActionButton(
                 context,
                 Icons.person_add_rounded,
