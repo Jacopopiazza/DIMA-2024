@@ -9,6 +9,7 @@ import 'cognito_profile_provider.dart';
 import 'meal_plans_provider.dart';
 import 'subscription_status_provider.dart';
 import 'today_page_provider.dart';
+import 'meal_plan_notification_provider.dart';
 
 /// Enum representing different authentication states
 enum AuthState {
@@ -130,6 +131,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       ref.invalidate(userDetailsProvider);
       ref.invalidate(cognitoProfileProvider);
       ref.invalidate(subscriptionStatusProvider);
+      ref.invalidate(mealPlanNotificationProvider);
 
       print('[AuthStateProvider] All providers refreshed for new user');
     } catch (e) {
@@ -149,6 +151,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       ref.invalidate(mealPlansProvider);
       ref.invalidate(subscriptionStatusProvider);
       ref.invalidate(todayPageProvider);
+      ref.invalidate(mealPlanNotificationProvider);
 
       print('[AuthStateProvider] All providers invalidated');
     } catch (e) {

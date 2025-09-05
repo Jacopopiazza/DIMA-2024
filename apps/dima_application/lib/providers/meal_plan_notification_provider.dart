@@ -119,6 +119,23 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
     state = const NotificationState();
   }
 
+  /// Restart the notification system (useful when user changes)
+  Future<void> restart() async {
+    safePrint('[MealPlanNotificationNotifier] Restarting notification system...');
+    
+    // Stop existing subscription
+    await _notificationSubscription?.cancel();
+    _notificationSubscription = null;
+    
+    // Clear notifications
+    state = const NotificationState();
+    
+    // Restart the system
+    await _initializeNotifications();
+    
+    safePrint('[MealPlanNotificationNotifier] Notification system restarted');
+  }
+
   /// Get unread notification count
   int get unreadCount =>
       state.hasUnreadNotifications ? state.notifications.length : 0;
@@ -129,9 +146,13 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
 
   @override
   void dispose() {
+    safePrint('[MealPlanNotificationNotifier] Disposing notification provider...');
     _notificationSubscription?.cancel();
     _subscriptionService.dispose();
+    // Clear all notifications on disposal
+    state = const NotificationState();
     super.dispose();
+    safePrint('[MealPlanNotificationNotifier] Notification provider disposed');
   }
 }
 

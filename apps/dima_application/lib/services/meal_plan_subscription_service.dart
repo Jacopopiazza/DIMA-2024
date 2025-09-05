@@ -6,23 +6,31 @@ import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 
 class MealPlanSubscriptionService {
   StreamSubscription<GraphQLResponse<String>>? _subscription;
-  final StreamController<MealPlanResponse> _controller =
-      StreamController<MealPlanResponse>.broadcast();
+  StreamController<MealPlanResponse>? _controller;
+  String? _currentUserId;
 
   // Stream pubblico per ascoltare le notifiche
-  Stream<MealPlanResponse> get notificationStream => _controller.stream;
+  Stream<MealPlanResponse> get notificationStream => 
+      _controller?.stream ?? const Stream.empty();
 
   // Avvia la subscription
   Future<void> startListening() async {
     try {
-      print(
-          "[MealPlanSubscriptionService] 🔍 Starting meal plan subscription...");
+      print("[MealPlanSubscriptionService] 🔍 Starting meal plan subscription...");
+
+      // ALWAYS clean up existing resources first
+      await _cleanupResources();
 
       // Recupera l'ID dell'utente corrente
       final user = await Amplify.Auth.getCurrentUser();
       final String userId = user.userId;
+      _currentUserId = userId;
 
       print("[MealPlanSubscriptionService] 🔍 User ID: $userId");
+
+      // Create fresh stream controller
+      _controller = StreamController<MealPlanResponse>.broadcast();
+      print("[MealPlanSubscriptionService] ✨ Created fresh StreamController");
 
       // Query GraphQL per la subscription - simplified to match working console version
       const String subscriptionDocument = '''
@@ -58,7 +66,7 @@ class MealPlanSubscriptionService {
         },
         onError: (error) {
           safePrint('[MealPlanSubscriptionService] Subscription error: $error');
-          _controller.addError(error);
+          _controller?.addError(error);
         },
         onDone: () {
           safePrint('[MealPlanSubscriptionService] Subscription completed');
@@ -73,9 +81,32 @@ class MealPlanSubscriptionService {
     }
   }
 
+  // Clean up all existing resources
+  Future<void> _cleanupResources() async {
+    print("[MealPlanSubscriptionService] 🧹 Cleaning up existing resources...");
+    
+    // Cancel existing subscription
+    await _subscription?.cancel();
+    _subscription = null;
+    
+    // Close existing controller if it exists
+    if (_controller != null && !_controller!.isClosed) {
+      await _controller!.close();
+    }
+    _controller = null;
+    
+    print("[MealPlanSubscriptionService] ✅ Cleanup completed");
+  }
+
   // Gestisce i dati ricevuti dalla subscription
   void _handleSubscriptionData(GraphQLResponse<String> response) {
     try {
+      // Simple check - if no controller, ignore
+      if (_controller == null || _controller!.isClosed) {
+        safePrint('[MealPlanSubscriptionService] No active controller, ignoring subscription data');
+        return;
+      }
+
       if (response.data != null) {
         // Parse manuale del JSON
         final data = response.data!;
@@ -85,18 +116,18 @@ class MealPlanSubscriptionService {
             '[MealPlanSubscriptionService] Received meal plan notification: ${notification.mealPlanId}');
 
         // Invia la notifica attraverso lo stream
-        _controller.add(notification);
+        _controller!.add(notification);
       }
 
       if (response.errors != null && response.errors!.isNotEmpty) {
         safePrint(
             '[MealPlanSubscriptionService] Subscription response errors: ${response.errors}');
-        _controller.addError(response.errors!);
+        _controller!.addError(response.errors!);
       }
     } catch (e) {
       safePrint(
           '[MealPlanSubscriptionService] Error handling subscription data: $e');
-      _controller.addError(e);
+      _controller?.addError(e);
     }
   }
 
@@ -167,14 +198,14 @@ class MealPlanSubscriptionService {
 
   // Ferma la subscription
   Future<void> stopListening() async {
-    await _subscription?.cancel();
-    _subscription = null;
+    await _cleanupResources();
+    _currentUserId = null;
     safePrint('[MealPlanSubscriptionService] MealPlan subscription stopped');
   }
 
   // Pulisce le risorse
   void dispose() {
     stopListening();
-    _controller.close();
+    safePrint('[MealPlanSubscriptionService] Service disposed');
   }
 }
