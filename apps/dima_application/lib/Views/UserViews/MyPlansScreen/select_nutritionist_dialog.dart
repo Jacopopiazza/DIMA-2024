@@ -69,6 +69,24 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
       return;
     }
 
+    // Check if selected nutritionist is available
+    final selectedNutritionist = _nutritionists.firstWhere(
+      (n) => n.nutritionistId == _selectedNutritionistId,
+    );
+
+    if (selectedNutritionist.isAvailable != true) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text('Selected nutritionist is not available for validation'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
     if (mounted) {
       setState(() {
         _isAssigning = true;
@@ -117,6 +135,24 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
         });
       }
     }
+  }
+
+  bool _isSelectedNutritionistUnavailable() {
+    if (_selectedNutritionistId == null) return false;
+
+    final selectedNutritionist = _nutritionists.firstWhere(
+      (n) => n.nutritionistId == _selectedNutritionistId,
+      orElse: () => NutritionistProfile(
+        nutritionistId: '',
+        givenName: '',
+        familyName: '',
+        specialization: '',
+        bio: '',
+        isAvailable: false,
+      ),
+    );
+
+    return selectedNutritionist.isAvailable != true;
   }
 
   Widget _buildProfileImage(String? imageUrl, {double size = 60}) {
@@ -185,23 +221,28 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
 
   Widget _buildNutritionistCard(NutritionistProfile nutritionist) {
     final isSelected = _selectedNutritionistId == nutritionist.nutritionistId;
+    final isUnavailable = nutritionist.isAvailable != true;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4),
-      color: isSelected
-          ? colorScheme.primary.withOpacity(0.1)
-          : colorScheme.surface,
+      color: isUnavailable
+          ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+          : isSelected
+              ? colorScheme.primary.withOpacity(0.1)
+              : colorScheme.surface,
       elevation: isSelected ? 2 : 1,
       child: InkWell(
-        onTap: () {
-          if (mounted) {
-            setState(() {
-              _selectedNutritionistId = nutritionist.nutritionistId;
-            });
-          }
-        },
+        onTap: isUnavailable
+            ? null
+            : () {
+                if (mounted) {
+                  setState(() {
+                    _selectedNutritionistId = nutritionist.nutritionistId;
+                  });
+                }
+              },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -223,9 +264,11 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.w600,
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.onSurface,
+                        color: isUnavailable
+                            ? colorScheme.onSurfaceVariant.withOpacity(0.6)
+                            : isSelected
+                                ? colorScheme.primary
+                                : colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -236,7 +279,9 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                       Text(
                         nutritionist.specialization!,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
+                          color: isUnavailable
+                              ? colorScheme.onSurfaceVariant.withOpacity(0.5)
+                              : colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -249,7 +294,9 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                         child: Text(
                           nutritionist.bio!,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
+                            color: isUnavailable
+                                ? colorScheme.onSurfaceVariant.withOpacity(0.5)
+                                : colorScheme.onSurfaceVariant,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -368,7 +415,9 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: _isAssigning || _selectedNutritionistId == null
+          onPressed: _isAssigning ||
+                  _selectedNutritionistId == null ||
+                  _isSelectedNutritionistUnavailable()
               ? null
               : _assignNutritionist,
           child: _isAssigning
