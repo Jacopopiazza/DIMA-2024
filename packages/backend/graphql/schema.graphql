@@ -218,6 +218,7 @@ type MealPlan @model {
   dailyPlan: DailyPlanData
   userFullName: String
   nutritionistFullName: String
+  errorDetails: String
 }
 
 #  Pagination Helper Types

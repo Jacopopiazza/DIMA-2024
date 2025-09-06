@@ -29,6 +29,7 @@ class MealPlan extends amplify_core.Model {
   final String? _assignedNutritionistId;
   final String? _chatId;
   final DailyPlanData? _dailyPlan;
+  final String? _errorDetails;
   final amplify_core.TemporalDateTime? _generatedAt;
   final String? _mealPlanId;
   final String? _nutritionistFullName;
@@ -62,6 +63,10 @@ class MealPlan extends amplify_core.Model {
 
   DailyPlanData? get dailyPlan {
     return _dailyPlan;
+  }
+
+  String? get errorDetails {
+    return _errorDetails;
   }
 
   amplify_core.TemporalDateTime? get generatedAt {
@@ -127,6 +132,7 @@ class MealPlan extends amplify_core.Model {
       assignedNutritionistId,
       chatId,
       dailyPlan,
+      errorDetails,
       generatedAt,
       required mealPlanId,
       nutritionistFullName,
@@ -140,6 +146,7 @@ class MealPlan extends amplify_core.Model {
       : _assignedNutritionistId = assignedNutritionistId,
         _chatId = chatId,
         _dailyPlan = dailyPlan,
+        _errorDetails = errorDetails,
         _generatedAt = generatedAt,
         _mealPlanId = mealPlanId,
         _nutritionistFullName = nutritionistFullName,
@@ -156,6 +163,7 @@ class MealPlan extends amplify_core.Model {
       String? assignedNutritionistId,
       String? chatId,
       DailyPlanData? dailyPlan,
+      String? errorDetails,
       amplify_core.TemporalDateTime? generatedAt,
       required String mealPlanId,
       String? nutritionistFullName,
@@ -170,6 +178,7 @@ class MealPlan extends amplify_core.Model {
         assignedNutritionistId: assignedNutritionistId,
         chatId: chatId,
         dailyPlan: dailyPlan,
+        errorDetails: errorDetails,
         generatedAt: generatedAt,
         mealPlanId: mealPlanId,
         nutritionistFullName: nutritionistFullName,
@@ -193,6 +202,7 @@ class MealPlan extends amplify_core.Model {
         _assignedNutritionistId == other._assignedNutritionistId &&
         _chatId == other._chatId &&
         _dailyPlan == other._dailyPlan &&
+        _errorDetails == other._errorDetails &&
         _generatedAt == other._generatedAt &&
         _mealPlanId == other._mealPlanId &&
         _nutritionistFullName == other._nutritionistFullName &&
@@ -218,6 +228,7 @@ class MealPlan extends amplify_core.Model {
     buffer.write("dailyPlan=" +
         (_dailyPlan != null ? _dailyPlan!.toString() : "null") +
         ", ");
+    buffer.write("errorDetails=" + "$_errorDetails" + ", ");
     buffer.write("generatedAt=" +
         (_generatedAt != null ? _generatedAt!.format() : "null") +
         ", ");
@@ -248,6 +259,7 @@ class MealPlan extends amplify_core.Model {
       {String? assignedNutritionistId,
       String? chatId,
       DailyPlanData? dailyPlan,
+      String? errorDetails,
       amplify_core.TemporalDateTime? generatedAt,
       String? mealPlanId,
       String? nutritionistFullName,
@@ -263,6 +275,7 @@ class MealPlan extends amplify_core.Model {
             assignedNutritionistId ?? this.assignedNutritionistId,
         chatId: chatId ?? this.chatId,
         dailyPlan: dailyPlan ?? this.dailyPlan,
+        errorDetails: errorDetails ?? this.errorDetails,
         generatedAt: generatedAt ?? this.generatedAt,
         mealPlanId: mealPlanId ?? this.mealPlanId,
         nutritionistFullName: nutritionistFullName ?? this.nutritionistFullName,
@@ -278,6 +291,7 @@ class MealPlan extends amplify_core.Model {
       {ModelFieldValue<String?>? assignedNutritionistId,
       ModelFieldValue<String?>? chatId,
       ModelFieldValue<DailyPlanData?>? dailyPlan,
+      ModelFieldValue<String?>? errorDetails,
       ModelFieldValue<amplify_core.TemporalDateTime?>? generatedAt,
       ModelFieldValue<String>? mealPlanId,
       ModelFieldValue<String?>? nutritionistFullName,
@@ -294,6 +308,8 @@ class MealPlan extends amplify_core.Model {
             : assignedNutritionistId.value,
         chatId: chatId == null ? this.chatId : chatId.value,
         dailyPlan: dailyPlan == null ? this.dailyPlan : dailyPlan.value,
+        errorDetails:
+            errorDetails == null ? this.errorDetails : errorDetails.value,
         generatedAt: generatedAt == null ? this.generatedAt : generatedAt.value,
         mealPlanId: mealPlanId == null ? this.mealPlanId : mealPlanId.value,
         nutritionistFullName: nutritionistFullName == null
@@ -321,6 +337,7 @@ class MealPlan extends amplify_core.Model {
                 : DailyPlanData.fromJson(
                     new Map<String, dynamic>.from(json['dailyPlan']))
             : null,
+        _errorDetails = json['errorDetails'],
         _generatedAt = json['generatedAt'] != null
             ? amplify_core.TemporalDateTime.fromString(json['generatedAt'])
             : null,
@@ -346,6 +363,7 @@ class MealPlan extends amplify_core.Model {
         'assignedNutritionistId': _assignedNutritionistId,
         'chatId': _chatId,
         'dailyPlan': _dailyPlan?.toJson(),
+        'errorDetails': _errorDetails,
         'generatedAt': _generatedAt?.format(),
         'mealPlanId': _mealPlanId,
         'nutritionistFullName': _nutritionistFullName,
@@ -363,6 +381,7 @@ class MealPlan extends amplify_core.Model {
         'assignedNutritionistId': _assignedNutritionistId,
         'chatId': _chatId,
         'dailyPlan': _dailyPlan,
+        'errorDetails': _errorDetails,
         'generatedAt': _generatedAt,
         'mealPlanId': _mealPlanId,
         'nutritionistFullName': _nutritionistFullName,
@@ -383,6 +402,8 @@ class MealPlan extends amplify_core.Model {
       amplify_core.QueryField(fieldName: "assignedNutritionistId");
   static final CHATID = amplify_core.QueryField(fieldName: "chatId");
   static final DAILYPLAN = amplify_core.QueryField(fieldName: "dailyPlan");
+  static final ERRORDETAILS =
+      amplify_core.QueryField(fieldName: "errorDetails");
   static final GENERATEDAT = amplify_core.QueryField(fieldName: "generatedAt");
   static final MEALPLANID = amplify_core.QueryField(fieldName: "mealPlanId");
   static final NUTRITIONISTFULLNAME =
@@ -420,6 +441,12 @@ class MealPlan extends amplify_core.Model {
         ofType: amplify_core.ModelFieldType(
             amplify_core.ModelFieldTypeEnum.embedded,
             ofCustomTypeName: 'DailyPlanData')));
+
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+        key: MealPlan.ERRORDETAILS,
+        isRequired: false,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
         key: MealPlan.GENERATEDAT,

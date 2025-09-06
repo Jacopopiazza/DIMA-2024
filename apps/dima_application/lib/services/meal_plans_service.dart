@@ -559,6 +559,7 @@ class MealPlansService {
       planName
       status
       userId
+      errorDetails
       validationStatus
       nutritionistFullName
       userFullName

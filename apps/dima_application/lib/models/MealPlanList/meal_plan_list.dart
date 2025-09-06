@@ -181,6 +181,7 @@ class LightMealPlan {
   final String mealPlanId;
   final DateTime? updatedAt;
   final String? planName;
+  final String? errorDetails;
   final DateTime? startDate;
   final DateTime? endDate;
   final PlanStatus? status;
@@ -192,6 +193,7 @@ class LightMealPlan {
     this.updatedAt,
     this.startDate,
     this.endDate,
+    this.errorDetails,
     this.status,
     this.validationStatus,
   });
@@ -214,6 +216,7 @@ class LightMealPlan {
               json['validationStatus'] as String,
               MealPlanValidationStatus.values)
           : null,
+      errorDetails: json['errorDetails'] as String?,
     );
   }
 
@@ -226,6 +229,7 @@ class LightMealPlan {
       'updatedAt': updatedAt?.toIso8601String(),
       'status': status?.name,
       'validationStatus': validationStatus?.name,
+      'errorDetails': errorDetails,
     };
   }
 }

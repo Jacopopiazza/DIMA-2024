@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dima_application/Views/UserViews/MyPlansScreen/action_confirmation_dialog.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
@@ -617,6 +619,45 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                   ),
                 ],
               ),
+              // Show error message for failed plans
+              if (isFailed && plan.errorDetails != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.red.shade200,
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.error_outline_rounded,
+                          color: Colors.red.shade600,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _parseErrorMessage(plan.errorDetails),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.red.shade700,
+                              fontSize: 13,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -913,6 +954,38 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     }
 
     return colorScheme.onSurfaceVariant;
+  }
+
+  /// Safely parses error details JSON to extract user-friendly error message
+  String _parseErrorMessage(String? errorDetails) {
+    if (errorDetails == null || errorDetails.isEmpty) {
+      return 'Please try again later';
+    }
+
+    try {
+      // Parse the outer JSON
+      final outerJson = jsonDecode(errorDetails);
+      
+      // Get the errorMessage field
+      final errorMessage = outerJson['errorMessage'];
+      if (errorMessage == null) {
+        return 'Please try again later';
+      }
+
+      // Parse the inner JSON (errorMessage is a JSON string)
+      final innerJson = jsonDecode(errorMessage);
+      
+      // Extract the actual error message
+      final message = innerJson['error']?['message'];
+      if (message != null && message is String && message.isNotEmpty) {
+        return message;
+      }
+
+      return 'Please try again later';
+    } catch (e) {
+      // If any parsing fails, return fallback message
+      return 'Please try again later';
+    }
   }
 
   Future<bool> _handleSwipe(BuildContext context, plan,
