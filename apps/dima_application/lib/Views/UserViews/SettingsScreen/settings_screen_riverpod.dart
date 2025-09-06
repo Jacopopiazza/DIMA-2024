@@ -1,15 +1,16 @@
 import 'package:dima_application/Views/UserViews/SettingsScreen/widgets/pro_subscription_section_riverpod.dart';
-import 'package:dima_application/providers/subscription_status_provider.dart';
 import 'package:dima_application/navigation/route_observer.dart';
+import 'package:dima_application/providers/subscription_status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers/user_details_provider.dart';
+
 import '../../../providers/cognito_profile_provider.dart';
+import '../../../providers/user_details_provider.dart';
+import 'widgets/actions_section_riverpod.dart';
+import 'widgets/danger_zone_section_riverpod.dart';
+import 'widgets/password_change_form_riverpod.dart';
 import 'widgets/user_details_form_riverpod.dart';
 import 'widgets/user_profile_section_riverpod.dart';
-import 'widgets/password_change_form_riverpod.dart';
-import 'widgets/danger_zone_section_riverpod.dart';
-import 'widgets/actions_section_riverpod.dart';
 
 class SettingsScreenRiverpod extends ConsumerStatefulWidget {
   final bool showBackButton;

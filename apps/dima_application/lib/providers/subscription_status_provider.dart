@@ -135,6 +135,10 @@ class SubscriptionStatusNotifier
       } else {
         print(
             '[SubscriptionStatusNotifier] Subscription failed, service returned false');
+        // If subscription failed, revert to the previous state
+        if (_mounted) {
+          state = previousState;
+        }
       }
 
       return result.subscriptionStatus == SubscriptionStatusEnum.PRO;
@@ -142,11 +146,9 @@ class SubscriptionStatusNotifier
       print('[SubscriptionStatusNotifier] Error during subscription: $e');
       print('[SubscriptionStatusNotifier] Stack trace: $stackTrace');
 
-      // On error, keep the previous state
+      // On error, revert to the previous state (same behavior as other providers)
       if (_mounted) {
-        state =
-            AsyncValue<(SubscriptionStatusData, String)>.error(e, stackTrace)
-                .copyWithPrevious(previousState);
+        state = previousState;
       }
       return false;
     }
@@ -183,6 +185,10 @@ class SubscriptionStatusNotifier
       } else {
         print(
             '[SubscriptionStatusNotifier] Unsubscription failed, service returned false');
+        // If unsubscription failed, revert to the previous state
+        if (_mounted) {
+          state = previousState;
+        }
       }
 
       return result.subscriptionStatus == SubscriptionStatusEnum.FREE;
@@ -190,11 +196,9 @@ class SubscriptionStatusNotifier
       print('[SubscriptionStatusNotifier] Error during unsubscription: $e');
       print('[SubscriptionStatusNotifier] Stack trace: $stackTrace');
 
-      // On error, keep the previous state
+      // On error, revert to the previous state (same behavior as other providers)
       if (_mounted) {
-        state =
-            AsyncValue<(SubscriptionStatusData, String)>.error(e, stackTrace)
-                .copyWithPrevious(previousState);
+        state = previousState;
       }
       return false;
     }
