@@ -648,7 +648,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                             _parseErrorMessage(plan.errorDetails),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: Colors.red.shade700,
-                              fontSize: 13,
+                              fontSize: 11,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -978,6 +978,10 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       // Extract the actual error message
       final message = innerJson['error']?['message'];
       if (message != null && message is String && message.isNotEmpty) {
+        // Check for overloaded model and provide user-friendly message
+        if (message.toLowerCase().contains('overloaded')) {
+          return 'The model is overloaded. Please request a new meal plan later.';
+        }
         return message;
       }
 

@@ -487,7 +487,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                               _parseErrorMessage(_mealPlan!.errorDetails),
                               style: TextStyle(
                                 color: Colors.red.shade700,
-                                fontSize: 13,
+                                fontSize: 12,
                                 height: 1.4,
                               ),
                             ),
@@ -1154,6 +1154,10 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
       // Extract the actual error message
       final message = innerJson['error']?['message'];
       if (message != null && message is String && message.isNotEmpty) {
+        // Check for overloaded model and provide user-friendly message
+        if (message.toLowerCase().contains('overloaded')) {
+          return 'The model is overloaded. Please request a new meal plan later.';
+        }
         return message;
       }
 
