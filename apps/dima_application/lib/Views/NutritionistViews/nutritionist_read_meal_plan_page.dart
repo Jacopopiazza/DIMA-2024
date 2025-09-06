@@ -322,8 +322,12 @@ class _NutritionistReadMealPlanPageState
       backgroundColor: colorScheme.surface,
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: _buildBody(theme, colorScheme),
+          GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            behavior: HitTestBehavior.opaque,
+            child: SingleChildScrollView(
+              child: _buildBody(theme, colorScheme),
+            ),
           ),
           // Modern back button positioned on top
           Positioned(
