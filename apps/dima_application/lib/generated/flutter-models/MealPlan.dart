@@ -34,11 +34,11 @@ class MealPlan extends amplify_core.Model {
   final String? _nutritionistFullName;
   final String? _planName;
   final PlanStatus? _status;
+  final amplify_core.TemporalDateTime? _updatedAt;
   final String? _userFullName;
   final String? _userId;
   final MealPlanValidationStatus? _validationStatus;
   final amplify_core.TemporalDateTime? _createdAt;
-  final amplify_core.TemporalDateTime? _updatedAt;
 
   @override
   getInstanceType() => classType;
@@ -93,6 +93,10 @@ class MealPlan extends amplify_core.Model {
     return _status;
   }
 
+  amplify_core.TemporalDateTime? get updatedAt {
+    return _updatedAt;
+  }
+
   String? get userFullName {
     return _userFullName;
   }
@@ -118,10 +122,6 @@ class MealPlan extends amplify_core.Model {
     return _createdAt;
   }
 
-  amplify_core.TemporalDateTime? get updatedAt {
-    return _updatedAt;
-  }
-
   const MealPlan._internal(
       {required this.id,
       assignedNutritionistId,
@@ -132,11 +132,11 @@ class MealPlan extends amplify_core.Model {
       nutritionistFullName,
       planName,
       status,
+      updatedAt,
       userFullName,
       required userId,
       validationStatus,
-      createdAt,
-      updatedAt})
+      createdAt})
       : _assignedNutritionistId = assignedNutritionistId,
         _chatId = chatId,
         _dailyPlan = dailyPlan,
@@ -145,11 +145,11 @@ class MealPlan extends amplify_core.Model {
         _nutritionistFullName = nutritionistFullName,
         _planName = planName,
         _status = status,
+        _updatedAt = updatedAt,
         _userFullName = userFullName,
         _userId = userId,
         _validationStatus = validationStatus,
-        _createdAt = createdAt,
-        _updatedAt = updatedAt;
+        _createdAt = createdAt;
 
   factory MealPlan(
       {String? id,
@@ -161,6 +161,7 @@ class MealPlan extends amplify_core.Model {
       String? nutritionistFullName,
       String? planName,
       PlanStatus? status,
+      amplify_core.TemporalDateTime? updatedAt,
       String? userFullName,
       required String userId,
       MealPlanValidationStatus? validationStatus}) {
@@ -174,6 +175,7 @@ class MealPlan extends amplify_core.Model {
         nutritionistFullName: nutritionistFullName,
         planName: planName,
         status: status,
+        updatedAt: updatedAt,
         userFullName: userFullName,
         userId: userId,
         validationStatus: validationStatus);
@@ -196,6 +198,7 @@ class MealPlan extends amplify_core.Model {
         _nutritionistFullName == other._nutritionistFullName &&
         _planName == other._planName &&
         _status == other._status &&
+        _updatedAt == other._updatedAt &&
         _userFullName == other._userFullName &&
         _userId == other._userId &&
         _validationStatus == other._validationStatus;
@@ -224,6 +227,9 @@ class MealPlan extends amplify_core.Model {
     buffer.write("status=" +
         (_status != null ? amplify_core.enumToString(_status)! : "null") +
         ", ");
+    buffer.write("updatedAt=" +
+        (_updatedAt != null ? _updatedAt!.format() : "null") +
+        ", ");
     buffer.write("userFullName=" + "$_userFullName" + ", ");
     buffer.write("userId=" + "$_userId" + ", ");
     buffer.write("validationStatus=" +
@@ -231,11 +237,8 @@ class MealPlan extends amplify_core.Model {
             ? amplify_core.enumToString(_validationStatus)!
             : "null") +
         ", ");
-    buffer.write("createdAt=" +
-        (_createdAt != null ? _createdAt!.format() : "null") +
-        ", ");
     buffer.write(
-        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+        "createdAt=" + (_createdAt != null ? _createdAt!.format() : "null"));
     buffer.write("}");
 
     return buffer.toString();
@@ -250,6 +253,7 @@ class MealPlan extends amplify_core.Model {
       String? nutritionistFullName,
       String? planName,
       PlanStatus? status,
+      amplify_core.TemporalDateTime? updatedAt,
       String? userFullName,
       String? userId,
       MealPlanValidationStatus? validationStatus}) {
@@ -264,6 +268,7 @@ class MealPlan extends amplify_core.Model {
         nutritionistFullName: nutritionistFullName ?? this.nutritionistFullName,
         planName: planName ?? this.planName,
         status: status ?? this.status,
+        updatedAt: updatedAt ?? this.updatedAt,
         userFullName: userFullName ?? this.userFullName,
         userId: userId ?? this.userId,
         validationStatus: validationStatus ?? this.validationStatus);
@@ -278,6 +283,7 @@ class MealPlan extends amplify_core.Model {
       ModelFieldValue<String?>? nutritionistFullName,
       ModelFieldValue<String?>? planName,
       ModelFieldValue<PlanStatus?>? status,
+      ModelFieldValue<amplify_core.TemporalDateTime?>? updatedAt,
       ModelFieldValue<String?>? userFullName,
       ModelFieldValue<String>? userId,
       ModelFieldValue<MealPlanValidationStatus?>? validationStatus}) {
@@ -295,6 +301,7 @@ class MealPlan extends amplify_core.Model {
             : nutritionistFullName.value,
         planName: planName == null ? this.planName : planName.value,
         status: status == null ? this.status : status.value,
+        updatedAt: updatedAt == null ? this.updatedAt : updatedAt.value,
         userFullName:
             userFullName == null ? this.userFullName : userFullName.value,
         userId: userId == null ? this.userId : userId.value,
@@ -322,6 +329,9 @@ class MealPlan extends amplify_core.Model {
         _planName = json['planName'],
         _status = amplify_core.enumFromString<PlanStatus>(
             json['status'], PlanStatus.values),
+        _updatedAt = json['updatedAt'] != null
+            ? amplify_core.TemporalDateTime.fromString(json['updatedAt'])
+            : null,
         _userFullName = json['userFullName'],
         _userId = json['userId'],
         _validationStatus =
@@ -329,9 +339,6 @@ class MealPlan extends amplify_core.Model {
                 json['validationStatus'], MealPlanValidationStatus.values),
         _createdAt = json['createdAt'] != null
             ? amplify_core.TemporalDateTime.fromString(json['createdAt'])
-            : null,
-        _updatedAt = json['updatedAt'] != null
-            ? amplify_core.TemporalDateTime.fromString(json['updatedAt'])
             : null;
 
   Map<String, dynamic> toJson() => {
@@ -344,11 +351,11 @@ class MealPlan extends amplify_core.Model {
         'nutritionistFullName': _nutritionistFullName,
         'planName': _planName,
         'status': amplify_core.enumToString(_status),
+        'updatedAt': _updatedAt?.format(),
         'userFullName': _userFullName,
         'userId': _userId,
         'validationStatus': amplify_core.enumToString(_validationStatus),
-        'createdAt': _createdAt?.format(),
-        'updatedAt': _updatedAt?.format()
+        'createdAt': _createdAt?.format()
       };
 
   Map<String, Object?> toMap() => {
@@ -361,11 +368,11 @@ class MealPlan extends amplify_core.Model {
         'nutritionistFullName': _nutritionistFullName,
         'planName': _planName,
         'status': _status,
+        'updatedAt': _updatedAt,
         'userFullName': _userFullName,
         'userId': _userId,
         'validationStatus': _validationStatus,
-        'createdAt': _createdAt,
-        'updatedAt': _updatedAt
+        'createdAt': _createdAt
       };
 
   static final amplify_core.QueryModelIdentifier<MealPlanModelIdentifier>
@@ -382,6 +389,7 @@ class MealPlan extends amplify_core.Model {
       amplify_core.QueryField(fieldName: "nutritionistFullName");
   static final PLANNAME = amplify_core.QueryField(fieldName: "planName");
   static final STATUS = amplify_core.QueryField(fieldName: "status");
+  static final UPDATEDAT = amplify_core.QueryField(fieldName: "updatedAt");
   static final USERFULLNAME =
       amplify_core.QueryField(fieldName: "userFullName");
   static final USERID = amplify_core.QueryField(fieldName: "userId");
@@ -444,6 +452,12 @@ class MealPlan extends amplify_core.Model {
             amplify_core.ModelFieldTypeEnum.enumeration)));
 
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+        key: MealPlan.UPDATEDAT,
+        isRequired: false,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.dateTime)));
+
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
         key: MealPlan.USERFULLNAME,
         isRequired: false,
         ofType: amplify_core.ModelFieldType(
@@ -464,14 +478,6 @@ class MealPlan extends amplify_core.Model {
     modelSchemaDefinition.addField(
         amplify_core.ModelFieldDefinition.nonQueryField(
             fieldName: 'createdAt',
-            isRequired: false,
-            isReadOnly: true,
-            ofType: amplify_core.ModelFieldType(
-                amplify_core.ModelFieldTypeEnum.dateTime)));
-
-    modelSchemaDefinition.addField(
-        amplify_core.ModelFieldDefinition.nonQueryField(
-            fieldName: 'updatedAt',
             isRequired: false,
             isReadOnly: true,
             ofType: amplify_core.ModelFieldType(

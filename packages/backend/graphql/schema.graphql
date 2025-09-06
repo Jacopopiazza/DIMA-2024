@@ -210,6 +210,7 @@ type MealPlan @model {
   # From PK
   planName: String
   generatedAt: AWSDateTime
+  updatedAt: AWSDateTime
   status: PlanStatus
   validationStatus: MealPlanValidationStatus
   assignedNutritionistId: ID

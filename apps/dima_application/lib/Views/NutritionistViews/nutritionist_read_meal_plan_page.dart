@@ -1607,7 +1607,7 @@ class _NutritionistReadMealPlanPageState
     if (widget.mealPlan.validationStatus == MealPlanValidationStatus.REJECTED) {
       return const SizedBox.shrink();
     }
-    
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

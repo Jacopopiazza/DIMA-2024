@@ -106,6 +106,7 @@ type MealPlan @model {
   #  From PK
   planName: String
   status: PlanStatus
+  updatedAt: AWSDateTime
   userFullName: String
   #  Extracted from SK
   userId: ID!

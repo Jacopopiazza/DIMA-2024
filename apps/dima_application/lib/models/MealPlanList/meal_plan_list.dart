@@ -179,6 +179,7 @@ class MealPlanListCache {
 
 class LightMealPlan {
   final String mealPlanId;
+  final DateTime? updatedAt;
   final String? planName;
   final DateTime? startDate;
   final DateTime? endDate;
@@ -188,6 +189,7 @@ class LightMealPlan {
   LightMealPlan({
     required this.mealPlanId,
     this.planName,
+    this.updatedAt,
     this.startDate,
     this.endDate,
     this.status,
@@ -198,6 +200,8 @@ class LightMealPlan {
     return LightMealPlan(
       mealPlanId: json['mealPlanId'] as String,
       planName: json['planName'] as String?,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       startDate:
           json['startDate'] != null ? DateTime.parse(json['startDate']) : null,
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
@@ -219,6 +223,7 @@ class LightMealPlan {
       'planName': planName,
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       'status': status?.name,
       'validationStatus': validationStatus?.name,
     };
@@ -254,5 +259,13 @@ class LightMealPlanList {
       'nextToken': nextToken,
       'activeMealPlan': activeMealPlan,
     };
+  }
+
+  void sortByUpdatedAtDesc() {
+    items.sort((a, b) {
+      final aTime = a.updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final bTime = b.updatedAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+      return bTime.compareTo(aTime);
+    });
   }
 }
