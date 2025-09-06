@@ -1,5 +1,7 @@
+import 'package:dima_application/Utils/error_handling_utils.dart';
 import 'package:dima_application/Views/Common/ChatScreen/chat_input.dart';
 import 'package:dima_application/Views/Common/ChatScreen/message_bubble.dart';
+import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
 import 'package:dima_application/models/Chat/chat_message.dart';
 import 'package:dima_application/models/Chat/chat_state.dart';
 import 'package:dima_application/providers/chat_messages_provider.dart';
@@ -120,10 +122,38 @@ class _ChatPageState extends ConsumerState<ChatPage>
       _scrollToBottom();
     } catch (e) {
       if (mounted) {
+        final errorMessage = ErrorHandlingUtils.formatErrorMessage(e);
+        final isSubscriptionError = ErrorHandlingUtils.isSubscriptionError(e);
+        final isRetryable = ErrorHandlingUtils.isRetryableError(e);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to send message: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            content: Text(errorMessage),
+            backgroundColor: isSubscriptionError
+                ? Theme.of(context).colorScheme.tertiary
+                : Theme.of(context).colorScheme.error,
+            action: isRetryable
+                ? SnackBarAction(
+                    label: 'Retry',
+                    textColor: Theme.of(context).colorScheme.onError,
+                    onPressed: () => _onSendMessage(message),
+                  )
+                : isSubscriptionError
+                    ? SnackBarAction(
+                        label: 'Upgrade',
+                        textColor: Theme.of(context).colorScheme.onTertiary,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const SettingsScreenRiverpod(
+                                      showBackButton: true),
+                            ),
+                          );
+                        },
+                      )
+                    : null,
           ),
         );
       }
@@ -144,7 +174,6 @@ class _ChatPageState extends ConsumerState<ChatPage>
     final messagesBeforeLoad = currentChatState.messages.length;
 
     // Find which message we're currently looking at (approximate)
-    final viewportHeight = _scrollController.position.viewportDimension;
     final messageHeight = 80; // Approximate message height
     final visibleMessageIndex =
         ((currentMaxScrollExtent - currentScrollOffset) / messageHeight)

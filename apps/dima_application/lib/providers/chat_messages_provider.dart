@@ -1,13 +1,15 @@
 import 'dart:async';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dima_application/models/Chat/chat_message.dart';
-import 'package:dima_application/models/Chat/chat_state.dart';
-import 'package:dima_application/models/Chat/chat_response.dart';
-import 'package:dima_application/models/Chat/chat_messages_response.dart';
-import 'package:dima_application/services/chat_service.dart';
-import 'package:dima_application/services/auth_service.dart';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/Utils/error_handling_utils.dart';
+import 'package:dima_application/models/Chat/chat_message.dart';
+import 'package:dima_application/models/Chat/chat_messages_response.dart';
+import 'package:dima_application/models/Chat/chat_response.dart';
+import 'package:dima_application/models/Chat/chat_state.dart';
+import 'package:dima_application/services/auth_service.dart';
+import 'package:dima_application/services/chat_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_messages_provider.g.dart';
 
@@ -21,9 +23,13 @@ class ChatMessages extends _$ChatMessages {
   FutureOr<ChatState> build(String chatId) async {
     // Set up cleanup on dispose
     ref.onDispose(() {
-      _messageSubscription?.cancel();
-      ChatService.instance.setActiveChatId(null);
-      safePrint('[ChatMessages] Provider disposed for chat: $chatId');
+      try {
+        _messageSubscription?.cancel();
+        ChatService.instance.setActiveChatId(null);
+        safePrint('[ChatMessages] Provider disposed for chat: $chatId');
+      } catch (e) {
+        safePrint('[ChatMessages] Error during provider disposal: $e');
+      }
     });
 
     // Get current user ID
@@ -69,7 +75,7 @@ class ChatMessages extends _$ChatMessages {
     safePrint(
         '[ChatMessages] *** SETTING UP MESSAGE SUBSCRIPTION for chat: $chatId ***');
     safePrint(
-        '[ChatMessages] ChatService messageStream available: ${ChatService.instance.messageStream != null}');
+        '[ChatMessages] ChatService messageStream available: ${ChatService.instance.messageStream != const Stream.empty()}');
 
     // Listen to the general message stream for this specific chat
     _messageSubscription = ChatService.instance.messageStream.where((response) {
@@ -91,9 +97,15 @@ class ChatMessages extends _$ChatMessages {
         // Update state to show connection error but keep existing messages
         final currentState = state.valueOrNull;
         if (currentState != null) {
-          state = AsyncValue.data(currentState.copyWith(isConnected: false));
+          try {
+            state = AsyncValue.data(currentState.copyWith(isConnected: false));
+          } catch (e) {
+            safePrint(
+                '[ChatMessages] Error updating state after stream error: $e');
+          }
         }
       },
+      cancelOnError: false, // Don't cancel on error to prevent race conditions
     );
 
     safePrint(
@@ -204,7 +216,10 @@ class ChatMessages extends _$ChatMessages {
       state = AsyncValue.data(
           currentState.copyWith(messages: messagesWithoutFailed));
 
-      // Re-throw to allow UI to show error
+      // Re-throw with better error context
+      if (ErrorHandlingUtils.isNetworkError(e)) {
+        throw Exception(ErrorHandlingUtils.formatErrorMessage(e));
+      }
       rethrow;
     }
   }

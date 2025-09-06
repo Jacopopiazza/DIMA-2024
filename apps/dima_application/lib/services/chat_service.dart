@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:dima_application/models/Chat/send_message_input.dart';
-import 'package:dima_application/models/Chat/chat_response.dart';
 import 'package:dima_application/models/Chat/chat_messages_response.dart';
+import 'package:dima_application/models/Chat/chat_response.dart';
+import 'package:dima_application/models/Chat/send_message_input.dart';
 
 class ChatService {
   static ChatService? _instance;
@@ -16,6 +16,7 @@ class ChatService {
   StreamController<ChatResponse>? _messageController;
   String? _currentUserId;
   String? _activeChatId;
+  bool _isCleaningUp = false;
 
   // Callback for handling messages when user is not in the active chat
   Function(ChatResponse)? onBackgroundMessage;
@@ -79,11 +80,20 @@ class ChatService {
         },
         onError: (error) {
           safePrint('[ChatService] *** SUBSCRIPTION ERROR *** $error');
-          _messageController?.addError(error);
+          // Only add error if controller is still active
+          if (_messageController != null && !_messageController!.isClosed) {
+            try {
+              _messageController!.addError(error);
+            } catch (e) {
+              safePrint('[ChatService] Error adding error to controller: $e');
+            }
+          }
         },
         onDone: () {
           safePrint('[ChatService] *** SUBSCRIPTION COMPLETED ***');
         },
+        cancelOnError:
+            false, // Don't cancel on error to prevent race conditions
       );
 
       safePrint('[ChatService] *** CHAT SUBSCRIPTION STARTED SUCCESSFULLY ***');
@@ -106,21 +116,45 @@ class ChatService {
   }
 
   Future<void> _cleanupResources() async {
+    // Prevent multiple simultaneous cleanup operations
+    if (_isCleaningUp) {
+      safePrint('[ChatService] Cleanup already in progress, skipping...');
+      return;
+    }
+
+    _isCleaningUp = true;
     safePrint('[ChatService] Cleaning up existing resources...');
 
-    await _subscription?.cancel();
-    _subscription = null;
+    try {
+      // Cancel subscription first
+      if (_subscription != null) {
+        try {
+          await _subscription!.cancel();
+        } catch (e) {
+          safePrint('[ChatService] Error canceling subscription: $e');
+        }
+        _subscription = null;
+      }
 
-    if (_messageController != null && !_messageController!.isClosed) {
-      await _messageController!.close();
+      // Close message controller safely
+      if (_messageController != null && !_messageController!.isClosed) {
+        try {
+          await _messageController!.close();
+        } catch (e) {
+          safePrint('[ChatService] Error closing message controller: $e');
+        }
+      }
+      _messageController = null;
+
+      safePrint('[ChatService] Cleanup completed');
+    } finally {
+      _isCleaningUp = false;
     }
-    _messageController = null;
-
-    safePrint('[ChatService] Cleanup completed');
   }
 
   void _handleSubscriptionData(GraphQLResponse<String> response) {
     try {
+      // Check if controller is still active before processing
       if (_messageController == null || _messageController!.isClosed) {
         safePrint(
             '[ChatService] No active controller, ignoring subscription data');
@@ -147,17 +181,37 @@ class ChatService {
               '[ChatService] Message delivered as background notification');
         }
 
-        _messageController!.add(chatResponse);
+        // Safely add to controller
+        try {
+          _messageController!.add(chatResponse);
+        } catch (e) {
+          safePrint('[ChatService] Error adding message to controller: $e');
+        }
       }
 
       final errors = response.errors;
-      if (errors?.isNotEmpty == true) {
+      if (errors.isNotEmpty) {
         safePrint('[ChatService] Subscription response errors: $errors');
-        _messageController!.addError(errors!);
+        // Safely add errors to controller
+        try {
+          if (_messageController != null && !_messageController!.isClosed) {
+            _messageController!.addError(errors);
+          }
+        } catch (e) {
+          safePrint('[ChatService] Error adding errors to controller: $e');
+        }
       }
     } catch (e) {
       safePrint('[ChatService] Error handling subscription data: $e');
-      _messageController?.addError(e);
+      // Safely add error to controller
+      try {
+        if (_messageController != null && !_messageController!.isClosed) {
+          _messageController!.addError(e);
+        }
+      } catch (controllerError) {
+        safePrint(
+            '[ChatService] Error adding error to controller: $controllerError');
+      }
     }
   }
 
@@ -308,6 +362,13 @@ class ChatService {
       return chatResponse;
     } catch (e) {
       safePrint('[ChatService] Error sending message: $e');
+      // Re-throw with better error context
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Failed host lookup') ||
+          e.toString().contains('No such host is known')) {
+        throw Exception(
+            'No internet connection. Please check your network and try again.');
+      }
       rethrow;
     }
   }
