@@ -96,11 +96,13 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     super.dispose();
   }
 
-  void _openGenerateMealPlan(BuildContext context) {
-    Navigator.push(
+  void _openGenerateMealPlan(BuildContext context) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const GenerateMealPlanPage()),
     );
+    // Refresh the meal plans list when returning from generation
+    _refreshPlans();
   }
 
   Future<void> _refreshPlans() async {
@@ -1091,9 +1093,9 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
               'View Plan',
               'See detailed meal plan',
               colorScheme.primary,
-              () {
+              () async {
                 Navigator.pop(context);
-                Navigator.push(
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ReadMealPlanPage(
@@ -1102,6 +1104,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                     ),
                   ),
                 );
+                // Refresh the meal plans list when returning
+                _refreshPlans();
               },
             ),
             if (plan.validationStatus != MealPlanValidationStatus.REJECTED)
