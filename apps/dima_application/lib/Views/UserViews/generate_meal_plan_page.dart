@@ -1,8 +1,10 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Utils/localization_helpers.dart';
+import 'package:dima_application/Utils/profile_validation_utils.dart';
 import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
 import 'package:dima_application/generated/flutter-models/AllergenEnum.dart';
 import 'package:dima_application/generated/flutter-models/ExerciseFrequency.dart';
+import 'package:dima_application/providers/cognito_profile_provider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:dima_application/providers/user_details_provider.dart';
 import 'package:flutter/material.dart';
@@ -140,6 +142,28 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     }
   }
 
+  /// Validates user profile data (gender and birthdate from Cognito)
+  ProfileValidationResult _validateUserProfile() {
+    final cognitoProfileAsync = ref.read(cognitoProfileProvider);
+    final cognitoProfile = cognitoProfileAsync.value?.$1;
+
+    if (cognitoProfile == null) {
+      return const ProfileValidationResult(
+        isValid: false,
+        issues: ['Profile information not available'],
+      );
+    }
+
+    final attributes = cognitoProfile.userAttributes;
+    final gender = attributes['gender'];
+    final birthdate = attributes['birthdate'];
+
+    return ProfileValidationUtils.validateProfile(
+      gender: gender,
+      birthdate: birthdate,
+    );
+  }
+
   /// Converts UserDetails to preferences format for meal plan creation
   Map<String, dynamic> _buildPreferencesFromUserDetails(dynamic userDetails) {
     if (_useOverrides) {
@@ -265,6 +289,24 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     setState(() {
       _isGenerating = true;
     });
+
+    // Validate user profile (gender and birthdate) - always required
+    final profileValidation = _validateUserProfile();
+    if (!profileValidation.isValid) {
+      setState(() {
+        _isGenerating = false;
+      });
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(profileValidation.message),
+          backgroundColor: Colors.red.shade600,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+      return;
+    }
 
     // Validate override ranges if custom preferences are enabled
     if (_useOverrides) {
@@ -392,6 +434,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
   @override
   Widget build(BuildContext context) {
     final userDetailsAsync = ref.watch(userDetailsProvider);
+    ref.watch(cognitoProfileProvider); // Watch for changes to trigger rebuilds
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -446,6 +489,10 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   (userDetails.dietaryRestrictions?.isNotEmpty ?? false) ||
                   (userDetails.openTextPreferences?.isNotEmpty ?? false));
 
+          // Get profile validation status
+          final profileValidation = _validateUserProfile();
+          final hasValidProfile = profileValidation.isValid;
+
           // Initialize overrides when data is available
           if (!_showPreferenceOverrides) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -468,6 +515,13 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                           // Header section
                           _buildHeaderSection(colorScheme, theme),
                           const SizedBox(height: 32),
+
+                          // Profile Validation Status Section
+                          if (!hasValidProfile) ...[
+                            _buildProfileValidationCard(
+                                profileValidation, colorScheme, theme),
+                            const SizedBox(height: 24),
+                          ],
 
                           // User Details Status Section
                           if (!hasUserDetails) ...[
@@ -592,6 +646,88 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildProfileValidationCard(ProfileValidationResult validation,
+      ColorScheme colorScheme, ThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.red.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.red.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.red.shade100,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.warning_rounded,
+                size: 32,
+                color: Colors.red.shade700,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Profile Incomplete',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.red.shade800,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              validation.message,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.red.shade700,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 20),
+            FilledButton.tonalIcon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const SettingsScreenRiverpod(showBackButton: true),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.person_rounded),
+              label: const Text('Complete Profile'),
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.red.shade600,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.red.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'You must complete your profile before generating a meal plan',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: Colors.red.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1092,11 +1228,16 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     final isCustom = _useOverrides;
     final buttonColor = isCustom ? Colors.orange.shade600 : colorScheme.primary;
 
+    // Check if profile is valid
+    final profileValidation = _validateUserProfile();
+    final isProfileValid = profileValidation.isValid;
+    final isButtonEnabled = !_isGenerating && isProfileValid;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: FilledButton.icon(
-        onPressed: _isGenerating ? null : _generateMealPlan,
+        onPressed: isButtonEnabled ? _generateMealPlan : null,
         icon: _isGenerating
             ? SizedBox(
                 width: 20,
@@ -1114,23 +1255,28 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         label: Text(
           _isGenerating
               ? 'Creating Meal Plan...'
-              : isCustom
-                  ? 'Generate with Custom Preferences'
-                  : 'Generate Personalized Plan',
+              : !isProfileValid
+                  ? 'Complete Profile First'
+                  : isCustom
+                      ? 'Generate with Custom Preferences'
+                      : 'Generate Personalized Plan',
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
         ),
         style: FilledButton.styleFrom(
-          backgroundColor:
-              _isGenerating ? buttonColor.withOpacity(0.7) : buttonColor,
+          backgroundColor: !isButtonEnabled
+              ? buttonColor.withOpacity(0.5)
+              : _isGenerating
+                  ? buttonColor.withOpacity(0.7)
+                  : buttonColor,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          elevation: _isGenerating ? 0 : 4,
+          elevation: !isButtonEnabled ? 0 : (_isGenerating ? 0 : 4),
         ),
       ),
     );
