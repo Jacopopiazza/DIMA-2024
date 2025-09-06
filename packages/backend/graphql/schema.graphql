@@ -281,6 +281,9 @@ type MealWithStatus {
 input ModifyAssignedMealPlanInput {
   planName: String
   dailyPlan: DailyPlanDataInput
+  # Allow editing of all meal plan properties including ingredients and macronutrients
+  ingredients: [IngredientInput!]
+  totalMacros: MacrosInput
 }
 
 type NutritionistProfile @model {

@@ -23,9 +23,9 @@ export function request(ctx) {
     util.error('userId is required');
   }
 
-  if (!input || (!input.planName && !input.dailyPlan)) {
+  if (!input || (!input.planName && !input.dailyPlan && !input.ingredients && !input.totalMacros)) {
     util.error(
-      'At least one of planName or dailyPlan must be provided in input',
+      'At least one of planName, dailyPlan, ingredients, or totalMacros must be provided in input',
     );
   }
 
@@ -52,6 +52,18 @@ export function request(ctx) {
   if (input.dailyPlan) {
     updateExpression += ', dailyPlan = :dailyPlan';
     expressionValues[':dailyPlan'] = input.dailyPlan;
+  }
+
+  // Add ingredients if provided
+  if (input.ingredients) {
+    updateExpression += ', ingredients = :ingredients';
+    expressionValues[':ingredients'] = input.ingredients;
+  }
+
+  // Add totalMacros if provided
+  if (input.totalMacros) {
+    updateExpression += ', totalMacros = :totalMacros';
+    expressionValues[':totalMacros'] = input.totalMacros;
   }
 
   return {
