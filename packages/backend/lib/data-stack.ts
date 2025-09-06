@@ -157,7 +157,7 @@ export class DataStack extends cdk.Stack {
         name: 'assignedNutritionistId',
         type: dynamodb.AttributeType.STRING,
       },
-      sortKey: { name: 'generatedAt', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'updatedAt', type: dynamodb.AttributeType.STRING },
       projectionType: dynamodb.ProjectionType.ALL,
     });
 

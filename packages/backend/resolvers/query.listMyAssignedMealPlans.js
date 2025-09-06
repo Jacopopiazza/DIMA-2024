@@ -12,6 +12,7 @@ export function request(ctx) {
         ':nid': { S: `NUTR#${nutritionistId}` },
       },
     },
+    scanIndexForward: false,
   };
 }
 
