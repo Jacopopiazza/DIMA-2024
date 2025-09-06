@@ -1225,7 +1225,9 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           builder: (context) => ChatPage(
             key: UniqueKey(),
             chatId: _mealPlan!.chatId!,
-            title: 'Chat - ${_mealPlan!.planName ?? 'Meal Plan'}',
+            nutritionistName: _mealPlan!.nutritionistFullName,
+            userName: _mealPlan!.userFullName,
+            isCurrentUserNutritionist: false, // User view
           ),
         ),
       );

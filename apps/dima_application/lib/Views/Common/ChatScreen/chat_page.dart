@@ -9,11 +9,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ChatPage extends ConsumerStatefulWidget {
   final String chatId;
   final String? title;
+  final String? nutritionistName;
+  final String? userName;
+  final bool isCurrentUserNutritionist;
 
   const ChatPage({
     super.key,
     required this.chatId,
     this.title,
+    this.nutritionistName,
+    this.userName,
+    this.isCurrentUserNutritionist = false,
   });
 
   @override
@@ -64,6 +70,17 @@ class _ChatPageState extends ConsumerState<ChatPage>
     }
 
     super.dispose();
+  }
+
+  /// Gets the recipient's name based on the current user type
+  String _getRecipientName() {
+    if (widget.isCurrentUserNutritionist) {
+      // Current user is nutritionist, show user/patient name
+      return widget.userName ?? 'Patient';
+    } else {
+      // Current user is regular user, show nutritionist name  
+      return widget.nutritionistName ?? 'Nutritionist';
+    }
   }
 
   @override
@@ -222,7 +239,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.title ?? 'Chat',
+              _getRecipientName(),
               style: theme.textTheme.titleMedium?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.w600,
@@ -258,35 +275,6 @@ class _ChatPageState extends ConsumerState<ChatPage>
               color: colorScheme.onSurface,
             ),
           ),
-          // Connection status indicator
-          Container(
-            margin: const EdgeInsets.only(right: 8),
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: chatAsync.maybeWhen(
-                data: (chatState) => chatState.isConnected
-                    ? Colors.green.withValues(alpha: 0.1)
-                    : Colors.orange.withValues(alpha: 0.1),
-                orElse: () => Colors.orange.withValues(alpha: 0.1),
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              chatAsync.maybeWhen(
-                data: (chatState) => chatState.isConnected
-                    ? Icons.wifi_rounded
-                    : Icons.wifi_off_rounded,
-                orElse: () => Icons.wifi_off_rounded,
-              ),
-              size: 16,
-              color: chatAsync.maybeWhen(
-                data: (chatState) =>
-                    chatState.isConnected ? Colors.green : Colors.orange,
-                orElse: () => Colors.orange,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
         ],
       ),
       body: Column(

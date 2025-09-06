@@ -1653,7 +1653,9 @@ class _NutritionistReadMealPlanPageState
           builder: (context) => ChatPage(
             key: UniqueKey(),
             chatId: widget.mealPlan.chatId!,
-            title: 'Chat - ${widget.mealPlan.planName ?? 'Meal Plan'}',
+            nutritionistName: widget.mealPlan.nutritionistFullName,
+            userName: widget.mealPlan.userFullName,
+            isCurrentUserNutritionist: true, // Nutritionist view
           ),
         ),
       );
