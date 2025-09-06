@@ -1262,8 +1262,6 @@ class MealPlansService {
       final items =
           jsonData['listMyAssignedMealPlans']['items'] as List<dynamic>;
 
-      //TODO: Remove id field from the items and put it in the schema
-
       return items.map((item) {
         if (item is Map<String, dynamic>) {
           item['id'] = item['mealPlanId']; // Add id field for compatibility

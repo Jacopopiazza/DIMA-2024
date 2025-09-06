@@ -1,8 +1,8 @@
 import 'package:dima_application/Utils/localization_helpers.dart';
+import 'package:dima_application/Views/Common/ChatScreen/chat_page.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:dima_application/services/client_details_service.dart';
-import 'package:dima_application/Views/Common/ChatScreen/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -118,6 +118,229 @@ class _NutritionistReadMealPlanPageState
   void _toggleEditMode() {
     setState(() {
       _isEditing = !_isEditing;
+    });
+  }
+
+  void _updateTotalMacro(
+      String dayKey, int mealIndex, String macroType, double value) {
+    setState(() {
+      final meals = _editedMeals[dayKey]!;
+      final meal = meals[mealIndex];
+
+      Macros updatedMacros;
+      switch (macroType) {
+        case 'calories':
+          updatedMacros = Macros(
+            calories: value,
+            proteins: meal.totalMacros.proteins,
+            carbohydrates: meal.totalMacros.carbohydrates,
+            fats: meal.totalMacros.fats,
+          );
+          break;
+        case 'proteins':
+          updatedMacros = Macros(
+            calories: meal.totalMacros.calories,
+            proteins: value,
+            carbohydrates: meal.totalMacros.carbohydrates,
+            fats: meal.totalMacros.fats,
+          );
+          break;
+        case 'carbohydrates':
+          updatedMacros = Macros(
+            calories: meal.totalMacros.calories,
+            proteins: meal.totalMacros.proteins,
+            carbohydrates: value,
+            fats: meal.totalMacros.fats,
+          );
+          break;
+        case 'fats':
+          updatedMacros = Macros(
+            calories: meal.totalMacros.calories,
+            proteins: meal.totalMacros.proteins,
+            carbohydrates: meal.totalMacros.carbohydrates,
+            fats: value,
+          );
+          break;
+        default:
+          return;
+      }
+
+      final updatedMeal = Meal(
+        name: meal.name,
+        recipeName: meal.recipeName,
+        recipe: meal.recipe,
+        ingredients: meal.ingredients,
+        totalMacros: updatedMacros,
+      );
+
+      meals[mealIndex] = updatedMeal;
+    });
+  }
+
+  void _addIngredient(String dayKey, int mealIndex) {
+    setState(() {
+      final meals = _editedMeals[dayKey]!;
+      final meal = meals[mealIndex];
+
+      final newIngredient = Ingredient(
+        name: 'New Ingredient',
+        amount: 1.0,
+        unit: 'g',
+        macros: Macros(
+          calories: 0.0,
+          proteins: 0.0,
+          carbohydrates: 0.0,
+          fats: 0.0,
+        ),
+      );
+
+      final updatedIngredients = List<Ingredient>.from(meal.ingredients)
+        ..add(newIngredient);
+
+      final updatedMeal = Meal(
+        name: meal.name,
+        recipeName: meal.recipeName,
+        recipe: meal.recipe,
+        ingredients: updatedIngredients,
+        totalMacros: meal.totalMacros,
+      );
+
+      meals[mealIndex] = updatedMeal;
+    });
+  }
+
+  void _removeIngredient(String dayKey, int mealIndex, int ingredientIndex) {
+    setState(() {
+      final meals = _editedMeals[dayKey]!;
+      final meal = meals[mealIndex];
+
+      final updatedIngredients = List<Ingredient>.from(meal.ingredients)
+        ..removeAt(ingredientIndex);
+
+      final updatedMeal = Meal(
+        name: meal.name,
+        recipeName: meal.recipeName,
+        recipe: meal.recipe,
+        ingredients: updatedIngredients,
+        totalMacros: meal.totalMacros,
+      );
+
+      meals[mealIndex] = updatedMeal;
+    });
+  }
+
+  void _updateIngredientProperty(String dayKey, int mealIndex,
+      int ingredientIndex, String property, dynamic value) {
+    setState(() {
+      final meals = _editedMeals[dayKey]!;
+      final meal = meals[mealIndex];
+      final ingredient = meal.ingredients[ingredientIndex];
+
+      Ingredient updatedIngredient;
+      if (property == 'name') {
+        updatedIngredient = Ingredient(
+          name: value,
+          amount: ingredient.amount,
+          unit: ingredient.unit,
+          macros: ingredient.macros,
+        );
+      } else if (property == 'amount') {
+        updatedIngredient = Ingredient(
+          name: ingredient.name,
+          amount: value,
+          unit: ingredient.unit,
+          macros: ingredient.macros,
+        );
+      } else if (property == 'unit') {
+        updatedIngredient = Ingredient(
+          name: ingredient.name,
+          amount: ingredient.amount,
+          unit: value,
+          macros: ingredient.macros,
+        );
+      } else {
+        return;
+      }
+
+      final updatedIngredients = List<Ingredient>.from(meal.ingredients)
+        ..[ingredientIndex] = updatedIngredient;
+
+      final updatedMeal = Meal(
+        name: meal.name,
+        recipeName: meal.recipeName,
+        recipe: meal.recipe,
+        ingredients: updatedIngredients,
+        totalMacros: meal.totalMacros,
+      );
+
+      meals[mealIndex] = updatedMeal;
+    });
+  }
+
+  void _updateIngredientMacro(String dayKey, int mealIndex, int ingredientIndex,
+      String macroType, double value) {
+    setState(() {
+      final meals = _editedMeals[dayKey]!;
+      final meal = meals[mealIndex];
+      final ingredient = meal.ingredients[ingredientIndex];
+
+      Macros updatedMacros;
+      switch (macroType) {
+        case 'calories':
+          updatedMacros = Macros(
+            calories: value,
+            proteins: ingredient.macros.proteins,
+            carbohydrates: ingredient.macros.carbohydrates,
+            fats: ingredient.macros.fats,
+          );
+          break;
+        case 'proteins':
+          updatedMacros = Macros(
+            calories: ingredient.macros.calories,
+            proteins: value,
+            carbohydrates: ingredient.macros.carbohydrates,
+            fats: ingredient.macros.fats,
+          );
+          break;
+        case 'carbohydrates':
+          updatedMacros = Macros(
+            calories: ingredient.macros.calories,
+            proteins: ingredient.macros.proteins,
+            carbohydrates: value,
+            fats: ingredient.macros.fats,
+          );
+          break;
+        case 'fats':
+          updatedMacros = Macros(
+            calories: ingredient.macros.calories,
+            proteins: ingredient.macros.proteins,
+            carbohydrates: ingredient.macros.carbohydrates,
+            fats: value,
+          );
+          break;
+        default:
+          return;
+      }
+
+      final updatedIngredient = Ingredient(
+        name: ingredient.name,
+        amount: ingredient.amount,
+        unit: ingredient.unit,
+        macros: updatedMacros,
+      );
+
+      final updatedIngredients = List<Ingredient>.from(meal.ingredients)
+        ..[ingredientIndex] = updatedIngredient;
+
+      final updatedMeal = Meal(
+        name: meal.name,
+        recipeName: meal.recipeName,
+        recipe: meal.recipe,
+        ingredients: updatedIngredients,
+        totalMacros: meal.totalMacros,
+      );
+
+      meals[mealIndex] = updatedMeal;
     });
   }
 
@@ -244,11 +467,44 @@ class _NutritionistReadMealPlanPageState
         }
       }
 
+      // Convert the edited meals to the proper format for the API
+      final dailyPlanData = <String, List<Map<String, dynamic>>>{};
+
+      for (String dayKey in _editedMeals.keys) {
+        final meals = _editedMeals[dayKey]!;
+        dailyPlanData[dayKey] = meals
+            .map((meal) => {
+                  'name': meal.name.name,
+                  'recipeName': meal.recipeName,
+                  'recipe': meal.recipe,
+                  'ingredients': meal.ingredients
+                      .map((ingredient) => {
+                            'name': ingredient.name,
+                            'amount': ingredient.amount,
+                            'unit': ingredient.unit,
+                            'macros': {
+                              'calories': ingredient.macros.calories,
+                              'proteins': ingredient.macros.proteins,
+                              'carbohydrates': ingredient.macros.carbohydrates,
+                              'fats': ingredient.macros.fats,
+                            },
+                          })
+                      .toList(),
+                  'totalMacros': {
+                    'calories': meal.totalMacros.calories,
+                    'proteins': meal.totalMacros.proteins,
+                    'carbohydrates': meal.totalMacros.carbohydrates,
+                    'fats': meal.totalMacros.fats,
+                  },
+                })
+            .toList();
+      }
+
       final success =
           await ref.read(mealPlansProvider.notifier).modifyAssignedMealPlan(
         widget.mealPlan.mealPlanId,
         widget.mealPlan.userId,
-        {'dailyPlan': _editedMeals},
+        {'dailyPlan': dailyPlanData},
       );
 
       if (mounted) {
@@ -699,12 +955,10 @@ class _NutritionistReadMealPlanPageState
           'Physical Information',
           Icons.fitness_center_rounded,
           [
-            if (_clientDetails!.heightCm != null)
-              _buildDetailRow('Height',
-                  '${_clientDetails!.heightCm!.toStringAsFixed(0)} cm'),
-            if (_clientDetails!.weightKg != null)
-              _buildDetailRow('Weight',
-                  '${_clientDetails!.weightKg!.toStringAsFixed(1)} kg'),
+            _buildDetailRow(
+                'Height', '${_clientDetails!.heightCm.toStringAsFixed(0)} cm'),
+            _buildDetailRow(
+                'Weight', '${_clientDetails!.weightKg.toStringAsFixed(1)} kg'),
             if (bmi != null)
               _buildDetailRow('BMI',
                   '${bmi.toStringAsFixed(1)} (${ClientDetailsService.getBMICategory(bmi)})'),
@@ -1327,13 +1581,14 @@ class _NutritionistReadMealPlanPageState
                   _buildSectionHeader('Nutrition Information',
                       Icons.local_fire_department_rounded, colorScheme),
                   const SizedBox(height: 12),
-                  _buildNutritionInfo(meal.totalMacros, colorScheme),
+                  _buildNutritionInfo(
+                      meal.totalMacros, colorScheme, dayKey, mealIndex),
                   const SizedBox(height: 16),
                   _buildSectionHeader(
                       'Ingredients', Icons.eco_rounded, colorScheme),
                   const SizedBox(height: 12),
-                  ...meal.ingredients.map((ingredient) =>
-                      _buildIngredientRow(ingredient, colorScheme)),
+                  _buildIngredientsSection(
+                      meal.ingredients, colorScheme, dayKey, mealIndex),
                 ],
               ),
             ),
@@ -1392,7 +1647,8 @@ class _NutritionistReadMealPlanPageState
     );
   }
 
-  Widget _buildNutritionInfo(Macros macros, ColorScheme colorScheme) {
+  Widget _buildNutritionInfo(
+      Macros macros, ColorScheme colorScheme, String dayKey, int mealIndex) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1407,43 +1663,181 @@ class _NutritionistReadMealPlanPageState
           color: colorScheme.outline.withOpacity(0.1),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNutritionItem(
-            'Calories',
-            '${macros.calories.round()}',
-            'kcal',
-            Icons.local_fire_department_rounded,
-            Colors.orange,
-            colorScheme,
+      child: _isEditing &&
+              widget.mealPlan.validationStatus ==
+                  MealPlanValidationStatus.PENDING_REVIEW
+          ? _buildEditableNutritionInfo(macros, colorScheme, dayKey, mealIndex)
+          : _buildReadOnlyNutritionInfo(macros, colorScheme),
+    );
+  }
+
+  Widget _buildReadOnlyNutritionInfo(Macros macros, ColorScheme colorScheme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _buildNutritionItem(
+          'Calories',
+          '${macros.calories.round()}',
+          'kcal',
+          Icons.local_fire_department_rounded,
+          Colors.orange,
+          colorScheme,
+        ),
+        _buildNutritionItem(
+          'Protein',
+          '${macros.proteins.toStringAsFixed(1)}',
+          'g',
+          Icons.fitness_center_rounded,
+          Colors.red,
+          colorScheme,
+        ),
+        _buildNutritionItem(
+          'Carbs',
+          '${macros.carbohydrates.toStringAsFixed(1)}',
+          'g',
+          Icons.grain_rounded,
+          Colors.green,
+          colorScheme,
+        ),
+        _buildNutritionItem(
+          'Fat',
+          '${macros.fats.toStringAsFixed(1)}',
+          'g',
+          Icons.opacity_rounded,
+          Colors.blue,
+          colorScheme,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEditableNutritionInfo(
+      Macros macros, ColorScheme colorScheme, String dayKey, int mealIndex) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildEditableNutritionItem(
+                'Calories',
+                macros.calories,
+                'kcal',
+                Icons.local_fire_department_rounded,
+                Colors.orange,
+                colorScheme,
+                (value) =>
+                    _updateTotalMacro(dayKey, mealIndex, 'calories', value),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: _buildEditableNutritionItem(
+                'Protein',
+                macros.proteins,
+                'g',
+                Icons.fitness_center_rounded,
+                Colors.red,
+                colorScheme,
+                (value) =>
+                    _updateTotalMacro(dayKey, mealIndex, 'proteins', value),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildEditableNutritionItem(
+                'Carbs',
+                macros.carbohydrates,
+                'g',
+                Icons.grain_rounded,
+                Colors.green,
+                colorScheme,
+                (value) => _updateTotalMacro(
+                    dayKey, mealIndex, 'carbohydrates', value),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: _buildEditableNutritionItem(
+                'Fat',
+                macros.fats,
+                'g',
+                Icons.opacity_rounded,
+                Colors.blue,
+                colorScheme,
+                (value) => _updateTotalMacro(dayKey, mealIndex, 'fats', value),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEditableNutritionItem(
+    String label,
+    double value,
+    String unit,
+    IconData icon,
+    Color color,
+    ColorScheme colorScheme,
+    Function(double) onChanged,
+  ) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: colorScheme.onSurface,
           ),
-          _buildNutritionItem(
-            'Protein',
-            '${macros.proteins.toStringAsFixed(1)}',
-            'g',
-            Icons.fitness_center_rounded,
-            Colors.red,
-            colorScheme,
+        ),
+        const SizedBox(height: 4),
+        TextFormField(
+          initialValue: value.toStringAsFixed(1),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
           ),
-          _buildNutritionItem(
-            'Carbs',
-            '${macros.carbohydrates.toStringAsFixed(1)}',
-            'g',
-            Icons.grain_rounded,
-            Colors.green,
-            colorScheme,
+          textAlign: TextAlign.center,
+          decoration: InputDecoration(
+            suffixText: unit,
+            suffixStyle: TextStyle(
+              fontSize: 12,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: color.withOpacity(0.3)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: color.withOpacity(0.3)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: color, width: 2),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            isDense: true,
           ),
-          _buildNutritionItem(
-            'Fat',
-            '${macros.fats.toStringAsFixed(1)}',
-            'g',
-            Icons.opacity_rounded,
-            Colors.blue,
-            colorScheme,
-          ),
-        ],
-      ),
+          onChanged: (text) {
+            final parsed = double.tryParse(text);
+            if (parsed != null && parsed >= 0) {
+              onChanged(parsed);
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -1488,6 +1882,244 @@ class _NutritionistReadMealPlanPageState
           textAlign: TextAlign.center,
         ),
       ],
+    );
+  }
+
+  Widget _buildIngredientsSection(List<Ingredient> ingredients,
+      ColorScheme colorScheme, String dayKey, int mealIndex) {
+    return _isEditing &&
+            widget.mealPlan.validationStatus ==
+                MealPlanValidationStatus.PENDING_REVIEW
+        ? _buildEditableIngredientsSection(
+            ingredients, colorScheme, dayKey, mealIndex)
+        : _buildReadOnlyIngredientsSection(ingredients, colorScheme);
+  }
+
+  Widget _buildReadOnlyIngredientsSection(
+      List<Ingredient> ingredients, ColorScheme colorScheme) {
+    return Column(
+      children: ingredients
+          .map((ingredient) => _buildIngredientRow(ingredient, colorScheme))
+          .toList(),
+    );
+  }
+
+  Widget _buildEditableIngredientsSection(List<Ingredient> ingredients,
+      ColorScheme colorScheme, String dayKey, int mealIndex) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Ingredients',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            ElevatedButton.icon(
+              onPressed: () => _addIngredient(dayKey, mealIndex),
+              icon: const Icon(Icons.add, size: 16),
+              label: const Text('Add'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ...ingredients.asMap().entries.map((entry) {
+          final index = entry.key;
+          final ingredient = entry.value;
+          return _buildEditableIngredientRow(
+              ingredient, colorScheme, dayKey, mealIndex, index);
+        }).toList(),
+        if (ingredients.isEmpty)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceVariant.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: colorScheme.outline.withOpacity(0.2),
+                style: BorderStyle.solid,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                'No ingredients added yet',
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildEditableIngredientRow(
+      Ingredient ingredient,
+      ColorScheme colorScheme,
+      String dayKey,
+      int mealIndex,
+      int ingredientIndex) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceVariant.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: colorScheme.outline.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  initialValue: ingredient.name,
+                  decoration: const InputDecoration(
+                    labelText: 'Ingredient Name',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  onChanged: (value) => _updateIngredientProperty(
+                      dayKey, mealIndex, ingredientIndex, 'name', value),
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: () =>
+                    _removeIngredient(dayKey, mealIndex, ingredientIndex),
+                icon: const Icon(Icons.delete, color: Colors.red),
+                tooltip: 'Remove ingredient',
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  initialValue: ingredient.amount.toStringAsFixed(1),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Amount',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  onChanged: (value) {
+                    final parsed = double.tryParse(value);
+                    if (parsed != null && parsed >= 0) {
+                      _updateIngredientProperty(
+                          dayKey, mealIndex, ingredientIndex, 'amount', parsed);
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextFormField(
+                  initialValue: ingredient.unit ?? '',
+                  decoration: const InputDecoration(
+                    labelText: 'Unit',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  onChanged: (value) => _updateIngredientProperty(
+                      dayKey, mealIndex, ingredientIndex, 'unit', value),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Nutritional Values (per unit)',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: _buildIngredientMacroField(
+                  'Calories',
+                  ingredient.macros.calories,
+                  (value) => _updateIngredientMacro(
+                      dayKey, mealIndex, ingredientIndex, 'calories', value),
+                  colorScheme,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildIngredientMacroField(
+                  'Proteins',
+                  ingredient.macros.proteins,
+                  (value) => _updateIngredientMacro(
+                      dayKey, mealIndex, ingredientIndex, 'proteins', value),
+                  colorScheme,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: _buildIngredientMacroField(
+                  'Carbs',
+                  ingredient.macros.carbohydrates,
+                  (value) => _updateIngredientMacro(dayKey, mealIndex,
+                      ingredientIndex, 'carbohydrates', value),
+                  colorScheme,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildIngredientMacroField(
+                  'Fats',
+                  ingredient.macros.fats,
+                  (value) => _updateIngredientMacro(
+                      dayKey, mealIndex, ingredientIndex, 'fats', value),
+                  colorScheme,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIngredientMacroField(String label, double value,
+      Function(double) onChanged, ColorScheme colorScheme) {
+    return TextFormField(
+      initialValue: value.toStringAsFixed(1),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+        isDense: true,
+      ),
+      onChanged: (text) {
+        final parsed = double.tryParse(text);
+        if (parsed != null && parsed >= 0) {
+          onChanged(parsed);
+        }
+      },
     );
   }
 
@@ -1607,7 +2239,7 @@ class _NutritionistReadMealPlanPageState
     if (widget.mealPlan.validationStatus == MealPlanValidationStatus.REJECTED) {
       return const SizedBox.shrink();
     }
-    
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

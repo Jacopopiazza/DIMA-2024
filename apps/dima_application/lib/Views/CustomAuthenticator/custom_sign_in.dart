@@ -17,7 +17,17 @@ class SignInView extends StatelessWidget {
         child: Column(
           children: [
             // Your app logo
-            const Center(child: FlutterLogo(size: 100)),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                child: Image.asset(
+                  'assets/logo_no_background.png',
+                  height: 200,
+                  width: 200,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
             const Divider(),
 
             // Built-in sign in form (keeps the default Amplify form)
