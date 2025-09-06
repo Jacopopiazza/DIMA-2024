@@ -97,7 +97,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Loading meal plansr...',
+            'Loading meal plans...',
             style: theme.textTheme.bodyLarge?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
