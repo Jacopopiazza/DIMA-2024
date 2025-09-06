@@ -198,6 +198,20 @@ export class ChatStack extends Construct {
       },
     );
 
+    const updateMealPlanTimestampFn = new appsync.AppsyncFunction(
+      this,
+      'UpdateMealPlanTimestampFn',
+      {
+        api: props.api,
+        dataSource: props.dynamoDataSource,
+        name: 'UpdateMealPlanTimestampFunction',
+        code: appsync.Code.fromAsset(
+          'resolvers/mutation.sendChatMessage.updateMealPlanTimestamp.js',
+        ),
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
+
     const verifyParticipantForChatFn = new appsync.AppsyncFunction(
       this,
       'verifyParticipantFunctionForChat',
@@ -263,6 +277,7 @@ export class ChatStack extends Construct {
         subscriptionCheckFunction,
         verifyParticipantFn,
         createMessageFn,
+        updateMealPlanTimestampFn,
         updateChatMetadataFn,
       ],
       code: appsync.Code.fromInline(`
