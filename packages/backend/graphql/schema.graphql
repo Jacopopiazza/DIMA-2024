@@ -215,6 +215,8 @@ type MealPlan @model {
   assignedNutritionistId: ID
   chatId: ID
   dailyPlan: DailyPlanData
+  userFullName: String
+  nutritionistFullName: String
 }
 
 #  Pagination Helper Types

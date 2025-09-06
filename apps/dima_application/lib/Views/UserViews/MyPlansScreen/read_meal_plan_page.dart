@@ -433,8 +433,15 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   ),
                   if (_mealPlan!.assignedNutritionistId != null)
                     _buildInfoRow(
-                      'Nutritionist ID',
-                      _mealPlan!.assignedNutritionistId!,
+                      'Nutritionist',
+                      _mealPlan!.nutritionistFullName ?? 
+                          _mealPlan!.assignedNutritionistId!,
+                      colorScheme,
+                    ),
+                  if (_mealPlan!.userFullName != null)
+                    _buildInfoRow(
+                      'User',
+                      _mealPlan!.userFullName!,
                       colorScheme,
                     ),
                 ],

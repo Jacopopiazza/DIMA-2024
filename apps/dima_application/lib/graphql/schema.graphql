@@ -102,9 +102,11 @@ type MealPlan @model {
   dailyPlan: DailyPlanData
   generatedAt: AWSDateTime
   mealPlanId: ID!
+  nutritionistFullName: String
   #  From PK
   planName: String
   status: PlanStatus
+  userFullName: String
   #  Extracted from SK
   userId: ID!
   validationStatus: MealPlanValidationStatus

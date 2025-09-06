@@ -39,6 +39,8 @@ export function response(ctx) {
       assignedNutritionistId: plan.assignedNutritionistId,
       chatId: plan.chatId,
       dailyPlan: plan.dailyPlan,
+      userFullName: plan.userFullName,
+      nutritionistFullName: plan.nutritionistFullName,
     };
   });
 

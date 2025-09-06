@@ -31,6 +31,8 @@ class MealPlansService {
               generatedAt
               status
               validationStatus
+              nutritionistFullName
+              userFullName
               assignedNutritionistId
               chatId
               dailyPlan {
@@ -557,6 +559,8 @@ class MealPlansService {
       status
       userId
       validationStatus
+      nutritionistFullName
+      userFullName
       chatId
       assignedNutritionistId
       dailyPlan {
@@ -1075,6 +1079,8 @@ class MealPlansService {
                 planName
                 status
                 validationStatus
+                nutritionistFullName
+                userFullName
                 assignedNutritionistId
                 userId
                 chatId
