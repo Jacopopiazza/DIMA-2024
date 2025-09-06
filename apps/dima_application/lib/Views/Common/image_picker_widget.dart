@@ -132,6 +132,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     return showModalBottomSheet<XFile?>(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
           decoration: BoxDecoration(
@@ -139,115 +140,106 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Handle bar
-                Container(
-                  margin: const EdgeInsets.only(top: 12),
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
                 ),
-
-                // Title
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(
-                    'Select Photo Source',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Handle bar
+                    Container(
+                      margin: const EdgeInsets.only(top: 12),
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color:
+                            theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-                  ),
-                ),
 
-                // Options
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      // Camera option
-                      _buildImageSourceOption(
-                        context: context,
-                        icon: Icons.camera_alt,
-                        title: 'Take Photo',
-                        subtitle: 'Use camera to take a new photo',
-                        onTap: () async {
-                          final image = await _imageUploadService.pickImage(
-                              source: ImageSource.camera);
-                          if (context.mounted) {
-                            Navigator.of(context).pop(image);
-                          }
-                        },
+                    // Title
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        'Select Photo',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
+                    ),
 
-                      const SizedBox(height: 8),
+                    // Options
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          // Gallery option
+                          _buildImageSourceOption(
+                            context: context,
+                            icon: Icons.photo_library,
+                            title: 'Choose from Gallery',
+                            subtitle: 'Select from existing photos',
+                            onTap: () async {
+                              final image = await _imageUploadService.pickImage(
+                                  source: ImageSource.gallery);
+                              if (context.mounted) {
+                                Navigator.of(context).pop(image);
+                              }
+                            },
+                          ),
 
-                      // Gallery option
-                      _buildImageSourceOption(
-                        context: context,
-                        icon: Icons.photo_library,
-                        title: 'Choose from Gallery',
-                        subtitle: 'Select from existing photos',
-                        onTap: () async {
-                          final image = await _imageUploadService.pickImage(
-                              source: ImageSource.gallery);
-                          if (context.mounted) {
-                            Navigator.of(context).pop(image);
-                          }
-                        },
+                          if (_currentImageUrl != null) ...[
+                            const SizedBox(height: 8),
+                            // Remove option
+                            _buildImageSourceOption(
+                              context: context,
+                              icon: Icons.delete_outline,
+                              title: 'Remove Photo',
+                              subtitle: 'Delete current profile picture',
+                              isDestructive: true,
+                              onTap: () {
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                                _removeImage();
+                              },
+                            ),
+                          ],
+                        ],
                       ),
+                    ),
 
-                      if (_currentImageUrl != null) ...[
-                        const SizedBox(height: 8),
-                        // Remove option
-                        _buildImageSourceOption(
-                          context: context,
-                          icon: Icons.delete_outline,
-                          title: 'Remove Photo',
-                          subtitle: 'Delete current profile picture',
-                          isDestructive: true,
-                          onTap: () {
+                    const SizedBox(height: 16),
+
+                    // Cancel button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: () {
                             if (context.mounted) {
                               Navigator.of(context).pop();
                             }
-                            _removeImage();
                           },
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Cancel button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        if (context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text('Cancel'),
                         ),
                       ),
-                      child: const Text('Cancel'),
                     ),
-                  ),
-                ),
 
-                const SizedBox(height: 16),
-              ],
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
             ),
           ),
         );
@@ -367,39 +359,16 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                       ),
                     ),
 
-                  // Camera icon overlay - FIXED ALIGNMENT
+                  // Plus icon overlay when no image
                   if (_currentImageUrl == null &&
                       _pendingImageFile == null &&
                       !_isUploading)
                     Positioned.fill(
                       child: Center(
                         child: Icon(
-                          Icons.add_a_photo,
-                          size: widget.size * 0.3,
+                          Icons.add,
+                          size: widget.size * 0.4,
                           color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-
-                  // Edit overlay when image exists
-                  if (_currentImageUrl != null && !_isUploading)
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: theme.colorScheme.surface,
-                            width: 2,
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(4),
-                        child: Icon(
-                          Icons.edit,
-                          size: 16,
-                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -411,38 +380,15 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
         const SizedBox(height: 12),
 
-        // Enhanced instruction text
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: theme.colorScheme.outline.withOpacity(0.3),
+        // Simple instruction text
+        if (_currentImageUrl == null)
+          Text(
+            'Tap to select photo',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _currentImageUrl != null ? Icons.edit : Icons.touch_app,
-                size: 16,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                _currentImageUrl != null
-                    ? 'Tap to change photo'
-                    : 'Tap to upload a profile picture',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }
@@ -507,14 +453,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       );
     }
 
-    // Show placeholder
+    // Show empty placeholder
     return Container(
       color: theme.colorScheme.surfaceContainerHighest,
-      child: Icon(
-        Icons.person,
-        size: widget.size * 0.5,
-        color: theme.colorScheme.onSurfaceVariant,
-      ),
     );
   }
 }

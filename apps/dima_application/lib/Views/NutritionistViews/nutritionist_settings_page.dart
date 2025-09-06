@@ -1,4 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/Views/Common/image_picker_widget.dart';
 import 'package:dima_application/Views/Common/offline_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/enter_nutritionist_profile.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/availability_section.dart';
@@ -163,6 +164,12 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
         });
       }
     }
+  }
+
+  void _onProfilePictureChanged(String? newImageUrl) {
+    setState(() {
+      _profilePictureUrl = newImageUrl;
+    });
   }
 
   Future<void> _updateAvailability(bool value) async {
@@ -477,6 +484,38 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                       }
                       return null;
                     },
+                  ),
+                  const SizedBox(height: 16),
+                  // Profile Picture Section
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: colorScheme.outline.withOpacity(0.5),
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Profile Picture',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Center(
+                          child: ImagePickerWidget(
+                            initialImageUrl: _profilePictureUrl,
+                            onImageChanged: _onProfilePictureChanged,
+                            enabled: !_isSaving,
+                            size: 120,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Align(

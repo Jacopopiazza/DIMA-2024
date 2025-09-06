@@ -57,12 +57,13 @@ class ImageUploadService {
       safePrint(
           'Image uploaded successfully: ${uploadResult.uploadedItem.path}');
 
-      // Get the URL for the uploaded file
+      // Get the URL for the uploaded file (maximum expiration allowed by AWS)
       final urlResult = await Amplify.Storage.getUrl(
         path: StoragePath.fromString(s3Key),
         options: const StorageGetUrlOptions(
           pluginOptions: S3GetUrlPluginOptions(
             validateObjectExistence: true,
+            expiresIn: Duration(days: 7), // Maximum allowed by AWS S3
           ),
         ),
       ).result;
@@ -143,13 +144,13 @@ class ImageUploadService {
         throw Exception('Invalid image URL - cannot extract S3 key');
       }
 
-      // Generate a new presigned URL
+      // Generate a new presigned URL (maximum expiration allowed by AWS)
       final urlResult = await Amplify.Storage.getUrl(
         path: StoragePath.fromString(s3Key),
         options: const StorageGetUrlOptions(
           pluginOptions: S3GetUrlPluginOptions(
             validateObjectExistence: true,
-            expiresIn: Duration(hours: 24), // Longer expiration
+            expiresIn: Duration(days: 7), // Maximum allowed by AWS S3
           ),
         ),
       ).result;

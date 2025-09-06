@@ -1,4 +1,3 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/services/subscription_status_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,16 +44,25 @@ final subscriptionStatusProvider = StateNotifierProvider<
 class SubscriptionStatusNotifier
     extends StateNotifier<AsyncValue<(SubscriptionStatusData, String)>> {
   final Ref ref;
+  bool _mounted = true;
 
   SubscriptionStatusNotifier(this.ref) : super(const AsyncValue.loading()) {
     _initialize();
+  }
+
+  @override
+  void dispose() {
+    _mounted = false;
+    super.dispose();
   }
 
   Future<void> _initialize() async {
     try {
       await loadSubscriptionStatus();
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      if (_mounted) {
+        state = AsyncValue.error(error, stackTrace);
+      }
     }
   }
 
@@ -81,14 +89,18 @@ class SubscriptionStatusNotifier
 
       print('[SubscriptionStatusNotifier] Profile data loaded: $profileData');
       // On success, update the state with the new data and a unique ID.
-      state = AsyncValue.data((profileData, const Uuid().v4()));
+      if (_mounted) {
+        state = AsyncValue.data((profileData, const Uuid().v4()));
+      }
     } catch (error, stackTrace) {
       print('[SubscriptionStatusNotifier] Error loading profile: $error');
       print('[SubscriptionStatusNotifier] Stack trace: $stackTrace');
       // On error, report the error but keep the previous data.
-      state =
-          AsyncValue<(SubscriptionStatusData, String)>.error(error, stackTrace)
-              .copyWithPrevious(previousState);
+      if (_mounted) {
+        state = AsyncValue<(SubscriptionStatusData, String)>.error(
+                error, stackTrace)
+            .copyWithPrevious(previousState);
+      }
     }
   }
 
@@ -112,7 +124,7 @@ class SubscriptionStatusNotifier
             '[SubscriptionStatusNotifier] Subscription successful, user upgraded to PRO');
 
         // Optimistically update the subscription status
-        if (previousTuple != null) {
+        if (previousTuple != null && _mounted) {
           final updatedProfileData = previousTuple.$1
               .copyWith(subscriptionStatus: SubscriptionStatusEnum.PRO);
           state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
@@ -131,8 +143,11 @@ class SubscriptionStatusNotifier
       print('[SubscriptionStatusNotifier] Stack trace: $stackTrace');
 
       // On error, keep the previous state
-      state = AsyncValue<(SubscriptionStatusData, String)>.error(e, stackTrace)
-          .copyWithPrevious(previousState);
+      if (_mounted) {
+        state =
+            AsyncValue<(SubscriptionStatusData, String)>.error(e, stackTrace)
+                .copyWithPrevious(previousState);
+      }
       return false;
     }
   }
@@ -157,7 +172,7 @@ class SubscriptionStatusNotifier
             '[SubscriptionStatusNotifier] Unsubscription successful, user downgraded to FREE');
 
         // Optimistically update the subscription status
-        if (previousTuple != null) {
+        if (previousTuple != null && _mounted) {
           final updatedProfileData = previousTuple.$1
               .copyWith(subscriptionStatus: SubscriptionStatusEnum.FREE);
           state = AsyncValue.data((updatedProfileData, const Uuid().v4()));
@@ -176,8 +191,11 @@ class SubscriptionStatusNotifier
       print('[SubscriptionStatusNotifier] Stack trace: $stackTrace');
 
       // On error, keep the previous state
-      state = AsyncValue<(SubscriptionStatusData, String)>.error(e, stackTrace)
-          .copyWithPrevious(previousState);
+      if (_mounted) {
+        state =
+            AsyncValue<(SubscriptionStatusData, String)>.error(e, stackTrace)
+                .copyWithPrevious(previousState);
+      }
       return false;
     }
   }
