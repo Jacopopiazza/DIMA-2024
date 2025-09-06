@@ -619,7 +619,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                   ),
                 ],
               ),
-              // Show error message for failed plans
+              // Show error message for failed plans  
               if (isFailed && plan.errorDetails != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
@@ -978,8 +978,16 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       // Extract the actual error message
       final message = innerJson['error']?['message'];
       if (message != null && message is String && message.isNotEmpty) {
+        // Debug: Print the actual message to console (temporary)
+        print('DEBUG: Error message = "$message"');
+        
         // Check for overloaded model and provide user-friendly message
-        if (message.toLowerCase().contains('overloaded')) {
+        final lowerMessage = message.toLowerCase();
+        if (lowerMessage.contains('overloaded') || 
+            lowerMessage.contains('overload') ||
+            lowerMessage.contains('too many requests') ||
+            lowerMessage.contains('rate limit')) {
+          print('DEBUG: Detected overload, replacing message');
           return 'The model is overloaded. Please request a new meal plan later.';
         }
         return message;

@@ -1155,7 +1155,11 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
       final message = innerJson['error']?['message'];
       if (message != null && message is String && message.isNotEmpty) {
         // Check for overloaded model and provide user-friendly message
-        if (message.toLowerCase().contains('overloaded')) {
+        final lowerMessage = message.toLowerCase();
+        if (lowerMessage.contains('overloaded') || 
+            lowerMessage.contains('overload') ||
+            lowerMessage.contains('too many requests') ||
+            lowerMessage.contains('rate limit')) {
           return 'The model is overloaded. Please request a new meal plan later.';
         }
         return message;
