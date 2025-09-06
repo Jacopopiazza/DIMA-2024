@@ -164,9 +164,11 @@ export class DataStack extends cdk.Stack {
     // GSI5_MealPlanId - For retrieving meal plans by mealPlanId
     // MealPlan items will have:
     // mealPlanId = <mealPlanId>
+    // entityType = "MEAL_PLAN"
     this.mealPlanningTable.addGlobalSecondaryIndex({
       indexName: 'GSI5_MealPlanId',
       partitionKey: { name: 'mealPlanId', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'entityType', type: dynamodb.AttributeType.STRING },
       projectionType: dynamodb.ProjectionType.ALL,
     });
 

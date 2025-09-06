@@ -532,6 +532,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     final bool isGenerating = plan.status == PlanStatus.PENDING ||
         plan.status == PlanStatus.IN_PROGRESS;
     final bool isFailed = plan.status == PlanStatus.FAILED;
+    final bool isRejected =
+        plan.validationStatus == MealPlanValidationStatus.REJECTED;
 
     return Row(
       children: [
@@ -631,6 +633,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     final bool isGenerating = plan.status == PlanStatus.PENDING ||
         plan.status == PlanStatus.IN_PROGRESS;
     final bool isFailed = plan.status == PlanStatus.FAILED;
+    final bool isRejected =
+        plan.validationStatus == MealPlanValidationStatus.REJECTED;
 
     if (isGenerating) {
       return child; // No dismissible for generating plans
@@ -638,11 +642,13 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
 
     return Dismissible(
       key: Key(plan.mealPlanId),
-      direction: _getDismissDirection(isActive, isFailed),
-      background:
-          _getBackgroundWidget(isActive, isFailed, colorScheme, isLeft: true),
-      secondaryBackground:
-          _getBackgroundWidget(isActive, isFailed, colorScheme, isLeft: false),
+      direction: _getDismissDirection(isActive, isFailed, isRejected),
+      background: _getBackgroundWidget(
+          isActive, isFailed, isRejected, colorScheme,
+          isLeft: true),
+      secondaryBackground: _getBackgroundWidget(
+          isActive, isFailed, isRejected, colorScheme,
+          isLeft: false),
       confirmDismiss: (direction) =>
           _handleSwipe(context, plan, direction, isActive),
       child: child,
@@ -650,19 +656,22 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   }
 
   /// Gets the appropriate dismiss direction based on plan state
-  DismissDirection _getDismissDirection(bool isActive, bool isFailed) {
+  DismissDirection _getDismissDirection(
+      bool isActive, bool isFailed, bool isRejected) {
     if (isFailed) return DismissDirection.endToStart; // Only delete
     if (isActive) return DismissDirection.endToStart; // Only delete
+    if (isRejected)
+      return DismissDirection.endToStart; // Only delete for rejected
     return DismissDirection.horizontal; // Both directions
   }
 
   /// Gets the appropriate background widget for swipe actions
   Widget? _getBackgroundWidget(
-      bool isActive, bool isFailed, ColorScheme colorScheme,
+      bool isActive, bool isFailed, bool isRejected, ColorScheme colorScheme,
       {required bool isLeft}) {
     if (isLeft) {
-      // Left swipe (set active) - disabled for active and failed plans
-      if (isActive || isFailed) return Container();
+      // Left swipe (set active) - disabled for active, failed, and rejected plans
+      if (isActive || isFailed || isRejected) return Container();
       return _buildSwipeBackground(
         colorScheme.primary,
         Icons.radio_button_checked_rounded,
@@ -727,6 +736,11 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       'icon': Icons.pending_rounded,
       'label': 'Pending Validation',
       'color': Colors.orange,
+    },
+    MealPlanValidationStatus.REJECTED: {
+      'icon': Icons.cancel_rounded,
+      'label': 'Rejected',
+      'color': Colors.red,
     },
     MealPlanValidationStatus.NOT_VALIDATED: {
       'icon': Icons.help_outline_rounded,
@@ -901,18 +915,21 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
 
   Future<bool> _handleSwipe(BuildContext context, plan,
       DismissDirection direction, bool isActive) async {
-    // For failed plans, only allow deletion (endToStart)
-    if (plan.status == PlanStatus.FAILED) {
+    final bool isRejected =
+        plan.validationStatus == MealPlanValidationStatus.REJECTED;
+
+    // For failed or rejected plans, only allow deletion (endToStart)
+    if (plan.status == PlanStatus.FAILED || isRejected) {
       if (direction == DismissDirection.startToEnd) {
-        return false; // Prevent set active for failed plans
+        return false; // Prevent set active for failed or rejected plans
       }
-      // Allow deletion to proceed for failed plans
+      // Allow deletion to proceed for failed or rejected plans
     }
 
     // For SET ACTIVE (startToEnd):
     if (direction == DismissDirection.startToEnd) {
-      if (isActive) {
-        return false; // Prevent set active for already active plans
+      if (isActive || isRejected) {
+        return false; // Prevent set active for already active or rejected plans
       }
       // Set as active
       await showDialog<void>(
@@ -1087,33 +1104,34 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 );
               },
             ),
-            _buildActionButton(
-              context,
-              Icons.edit_rounded,
-              'Edit Name',
-              'Change the plan name',
-              colorScheme.secondary,
-              () async {
-                Navigator.pop(context);
-                await showDialog<void>(
-                  context: context,
-                  builder: (BuildContext dialogContext) {
-                    return ModifyPlanNameDialog(
-                      currentPlanName: plan.planName ?? 'Unnamed Plan',
-                      mealPlanId: plan.mealPlanId,
-                      onSave: (mealPlanId, newName) async {
-                        final success =
-                            await mealPlans.modifyMealPlan(mealPlanId, newName);
+            if (plan.validationStatus != MealPlanValidationStatus.REJECTED)
+              _buildActionButton(
+                context,
+                Icons.edit_rounded,
+                'Edit Name',
+                'Change the plan name',
+                colorScheme.secondary,
+                () async {
+                  Navigator.pop(context);
+                  await showDialog<void>(
+                    context: context,
+                    builder: (BuildContext dialogContext) {
+                      return ModifyPlanNameDialog(
+                        currentPlanName: plan.planName ?? 'Unnamed Plan',
+                        mealPlanId: plan.mealPlanId,
+                        onSave: (mealPlanId, newName) async {
+                          final success = await mealPlans.modifyMealPlan(
+                              mealPlanId, newName);
 
-                        if (!success) {
-                          throw Exception('Failed to update meal plan');
-                        }
-                      },
-                    );
-                  },
-                );
-              },
-            ),
+                          if (!success) {
+                            throw Exception('Failed to update meal plan');
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             if (plan.status != PlanStatus.FAILED &&
                 plan.validationStatus == MealPlanValidationStatus.NOT_VALIDATED)
               _buildActionButton(

@@ -1,7 +1,26 @@
 import { util } from '@aws-appsync/utils';
 
 export function request(ctx) {
-  const { userId, mealPlanId, nutritionistId, chatId, now } = ctx.stash;
+  const {
+    userId,
+    mealPlanId,
+    nutritionistId,
+    chatId,
+    now,
+    userGivenName,
+    userFamilyName,
+    nutritionistGivenName,
+    nutritionistFamilyName,
+  } = ctx.stash;
+
+  // Build full names
+  const userFullName = userFamilyName
+    ? `${userGivenName} ${userFamilyName}`
+    : userGivenName;
+
+  const nutritionistFullName = nutritionistFamilyName
+    ? `${nutritionistGivenName} ${nutritionistFamilyName}`
+    : nutritionistGivenName;
 
   const pk = `USER#${userId}`;
   const sk = `PLAN#${mealPlanId}`;
@@ -15,15 +34,18 @@ export function request(ctx) {
         'updatedAt = :updatedAt, ' +
         'assignedNutritionistId = :assignedNutritionistId, ' +
         'chatId = :chatId, ' +
-        // 'nutritionistId = :nutritionistId, ' + Should be deprecated
+        'userFullName = :userFullName, ' +
+        'nutritionistFullName = :nutritionistFullName, ' +
         '#mealPlanId = :mealPlanId',
+
       expressionValues: util.dynamodb.toMapValues({
         ':validationStatus': 'PENDING_REVIEW',
         ':updatedAt': now,
         ':assignedNutritionistId': `NUTR#${nutritionistId}`,
         ':chatId': chatId,
-        // ':nutritionistId': nutritionistId, Should be deprecated
         ':mealPlanId': mealPlanId,
+        ':userFullName': userFullName,
+        ':nutritionistFullName': nutritionistFullName,
       }),
       expressionNames: {
         '#mealPlanId': 'mealPlanId',

@@ -166,7 +166,7 @@ class _NutritionistReadMealPlanPageState
           await ref.read(mealPlansProvider.notifier).validateMealPlan(
                 widget.mealPlan.mealPlanId,
                 widget.mealPlan.assignedNutritionistId ?? '',
-                'VALIDATED',
+                MealPlanValidationStatus.VALIDATED,
               );
 
       if (mounted) {
@@ -200,7 +200,7 @@ class _NutritionistReadMealPlanPageState
           await ref.read(mealPlansProvider.notifier).validateMealPlan(
                 widget.mealPlan.mealPlanId,
                 widget.mealPlan.assignedNutritionistId ?? '',
-                'NOT_VALIDATED',
+                MealPlanValidationStatus.REJECTED,
               );
 
       if (mounted) {
@@ -933,8 +933,15 @@ class _NutritionistReadMealPlanPageState
                   ),
                   if (widget.mealPlan.assignedNutritionistId != null)
                     _buildInfoRow(
-                      'Nutritionist ID',
-                      widget.mealPlan.assignedNutritionistId!,
+                      'Nutritionist',
+                      widget.mealPlan.nutritionistFullName ??
+                          widget.mealPlan.assignedNutritionistId!,
+                      colorScheme,
+                    ),
+                  if (widget.mealPlan.userFullName != null)
+                    _buildInfoRow(
+                      'User',
+                      widget.mealPlan.userFullName!,
                       colorScheme,
                     ),
                 ],
@@ -1583,6 +1590,7 @@ class _NutritionistReadMealPlanPageState
     final statusString = validationStatus?.toString().split('.').last;
     if (statusString == 'VALIDATED') return Colors.green;
     if (statusString == 'PENDING_REVIEW') return Colors.orange;
+    if (statusString == 'REJECTED') return Colors.red;
     if (statusString == 'NOT_VALIDATED') return Colors.grey;
     return colorScheme.outline;
   }
@@ -1595,7 +1603,11 @@ class _NutritionistReadMealPlanPageState
   }
 
   Widget _buildChatButton(ColorScheme colorScheme) {
-    // Always show chat button for nutritionists since chat exists
+    // Don't show chat button if meal plan is rejected
+    if (widget.mealPlan.validationStatus == MealPlanValidationStatus.REJECTED) {
+      return const SizedBox.shrink();
+    }
+    
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

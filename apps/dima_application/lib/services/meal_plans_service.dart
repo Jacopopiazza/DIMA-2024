@@ -31,6 +31,8 @@ class MealPlansService {
               generatedAt
               status
               validationStatus
+              nutritionistFullName
+              userFullName
               assignedNutritionistId
               chatId
               dailyPlan {
@@ -557,6 +559,8 @@ class MealPlansService {
       status
       userId
       validationStatus
+      nutritionistFullName
+      userFullName
       chatId
       assignedNutritionistId
       dailyPlan {
@@ -1012,8 +1016,8 @@ class MealPlansService {
   }
 
   /// Validates a meal plan by a nutritionist, updating the validation status.
-  Future<MealPlanResponse?> validateMealPlan(
-      String mealPlanId, String nutritionistId, String validationStatus) async {
+  Future<MealPlanResponse?> validateMealPlan(String mealPlanId,
+      String nutritionistId, MealPlanValidationStatus validationStatus) async {
     try {
       final request = GraphQLRequest<String>(
         document: '''
@@ -1028,11 +1032,16 @@ class MealPlansService {
         variables: {
           'input': {
             'mealPlanId': mealPlanId,
-            'validationStatus': validationStatus,
+            'validationStatus': validationStatus.name,
           },
         },
         decodePath: 'validateMealPlan',
       );
+      safePrint(
+          '[MealPlansService] Sending validateMealPlan mutation with input: ${{
+        'mealPlanId': mealPlanId,
+        'validationStatus': validationStatus.name,
+      }}');
       final response = await Amplify.API.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
@@ -1042,6 +1051,9 @@ class MealPlansService {
 
       final Map<String, dynamic> validateData = json.decode(response.data!);
       final data = validateData['validateMealPlan'];
+
+      safePrint(
+          '[MealPlansService] validateMealPlan response data: $validateData');
 
       return MealPlanResponse(
         success: data['success'] as bool? ?? false,
@@ -1067,6 +1079,8 @@ class MealPlansService {
                 planName
                 status
                 validationStatus
+                nutritionistFullName
+                userFullName
                 assignedNutritionistId
                 userId
                 chatId

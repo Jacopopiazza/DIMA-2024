@@ -215,6 +215,8 @@ type MealPlan @model {
   assignedNutritionistId: ID
   chatId: ID
   dailyPlan: DailyPlanData
+  userFullName: String
+  nutritionistFullName: String
 }
 
 #  Pagination Helper Types
@@ -268,6 +270,7 @@ enum MealPlanValidationStatus {
   NOT_VALIDATED
   VALIDATED
   PENDING_REVIEW
+  REJECTED
 }
 
 type MealWithStatus {

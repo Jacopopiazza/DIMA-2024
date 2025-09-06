@@ -299,8 +299,8 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
   }
 
   /// Validates a meal plan by a nutritionist, updating the validation status.
-  Future<bool> validateMealPlan(
-      String mealPlanId, String nutritionistId, String validationStatus) async {
+  Future<bool> validateMealPlan(String mealPlanId, String nutritionistId,
+      MealPlanValidationStatus validationStatus) async {
     print(
         '[MealPlansProvider] Validating meal plan $mealPlanId by nutritionist $nutritionistId with status: $validationStatus');
     final response = await _service.validateMealPlan(
