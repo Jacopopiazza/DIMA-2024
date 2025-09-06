@@ -15,6 +15,8 @@ export function request(ctx) {
     util.error('validationStatus must be VALIDATED or NOT_VALIDATED');
   }
 
+  ctx.stash.validationStatus = validationStatus;
+
   return {
     operation: 'UpdateItem',
     key: util.dynamodb.toMapValues({ PK: pk, SK: sk }),
@@ -42,7 +44,7 @@ export function response(ctx) {
   }
   return {
     success: true,
-    message: 'Meal plan validation status updated successfully.',
+    message: `Meal plan validation status updated successfully to '${ctx.stash.validationStatus}'.`,
     mealPlanId: ctx.args.input.mealPlanId,
   };
 }

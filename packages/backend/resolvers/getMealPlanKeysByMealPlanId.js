@@ -9,9 +9,10 @@ export function request(ctx) {
     operation: 'Query',
     index: 'GSI5_MealPlanId',
     query: {
-      expression: 'mealPlanId = :mpid',
+      expression: 'mealPlanId = :mpid AND entityType = :et',
       expressionValues: {
         ':mpid': { S: mealPlanId },
+        ':et': { S: 'MEAL_PLAN' },
       },
     },
     limit: 1,
@@ -22,6 +23,9 @@ export function response(ctx) {
   if (!ctx.result || !ctx.result.items || ctx.result.items.length === 0) {
     util.error('Meal plan not found');
   }
+
+  console.log(ctx.result);
+
   // Stash PK and SK for the next function
   const item = ctx.result.items[0];
   ctx.stash.pk = item.PK;
