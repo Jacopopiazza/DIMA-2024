@@ -24,8 +24,6 @@ export function response(ctx) {
     util.error('Meal plan not found');
   }
 
-  console.log(ctx.result);
-
   // Stash PK and SK for the next function
   const item = ctx.result.items[0];
   ctx.stash.pk = item.PK;

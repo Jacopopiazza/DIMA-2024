@@ -11,8 +11,8 @@ export function request(ctx) {
   if (!validationStatus) {
     util.error('validationStatus is required');
   }
-  if (!['VALIDATED', 'NOT_VALIDATED'].includes(validationStatus)) {
-    util.error('validationStatus must be VALIDATED or NOT_VALIDATED');
+  if (!['VALIDATED', 'REJECTED'].includes(validationStatus)) {
+    util.error('validationStatus must be VALIDATED or REJECTED');
   }
 
   ctx.stash.validationStatus = validationStatus;

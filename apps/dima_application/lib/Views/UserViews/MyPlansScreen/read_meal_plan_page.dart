@@ -1062,6 +1062,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     final statusString = validationStatus?.toString().split('.').last;
     if (statusString == 'VALIDATED') return Colors.green;
     if (statusString == 'PENDING_REVIEW') return Colors.orange;
+    if (statusString == 'REJECTED') return Colors.red;
     if (statusString == 'NOT_VALIDATED') return Colors.grey;
     return colorScheme.outline;
   }
@@ -1074,8 +1075,10 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
   }
 
   Widget? _buildChatButton(ColorScheme colorScheme) {
-    // Only show chat button if meal plan has chatId
-    if (_mealPlan?.chatId == null || _mealPlan!.chatId!.isEmpty) {
+    // Don't show chat button if meal plan has chatId but validation status is rejected
+    if (_mealPlan?.chatId == null ||
+        _mealPlan!.chatId!.isEmpty ||
+        _mealPlan!.validationStatus == MealPlanValidationStatus.REJECTED) {
       return null;
     }
 

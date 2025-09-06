@@ -166,7 +166,7 @@ class _NutritionistReadMealPlanPageState
           await ref.read(mealPlansProvider.notifier).validateMealPlan(
                 widget.mealPlan.mealPlanId,
                 widget.mealPlan.assignedNutritionistId ?? '',
-                'VALIDATED',
+                MealPlanValidationStatus.VALIDATED,
               );
 
       if (mounted) {
@@ -200,7 +200,7 @@ class _NutritionistReadMealPlanPageState
           await ref.read(mealPlansProvider.notifier).validateMealPlan(
                 widget.mealPlan.mealPlanId,
                 widget.mealPlan.assignedNutritionistId ?? '',
-                'NOT_VALIDATED',
+                MealPlanValidationStatus.REJECTED,
               );
 
       if (mounted) {

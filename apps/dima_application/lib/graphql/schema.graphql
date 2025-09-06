@@ -327,6 +327,7 @@ enum MealPlanGenerationStatusValue {
 enum MealPlanValidationStatus {
   NOT_VALIDATED
   PENDING_REVIEW
+  REJECTED
   VALIDATED
 }
 
