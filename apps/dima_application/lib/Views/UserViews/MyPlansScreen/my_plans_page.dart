@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dima_application/Views/UserViews/MyPlansScreen/action_confirmation_dialog.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
@@ -96,11 +98,13 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     super.dispose();
   }
 
-  void _openGenerateMealPlan(BuildContext context) {
-    Navigator.push(
+  void _openGenerateMealPlan(BuildContext context) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const GenerateMealPlanPage()),
     );
+    // Refresh the meal plans list when returning from generation
+    _refreshPlans();
   }
 
   Future<void> _refreshPlans() async {
@@ -615,6 +619,45 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                   ),
                 ],
               ),
+              // Show error message for failed plans  
+              if (isFailed && plan.errorDetails != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.red.shade200,
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.error_outline_rounded,
+                          color: Colors.red.shade600,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _parseErrorMessage(plan.errorDetails),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.red.shade700,
+                              fontSize: 11,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -913,6 +956,50 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     return colorScheme.onSurfaceVariant;
   }
 
+  /// Safely parses error details JSON to extract user-friendly error message
+  String _parseErrorMessage(String? errorDetails) {
+    if (errorDetails == null || errorDetails.isEmpty) {
+      return 'Please try again later';
+    }
+
+    try {
+      // Parse the outer JSON
+      final outerJson = jsonDecode(errorDetails);
+      
+      // Get the errorMessage field
+      final errorMessage = outerJson['errorMessage'];
+      if (errorMessage == null) {
+        return 'Please try again later';
+      }
+
+      // Parse the inner JSON (errorMessage is a JSON string)
+      final innerJson = jsonDecode(errorMessage);
+      
+      // Extract the actual error message
+      final message = innerJson['error']?['message'];
+      if (message != null && message is String && message.isNotEmpty) {
+        // Debug: Print the actual message to console (temporary)
+        print('DEBUG: Error message = "$message"');
+        
+        // Check for overloaded model and provide user-friendly message
+        final lowerMessage = message.toLowerCase();
+        if (lowerMessage.contains('overloaded') || 
+            lowerMessage.contains('overload') ||
+            lowerMessage.contains('too many requests') ||
+            lowerMessage.contains('rate limit')) {
+          print('DEBUG: Detected overload, replacing message');
+          return 'The model is overloaded. Please request a new meal plan later.';
+        }
+        return message;
+      }
+
+      return 'Please try again later';
+    } catch (e) {
+      // If any parsing fails, return fallback message
+      return 'Please try again later';
+    }
+  }
+
   Future<bool> _handleSwipe(BuildContext context, plan,
       DismissDirection direction, bool isActive) async {
     final bool isRejected =
@@ -1091,9 +1178,9 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
               'View Plan',
               'See detailed meal plan',
               colorScheme.primary,
-              () {
+              () async {
                 Navigator.pop(context);
-                Navigator.push(
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ReadMealPlanPage(
@@ -1102,6 +1189,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                     ),
                   ),
                 );
+                // Refresh the meal plans list when returning
+                _refreshPlans();
               },
             ),
             if (plan.validationStatus != MealPlanValidationStatus.REJECTED)

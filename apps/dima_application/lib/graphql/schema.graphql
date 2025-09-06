@@ -100,12 +100,14 @@ type MealPlan @model {
   assignedNutritionistId: ID
   chatId: ID
   dailyPlan: DailyPlanData
+  errorDetails: String
   generatedAt: AWSDateTime
   mealPlanId: ID!
   nutritionistFullName: String
   #  From PK
   planName: String
   status: PlanStatus
+  updatedAt: AWSDateTime
   userFullName: String
   #  Extracted from SK
   userId: ID!

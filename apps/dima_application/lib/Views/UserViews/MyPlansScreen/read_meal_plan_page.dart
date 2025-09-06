@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dima_application/Utils/localization_helpers.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/services/meal_plans_service.dart';
@@ -434,7 +436,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   if (_mealPlan!.assignedNutritionistId != null)
                     _buildInfoRow(
                       'Nutritionist',
-                      _mealPlan!.nutritionistFullName ?? 
+                      _mealPlan!.nutritionistFullName ??
                           _mealPlan!.assignedNutritionistId!,
                       colorScheme,
                     ),
@@ -443,6 +445,55 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                       'User',
                       _mealPlan!.userFullName!,
                       colorScheme,
+                    ),
+                  // Show error details for failed meal plans
+                  if (_mealPlan!.status == PlanStatus.FAILED && _mealPlan!.errorDetails != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.red.shade200,
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.error_outline_rounded,
+                                  color: Colors.red.shade600,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Error Details',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.red.shade800,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              _parseErrorMessage(_mealPlan!.errorDetails),
+                              style: TextStyle(
+                                color: Colors.red.shade700,
+                                fontSize: 12,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                 ],
               ),
@@ -1081,6 +1132,46 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         .join(' ');
   }
 
+  /// Safely parses error details JSON to extract user-friendly error message
+  String _parseErrorMessage(String? errorDetails) {
+    if (errorDetails == null || errorDetails.isEmpty) {
+      return 'Please try again later';
+    }
+
+    try {
+      // Parse the outer JSON
+      final outerJson = jsonDecode(errorDetails);
+      
+      // Get the errorMessage field
+      final errorMessage = outerJson['errorMessage'];
+      if (errorMessage == null) {
+        return 'Please try again later';
+      }
+
+      // Parse the inner JSON (errorMessage is a JSON string)
+      final innerJson = jsonDecode(errorMessage);
+      
+      // Extract the actual error message
+      final message = innerJson['error']?['message'];
+      if (message != null && message is String && message.isNotEmpty) {
+        // Check for overloaded model and provide user-friendly message
+        final lowerMessage = message.toLowerCase();
+        if (lowerMessage.contains('overloaded') || 
+            lowerMessage.contains('overload') ||
+            lowerMessage.contains('too many requests') ||
+            lowerMessage.contains('rate limit')) {
+          return 'The model is overloaded. Please request a new meal plan later.';
+        }
+        return message;
+      }
+
+      return 'Please try again later';
+    } catch (e) {
+      // If any parsing fails, return fallback message
+      return 'Please try again later';
+    }
+  }
+
   Widget? _buildChatButton(ColorScheme colorScheme) {
     // Don't show chat button if meal plan has chatId but validation status is rejected
     if (_mealPlan?.chatId == null ||
@@ -1134,7 +1225,9 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           builder: (context) => ChatPage(
             key: UniqueKey(),
             chatId: _mealPlan!.chatId!,
-            title: 'Chat - ${_mealPlan!.planName ?? 'Meal Plan'}',
+            nutritionistName: _mealPlan!.nutritionistFullName,
+            userName: _mealPlan!.userFullName,
+            isCurrentUserNutritionist: false, // User view
           ),
         ),
       );

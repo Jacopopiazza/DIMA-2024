@@ -210,6 +210,7 @@ type MealPlan @model {
   # From PK
   planName: String
   generatedAt: AWSDateTime
+  updatedAt: AWSDateTime
   status: PlanStatus
   validationStatus: MealPlanValidationStatus
   assignedNutritionistId: ID
@@ -217,6 +218,7 @@ type MealPlan @model {
   dailyPlan: DailyPlanData
   userFullName: String
   nutritionistFullName: String
+  errorDetails: String
 }
 
 #  Pagination Helper Types

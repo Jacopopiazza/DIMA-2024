@@ -555,9 +555,11 @@ class MealPlansService {
     items {
       mealPlanId
       generatedAt
+      updatedAt
       planName
       status
       userId
+      errorDetails
       validationStatus
       nutritionistFullName
       userFullName
@@ -743,7 +745,9 @@ class MealPlansService {
         return LightMealPlanList(
             items: [], nextToken: null, activeMealPlan: null);
       }
-      return LightMealPlanList.fromJson(jsonData);
+      final list = LightMealPlanList.fromJson(jsonData);
+      list.sortByUpdatedAtDesc();
+      return list;
     } catch (e) {
       safePrint(
           '[MealPlansService] Error fetching meal plans: \\${e.toString()}');

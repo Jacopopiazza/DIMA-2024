@@ -578,8 +578,12 @@ class _NutritionistReadMealPlanPageState
       backgroundColor: colorScheme.surface,
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: _buildBody(theme, colorScheme),
+          GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            behavior: HitTestBehavior.opaque,
+            child: SingleChildScrollView(
+              child: _buildBody(theme, colorScheme),
+            ),
           ),
           // Modern back button positioned on top
           Positioned(
@@ -2285,7 +2289,9 @@ class _NutritionistReadMealPlanPageState
           builder: (context) => ChatPage(
             key: UniqueKey(),
             chatId: widget.mealPlan.chatId!,
-            title: 'Chat - ${widget.mealPlan.planName ?? 'Meal Plan'}',
+            nutritionistName: widget.mealPlan.nutritionistFullName,
+            userName: widget.mealPlan.userFullName,
+            isCurrentUserNutritionist: true, // Nutritionist view
           ),
         ),
       );
