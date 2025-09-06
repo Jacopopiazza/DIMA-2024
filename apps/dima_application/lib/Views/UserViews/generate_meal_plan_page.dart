@@ -507,9 +507,12 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
               child: Column(
                 children: [
                   Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
+                    child: GestureDetector(
+                      onTap: () => FocusScope.of(context).unfocus(),
+                      behavior: HitTestBehavior.opaque,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           // Header section
@@ -539,6 +542,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                           const SizedBox(height: 120), // Space for FAB
                         ],
                       ),
+                    ),
                     ),
                   ),
                 ],
