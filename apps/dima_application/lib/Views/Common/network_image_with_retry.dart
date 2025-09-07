@@ -49,8 +49,10 @@ class _NetworkImageWithRetryState extends State<NetworkImageWithRetry> {
   }
 
   Future<void> _handleImageError(Object error) async {
-    // Check if this is a 403 error (expired URL) and we haven't retried yet
-    if (!_hasRetried && error.toString().contains('403')) {
+    // Check if this is a 400 or 403 error (expired URL) and we haven't retried yet
+    final errorString = error.toString();
+    if (!_hasRetried &&
+        (errorString.contains('400') || errorString.contains('403'))) {
       try {
         safePrint('Image URL expired, attempting to refresh: $_currentUrl');
 
@@ -113,28 +115,14 @@ class _NetworkImageWithRetryState extends State<NetworkImageWithRetry> {
               width: widget.width,
               height: widget.height,
               color: theme.colorScheme.surfaceContainerHighest,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    _hasRetried ? Icons.broken_image : Icons.refresh,
-                    size: (widget.width ?? 120) * 0.3,
-                    color: _hasRetried
-                        ? theme.colorScheme.error
-                        : theme.colorScheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _hasRetried ? 'Failed to load' : 'Retrying...',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: _hasRetried
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.onSurfaceVariant,
-                      fontSize: 10,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+              child: Center(
+                child: Icon(
+                  _hasRetried ? Icons.broken_image : Icons.refresh,
+                  size: (widget.width ?? 120) * 0.3,
+                  color: _hasRetried
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             );
       },

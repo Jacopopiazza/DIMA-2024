@@ -421,33 +421,12 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         ),
         errorWidget: Container(
           color: theme.colorScheme.surfaceContainerHighest,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: widget.size * 0.25,
-                color: theme.colorScheme.error,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Failed to load',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.error,
-                  fontSize: 10,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                'Tap to retry',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: 8,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+          child: Center(
+            child: Icon(
+              Icons.error_outline,
+              size: widget.size * 0.3,
+              color: theme.colorScheme.error,
+            ),
           ),
         ),
       );
