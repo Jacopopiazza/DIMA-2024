@@ -13,7 +13,7 @@ class MealPlansService {
   final AmplifyGraphQL _amplifyGraphQL;
   // static const Duration _cacheValidityDuration = Duration(hours: 24);
 
-  MealPlansService({this.isar, AmplifyGraphQL? amplifyGraphQL}) 
+  MealPlansService({this.isar, AmplifyGraphQL? amplifyGraphQL})
       : _amplifyGraphQL = amplifyGraphQL ?? AmplifyGraphQL();
 
   Future<MealPlan?> getMealPlanById(String mealPlanId) async {
@@ -195,7 +195,7 @@ class MealPlansService {
         ''',
         variables: {'mealPlanId': mealPlanId},
       );
-      final response = await Amplify.API.query(request: request).response;
+      final response = await _amplifyGraphQL.query(request: request).response;
       safePrint(
           '[MealPlansService] GraphQL response received. Has errors: ${response.hasErrors}');
 
@@ -293,7 +293,7 @@ class MealPlansService {
         variables: {'mealPlanId': mealPlanId},
         decodePath: 'deleteMealPlan',
       );
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
         return null;
@@ -472,7 +472,7 @@ class MealPlansService {
         variables: {'prefsOverride': input},
         decodePath: 'requestNewMealPlan',
       );
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
         return null;
@@ -517,7 +517,7 @@ class MealPlansService {
         variables: {'mealPlanId': mealPlanId},
         decodePath: 'setActiveMealPlan',
       );
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
         return null;
@@ -777,7 +777,7 @@ class MealPlansService {
         },
         decodePath: 'modifyMealPlan',
       );
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
         return null;
@@ -906,7 +906,7 @@ class MealPlansService {
         },
         decodePath: 'listNutritionists',
       );
-      final response = await Amplify.API.query(request: request).response;
+      final response = await _amplifyGraphQL.query(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
         return [];
@@ -952,7 +952,7 @@ class MealPlansService {
         },
         decodePath: 'assignNutritionistToPlan',
       );
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
         return null;
@@ -996,7 +996,7 @@ class MealPlansService {
         },
         decodePath: 'requestValidation',
       );
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
         return null;
@@ -1254,7 +1254,7 @@ class MealPlansService {
         },
         decodePath: 'listMyAssignedMealPlans',
       );
-      final response = await Amplify.API.query(request: request).response;
+      final response = await _amplifyGraphQL.query(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
         return [];
