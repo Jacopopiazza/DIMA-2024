@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/models/MealPlanList/meal_plan_list.dart'
     show LightMealPlanList;
@@ -9,13 +10,11 @@ import 'package:isar/isar.dart';
 
 class MealPlansService {
   final Isar? isar;
+  final AmplifyGraphQL _amplifyGraphQL;
   // static const Duration _cacheValidityDuration = Duration(hours: 24);
 
-  MealPlansService({this.isar});
-
-  Future<List<MealPlan>> getMealPlans() async {
-    throw UnimplementedError();
-  }
+  MealPlansService({this.isar, AmplifyGraphQL? amplifyGraphQL}) 
+      : _amplifyGraphQL = amplifyGraphQL ?? AmplifyGraphQL();
 
   Future<MealPlan?> getMealPlanById(String mealPlanId) async {
     try {
@@ -727,7 +726,7 @@ class MealPlansService {
         ''',
         decodePath: 'listMyMealPlans',
       );
-      final response = await Amplify.API.query(request: request).response;
+      final response = await _amplifyGraphQL.query(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: \\${response.errors}');
         return LightMealPlanList(
