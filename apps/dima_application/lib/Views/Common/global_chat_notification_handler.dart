@@ -1,5 +1,6 @@
 import 'package:dima_application/Views/Common/ChatScreen/chat_page.dart';
 import 'package:dima_application/Views/Common/chat_notification.dart';
+import 'package:dima_application/models/Chat/chat_message.dart';
 import 'package:dima_application/models/Chat/chat_response.dart';
 import 'package:dima_application/models/Chat/chat_state.dart';
 import 'package:dima_application/providers/chat_messages_provider.dart';
@@ -106,7 +107,7 @@ class _GlobalChatNotificationHandlerState
             // Hide the notification first
             ChatNotificationManager.hide();
             // Then open the chat
-            _openChatFromNotification(message.chatId, message.senderName);
+            _openChatFromNotification(message);
           },
         );
       } else {
@@ -119,22 +120,41 @@ class _GlobalChatNotificationHandlerState
     }
   }
 
-  void _openChatFromNotification(String chatId, String? senderName) {
+  void _openChatFromNotification(ChatMessage message) {
     if (_disposed || !mounted) return;
 
     try {
-      // Navigate to chat page
+      // Determine the correct parameters based on who sent the message
+      String? nutritionistName;
+      String? userName;
+      bool isCurrentUserNutritionist;
+
+      if (message.senderType == SenderType.NUTRITIONIST) {
+        // Sender is nutritionist, so current user is regular user
+        nutritionistName = message.senderName;
+        userName = null;
+        isCurrentUserNutritionist = false;
+      } else {
+        // Sender is regular user, so current user is nutritionist
+        nutritionistName = null;
+        userName = message.senderName;
+        isCurrentUserNutritionist = true;
+      }
+
+      // Navigate to chat page with proper context
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ChatPage(
-            chatId: chatId,
-            title: senderName != null ? 'Chat with $senderName' : 'Chat',
+            chatId: message.chatId,
+            nutritionistName: nutritionistName,
+            userName: userName,
+            isCurrentUserNutritionist: isCurrentUserNutritionist,
           ),
         ),
       );
 
       // Mark chat as read
-      ref.read(chatNotificationProvider.notifier).markChatAsRead(chatId);
+      ref.read(chatNotificationProvider.notifier).markChatAsRead(message.chatId);
     } catch (e) {
       debugPrint(
           '[GlobalChatNotificationHandler] Error opening chat from notification: $e');
