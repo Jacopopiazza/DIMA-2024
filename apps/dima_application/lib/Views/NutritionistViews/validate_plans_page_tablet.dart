@@ -33,7 +33,6 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
 
   @override
   void dispose() {
-    // Cancel any ongoing operations here if needed
     super.dispose();
   }
 
@@ -68,11 +67,7 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
           _assignedMealPlans = plans;
           _isLoading = false;
           
-          // Ensure selection is valid
-          final ids = plans.map((p) => p.mealPlanId).toSet();
-          if (_selectedPlanId == null || !ids.contains(_selectedPlanId)) {
-            _selectedPlanId = plans.isNotEmpty ? plans.first.mealPlanId : null;
-          }
+          _ensureValidSelection(plans);
         });
       }
     } catch (e) {
@@ -96,13 +91,74 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
     }
   }
 
-  /// Refreshes the detail pane by updating the key
   void _refreshDetailPane() {
     if (mounted) {
       setState(() {
         _detailRefreshKey++;
       });
     }
+  }
+
+  void _ensureValidSelection(List<MealPlan> plans) {
+    final ids = plans.map((p) => p.mealPlanId).toSet();
+    if (_selectedPlanId == null || !ids.contains(_selectedPlanId)) {
+      _selectedPlanId = plans.isNotEmpty ? plans.first.mealPlanId : null;
+    }
+  }
+
+  Widget _buildBody() {
+    if (_isLoading) return _buildLoadingState(context);
+    if (_errorMessage != null) return _buildErrorState(context, _errorMessage!);
+    if (_assignedMealPlans.isEmpty) return _buildEmptyState(context);
+    
+    return Row(
+      children: [
+        Flexible(
+          flex: 5,
+          child: _buildGrid(_assignedMealPlans),
+        ),
+        Flexible(
+          flex: 7,
+          child: _buildDetailPane(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailPane() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      child: _selectedPlanId == null
+          ? _buildNoSelection(context)
+          : NutritionistReadMealPlanPage(
+              key: ValueKey('${_selectedPlanId}_$_detailRefreshKey'),
+              mealPlan: _assignedMealPlans.firstWhere(
+                (p) => p.mealPlanId == _selectedPlanId,
+              ),
+              showBackButton: false,
+              onOperationComplete: () {
+                _refreshPlans();
+                _refreshDetailPane();
+              },
+            ),
+    );
+  }
+
+  Widget _buildPlanTile(MealPlan plan, bool isLandscape) {
+    final isSelected = plan.mealPlanId == _selectedPlanId;
+    
+    return _ValidationPlanTile(
+      plan: plan,
+      isSelected: isSelected,
+      isLandscape: isLandscape,
+      onTap: () => setState(() => _selectedPlanId = plan.mealPlanId),
+      onRefresh: () {
+        _refreshPlans();
+        if (_selectedPlanId == plan.mealPlanId) {
+          _refreshDetailPane();
+        }
+      },
+    );
   }
 
   Widget _buildLoadingState(BuildContext context) {
@@ -219,57 +275,85 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.assignment_outlined,
-                size: 72, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(height: 16),
-            Text(l10n.noMealPlansYet,
-                style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 8),
-            Text(
-              'Assigned plans for validation will appear here.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge,
+    
+    return RefreshIndicator(
+      onRefresh: _refreshPlans,
+      backgroundColor: colorScheme.surface,
+      color: colorScheme.primary,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.assignment_outlined,
+                        size: 72,
+                        color: colorScheme.primary,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.noMealPlansYet,
+                        style: theme.textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Assigned plans for validation will appear here.',
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.pullDownToRefresh,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
   Widget _buildNoSelection(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Text(
-        l10n.mealPlans,
+        AppLocalizations.of(context)!.mealPlans,
         style: Theme.of(context).textTheme.titleMedium,
       ),
     );
   }
 
-  Widget _buildGrid(ThemeData theme, ColorScheme colorScheme, List<MealPlan> plans) {
+  Widget _buildGrid(List<MealPlan> plans) {
     return Consumer(
       builder: (context, ref, child) {
-        // Get orientation for responsive card sizing
         final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-        
-        // iPad-optimized grid parameters
-        final cardPadding = 12.0; // Consistent padding
-        
-        // Always 2 columns on iPad, but adjust aspect ratio for orientation
-        final crossAxisCount = 2; 
-        final childAspectRatio = isLandscape ? 1.3 : 1.0; // Slightly wider in landscape, more square in portrait
+        const cardPadding = 12.0;
+        const crossAxisCount = 2;
+        final childAspectRatio = isLandscape ? 1.3 : 1.0;
 
         return RefreshIndicator(
           onRefresh: _refreshPlans,
           child: GridView.builder(
-            padding: EdgeInsets.all(cardPadding),
+            padding: const EdgeInsets.all(cardPadding),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
               childAspectRatio: childAspectRatio,
@@ -277,24 +361,7 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
               mainAxisSpacing: cardPadding,
             ),
             itemCount: plans.length,
-            itemBuilder: (context, index) {
-              final plan = plans[index];
-              final isSelected = plan.mealPlanId == _selectedPlanId;
-
-              return _ValidationPlanTile(
-                plan: plan,
-                isSelected: isSelected,
-                isLandscape: isLandscape,
-                onTap: () => setState(() => _selectedPlanId = plan.mealPlanId),
-                onRefresh: () {
-                  _refreshPlans();
-                  // Also refresh detail pane if this plan is selected
-                  if (_selectedPlanId == plan.mealPlanId) {
-                    _refreshDetailPane();
-                  }
-                },
-              );
-            },
+            itemBuilder: (context, index) => _buildPlanTile(plans[index], isLandscape),
           ),
         );
       },
@@ -303,48 +370,11 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return OfflineScreen(
       child: Scaffold(
-        backgroundColor: colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
-          child: _isLoading
-              ? _buildLoadingState(context)
-              : _errorMessage != null
-                  ? _buildErrorState(context, _errorMessage!)
-                  : _assignedMealPlans.isEmpty
-                      ? _buildEmptyState(context)
-                      : Row(
-                          children: [
-                            // Master: Grid with meal plans
-                            Flexible(
-                              flex: 5,
-                              child: _buildGrid(theme, colorScheme, _assignedMealPlans),
-                            ),
-                            // Detail: Nutritionist view pane
-                            Flexible(
-                              flex: 7,
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 250),
-                                child: _selectedPlanId == null
-                                    ? _buildNoSelection(context)
-                                    : NutritionistReadMealPlanPage(
-                                        key: ValueKey('${_selectedPlanId}_$_detailRefreshKey'),
-                                        mealPlan: _assignedMealPlans.firstWhere(
-                                          (p) => p.mealPlanId == _selectedPlanId,
-                                        ),
-                                        showBackButton: false, // No back button on tablet
-                                        onOperationComplete: () {
-                                          _refreshPlans();
-                                          _refreshDetailPane();
-                                        },
-                                      ),
-                              ),
-                            ),
-                          ],
-                        ),
+          child: _buildBody(),
         ),
       ),
     );
@@ -375,20 +405,19 @@ class _ValidationPlanTile extends StatelessWidget {
         ? colorScheme.primary
         : colorScheme.outlineVariant;
 
-    // Responsive padding and typography based on orientation
-    final cardPadding = 12.0; // Consistent padding for both orientations
-    final titleMaxLines = 3; // Consistent max lines for plan names
-    final titleFontSize = isLandscape ? 12.0 : 13.0; // Slightly larger in portrait
-    final clientFontSize = isLandscape ? 10.0 : 10.5; // Slightly larger in portrait  
-    final statusFontSize = isLandscape ? 9.0 : 9.5; // Slightly larger in portrait
-    final iconSize = isLandscape ? 22.0 : 24.0; // Slightly larger in portrait
-    final verticalSpacing = isLandscape ? 6.0 : 8.0; // More spacing in portrait
+    const cardPadding = 12.0;
+    const titleMaxLines = 3;
+    final titleFontSize = isLandscape ? 12.0 : 13.0;
+    final clientFontSize = isLandscape ? 10.0 : 10.5;
+    final statusFontSize = isLandscape ? 9.0 : 9.5;
+    final iconSize = isLandscape ? 22.0 : 24.0;
+    final verticalSpacing = isLandscape ? 6.0 : 8.0;
 
     return Card(
       elevation: isSelected ? 3 : 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: borderColor.withOpacity(isSelected ? 0.7 : 0.3)),
+        side: BorderSide(color: borderColor.withValues(alpha: isSelected ? 0.7 : 0.3)),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -447,7 +476,6 @@ class _ValidationPlanTile extends StatelessWidget {
                       ),
                     ),
                     const Spacer(), // Push date to bottom
-                    // Date information always at the bottom
                     if (plan.generatedAt != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
@@ -479,7 +507,7 @@ class _ValidationStatusIcon extends StatelessWidget {
   const _ValidationStatusIcon({
     required this.plan, 
     required this.isSelected,
-    this.iconSize = 24.0,
+    required this.iconSize,
   });
 
   @override
@@ -532,7 +560,7 @@ class _ValidationStatusPill extends StatelessWidget {
 
   const _ValidationStatusPill({
     required this.validationStatus,
-    this.fontSize = 9.0,
+    required this.fontSize,
   });
 
   @override
@@ -547,22 +575,22 @@ class _ValidationStatusPill extends StatelessWidget {
     switch (validationStatus) {
       case MealPlanValidationStatus.VALIDATED:
         label = l10n.validatedStatus;
-        bg = Colors.green.withOpacity(isDark ? 0.2 : 0.12);
+        bg = Colors.green.withValues(alpha: isDark ? 0.2 : 0.12);
         fg = isDark ? Colors.green[300]! : Colors.green[700]!;
         break;
       case MealPlanValidationStatus.PENDING_REVIEW:
         label = l10n.pendingReviewStatus;
-        bg = Colors.orange.withOpacity(isDark ? 0.2 : 0.12);
+        bg = Colors.orange.withValues(alpha: isDark ? 0.2 : 0.12);
         fg = isDark ? Colors.orange[300]! : Colors.orange[700]!;
         break;
       case MealPlanValidationStatus.REJECTED:
         label = l10n.rejected;
-        bg = Colors.red.withOpacity(isDark ? 0.2 : 0.12);
+        bg = Colors.red.withValues(alpha: isDark ? 0.2 : 0.12);
         fg = isDark ? Colors.red[300]! : Colors.red[700]!;
         break;
       default:
         label = l10n.notValidatedStatus;
-        bg = Colors.grey.withOpacity(isDark ? 0.2 : 0.12);
+        bg = Colors.grey.withValues(alpha: isDark ? 0.2 : 0.12);
         fg = isDark ? Colors.grey[300]! : Colors.grey[700]!;
         break;
     }
@@ -593,8 +621,8 @@ class _ClientPill extends StatelessWidget {
 
   const _ClientPill({
     required this.clientName,
-    this.fontSize = 10.0,
-    this.isLandscape = false,
+    required this.fontSize,
+    required this.isLandscape,
   });
 
   @override
@@ -605,7 +633,7 @@ class _ClientPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withOpacity(isDark ? 0.3 : 0.2),
+        color: colorScheme.primaryContainer.withValues(alpha: isDark ? 0.3 : 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
@@ -616,7 +644,7 @@ class _ClientPill extends StatelessWidget {
               letterSpacing: 0.1,
               fontSize: fontSize,
             ),
-        maxLines: isLandscape ? 1 : 2, // Allow 2 lines in portrait, 1 in landscape
+        maxLines: isLandscape ? 1 : 2,
         overflow: TextOverflow.ellipsis,
       ),
     );
