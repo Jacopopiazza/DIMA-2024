@@ -567,7 +567,9 @@ class _PlanTile extends StatelessWidget {
                       children: [
                         _StatusPill(status: plan.status as PlanStatus?, isActive: isActive),
                         const SizedBox(height: 3),
-                        _ValidationStatusPill(validationStatus: plan.validationStatus),
+                        // Only show validation pill for plans that are not generating (not IN_PROGRESS or PENDING)
+                        if (plan.status != PlanStatus.IN_PROGRESS && plan.status != PlanStatus.PENDING)
+                          _ValidationStatusPill(validationStatus: plan.validationStatus),
                       ],
                     ),
                   ),
@@ -671,15 +673,13 @@ class _StatusPill extends StatelessWidget {
     } else {
       switch (status) {
         case PlanStatus.IN_PROGRESS:
-          label = l10n.statusInProgress;
-          bg = Colors.orange.withOpacity(isDark ? 0.2 : 0.12);
-          fg = isDark ? Colors.orange[300]! : Colors.orange[700]!;
-          break;
-        case PlanStatus.PENDING:
-          label = l10n.statusPending;
+                case PlanStatus.PENDING:
+
+          label = l10n.generating;
           bg = Colors.amber.withOpacity(isDark ? 0.2 : 0.12);
           fg = isDark ? Colors.amber[300]! : Colors.amber[700]!;
           break;
+   
         case PlanStatus.FAILED:
           label = l10n.statusFailed;
           bg = Colors.red.withOpacity(isDark ? 0.2 : 0.12);

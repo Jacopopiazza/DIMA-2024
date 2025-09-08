@@ -1117,7 +1117,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     if (statusString == 'GENERATED') return Colors.blue;
     if (statusString == 'ARCHIVED') return Colors.grey;
     if (statusString == 'FAILED') return Colors.red;
-    if (statusString == 'IN_PROGRESS') return Colors.orange;
+    if (statusString == 'IN_PROGRESS') return Colors.amber;
     if (statusString == 'PENDING') return Colors.amber;
     return colorScheme.primary;
   }

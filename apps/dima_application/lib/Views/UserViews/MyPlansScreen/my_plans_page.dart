@@ -870,14 +870,14 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     PlanStatus.IN_PROGRESS: {
       'chipIcon': Icons.autorenew_rounded,
       'chipLabel': localizations.generating,
-      'chipBg': Colors.blue,
-      'iconContainerBg': Colors.blue,
+      'chipBg': Colors.amber,
+      'iconContainerBg': Colors.amber,
       'cardIcon': Icons.autorenew_rounded,
     },
     PlanStatus.PENDING: {
       'chipIcon': Icons.autorenew_rounded,
       'chipLabel': localizations.generating,
-      'chipBg': Colors.blue,
+      'chipBg': Colors.amber,
       'iconContainerBg': Colors.amber,
       'cardIcon': Icons.schedule_rounded,
     },
