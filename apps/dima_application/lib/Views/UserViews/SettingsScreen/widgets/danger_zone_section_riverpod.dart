@@ -134,7 +134,7 @@ class _DangerZoneSectionRiverpodState
             ),
             child: Text(
               AppLocalizations.of(context)!.deleteAccount,
-              style: TextStyle(color: colorScheme.onSurface),
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -355,14 +355,14 @@ class _DangerZoneSectionRiverpodState
                                   ),
                                 )
                               : Icon(Icons.delete_forever_rounded,
-                                  size: 20, color: colorScheme.onSurface),
+                                  size: 20, color: Colors.white),
                           label: Text(
                             _isDeleting
                                 ? AppLocalizations.of(context)!.deletingAccount
                                 : AppLocalizations.of(context)!.deleteMyAccount,
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: colorScheme.onSurface,
+                              color: Colors.white,
                             ),
                           ),
                           style: FilledButton.styleFrom(
