@@ -101,6 +101,42 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
+  /// No description provided for @proPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'PRO Plan'**
+  String get proPlanTitle;
+
+  /// No description provided for @unlockPremiumFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock premium features:'**
+  String get unlockPremiumFeatures;
+
+  /// No description provided for @expertMealPlanningValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Expert meal planning validation'**
+  String get expertMealPlanningValidation;
+
+  /// No description provided for @personalNutritionistChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal nutritionist chat in-app'**
+  String get personalNutritionistChat;
+
+  /// No description provided for @subscribeToPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to PRO'**
+  String get subscribeToPro;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
   /// No description provided for @changePreferences.
   ///
   /// In en, this message translates to:
@@ -112,12 +148,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear Cache'**
   String get clearCache;
-
-  /// No description provided for @deleteAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete Account'**
-  String get deleteAccount;
 
   /// No description provided for @confirmClearCacheTitle.
   ///
@@ -514,6 +544,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @mealPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Plans'**
+  String get mealPlans;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
 
   /// No description provided for @profileInfoNotAvailable.
   ///
@@ -1630,6 +1678,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} is typing...'**
   String isTyping(String name);
+
+  /// No description provided for @upgradeToPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to PRO'**
+  String get upgradeToPro;
+
+  /// No description provided for @chooseYourProPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your PRO plan:'**
+  String get chooseYourProPlan;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @yearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get yearly;
+
+  /// No description provided for @lifetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime'**
+  String get lifetime;
+
+  /// No description provided for @monthlyPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'\$9.99/month'**
+  String get monthlyPrice;
+
+  /// No description provided for @yearlyPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'\$99/year'**
+  String get yearlyPrice;
+
+  /// No description provided for @lifetimePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'\$299'**
+  String get lifetimePrice;
+
+  /// No description provided for @monthlyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Best for trying out'**
+  String get monthlyDescription;
+
+  /// No description provided for @yearlyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Save 17% (2 months free)'**
+  String get yearlyDescription;
+
+  /// No description provided for @lifetimeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'One-time payment'**
+  String get lifetimeDescription;
+
+  /// No description provided for @subscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get subscribe;
+
+  /// No description provided for @subscriptionFeatureComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription feature coming soon!'**
+  String get subscriptionFeatureComingSoon;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delete'**
+  String get confirmDelete;
+
+  /// No description provided for @confirmDeleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account?'**
+  String get confirmDeleteMessage;
 
   /// Breakfast meal display name
   ///

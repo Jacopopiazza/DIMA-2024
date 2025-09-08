@@ -12,13 +12,28 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsTitle => 'Impostazioni';
 
   @override
+  String get proPlanTitle => 'Piano PRO';
+
+  @override
+  String get unlockPremiumFeatures => 'Sblocca le funzionalità premium:';
+
+  @override
+  String get expertMealPlanningValidation => 'Validazione esperta della pianificazione dei pasti';
+
+  @override
+  String get personalNutritionistChat => 'Chat personale con nutrizionista nell\'app';
+
+  @override
+  String get subscribeToPro => 'Iscriviti a PRO';
+
+  @override
+  String get deleteAccount => 'Elimina Account';
+
+  @override
   String get changePreferences => 'Modifica Preferenze';
 
   @override
   String get clearCache => 'Svuota Cache';
-
-  @override
-  String get deleteAccount => 'Elimina Account';
 
   @override
   String get confirmClearCacheTitle => 'Conferma Svuotamento Cache';
@@ -219,6 +234,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get back => 'Indietro';
+
+  @override
+  String get today => 'Oggi';
+
+  @override
+  String get mealPlans => 'Piani Pasto';
+
+  @override
+  String get settings => 'Impostazioni';
 
   @override
   String get profileInfoNotAvailable => 'Informazioni profilo non disponibili';
@@ -793,6 +817,51 @@ class AppLocalizationsIt extends AppLocalizations {
   String isTyping(String name) {
     return '$name sta scrivendo...';
   }
+
+  @override
+  String get upgradeToPro => 'Aggiorna a PRO';
+
+  @override
+  String get chooseYourProPlan => 'Scegli il tuo piano PRO:';
+
+  @override
+  String get monthly => 'Mensile';
+
+  @override
+  String get yearly => 'Annuale';
+
+  @override
+  String get lifetime => 'A vita';
+
+  @override
+  String get monthlyPrice => '9,99€/mese';
+
+  @override
+  String get yearlyPrice => '99€/anno';
+
+  @override
+  String get lifetimePrice => '299€';
+
+  @override
+  String get monthlyDescription => 'Ideale per provare';
+
+  @override
+  String get yearlyDescription => 'Risparmia il 17% (2 mesi gratis)';
+
+  @override
+  String get lifetimeDescription => 'Pagamento unico';
+
+  @override
+  String get subscribe => 'Iscriviti';
+
+  @override
+  String get subscriptionFeatureComingSoon => 'Funzionalità di abbonamento presto disponibile!';
+
+  @override
+  String get confirmDelete => 'Conferma Eliminazione';
+
+  @override
+  String get confirmDeleteMessage => 'Sei sicuro di voler eliminare il tuo account?';
 
   @override
   String get mealNameBREAKFAST => 'Colazione';

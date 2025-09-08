@@ -12,13 +12,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
+  String get proPlanTitle => 'PRO Plan';
+
+  @override
+  String get unlockPremiumFeatures => 'Unlock premium features:';
+
+  @override
+  String get expertMealPlanningValidation => 'Expert meal planning validation';
+
+  @override
+  String get personalNutritionistChat => 'Personal nutritionist chat in-app';
+
+  @override
+  String get subscribeToPro => 'Subscribe to PRO';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
   String get changePreferences => 'Change Preferences';
 
   @override
   String get clearCache => 'Clear Cache';
-
-  @override
-  String get deleteAccount => 'Delete Account';
 
   @override
   String get confirmClearCacheTitle => 'Confirm Clear Cache';
@@ -219,6 +234,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get back => 'Back';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get mealPlans => 'Meal Plans';
+
+  @override
+  String get settings => 'Settings';
 
   @override
   String get profileInfoNotAvailable => 'Profile information not available';
@@ -793,6 +817,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String isTyping(String name) {
     return '$name is typing...';
   }
+
+  @override
+  String get upgradeToPro => 'Upgrade to PRO';
+
+  @override
+  String get chooseYourProPlan => 'Choose your PRO plan:';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get yearly => 'Yearly';
+
+  @override
+  String get lifetime => 'Lifetime';
+
+  @override
+  String get monthlyPrice => '\$9.99/month';
+
+  @override
+  String get yearlyPrice => '\$99/year';
+
+  @override
+  String get lifetimePrice => '\$299';
+
+  @override
+  String get monthlyDescription => 'Best for trying out';
+
+  @override
+  String get yearlyDescription => 'Save 17% (2 months free)';
+
+  @override
+  String get lifetimeDescription => 'One-time payment';
+
+  @override
+  String get subscribe => 'Subscribe';
+
+  @override
+  String get subscriptionFeatureComingSoon => 'Subscription feature coming soon!';
+
+  @override
+  String get confirmDelete => 'Confirm Delete';
+
+  @override
+  String get confirmDeleteMessage => 'Are you sure you want to delete your account?';
 
   @override
   String get mealNameBREAKFAST => 'Breakfast';

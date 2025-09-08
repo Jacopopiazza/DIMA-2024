@@ -4,6 +4,7 @@ import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 import 'HomeScreen/today_view.dart';
 
@@ -122,21 +123,21 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
   // Helper method to build the BottomNavigationBar
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.wb_sunny_outlined), // Icon when tab is inactive
           activeIcon: Icon(Icons.wb_sunny), // Icon when tab is active
-          label: 'Today',
+          label: AppLocalizations.of(context)!.today,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.menu_book_outlined),
           activeIcon: Icon(Icons.menu_book),
-          label: 'Meal Plans',
+          label: AppLocalizations.of(context)!.mealPlans,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.settings_outlined),
           activeIcon: Icon(Icons.settings),
-          label: 'Settings',
+          label: AppLocalizations.of(context)!.settings,
         ),
       ],
       currentIndex: _selectedIndex, // Highlights the current tab

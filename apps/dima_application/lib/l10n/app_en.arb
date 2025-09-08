@@ -1,9 +1,14 @@
 {
   "@@locale": "en",
   "settingsTitle": "Settings",
+  "proPlanTitle": "PRO Plan",
+  "unlockPremiumFeatures": "Unlock premium features:",
+  "expertMealPlanningValidation": "Expert meal planning validation",
+  "personalNutritionistChat": "Personal nutritionist chat in-app",
+  "subscribeToPro": "Subscribe to PRO",
+  "deleteAccount": "Delete Account",
   "changePreferences": "Change Preferences",
   "clearCache": "Clear Cache",
-  "deleteAccount": "Delete Account",
   "confirmClearCacheTitle": "Confirm Clear Cache",
   "confirmClearCacheMessage": "Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.",
   "clear": "Clear",
@@ -97,6 +102,9 @@
   "@back": {
     "description": "back button label"
   },
+  "today": "Today",
+  "mealPlans": "Meal Plans",
+  "settings": "Settings",
   "profileInfoNotAvailable": "Profile information not available",
   "notSpecified": "Not specified",
   "noExercise": "No exercise",
@@ -350,6 +358,21 @@
       }
     }
   },
+  "upgradeToPro": "Upgrade to PRO",
+  "chooseYourProPlan": "Choose your PRO plan:",
+  "monthly": "Monthly",
+  "yearly": "Yearly",
+  "lifetime": "Lifetime",
+  "monthlyPrice": "$9.99/month",
+  "yearlyPrice": "$99/year",
+  "lifetimePrice": "$299",
+  "monthlyDescription": "Best for trying out",
+  "yearlyDescription": "Save 17% (2 months free)",
+  "lifetimeDescription": "One-time payment",
+  "subscribe": "Subscribe",
+  "subscriptionFeatureComingSoon": "Subscription feature coming soon!",
+  "confirmDelete": "Confirm Delete",
+  "confirmDeleteMessage": "Are you sure you want to delete your account?",
   "mealNameBREAKFAST": "Breakfast",
   "@mealNameBREAKFAST": {
     "description": "Breakfast meal display name"
