@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 import '../../../../Utils/localization_helpers.dart';
 import '../../../../generated/flutter-models/AllergenEnum.dart';
@@ -114,26 +115,26 @@ class _UserDetailsFormRiverpodState
 
     // Validate required fields
     if (_weightController.text.isEmpty) {
-      _showErrorSnackBar('Weight is required');
+      _showErrorSnackBar(AppLocalizations.of(context)!.weightIsRequired);
       return;
     }
 
     if (_heightController.text.isEmpty) {
-      _showErrorSnackBar('Height is required');
+      _showErrorSnackBar(AppLocalizations.of(context)!.heightIsRequired);
       return;
     }
 
     // Validate weight range
     final weightValid = _isWeightValid();
     if (weightValid == false) {
-      _showErrorSnackBar('Weight must be between 30 and 300 kg');
+      _showErrorSnackBar(AppLocalizations.of(context)!.weightMustBeBetween);
       return;
     }
 
     // Validate height range
     final heightValid = _isHeightValid();
     if (heightValid == false) {
-      _showErrorSnackBar('Height must be between 50 and 250 cm');
+      _showErrorSnackBar(AppLocalizations.of(context)!.heightMustBeBetween);
       return;
     }
 
@@ -143,14 +144,14 @@ class _UserDetailsFormRiverpodState
     try {
       weightKg = double.parse(_weightController.text);
     } catch (e) {
-      _showErrorSnackBar('Please enter a valid weight');
+      _showErrorSnackBar(AppLocalizations.of(context)!.pleaseEnterValidWeight);
       return;
     }
 
     try {
       heightCm = double.parse(_heightController.text);
     } catch (e) {
-      _showErrorSnackBar('Please enter a valid height');
+      _showErrorSnackBar(AppLocalizations.of(context)!.pleaseEnterValidHeight);
       return;
     }
 
@@ -199,7 +200,7 @@ class _UserDetailsFormRiverpodState
                       color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
-                const Text('Profile updated successfully'),
+                Text(AppLocalizations.of(context)!.profileUpdatedSuccessfullyShort),
               ],
             ),
             backgroundColor: Colors.green.shade600,
@@ -209,7 +210,7 @@ class _UserDetailsFormRiverpodState
           ),
         );
       } else {
-        _showErrorSnackBar('Failed to update profile');
+        _showErrorSnackBar(AppLocalizations.of(context)!.failedToUpdateProfileShort);
       }
     }
   }
@@ -245,23 +246,23 @@ class _UserDetailsFormRiverpodState
   String _getExerciseDisplayText(ExerciseFrequency frequency) {
     switch (frequency) {
       case ExerciseFrequency.NOT_SPECIFIED:
-        return 'Not specified';
+        return AppLocalizations.of(context)!.notSpecified;
       case ExerciseFrequency.NONE:
-        return 'No exercise';
+        return AppLocalizations.of(context)!.noExercise;
       case ExerciseFrequency.ONCE_A_WEEK:
-        return 'Once a week';
+        return AppLocalizations.of(context)!.onceAWeek;
       case ExerciseFrequency.TWICE_A_WEEK:
-        return 'Twice a week';
+        return AppLocalizations.of(context)!.twiceAWeek;
       case ExerciseFrequency.THREE_TIMES_A_WEEK:
-        return '3 times a week';
+        return AppLocalizations.of(context)!.threeTimes;
       case ExerciseFrequency.FOUR_TIMES_A_WEEK:
-        return '4 times a week';
+        return AppLocalizations.of(context)!.fourTimes;
       case ExerciseFrequency.FIVE_TIMES_A_WEEK:
-        return '5 times a week';
+        return AppLocalizations.of(context)!.fiveTimes;
       case ExerciseFrequency.SIX_TIMES_A_WEEK:
-        return '6 times a week';
+        return AppLocalizations.of(context)!.sixTimes;
       case ExerciseFrequency.EVERY_DAY:
-        return 'Every day';
+        return AppLocalizations.of(context)!.everyDay;
     }
   }
 
@@ -305,7 +306,7 @@ class _UserDetailsFormRiverpodState
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Generation Preferences',
+                    AppLocalizations.of(context)!.generationPreferences,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
@@ -322,7 +323,7 @@ class _UserDetailsFormRiverpodState
                       border: Border.all(color: Colors.orange.shade300),
                     ),
                     child: Text(
-                      'Unsaved',
+                      AppLocalizations.of(context)!.unsaved,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: Colors.orange.shade800,
                         fontWeight: FontWeight.w500,
@@ -334,78 +335,73 @@ class _UserDetailsFormRiverpodState
             const SizedBox(height: 24),
 
             // Physical Details Section
-            _buildSectionHeader('Physical Details',
+            _buildSectionHeader(AppLocalizations.of(context)!.physicalDetails,
                 Icons.monitor_weight_rounded, colorScheme, theme),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildTextField(
-                    controller: _weightController,
-                    label: 'Weight',
-                    suffix: 'kg',
-                    icon: Icons.monitor_weight_outlined,
-                    keyboardType: TextInputType.number,
-                    colorScheme: colorScheme,
-                    helperText: 'Allowed: 30–300 kg',
-                    errorText: _isWeightValid() == false
-                        ? 'Weight must be between 30 and 300 kg'
-                        : null,
-                    suffixIcon: _isWeightValid() == null
-                        ? null
-                        : Icon(
-                            _isWeightValid() == true
-                                ? Icons.check_circle_rounded
-                                : Icons.error_outline_rounded,
-                            color: _isWeightValid() == true
-                                ? Colors.green
-                                : Colors.red,
-                            size: 20,
-                          ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildTextField(
-                    controller: _heightController,
-                    label: 'Height',
-                    suffix: 'cm',
-                    icon: Icons.height_rounded,
-                    keyboardType: TextInputType.number,
-                    colorScheme: colorScheme,
-                    helperText: 'Allowed: 50–250 cm',
-                    errorText: _isHeightValid() == false
-                        ? 'Height must be between 50 and 250 cm'
-                        : null,
-                    suffixIcon: _isHeightValid() == null
-                        ? null
-                        : Icon(
-                            _isHeightValid() == true
-                                ? Icons.check_circle_rounded
-                                : Icons.error_outline_rounded,
-                            color: _isHeightValid() == true
-                                ? Colors.green
-                                : Colors.red,
-                            size: 20,
-                          ),
-                  ),
-                ),
-              ],
+            // Weight
+            _buildTextField(
+              controller: _weightController,
+              label: AppLocalizations.of(context)!.weight,
+              suffix: 'kg',
+              icon: Icons.monitor_weight_outlined,
+              keyboardType: TextInputType.number,
+              colorScheme: colorScheme,
+              helperText: AppLocalizations.of(context)!.weightAllowed,
+              errorText: _isWeightValid() == false
+                  ? AppLocalizations.of(context)!.weightMustBeBetween
+                  : null,
+              suffixIcon: _isWeightValid() == null
+                  ? null
+                  : Icon(
+                      _isWeightValid() == true
+                          ? Icons.check_circle_rounded
+                          : Icons.error_outline_rounded,
+                      color: _isWeightValid() == true
+                          ? Colors.green
+                          : Colors.red,
+                      size: 20,
+                    ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Height
+            _buildTextField(
+              controller: _heightController,
+              label: AppLocalizations.of(context)!.height,
+              suffix: 'cm',
+              icon: Icons.height_rounded,
+              keyboardType: TextInputType.number,
+              colorScheme: colorScheme,
+              helperText: AppLocalizations.of(context)!.heightAllowed,
+              errorText: _isHeightValid() == false
+                  ? AppLocalizations.of(context)!.heightMustBeBetween
+                  : null,
+              suffixIcon: _isHeightValid() == null
+                  ? null
+                  : Icon(
+                      _isHeightValid() == true
+                          ? Icons.check_circle_rounded
+                          : Icons.error_outline_rounded,
+                      color: _isHeightValid() == true
+                          ? Colors.green
+                          : Colors.red,
+                      size: 20,
+                    ),
             ),
             const SizedBox(height: 24),
 
             // Meal Preferences Section
-            _buildSectionHeader('Meal Preferences', Icons.restaurant_rounded,
+            _buildSectionHeader(AppLocalizations.of(context)!.mealPreferences, Icons.restaurant_rounded,
                 colorScheme, theme),
             const SizedBox(height: 12),
             _buildDropdownField<int>(
               value: _dailyMealsPreference,
-              label: 'Daily Meals',
+              label: AppLocalizations.of(context)!.dailyMeals,
               icon: Icons.restaurant_menu_rounded,
               items: [2, 3, 4, 5, 6].map((meals) {
                 return DropdownMenuItem(
                   value: meals,
-                  child: Text('$meals meals per day'),
+                  child: Text(AppLocalizations.of(context)!.mealsPerDay(meals)),
                 );
               }).toList(),
               onChanged: (value) {
@@ -421,7 +417,7 @@ class _UserDetailsFormRiverpodState
             const SizedBox(height: 16),
             _buildDropdownField<ExerciseFrequency>(
               value: _exerciseFrequency,
-              label: 'Exercise Frequency',
+              label: AppLocalizations.of(context)!.exerciseFrequency,
               icon: Icons.fitness_center_rounded,
               items: ExerciseFrequency.values.map((frequency) {
                 return DropdownMenuItem(
@@ -441,19 +437,19 @@ class _UserDetailsFormRiverpodState
 
             // Allergies Section
             _buildSectionHeader(
-                'Allergies', Icons.warning_rounded, colorScheme, theme),
+                AppLocalizations.of(context)!.allergies, Icons.warning_rounded, colorScheme, theme),
             const SizedBox(height: 12),
             _buildAllergiesSelection(colorScheme, theme),
             const SizedBox(height: 24),
 
             // Additional Preferences Section
-            _buildSectionHeader('Additional Preferences',
+            _buildSectionHeader(AppLocalizations.of(context)!.additionalPreferences,
                 Icons.note_alt_rounded, colorScheme, theme),
             const SizedBox(height: 12),
             _buildTextField(
               controller: _dietaryRestrictionsController,
-              label: 'Dietary restrictions',
-              hint: 'Any specific dietary restriction',
+              label: AppLocalizations.of(context)!.dietaryRestrictions,
+              hint: AppLocalizations.of(context)!.anySpecificDietaryRestriction,
               icon: Icons.edit_note_rounded,
               maxLines: 3,
               colorScheme: colorScheme,
@@ -461,8 +457,8 @@ class _UserDetailsFormRiverpodState
             const SizedBox(height: 12),
             _buildTextField(
               controller: _preferencesController,
-              label: 'Dietary preferences',
-              hint: 'Any specific dietary preference or notes',
+              label: AppLocalizations.of(context)!.dietaryPreferences,
+              hint: AppLocalizations.of(context)!.anySpecificDietaryPreference,
               icon: Icons.edit_note_rounded,
               maxLines: 3,
               colorScheme: colorScheme,
@@ -487,7 +483,7 @@ class _UserDetailsFormRiverpodState
                         )
                       : const Icon(Icons.save_rounded, size: 20),
                   label: Text(
-                    _isLoading ? 'Saving...' : 'Save Changes',
+                    _isLoading ? AppLocalizations.of(context)!.saving : AppLocalizations.of(context)!.saveChanges,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: _isDirty
@@ -624,7 +620,7 @@ class _UserDetailsFormRiverpodState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Select any allergies you have:',
+            AppLocalizations.of(context)!.selectAllergies,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w500,

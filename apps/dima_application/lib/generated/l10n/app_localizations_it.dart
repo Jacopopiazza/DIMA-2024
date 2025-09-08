@@ -66,7 +66,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get confirmDeleteAccountMessage => 'ATTENZIONE: Questa azione è irreversibile ed eliminerà permanentemente il tuo account e tutti i dati associati. Sei assolutamente sicuro di voler procedere?';
 
   @override
-  String get accountDeletedSuccessfully => 'Account eliminato con successo.';
+  String get accountDeletedSuccessfully => 'Account eliminato con successo';
 
   @override
   String get errorDeletingAccount => 'Errore durante l\'eliminazione dell\'account. Riprova.';
@@ -115,11 +115,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String mealsPerDay(int count) {
-    return '$count pasti/giorno';
+    return '$count pasti al giorno';
   }
 
   @override
-  String get dietaryRestrictions => 'Restrizioni Dietetiche';
+  String get dietaryRestrictions => 'Restrizioni dietetiche';
 
   @override
   String get dietaryRestrictionsHint => 'es. Vegetariano, Vegano, Low-Carb';
@@ -293,7 +293,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get createMealPlan => 'Crea Piano Alimentare';
 
   @override
-  String get loadingPreferences => 'Caricamento delle tue preferenze...';
+  String get loadingPreferences => 'Caricamento preferenze...';
 
   @override
   String get somethingWentWrong => 'Qualcosa è andato storto';
@@ -353,7 +353,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get heightHelper => 'Consentito: 50–250 cm';
 
   @override
-  String get mealPreferences => 'Preferenze Pasto';
+  String get mealPreferences => 'Preferenze Pasti';
 
   @override
   String get dailyMeals => 'Pasti Giornalieri';
@@ -929,7 +929,312 @@ class AppLocalizationsIt extends AppLocalizations {
   String get retryAction => 'Riprova';
 
   @override
+  String get loadingSettings => 'Caricamento impostazioni...';
+
+  @override
+  String get unableToLoadSettings => 'Impossibile caricare le impostazioni';
+
+  @override
+  String get notSignedIn => 'Non autenticato';
+
+  @override
+  String get pleaseSignInToAccessSettings => 'Effettua l\'accesso per accedere alle tue impostazioni';
+
+  @override
   String get signIn => 'Accedi';
+
+  @override
+  String get accountSettings => 'Impostazioni Account';
+
+  @override
+  String get manageYourProfilePreferencesAndSecurity => 'Gestisci il tuo profilo, le preferenze e le impostazioni di sicurezza dell\'account.';
+
+  @override
+  String get loadingSubscription => 'Caricamento abbonamento...';
+
+  @override
+  String get loadingProfile => 'Caricamento profilo...';
+
+  @override
+  String get profileUnavailable => 'Profilo Non Disponibile';
+
+  @override
+  String get personalDataCurrentlyUnavailable => 'I dati personali sono attualmente non disponibili. Prova ad aggiornare o riprova più tardi.';
+
+  @override
+  String get preferencesUnavailable => 'Preferenze Non Disponibili';
+
+  @override
+  String get preferencesDataCurrentlyUnavailable => 'Le tue preferenze e i dati delle impostazioni sono attualmente non disponibili. Prova ad aggiornare o riprova più tardi.';
+
+  @override
+  String get subscriptionStatusUnavailable => 'Stato Abbonamento Non Disponibile';
+
+  @override
+  String get subscriptionStatusCurrentlyUnavailable => 'Il tuo stato dell\'abbonamento è attualmente non disponibile. Prova ad aggiornare o riprova più tardi.';
+
+  @override
+  String get userProfile => 'Profilo Utente';
+
+  @override
+  String get unsaved => 'Non salvato';
+
+  @override
+  String get givenName => 'Nome';
+
+  @override
+  String get familyName => 'Cognome';
+
+  @override
+  String get givenNameRequired => 'Il nome è obbligatorio';
+
+  @override
+  String get familyNameRequired => 'Il cognome è obbligatorio';
+
+  @override
+  String get nameFieldsReadOnly => 'I campi del nome sono gestiti dal tuo provider di autenticazione e non possono essere modificati qui.';
+
+  @override
+  String get gender => 'Sesso';
+
+  @override
+  String get male => 'Maschio';
+
+  @override
+  String get female => 'Femmina';
+
+  @override
+  String get other => 'Altro';
+
+  @override
+  String get birthdate => 'Data di nascita';
+
+  @override
+  String get selectDate => 'Seleziona data';
+
+  @override
+  String get saving => 'Salvataggio...';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profilo aggiornato con successo!';
+
+  @override
+  String get failedToUpdateProfile => 'Impossibile aggiornare il profilo. Riprova.';
+
+  @override
+  String get errorUpdatingProfile => 'Errore nell\'aggiornamento del profilo';
+
+  @override
+  String get generationPreferences => 'Preferenze di Generazione';
+
+  @override
+  String get weightAllowed => 'Consentito: 30–300 kg';
+
+  @override
+  String get weightMustBeBetween => 'Il peso deve essere tra 30 e 300 kg';
+
+  @override
+  String get heightAllowed => 'Consentito: 50–250 cm';
+
+  @override
+  String get heightMustBeBetween => 'L\'altezza deve essere tra 50 e 250 cm';
+
+  @override
+  String get onceAWeek => 'Una volta a settimana';
+
+  @override
+  String get twiceAWeek => 'Due volte a settimana';
+
+  @override
+  String get anySpecificDietaryRestriction => 'Qualsiasi restrizione dietetica specifica';
+
+  @override
+  String get dietaryPreferences => 'Preferenze dietetiche';
+
+  @override
+  String get anySpecificDietaryPreference => 'Qualsiasi preferenza dietetica specifica o note';
+
+  @override
+  String get weightIsRequired => 'Il peso è obbligatorio';
+
+  @override
+  String get heightIsRequired => 'L\'altezza è obbligatoria';
+
+  @override
+  String get pleaseEnterValidWeight => 'Inserisci un peso valido';
+
+  @override
+  String get pleaseEnterValidHeight => 'Inserisci un\'altezza valida';
+
+  @override
+  String get profileUpdatedSuccessfullyShort => 'Profilo aggiornato con successo';
+
+  @override
+  String get failedToUpdateProfileShort => 'Impossibile aggiornare il profilo';
+
+  @override
+  String get changePassword => 'Cambia Password';
+
+  @override
+  String get updateYourAccountPassword => 'Aggiorna la password del tuo account';
+
+  @override
+  String get currentPassword => 'Password Attuale';
+
+  @override
+  String get pleaseEnterCurrentPassword => 'Inserisci la tua password attuale';
+
+  @override
+  String get newPassword => 'Nuova Password';
+
+  @override
+  String get pleaseEnterNewPassword => 'Inserisci una nuova password';
+
+  @override
+  String get passwordMustBeAtLeast8Characters => 'La password deve essere di almeno 8 caratteri';
+
+  @override
+  String get passwordMustContainUppercase => 'La password deve contenere maiuscole, minuscole e numeri';
+
+  @override
+  String get confirmNewPassword => 'Conferma Nuova Password';
+
+  @override
+  String get pleaseConfirmNewPassword => 'Conferma la tua nuova password';
+
+  @override
+  String get passwordsDoNotMatch => 'Le password non corrispondono';
+
+  @override
+  String get passwordRequirements => 'Requisiti Password:';
+
+  @override
+  String get atLeast8Characters => 'Almeno 8 caratteri';
+
+  @override
+  String get uppercaseLetter => 'Lettera maiuscola (A-Z)';
+
+  @override
+  String get lowercaseLetter => 'Lettera minuscola (a-z)';
+
+  @override
+  String get number => 'Numero (0-9)';
+
+  @override
+  String get changingPassword => 'Cambiando Password...';
+
+  @override
+  String get changePasswordButton => 'Cambia Password';
+
+  @override
+  String get passwordChangedSuccessfully => 'Password cambiata con successo';
+
+  @override
+  String get failedToChangePassword => 'Impossibile cambiare la password';
+
+  @override
+  String get tooShort => 'Troppo corta';
+
+  @override
+  String get weak => 'Debole';
+
+  @override
+  String get fair => 'Discreta';
+
+  @override
+  String get good => 'Buona';
+
+  @override
+  String get strong => 'Forte';
+
+  @override
+  String get proPlan => 'Piano PRO';
+
+  @override
+  String get activeSubscription => 'Abbonamento attivo';
+
+  @override
+  String get upgradeToUnlockPremiumFeatures => 'Aggiorna per sbloccare le funzionalità premium';
+
+  @override
+  String currentStatus(Object status) {
+    return 'Stato Attuale: $status';
+  }
+
+  @override
+  String get youHaveAccessTo => 'Hai accesso a:';
+
+  @override
+  String get personalNutritionistChatInApp => 'Chat personale con nutrizionista nell\'app';
+
+  @override
+  String get unsubscribeFromPro => 'Cancella Abbonamento PRO';
+
+  @override
+  String get successfullySubscribedToPro => 'Iscritto con successo a PRO!';
+
+  @override
+  String get failedToSubscribe => 'Impossibile iscriversi. Riprova.';
+
+  @override
+  String get errorSubscribing => 'Errore durante l\'iscrizione';
+
+  @override
+  String get successfullyUnsubscribedToFree => 'Cancellato con successo e tornato a GRATUITO!';
+
+  @override
+  String get failedToUnsubscribe => 'Impossibile cancellare l\'abbonamento. Riprova.';
+
+  @override
+  String get errorUnsubscribing => 'Errore durante la cancellazione';
+
+  @override
+  String get quickActions => 'Azioni Rapide';
+
+  @override
+  String get refreshData => 'Aggiorna Dati';
+
+  @override
+  String get clearCacheAndReload => 'Svuota cache e ricarica le tue informazioni';
+
+  @override
+  String get signOut => 'Disconnetti';
+
+  @override
+  String get signOutOfYourAccount => 'Disconnetti dal tuo account';
+
+  @override
+  String get dataRefreshedSuccessfully => 'Dati aggiornati con successo';
+
+  @override
+  String get areYouSureSignOut => 'Sei sicuro di voler disconnetterti dal tuo account?';
+
+  @override
+  String get dangerZone => 'Zona Pericolosa';
+
+  @override
+  String get irreversibleAndDestructiveActions => 'Azioni irreversibili e distruttive';
+
+  @override
+  String get criticalWarning => 'Avviso Critico';
+
+  @override
+  String get actionsArePermanent => 'Le azioni qui sotto sono permanenti e non possono essere annullate. Tutti i tuoi dati, inclusi piani pasto, preferenze e informazioni dell\'account verranno eliminati definitivamente.';
+
+  @override
+  String get deletingAccount => 'Eliminazione Account...';
+
+  @override
+  String get deleteMyAccount => 'Elimina Il Mio Account';
+
+  @override
+  String get thisActionWillPermanentlyDelete => 'Questa azione eliminerà permanentemente il tuo account e tutti i dati associati. Questa operazione non può essere annullata.';
+
+  @override
+  String get allYourMealPlansWillBeRemoved => 'Tutti i tuoi piani pasto, preferenze e dati personali verranno rimossi definitivamente.';
+
+  @override
+  String get failedToDeleteAccount => 'Impossibile eliminare l\'account';
 
   @override
   String get signUp => 'Crea account';
@@ -942,9 +1247,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get submit => 'Invia';
-
-  @override
-  String get changePassword => 'Cambia password';
 
   @override
   String get sendCode => 'Invia codice';
@@ -972,9 +1274,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get copyKey => 'Copia chiave';
-
-  @override
-  String get signOut => 'Esci';
 
   @override
   String backTo(String previousStep) {
@@ -1756,9 +2055,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get password => 'Password';
 
   @override
-  String get newPassword => 'Nuova Password';
-
-  @override
   String get email => 'Email';
 
   @override
@@ -1771,16 +2067,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get address => 'Indirizzo';
 
   @override
-  String get birthdate => 'Data di Nascita';
-
-  @override
-  String get familyName => 'Cognome';
-
-  @override
   String get middleName => 'Secondo Nome';
-
-  @override
-  String get gender => 'Genere';
 
   @override
   String genders(String gender) {
@@ -1794,9 +2081,6 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get givenName => 'Nome';
 
   @override
   String get name => 'Nome';
@@ -1868,9 +2152,6 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return 'almeno $_temp0';
   }
-
-  @override
-  String get passwordsDoNotMatch => 'Le password non corrispondono.';
 
   @override
   String get rememberDevice => 'Ricorda Dispositivo?';

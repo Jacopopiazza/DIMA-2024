@@ -1018,60 +1018,55 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         _buildSectionHeader(AppLocalizations.of(context)!.physicalDetails, Icons.monitor_weight_rounded,
             colorScheme, theme),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildTextField(
-                controller: _weightController,
-                label: AppLocalizations.of(context)!.weight,
-                suffix: 'kg',
-                keyboardType: TextInputType.number,
-                colorScheme: colorScheme,
-                helperText: AppLocalizations.of(context)!.weightHelper,
-                errorText: _isWeightValid() == false
-                    ? AppLocalizations.of(context)!.weightRange
-                    : null,
-                suffixIcon: _isWeightValid() == null
-                    ? null
-                    : Icon(
-                        _isWeightValid() == true
-                            ? Icons.check_circle_rounded
-                            : Icons.error_outline_rounded,
-                        color: _isWeightValid() == true
-                            ? Colors.green
-                            : Colors.red,
-                        size: 20,
-                      ),
-                onChanged: (_) => setState(() {}),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildTextField(
-                controller: _heightController,
-                label: AppLocalizations.of(context)!.height,
-                suffix: 'cm',
-                keyboardType: TextInputType.number,
-                colorScheme: colorScheme,
-                helperText: AppLocalizations.of(context)!.heightHelper,
-                errorText: _isHeightValid() == false
-                    ? AppLocalizations.of(context)!.heightRange
-                    : null,
-                suffixIcon: _isHeightValid() == null
-                    ? null
-                    : Icon(
-                        _isHeightValid() == true
-                            ? Icons.check_circle_rounded
-                            : Icons.error_outline_rounded,
-                        color: _isHeightValid() == true
-                            ? Colors.green
-                            : Colors.red,
-                        size: 20,
-                      ),
-                onChanged: (_) => setState(() {}),
-              ),
-            ),
-          ],
+        // Weight
+        _buildTextField(
+          controller: _weightController,
+          label: AppLocalizations.of(context)!.weight,
+          suffix: 'kg',
+          keyboardType: TextInputType.number,
+          colorScheme: colorScheme,
+          helperText: AppLocalizations.of(context)!.weightHelper,
+          errorText: _isWeightValid() == false
+              ? AppLocalizations.of(context)!.weightRange
+              : null,
+          suffixIcon: _isWeightValid() == null
+              ? null
+              : Icon(
+                  _isWeightValid() == true
+                      ? Icons.check_circle_rounded
+                      : Icons.error_outline_rounded,
+                  color: _isWeightValid() == true
+                      ? Colors.green
+                      : Colors.red,
+                  size: 20,
+                ),
+          onChanged: (_) => setState(() {}),
+        ),
+        const SizedBox(height: 16),
+        
+        // Height
+        _buildTextField(
+          controller: _heightController,
+          label: AppLocalizations.of(context)!.height,
+          suffix: 'cm',
+          keyboardType: TextInputType.number,
+          colorScheme: colorScheme,
+          helperText: AppLocalizations.of(context)!.heightHelper,
+          errorText: _isHeightValid() == false
+              ? AppLocalizations.of(context)!.heightRange
+              : null,
+          suffixIcon: _isHeightValid() == null
+              ? null
+              : Icon(
+                  _isHeightValid() == true
+                      ? Icons.check_circle_rounded
+                      : Icons.error_outline_rounded,
+                  color: _isHeightValid() == true
+                      ? Colors.green
+                      : Colors.red,
+                  size: 20,
+                ),
+          onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: 24),
 
