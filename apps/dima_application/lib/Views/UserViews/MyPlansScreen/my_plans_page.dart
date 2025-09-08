@@ -295,6 +295,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       floatingActionButton: ScaleTransition(
         scale: _fabScaleAnimation,
         child: FloatingActionButton.extended(
+          heroTag: "phone_new_plan_button", // Unique hero tag
           onPressed: () {
             _fabAnimationController.forward().then((_) {
               _fabAnimationController.reverse();

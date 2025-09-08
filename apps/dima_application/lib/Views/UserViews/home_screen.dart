@@ -1,5 +1,5 @@
 import 'package:dima_application/Views/Common/in_app_notification.dart';
-import 'package:dima_application/Views/UserViews/MyPlansScreen/my_plans_page.dart';
+import 'package:dima_application/Views/UserViews/MyPlansScreen/my_plans_page_adaptive.dart';
 import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
   // List of widgets to display based on the selected tab
   static const List<Widget> _widgetOptions = <Widget>[
     TodayPage(), // Index 0
-    MyPlansPage(), // Index 1
+    MyPlansPageAdaptive(), // Index 1 (adaptive: phone vs tablet)
     SettingsScreenRiverpod(), // Index 2 - Using the new Riverpod version
   ];
 

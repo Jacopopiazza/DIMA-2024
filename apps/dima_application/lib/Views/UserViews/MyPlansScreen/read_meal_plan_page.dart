@@ -13,11 +13,13 @@ import 'package:intl/intl.dart';
 class ReadMealPlanPage extends StatefulWidget {
   final String mealPlanId;
   final String? initialPlanName;
+  final bool showBackButton;
 
   const ReadMealPlanPage({
     super.key,
     required this.mealPlanId,
     this.initialPlanName,
+    this.showBackButton = true,
   });
 
   @override
@@ -97,8 +99,9 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           SingleChildScrollView(
             child: _buildBody(theme, colorScheme),
           ),
-          // Modern back button positioned on top
-          Positioned(
+          // Modern back button positioned on top - only show if showBackButton is true
+          if (widget.showBackButton)
+            Positioned(
             top: MediaQuery.of(context).padding.top + 16,
             left: 16,
             child: Container(
@@ -156,8 +159,11 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-            16.0, 80.0, 16.0, 16.0), // Added top padding for floating button
+        padding: EdgeInsets.fromLTRB(
+            16.0, 
+            widget.showBackButton ? 80.0 : 16.0, // Conditional top padding
+            16.0, 
+            16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1126,13 +1132,6 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     return colorScheme.outline;
   }
 
-  String _formatEnumValue(String enumValue) {
-    return enumValue
-        .split('_')
-        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-        .join(' ');
-  }
-
   /// Returns localized status string
   String _getLocalizedStatus(String statusString) {
     final localizations = AppLocalizations.of(context)!;
@@ -1264,6 +1263,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         ],
       ),
       child: FloatingActionButton.extended(
+        heroTag: "read_meal_plan_chat_button", // Unique hero tag
         onPressed: _openChat,
         backgroundColor: Colors.transparent,
         elevation: 0,
