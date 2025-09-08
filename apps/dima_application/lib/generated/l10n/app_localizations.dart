@@ -95,6 +95,132 @@ abstract class AppLocalizations {
     Locale('it')
   ];
 
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @completeYourProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Your Profile'**
+  String get completeYourProfile;
+
+  /// No description provided for @profileInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Information'**
+  String get profileInformation;
+
+  /// No description provided for @welcomeCompleteProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome! Please complete your nutritionist profile'**
+  String get welcomeCompleteProfile;
+
+  /// No description provided for @specialization.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialization'**
+  String get specialization;
+
+  /// No description provided for @specializationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Sports Nutrition, Weight Management'**
+  String get specializationHint;
+
+  /// No description provided for @pleaseEnterSpecialization.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your specialization'**
+  String get pleaseEnterSpecialization;
+
+  /// No description provided for @bio.
+  ///
+  /// In en, this message translates to:
+  /// **'Bio'**
+  String get bio;
+
+  /// No description provided for @bioHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell clients about your expertise and approach'**
+  String get bioHint;
+
+  /// No description provided for @pleaseEnterBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your bio'**
+  String get pleaseEnterBio;
+
+  /// No description provided for @bioTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Bio should be at least 50 characters'**
+  String get bioTooShort;
+
+  /// No description provided for @profilePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Picture'**
+  String get profilePicture;
+
+  /// No description provided for @tapToUploadProfilePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to upload a profile picture'**
+  String get tapToUploadProfilePicture;
+
+  /// No description provided for @availableForNewClients.
+  ///
+  /// In en, this message translates to:
+  /// **'Available for new clients'**
+  String get availableForNewClients;
+
+  /// No description provided for @clientsCanRequestServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Clients can request your services'**
+  String get clientsCanRequestServices;
+
+  /// No description provided for @updateProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Profile'**
+  String get updateProfile;
+
+  /// No description provided for @saveProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Profile'**
+  String get saveProfile;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please check your connection and try again.'**
+  String get noInternetConnection;
+
+  /// No description provided for @profileSavedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved successfully!'**
+  String get profileSavedSuccessfully;
+
+  /// No description provided for @errorSavingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving profile. Please try again.'**
+  String get errorSavingProfile;
+
+  /// No description provided for @errorSavingProfileWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving profile: {error}'**
+  String errorSavingProfileWith(String error);
+
   /// No description provided for @loadingNutritionistSettings.
   ///
   /// In en, this message translates to:
@@ -113,35 +239,17 @@ abstract class AppLocalizations {
   /// **'Manage your professional profile, availability, and account settings.'**
   String get manageProfileMessage;
 
-  /// No description provided for @profileInformation.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile Information'**
-  String get profileInformation;
-
   /// No description provided for @editProfessionalDetails.
   ///
   /// In en, this message translates to:
   /// **'Edit Professional Details'**
   String get editProfessionalDetails;
 
-  /// No description provided for @specialization.
-  ///
-  /// In en, this message translates to:
-  /// **'Specialization'**
-  String get specialization;
-
   /// No description provided for @professionalBio.
   ///
   /// In en, this message translates to:
   /// **'Professional Bio'**
   String get professionalBio;
-
-  /// No description provided for @profilePicture.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile Picture'**
-  String get profilePicture;
 
   /// No description provided for @availabilitySettings.
   ///
@@ -160,18 +268,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error updating profile: {error}'**
   String errorUpdatingProfile(String error);
-
-  /// No description provided for @pleaseEnterSpecialization.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter your specialization'**
-  String get pleaseEnterSpecialization;
-
-  /// No description provided for @pleaseEnterBio.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter your bio'**
-  String get pleaseEnterBio;
 
   /// No description provided for @bioMinLength.
   ///
@@ -220,12 +316,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
-
-  /// No description provided for @noInternetConnection.
-  ///
-  /// In en, this message translates to:
-  /// **'No Internet Connection'**
-  String get noInternetConnection;
 
   /// No description provided for @internetRequiredMessage.
   ///
@@ -4936,6 +5026,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email'**
   String get selectEmail;
+
+  /// The user's role, e.g., user, admin, etc.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get rolePlaceholder;
 
   /// The message that is displayed after a new confirmation code is sent via Email/SMS.
   ///

@@ -1,0 +1,30 @@
+{
+  "editProfile": "Edit Profile",
+  "completeYourProfile": "Complete Your Profile",
+  "profileInformation": "Profile Information",
+  "welcomeCompleteProfile": "Welcome! Please complete your nutritionist profile",
+  "specialization": "Specialization",
+  "specializationHint": "e.g., Sports Nutrition, Weight Management",
+  "pleaseEnterSpecialization": "Please enter your specialization",
+  "bio": "Bio",
+  "bioHint": "Tell clients about your expertise and approach",
+  "pleaseEnterBio": "Please enter your bio",
+  "bioTooShort": "Bio should be at least 50 characters",
+  "profilePicture": "Profile Picture",
+  "tapToUploadProfilePicture": "Tap to upload a profile picture",
+  "availableForNewClients": "Available for new clients",
+  "clientsCanRequestServices": "Clients can request your services",
+  "updateProfile": "Update Profile",
+  "saveProfile": "Save Profile",
+  "noInternetConnection": "No internet connection. Please check your connection and try again.",
+  "profileSavedSuccessfully": "Profile saved successfully!",
+  "errorSavingProfile": "Error saving profile. Please try again.",
+  "errorSavingProfileWith": "Error saving profile: {error}",
+  "@errorSavingProfileWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
+}

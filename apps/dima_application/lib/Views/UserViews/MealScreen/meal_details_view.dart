@@ -330,7 +330,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
       children: [
         Text(
           '$value $unit',
-          style: textTheme.titleMedium?.copyWith(
+          style: textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.bold, color: colorScheme.primary),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

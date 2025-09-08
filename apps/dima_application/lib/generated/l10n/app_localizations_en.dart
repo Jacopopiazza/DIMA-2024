@@ -9,6 +9,71 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get completeYourProfile => 'Complete Your Profile';
+
+  @override
+  String get profileInformation => 'Profile Information';
+
+  @override
+  String get welcomeCompleteProfile => 'Welcome! Please complete your nutritionist profile';
+
+  @override
+  String get specialization => 'Specialization';
+
+  @override
+  String get specializationHint => 'e.g., Sports Nutrition, Weight Management';
+
+  @override
+  String get pleaseEnterSpecialization => 'Please enter your specialization';
+
+  @override
+  String get bio => 'Bio';
+
+  @override
+  String get bioHint => 'Tell clients about your expertise and approach';
+
+  @override
+  String get pleaseEnterBio => 'Please enter your bio';
+
+  @override
+  String get bioTooShort => 'Bio should be at least 50 characters';
+
+  @override
+  String get profilePicture => 'Profile Picture';
+
+  @override
+  String get tapToUploadProfilePicture => 'Tap to upload a profile picture';
+
+  @override
+  String get availableForNewClients => 'Available for new clients';
+
+  @override
+  String get clientsCanRequestServices => 'Clients can request your services';
+
+  @override
+  String get updateProfile => 'Update Profile';
+
+  @override
+  String get saveProfile => 'Save Profile';
+
+  @override
+  String get noInternetConnection => 'No internet connection. Please check your connection and try again.';
+
+  @override
+  String get profileSavedSuccessfully => 'Profile saved successfully!';
+
+  @override
+  String get errorSavingProfile => 'Error saving profile. Please try again.';
+
+  @override
+  String errorSavingProfileWith(String error) {
+    return 'Error saving profile: $error';
+  }
+
+  @override
   String get loadingNutritionistSettings => 'Loading nutritionist settings...';
 
   @override
@@ -18,19 +83,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageProfileMessage => 'Manage your professional profile, availability, and account settings.';
 
   @override
-  String get profileInformation => 'Profile Information';
-
-  @override
   String get editProfessionalDetails => 'Edit Professional Details';
 
   @override
-  String get specialization => 'Specialization';
-
-  @override
   String get professionalBio => 'Professional Bio';
-
-  @override
-  String get profilePicture => 'Profile Picture';
 
   @override
   String get availabilitySettings => 'Availability Settings';
@@ -42,12 +98,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String errorUpdatingProfile(String error) {
     return 'Error updating profile: $error';
   }
-
-  @override
-  String get pleaseEnterSpecialization => 'Please enter your specialization';
-
-  @override
-  String get pleaseEnterBio => 'Please enter your bio';
 
   @override
   String get bioMinLength => 'Bio should be at least 50 characters';
@@ -74,9 +124,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings => 'Settings';
-
-  @override
-  String get noInternetConnection => 'No Internet Connection';
 
   @override
   String get internetRequiredMessage => 'This app requires an internet connection to function properly. Please check your connection and try again.';
@@ -2551,6 +2598,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectEmail => 'Email';
+
+  @override
+  String get rolePlaceholder => 'Role';
 
   @override
   String codeSent(String destination) {

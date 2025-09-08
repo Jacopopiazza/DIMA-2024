@@ -139,11 +139,12 @@ class _OfflineScreenState extends State<OfflineScreen>
           child: SlideTransition(
             position: _slideAnimation,
             child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                     // Offline icon with gradient background
                     Container(
                       padding: const EdgeInsets.all(32),
@@ -262,6 +263,7 @@ class _OfflineScreenState extends State<OfflineScreen>
                   ],
                 ),
               ),
+            ),
             ),
           ),
         ),

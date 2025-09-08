@@ -9,6 +9,71 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
+  String get editProfile => 'Modifica Profilo';
+
+  @override
+  String get completeYourProfile => 'Completa il Tuo Profilo';
+
+  @override
+  String get profileInformation => 'Informazioni del Profilo';
+
+  @override
+  String get welcomeCompleteProfile => 'Benvenuto! Completa il tuo profilo di nutrizionista';
+
+  @override
+  String get specialization => 'Specializzazione';
+
+  @override
+  String get specializationHint => 'es. Nutrizione Sportiva, Gestione del Peso';
+
+  @override
+  String get pleaseEnterSpecialization => 'Inserisci la tua specializzazione';
+
+  @override
+  String get bio => 'Biografia';
+
+  @override
+  String get bioHint => 'Parla ai clienti della tua esperienza e del tuo approccio';
+
+  @override
+  String get pleaseEnterBio => 'Inserisci la tua biografia';
+
+  @override
+  String get bioTooShort => 'La biografia deve essere di almeno 50 caratteri';
+
+  @override
+  String get profilePicture => 'Foto del Profilo';
+
+  @override
+  String get tapToUploadProfilePicture => 'Tocca per caricare una foto del profilo';
+
+  @override
+  String get availableForNewClients => 'Disponibile per nuovi clienti';
+
+  @override
+  String get clientsCanRequestServices => 'I clienti possono richiedere i tuoi servizi';
+
+  @override
+  String get updateProfile => 'Aggiorna Profilo';
+
+  @override
+  String get saveProfile => 'Salva Profilo';
+
+  @override
+  String get noInternetConnection => 'Nessuna connessione internet. Controlla la connessione e riprova.';
+
+  @override
+  String get profileSavedSuccessfully => 'Profilo salvato con successo!';
+
+  @override
+  String get errorSavingProfile => 'Errore nel salvataggio del profilo. Riprova.';
+
+  @override
+  String errorSavingProfileWith(String error) {
+    return 'Errore nel salvataggio del profilo: $error';
+  }
+
+  @override
   String get loadingNutritionistSettings => 'Caricamento impostazioni nutrizionista...';
 
   @override
@@ -18,19 +83,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get manageProfileMessage => 'Gestisci il tuo profilo professionale, disponibilità e impostazioni account.';
 
   @override
-  String get profileInformation => 'Informazioni Profilo';
-
-  @override
   String get editProfessionalDetails => 'Modifica Dettagli Professionali';
 
   @override
-  String get specialization => 'Specializzazione';
-
-  @override
   String get professionalBio => 'Bio Professionale';
-
-  @override
-  String get profilePicture => 'Foto del Profilo';
 
   @override
   String get availabilitySettings => 'Impostazioni Disponibilità';
@@ -42,12 +98,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String errorUpdatingProfile(String error) {
     return 'Errore nell\'aggiornamento del profilo';
   }
-
-  @override
-  String get pleaseEnterSpecialization => 'Inserisci la tua specializzazione';
-
-  @override
-  String get pleaseEnterBio => 'Inserisci la tua bio';
 
   @override
   String get bioMinLength => 'La bio deve essere di almeno 50 caratteri';
@@ -74,9 +124,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settings => 'Impostazioni';
-
-  @override
-  String get noInternetConnection => 'Nessuna Connessione Internet';
 
   @override
   String get internetRequiredMessage => 'Questa app richiede una connessione internet per funzionare correttamente. Controlla la tua connessione e riprova.';
@@ -443,7 +490,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get weight => 'Peso';
 
   @override
-  String get bmi => 'BMI';
+  String get bmi => 'IMC';
 
   @override
   String get dietaryInformation => 'Informazioni Dietetiche';
@@ -2551,6 +2598,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get selectEmail => 'Email';
+
+  @override
+  String get rolePlaceholder => 'Ruolo';
 
   @override
   String codeSent(String destination) {

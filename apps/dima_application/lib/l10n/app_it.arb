@@ -457,7 +457,7 @@
   "noClientDetailsAvailable": "Nessun dettaglio cliente disponibile",
   "loadingClientDetails": "Caricamento dettagli cliente...",
   "physicalInformation": "Informazioni Fisiche",
-  "bmi": "BMI",
+  "bmi": "IMC",
   "dailyMealsPreference": "Preferenza Pasti Giornalieri",
   "dietaryRestrictionsLabel": "Restrizioni Dietetiche",
   "accountInformation": "Informazioni Account",
@@ -564,14 +564,39 @@
   },
   "proPlanTitle": "Piano PRO",
   "personalNutritionistChat": "Chat personale con nutrizionista nell'app",
+  "editProfile": "Modifica Profilo",
+  "completeYourProfile": "Completa il Tuo Profilo",
+  "profileInformation": "Informazioni del Profilo",
+  "welcomeCompleteProfile": "Benvenuto! Completa il tuo profilo di nutrizionista",
+  "specialization": "Specializzazione",
+  "specializationHint": "es. Nutrizione Sportiva, Gestione del Peso",
+  "pleaseEnterSpecialization": "Inserisci la tua specializzazione",
+  "bio": "Biografia",
+  "bioHint": "Parla ai clienti della tua esperienza e del tuo approccio",
+  "pleaseEnterBio": "Inserisci la tua biografia",
+  "bioTooShort": "La biografia deve essere di almeno 50 caratteri",
+  "profilePicture": "Foto del Profilo",
+  "tapToUploadProfilePicture": "Tocca per caricare una foto del profilo",
+  "availableForNewClients": "Disponibile per nuovi clienti",
+  "clientsCanRequestServices": "I clienti possono richiedere i tuoi servizi",
+  "updateProfile": "Aggiorna Profilo",
+  "saveProfile": "Salva Profilo",
+  "noInternetConnection": "Nessuna connessione internet. Controlla la connessione e riprova.",
+  "profileSavedSuccessfully": "Profilo salvato con successo!",
+  "errorSavingProfile": "Errore nel salvataggio del profilo. Riprova.",
+  "errorSavingProfileWith": "Errore nel salvataggio del profilo: {error}",
+  "@errorSavingProfileWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "loadingNutritionistSettings": "Caricamento impostazioni nutrizionista...",
   "nutritionistSettings": "Impostazioni Nutrizionista",
   "manageProfileMessage": "Gestisci il tuo profilo professionale, disponibilità e impostazioni account.",
-  "profileInformation": "Informazioni Profilo",
   "editProfessionalDetails": "Modifica Dettagli Professionali",
-  "specialization": "Specializzazione",
   "professionalBio": "Bio Professionale",
-  "profilePicture": "Foto del Profilo",
   "availabilitySettings": "Impostazioni Disponibilità",
   "@errorUpdatingProfile": {
     "description": "Error message when profile update fails",
@@ -581,8 +606,6 @@
       }
     }
   },
-  "pleaseEnterSpecialization": "Inserisci la tua specializzazione",
-  "pleaseEnterBio": "Inserisci la tua bio",
   "bioMinLength": "La bio deve essere di almeno 50 caratteri",
   "availableForConsultations": "Ora sei disponibile per le consultazioni",
   "unavailableForConsultations": "Ora non sei disponibile per le consultazioni",
@@ -596,7 +619,6 @@
     }
   },
   "validatePlans": "Convalida Piani",
-  "noInternetConnection": "Nessuna Connessione Internet",
   "internetRequiredMessage": "Questa app richiede una connessione internet per funzionare correttamente. Controlla la tua connessione e riprova.",
   "connectionTips": "Suggerimenti per la Connessione",
   "checkWifiConnection": "Controlla la tua connessione Wi-Fi o dati mobili",
@@ -1941,6 +1963,10 @@
   "selectEmail": "Email",
   "@selectEmail": {
     "description": "Label for the radio button to select email as the user's chosen MFA method."
+  },
+  "rolePlaceholder": "Ruolo",
+  "@rolePlaceholder": {
+    "description": "Il ruolo dell'utente, ad esempio, utente, amministratore, ecc."
   },
   "@signIn": {
     "description": "Label of the button to sign in the user."

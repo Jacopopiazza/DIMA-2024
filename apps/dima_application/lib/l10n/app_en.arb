@@ -1,13 +1,38 @@
 {
   "@@locale": "en",
+  "editProfile": "Edit Profile",
+  "completeYourProfile": "Complete Your Profile",
+  "profileInformation": "Profile Information",
+  "welcomeCompleteProfile": "Welcome! Please complete your nutritionist profile",
+  "specialization": "Specialization",
+  "specializationHint": "e.g., Sports Nutrition, Weight Management",
+  "pleaseEnterSpecialization": "Please enter your specialization",
+  "bio": "Bio",
+  "bioHint": "Tell clients about your expertise and approach",
+  "pleaseEnterBio": "Please enter your bio",
+  "bioTooShort": "Bio should be at least 50 characters",
+  "profilePicture": "Profile Picture",
+  "tapToUploadProfilePicture": "Tap to upload a profile picture",
+  "availableForNewClients": "Available for new clients",
+  "clientsCanRequestServices": "Clients can request your services",
+  "updateProfile": "Update Profile",
+  "saveProfile": "Save Profile",
+  "noInternetConnection": "No internet connection. Please check your connection and try again.",
+  "profileSavedSuccessfully": "Profile saved successfully!",
+  "errorSavingProfile": "Error saving profile. Please try again.",
+  "errorSavingProfileWith": "Error saving profile: {error}",
+  "@errorSavingProfileWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "loadingNutritionistSettings": "Loading nutritionist settings...",
   "nutritionistSettings": "Nutritionist Settings",
   "manageProfileMessage": "Manage your professional profile, availability, and account settings.",
-  "profileInformation": "Profile Information",
   "editProfessionalDetails": "Edit Professional Details",
-  "specialization": "Specialization",
   "professionalBio": "Professional Bio",
-  "profilePicture": "Profile Picture",
   "availabilitySettings": "Availability Settings",
   "profileUpdatedSuccessfully": "Profile updated successfully",
   "errorUpdatingProfile": "Error updating profile: {error}",
@@ -19,8 +44,6 @@
       }
     }
   },
-  "pleaseEnterSpecialization": "Please enter your specialization",
-  "pleaseEnterBio": "Please enter your bio",
   "bioMinLength": "Bio should be at least 50 characters",
   "saving": "Saving...",
   "saveChanges": "Save Changes",
@@ -37,7 +60,6 @@
   },
   "validatePlans": "Validate Plans",
   "settings": "Settings",
-  "noInternetConnection": "No Internet Connection",
   "internetRequiredMessage": "This app requires an internet connection to function properly. Please check your connection and try again.",
   "connectionTips": "Connection Tips",
   "checkWifiConnection": "Check your Wi-Fi or mobile data connection",
@@ -2090,6 +2112,10 @@
   "selectEmail": "Email",
   "@selectEmail": {
     "description": "Label for the radio button to select email as the user's chosen MFA method."
+  },
+  "rolePlaceholder": "Role",
+  "@rolePlaceholder": {
+    "description": "The user's role, e.g., user, admin, etc."
   },
   "codeSent": "A confirmation code has been sent to {destination}.",
   "@codeSent": {

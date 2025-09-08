@@ -1010,7 +1010,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           '$value $unit',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 13,
             color: colorScheme.onSurface,
           ),
         ),
