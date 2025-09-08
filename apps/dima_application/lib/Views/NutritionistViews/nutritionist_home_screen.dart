@@ -6,7 +6,7 @@ import 'package:dima_application/services/connectivity_service.dart';
 import 'package:flutter/material.dart';
 
 import 'nutritionist_settings_page.dart';
-import 'validate_plans_page.dart';
+import 'validate_plans_page_adaptive.dart';
 
 class NutritionistHomeScreen extends StatefulWidget {
   final bool isOffline;
@@ -56,7 +56,7 @@ class _NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
 
   // List of widgets to display based on the selected tab
   static final List<Widget> _widgetOptions = <Widget>[
-    ValidatePlansPage(), // Index 0
+    ValidatePlansPageAdaptive(), // Index 0
     NutritionistSettingsPage(), // Index 1
   ];
 

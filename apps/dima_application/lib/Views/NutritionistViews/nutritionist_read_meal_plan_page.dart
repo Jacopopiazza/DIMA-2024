@@ -11,10 +11,14 @@ import 'package:intl/intl.dart';
 /// A modern nutritionist view for meal plans with editing capabilities
 class NutritionistReadMealPlanPage extends ConsumerStatefulWidget {
   final MealPlan mealPlan;
+  final bool showBackButton;
+  final VoidCallback? onOperationComplete;
 
   const NutritionistReadMealPlanPage({
     super.key,
     required this.mealPlan,
+    this.showBackButton = true,
+    this.onOperationComplete,
   });
 
   @override
@@ -396,8 +400,12 @@ class _NutritionistReadMealPlanPageState
       if (mounted) {
         if (success) {
           _showSnackBar(AppLocalizations.of(context)!.mealPlanValidatedSuccessfully, Colors.green);
-          Navigator.of(context)
-              .pop(true); // Return true to indicate changes were made
+          if (widget.onOperationComplete != null) {
+            widget.onOperationComplete!();
+          } else {
+            Navigator.of(context)
+                .pop(true); // Return true to indicate changes were made
+          }
         } else {
           _showSnackBar(AppLocalizations.of(context)!.failedToValidateMealPlan, Colors.red);
         }
@@ -430,8 +438,12 @@ class _NutritionistReadMealPlanPageState
       if (mounted) {
         if (success) {
           _showSnackBar(AppLocalizations.of(context)!.mealPlanRejected, Colors.orange);
-          Navigator.of(context)
-              .pop(true); // Return true to indicate changes were made
+          if (widget.onOperationComplete != null) {
+            widget.onOperationComplete!();
+          } else {
+            Navigator.of(context)
+                .pop(true); // Return true to indicate changes were made
+          }
         } else {
           _showSnackBar(AppLocalizations.of(context)!.failedToRejectMealPlan, Colors.red);
         }
@@ -514,8 +526,12 @@ class _NutritionistReadMealPlanPageState
           setState(() {
             _isEditing = false;
           });
-          Navigator.of(context)
-              .pop(true); // Return true to indicate changes were made
+          if (widget.onOperationComplete != null) {
+            widget.onOperationComplete!();
+          } else {
+            Navigator.of(context)
+                .pop(true); // Return true to indicate changes were made
+          }
         } else {
           _showSnackBar(AppLocalizations.of(context)!.failedToSaveMealPlan, Colors.red);
         }
@@ -586,42 +602,43 @@ class _NutritionistReadMealPlanPageState
               child: _buildBody(theme, colorScheme),
             ),
           ),
-          // Modern back button positioned on top
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
-            left: 16,
-            child: Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surface.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.shadow.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-                border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.1),
-                ),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => Navigator.of(context).pop(),
+          // Modern back button positioned on top - only show if showBackButton is true
+          if (widget.showBackButton)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16,
+              left: 16,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.surface.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    child: Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: colorScheme.onSurface,
-                      size: 20,
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.shadow.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: colorScheme.outline.withOpacity(0.1),
+                  ),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: colorScheme.onSurface,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
           // Action buttons positioned on top right
           Positioned(
             top: MediaQuery.of(context).padding.top + 16,
@@ -2397,9 +2414,9 @@ class _NutritionistReadMealPlanPageState
     );
   }
 
-  void _openChat() {
+  void _openChat() async {
     if (widget.mealPlan.chatId != null) {
-      Navigator.of(context).push(
+      await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ChatPage(
             key: UniqueKey(),
@@ -2410,6 +2427,11 @@ class _NutritionistReadMealPlanPageState
           ),
         ),
       );
+      
+      // Always trigger refresh callback after chat since messages might have been sent
+      if (widget.onOperationComplete != null) {
+        widget.onOperationComplete!();
+      }
     }
   }
 }
