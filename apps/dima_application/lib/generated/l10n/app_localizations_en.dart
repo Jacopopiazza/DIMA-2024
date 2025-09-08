@@ -1,5 +1,5 @@
-// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -246,6 +246,326 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otherGender => 'Other';
 
   @override
+  String get newMealPlanAvailable => 'New meal plan available!';
+
+  @override
+  String get mealPlanGenerationFailed => 'Meal plan generation failed: ';
+
+  @override
+  String get unknownError => 'Unknown error';
+
+  @override
+  String get loadingYourMealPlans => 'Loading your meal plans...';
+
+  @override
+  String get newPlan => 'New Plan';
+
+  @override
+  String get noMealPlansYet => 'No meal plans yet';
+
+  @override
+  String get createFirstMealPlan => 'Create your first personalized meal plan\nto get started with healthy eating';
+
+  @override
+  String get pullDownToRefresh => 'Pull down to refresh';
+
+  @override
+  String get connectionProblem => 'Connection Problem';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get unableToLoadPlansWithConnection => 'Unable to load your meal plans.\nCheck your internet connection and try again.';
+
+  @override
+  String get unableToLoadPlans => 'Unable to load your meal plans';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get active => 'ACTIVE';
+
+  @override
+  String get setActive => 'Set Active';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get generating => 'Generating';
+
+  @override
+  String get failed => 'Failed';
+
+  @override
+  String get validated => 'Validated';
+
+  @override
+  String get pendingValidation => 'Pending Validation';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get notValidated => 'Not validated';
+
+  @override
+  String get pleaseRetryLater => 'Please try again later';
+
+  @override
+  String get modelOverloadedMessage => 'The model is overloaded. Please request a new meal plan later.';
+
+  @override
+  String get setActivePlan => 'Set Active Plan';
+
+  @override
+  String makeActivePlanQuestion(Object planName) {
+    return 'Make \"$planName\" your active meal plan?';
+  }
+
+  @override
+  String get deleteMealPlan => 'Delete Meal Plan';
+
+  @override
+  String deletePlanConfirmation(Object planName) {
+    return 'Are you sure you want to delete \"$planName\"?';
+  }
+
+  @override
+  String get unnamedPlan => 'Unnamed Plan';
+
+  @override
+  String planId(Object planId) {
+    return 'Plan ID: $planId';
+  }
+
+  @override
+  String get viewPlan => 'View Plan';
+
+  @override
+  String get editName => 'Edit Name';
+
+  @override
+  String get requestValidation => 'Request Validation';
+
+  @override
+  String get seeDetailedMealPlan => 'See detailed meal plan';
+
+  @override
+  String get changePlanName => 'Change the plan name';
+
+  @override
+  String get getNutritionistApproval => 'Get nutritionist approval';
+
+  @override
+  String get proFeature => 'Pro feature';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get activeMealPlanUpdated => 'Active meal plan updated!';
+
+  @override
+  String get failedToSetActiveMealPlan => 'Failed to set active meal plan';
+
+  @override
+  String get mealPlanDeletedSuccessfully => 'Meal plan deleted successfully';
+
+  @override
+  String get failedToDeleteMealPlan => 'Failed to delete meal plan';
+
+  @override
+  String get actionFailed => 'Action failed: ';
+
+  @override
+  String get modifyPlanName => 'Modify Plan Name';
+
+  @override
+  String get enterNewPlanName => 'Enter new plan name';
+
+  @override
+  String get planNameCannotBeEmpty => 'Plan name cannot be empty';
+
+  @override
+  String get planNameMinLength => 'Plan name must be at least 2 characters long';
+
+  @override
+  String get planNameMaxLength => 'Plan name must be less than 50 characters';
+
+  @override
+  String get validName => 'Valid name';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get failedToUpdatePlanName => 'Failed to update plan name: ';
+
+  @override
+  String get requestNutritionistValidation => 'Request Nutritionist Validation';
+
+  @override
+  String selectNutritionistToReview(Object planName) {
+    return 'Select a nutritionist to review your meal plan \"$planName\":';
+  }
+
+  @override
+  String get errorLoadingNutritionists => 'Error loading nutritionists: ';
+
+  @override
+  String get pleaseSelectNutritionist => 'Please select a nutritionist';
+
+  @override
+  String get nutritionistNotAvailable => 'Selected nutritionist is not available for validation';
+
+  @override
+  String get validationRequestSent => 'Validation request sent successfully!';
+
+  @override
+  String get failedToSendValidationRequest => 'Failed to send validation request';
+
+  @override
+  String get errorSendingValidationRequest => 'Error sending validation request: ';
+
+  @override
+  String get available => 'Available';
+
+  @override
+  String get unavailable => 'Unavailable';
+
+  @override
+  String get noNutritionistsAvailable => 'No nutritionists available at the moment.';
+
+  @override
+  String get requestValidationButton => 'Request Validation';
+
+  @override
+  String get failedToLoadMealPlan => 'Failed to load meal plan: ';
+
+  @override
+  String get loadingYourMealPlan => 'Loading your meal plan...';
+
+  @override
+  String get connectionProblemView => 'Connection Problem';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops! Something went wrong';
+
+  @override
+  String get checkInternetConnection => 'Please check your internet connection and try again. Make sure you\'re connected to Wi-Fi or cellular data.';
+
+  @override
+  String get encounterErrorLoadingPlan => 'We encountered an error while loading your meal plan. This might be a temporary issue.';
+
+  @override
+  String get reconnect => 'Reconnect';
+
+  @override
+  String get mealPlanNotFound => 'Meal Plan Not Found';
+
+  @override
+  String get mealPlanMightDeleted => 'This meal plan might have been deleted or is no longer available. Please try refreshing or go back to select another plan.';
+
+  @override
+  String get planInformation => 'Plan Information';
+
+  @override
+  String get viewPlanDetails => 'View plan details';
+
+  @override
+  String get planName => 'Plan Name';
+
+  @override
+  String get planIdLabel => 'Plan ID';
+
+  @override
+  String get generated => 'Generated';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get validation => 'Validation';
+
+  @override
+  String get nutritionist => 'Nutritionist';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get errorDetails => 'Error Details';
+
+  @override
+  String get weeklyMealPlan => 'Weekly Meal Plan';
+
+  @override
+  String get noMealPlanDataAvailable => 'No meal plan data available';
+
+  @override
+  String get noDailyPlanData => 'No daily plan data found for this meal plan.';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
+  String get noMealsScheduled => 'No meals scheduled for this day';
+
+  @override
+  String get unnamedMeal => 'Unnamed meal';
+
+  @override
+  String get recipeName => 'Recipe Name';
+
+  @override
+  String get instructions => 'Instructions';
+
+  @override
+  String get nutritionInformation => 'Nutrition Information';
+
+  @override
+  String get calories => 'Calories';
+
+  @override
+  String get protein => 'Protein';
+
+  @override
+  String get carbs => 'Carbs';
+
+  @override
+  String get fat => 'Fat';
+
+  @override
+  String get chatWithNutritionist => 'Chat with Nutritionist';
+
+  @override
+  String get showLess => 'Show less';
+
+  @override
+  String get readMore => 'Read more';
+
+  @override
   String get mealNameBREAKFAST => 'Breakfast';
 
   @override
@@ -267,12 +587,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayProgress => 'Today\'s Progress';
 
   @override
-  String get calories => 'Calories';
-
-  @override
-  String get carbs => 'Carbs';
-
-  @override
   String get fats => 'Fats';
 
   @override
@@ -280,6 +594,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get todaysMeals => 'Today\'s Meals';
+
+  @override
+  String get showingStaleData => 'Showing stale data.';
+
+  @override
+  String get networkUnavailableCachedData => 'Network unavailable. Showing cached data.';
+
+  @override
+  String get refreshFailedPreviousData => 'Refresh failed. Displaying previous data.';
+
+  @override
+  String get failedToLoadDataCheckConnection => 'Failed to load data. Check connection.';
+
+  @override
+  String get refreshFailedNoMealsScheduled => 'Refresh failed. No meals scheduled.';
+
+  @override
+  String get errorMealDataMissing => 'Error: Meal data is missing.';
+
+  @override
+  String get noMealsForToday => 'No Meals For Today';
+
+  @override
+  String currentMealPlanNoMealsScheduled(String dayName) {
+    return 'Your current meal plan doesn\'t have any meals scheduled for $dayName.';
+  }
+
+  @override
+  String get refreshNow => 'Refresh Now';
+
+  @override
+  String get failedToLoadData => 'Failed to Load Data';
+
+  @override
+  String get retryAction => 'Retry';
 
   @override
   String get signIn => 'Sign In';

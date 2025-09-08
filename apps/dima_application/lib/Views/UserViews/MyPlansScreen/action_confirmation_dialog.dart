@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 class ActionConfirmationDialog extends StatefulWidget {
   final String title;
@@ -46,7 +47,7 @@ class _ActionConfirmationDialogState extends State<ActionConfirmationDialog> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Action failed: $e'),
+            content: Text(AppLocalizations.of(context)!.actionFailed + e.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             shape:
@@ -69,7 +70,7 @@ class _ActionConfirmationDialogState extends State<ActionConfirmationDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-          child: Text('Cancel',
+          child: Text(AppLocalizations.of(context)!.cancel,
               style:
                   TextStyle(color: widget.textColor ?? colorScheme.onSurface)),
         ),

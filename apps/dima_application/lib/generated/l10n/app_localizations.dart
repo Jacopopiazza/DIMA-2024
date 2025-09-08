@@ -569,6 +569,630 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get otherGender;
 
+  /// No description provided for @newMealPlanAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'New meal plan available!'**
+  String get newMealPlanAvailable;
+
+  /// No description provided for @mealPlanGenerationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal plan generation failed: '**
+  String get mealPlanGenerationFailed;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error'**
+  String get unknownError;
+
+  /// No description provided for @loadingYourMealPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading your meal plans...'**
+  String get loadingYourMealPlans;
+
+  /// No description provided for @newPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'New Plan'**
+  String get newPlan;
+
+  /// No description provided for @noMealPlansYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No meal plans yet'**
+  String get noMealPlansYet;
+
+  /// No description provided for @createFirstMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first personalized meal plan\nto get started with healthy eating'**
+  String get createFirstMealPlan;
+
+  /// No description provided for @pullDownToRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to refresh'**
+  String get pullDownToRefresh;
+
+  /// No description provided for @connectionProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection Problem'**
+  String get connectionProblem;
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @unableToLoadPlansWithConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load your meal plans.\nCheck your internet connection and try again.'**
+  String get unableToLoadPlansWithConnection;
+
+  /// No description provided for @unableToLoadPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load your meal plans'**
+  String get unableToLoadPlans;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVE'**
+  String get active;
+
+  /// No description provided for @setActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Active'**
+  String get setActive;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @generating.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating'**
+  String get generating;
+
+  /// No description provided for @failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
+  /// No description provided for @validated.
+  ///
+  /// In en, this message translates to:
+  /// **'Validated'**
+  String get validated;
+
+  /// No description provided for @pendingValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Validation'**
+  String get pendingValidation;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// No description provided for @notValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'Not validated'**
+  String get notValidated;
+
+  /// No description provided for @pleaseRetryLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later'**
+  String get pleaseRetryLater;
+
+  /// No description provided for @modelOverloadedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The model is overloaded. Please request a new meal plan later.'**
+  String get modelOverloadedMessage;
+
+  /// No description provided for @setActivePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Active Plan'**
+  String get setActivePlan;
+
+  /// No description provided for @makeActivePlanQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Make \"{planName}\" your active meal plan?'**
+  String makeActivePlanQuestion(Object planName);
+
+  /// No description provided for @deleteMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Meal Plan'**
+  String get deleteMealPlan;
+
+  /// No description provided for @deletePlanConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{planName}\"?'**
+  String deletePlanConfirmation(Object planName);
+
+  /// No description provided for @unnamedPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Unnamed Plan'**
+  String get unnamedPlan;
+
+  /// No description provided for @planId.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan ID: {planId}'**
+  String planId(Object planId);
+
+  /// No description provided for @viewPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'View Plan'**
+  String get viewPlan;
+
+  /// No description provided for @editName.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Name'**
+  String get editName;
+
+  /// No description provided for @requestValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Validation'**
+  String get requestValidation;
+
+  /// No description provided for @seeDetailedMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'See detailed meal plan'**
+  String get seeDetailedMealPlan;
+
+  /// No description provided for @changePlanName.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the plan name'**
+  String get changePlanName;
+
+  /// No description provided for @getNutritionistApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Get nutritionist approval'**
+  String get getNutritionistApproval;
+
+  /// No description provided for @proFeature.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro feature'**
+  String get proFeature;
+
+  /// No description provided for @pro.
+  ///
+  /// In en, this message translates to:
+  /// **'PRO'**
+  String get pro;
+
+  /// No description provided for @activeMealPlanUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Active meal plan updated!'**
+  String get activeMealPlanUpdated;
+
+  /// No description provided for @failedToSetActiveMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to set active meal plan'**
+  String get failedToSetActiveMealPlan;
+
+  /// No description provided for @mealPlanDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal plan deleted successfully'**
+  String get mealPlanDeletedSuccessfully;
+
+  /// No description provided for @failedToDeleteMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete meal plan'**
+  String get failedToDeleteMealPlan;
+
+  /// No description provided for @actionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Action failed: '**
+  String get actionFailed;
+
+  /// No description provided for @modifyPlanName.
+  ///
+  /// In en, this message translates to:
+  /// **'Modify Plan Name'**
+  String get modifyPlanName;
+
+  /// No description provided for @enterNewPlanName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter new plan name'**
+  String get enterNewPlanName;
+
+  /// No description provided for @planNameCannotBeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan name cannot be empty'**
+  String get planNameCannotBeEmpty;
+
+  /// No description provided for @planNameMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan name must be at least 2 characters long'**
+  String get planNameMinLength;
+
+  /// No description provided for @planNameMaxLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan name must be less than 50 characters'**
+  String get planNameMaxLength;
+
+  /// No description provided for @validName.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid name'**
+  String get validName;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @failedToUpdatePlanName.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update plan name: '**
+  String get failedToUpdatePlanName;
+
+  /// No description provided for @requestNutritionistValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Nutritionist Validation'**
+  String get requestNutritionistValidation;
+
+  /// No description provided for @selectNutritionistToReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a nutritionist to review your meal plan \"{planName}\":'**
+  String selectNutritionistToReview(Object planName);
+
+  /// No description provided for @errorLoadingNutritionists.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading nutritionists: '**
+  String get errorLoadingNutritionists;
+
+  /// No description provided for @pleaseSelectNutritionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a nutritionist'**
+  String get pleaseSelectNutritionist;
+
+  /// No description provided for @nutritionistNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected nutritionist is not available for validation'**
+  String get nutritionistNotAvailable;
+
+  /// No description provided for @validationRequestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Validation request sent successfully!'**
+  String get validationRequestSent;
+
+  /// No description provided for @failedToSendValidationRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send validation request'**
+  String get failedToSendValidationRequest;
+
+  /// No description provided for @errorSendingValidationRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Error sending validation request: '**
+  String get errorSendingValidationRequest;
+
+  /// No description provided for @available.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get available;
+
+  /// No description provided for @unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable'**
+  String get unavailable;
+
+  /// No description provided for @noNutritionistsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No nutritionists available at the moment.'**
+  String get noNutritionistsAvailable;
+
+  /// No description provided for @requestValidationButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Validation'**
+  String get requestValidationButton;
+
+  /// No description provided for @failedToLoadMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load meal plan: '**
+  String get failedToLoadMealPlan;
+
+  /// No description provided for @loadingYourMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading your meal plan...'**
+  String get loadingYourMealPlan;
+
+  /// No description provided for @connectionProblemView.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection Problem'**
+  String get connectionProblemView;
+
+  /// No description provided for @oopsSomethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops! Something went wrong'**
+  String get oopsSomethingWentWrong;
+
+  /// No description provided for @checkInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection and try again. Make sure you\'re connected to Wi-Fi or cellular data.'**
+  String get checkInternetConnection;
+
+  /// No description provided for @encounterErrorLoadingPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'We encountered an error while loading your meal plan. This might be a temporary issue.'**
+  String get encounterErrorLoadingPlan;
+
+  /// No description provided for @reconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get reconnect;
+
+  /// No description provided for @mealPlanNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Plan Not Found'**
+  String get mealPlanNotFound;
+
+  /// No description provided for @mealPlanMightDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This meal plan might have been deleted or is no longer available. Please try refreshing or go back to select another plan.'**
+  String get mealPlanMightDeleted;
+
+  /// No description provided for @planInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Information'**
+  String get planInformation;
+
+  /// No description provided for @viewPlanDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View plan details'**
+  String get viewPlanDetails;
+
+  /// No description provided for @planName.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Name'**
+  String get planName;
+
+  /// No description provided for @planIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan ID'**
+  String get planIdLabel;
+
+  /// No description provided for @generated.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated'**
+  String get generated;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Validation'**
+  String get validation;
+
+  /// No description provided for @nutritionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritionist'**
+  String get nutritionist;
+
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
+  /// No description provided for @errorDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Error Details'**
+  String get errorDetails;
+
+  /// No description provided for @weeklyMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Meal Plan'**
+  String get weeklyMealPlan;
+
+  /// No description provided for @noMealPlanDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No meal plan data available'**
+  String get noMealPlanDataAvailable;
+
+  /// No description provided for @noDailyPlanData.
+  ///
+  /// In en, this message translates to:
+  /// **'No daily plan data found for this meal plan.'**
+  String get noDailyPlanData;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
+
+  /// No description provided for @noMealsScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'No meals scheduled for this day'**
+  String get noMealsScheduled;
+
+  /// No description provided for @unnamedMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Unnamed meal'**
+  String get unnamedMeal;
+
+  /// No description provided for @recipeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe Name'**
+  String get recipeName;
+
+  /// No description provided for @instructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get instructions;
+
+  /// No description provided for @nutritionInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Information'**
+  String get nutritionInformation;
+
+  /// Calories display name
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get calories;
+
+  /// No description provided for @protein.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get protein;
+
+  /// Carbs display name
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get carbs;
+
+  /// No description provided for @fat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat'**
+  String get fat;
+
+  /// No description provided for @chatWithNutritionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with Nutritionist'**
+  String get chatWithNutritionist;
+
+  /// No description provided for @showLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get showLess;
+
+  /// No description provided for @readMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Read more'**
+  String get readMore;
+
   /// Breakfast meal display name
   ///
   /// In en, this message translates to:
@@ -611,18 +1235,6 @@ abstract class AppLocalizations {
   /// **'Today\'s Progress'**
   String get todayProgress;
 
-  /// Calories display name
-  ///
-  /// In en, this message translates to:
-  /// **'Calories'**
-  String get calories;
-
-  /// Carbs display name
-  ///
-  /// In en, this message translates to:
-  /// **'Carbs'**
-  String get carbs;
-
   /// Fats display name
   ///
   /// In en, this message translates to:
@@ -640,6 +1252,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today\'s Meals'**
   String get todaysMeals;
+
+  /// Message when displaying cached/offline data
+  ///
+  /// In en, this message translates to:
+  /// **'Showing stale data.'**
+  String get showingStaleData;
+
+  /// Message when network is unavailable but cached data exists
+  ///
+  /// In en, this message translates to:
+  /// **'Network unavailable. Showing cached data.'**
+  String get networkUnavailableCachedData;
+
+  /// Message when refresh fails but previous data is available
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh failed. Displaying previous data.'**
+  String get refreshFailedPreviousData;
+
+  /// Generic connection error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load data. Check connection.'**
+  String get failedToLoadDataCheckConnection;
+
+  /// Message when refresh fails and no meals are scheduled
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh failed. No meals scheduled.'**
+  String get refreshFailedNoMealsScheduled;
+
+  /// Error message when meal data is unexpectedly missing
+  ///
+  /// In en, this message translates to:
+  /// **'Error: Meal data is missing.'**
+  String get errorMealDataMissing;
+
+  /// Title when no meals are scheduled for today
+  ///
+  /// In en, this message translates to:
+  /// **'No Meals For Today'**
+  String get noMealsForToday;
+
+  /// Message explaining no meals are scheduled for the day
+  ///
+  /// In en, this message translates to:
+  /// **'Your current meal plan doesn\'t have any meals scheduled for {dayName}.'**
+  String currentMealPlanNoMealsScheduled(String dayName);
+
+  /// Button text to refresh data
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Now'**
+  String get refreshNow;
+
+  /// Error view title when data loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to Load Data'**
+  String get failedToLoadData;
+
+  /// Button text to retry an action
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryAction;
 
   /// Label of the button to sign in the user.
   ///

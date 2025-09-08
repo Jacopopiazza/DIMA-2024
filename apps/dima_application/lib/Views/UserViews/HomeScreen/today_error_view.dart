@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 /// A widget that displays an error message within a styled card.
 ///
@@ -94,7 +95,7 @@ class ErrorView extends StatelessWidget {
 
             // Main heading
             Text(
-              "Failed to Load Data",
+              AppLocalizations.of(context)!.failedToLoadData,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold, // Make title bold
               ),
@@ -116,7 +117,7 @@ class ErrorView extends StatelessWidget {
             // Retry Button
             ElevatedButton.icon(
               icon: const Icon(Icons.refresh),
-              label: const Text("Retry"),
+              label: Text(AppLocalizations.of(context)!.retryAction),
               // Apply similar button styling
               style: ElevatedButton.styleFrom(
                 padding:

@@ -47,5 +47,59 @@
     "todaysMeals": "Today's Meals",
     "@todaysMeals" : {
         "description": "Today's Meals Label"
+    },
+    "showingStaleData": "Showing stale data.",
+    "@showingStaleData": {
+        "description": "Message when displaying cached/offline data"
+    },
+    "networkUnavailableCachedData": "Network unavailable. Showing cached data.",
+    "@networkUnavailableCachedData": {
+        "description": "Message when network is unavailable but cached data exists"
+    },
+    "refreshFailedPreviousData": "Refresh failed. Displaying previous data.",
+    "@refreshFailedPreviousData": {
+        "description": "Message when refresh fails but previous data is available"
+    },
+    "failedToLoadDataCheckConnection": "Failed to load data. Check connection.",
+    "@failedToLoadDataCheckConnection": {
+        "description": "Generic connection error message"
+    },
+    "refreshFailedNoMealsScheduled": "Refresh failed. No meals scheduled.",
+    "@refreshFailedNoMealsScheduled": {
+        "description": "Message when refresh fails and no meals are scheduled"
+    },
+    "somethingWentWrong": "Something went wrong.",
+    "@somethingWentWrong": {
+        "description": "Generic error message"
+    },
+    "errorMealDataMissing": "Error: Meal data is missing.",
+    "@errorMealDataMissing": {
+        "description": "Error message when meal data is unexpectedly missing"
+    },
+    "noMealsForToday": "No Meals For Today",
+    "@noMealsForToday": {
+        "description": "Title when no meals are scheduled for today"
+    },
+    "currentMealPlanNoMealsScheduled": "Your current meal plan doesn't have any meals scheduled for {dayName}.",
+    "@currentMealPlanNoMealsScheduled": {
+        "description": "Message explaining no meals are scheduled for the day",
+        "placeholders": {
+            "dayName": {
+                "type": "String",
+                "description": "Name of the current day"
+            }
+        }
+    },
+    "refreshNow": "Refresh Now",
+    "@refreshNow": {
+        "description": "Button text to refresh data"
+    },
+    "failedToLoadData": "Failed to Load Data",
+    "@failedToLoadData": {
+        "description": "Error view title when data loading fails"
+    },
+    "retryAction": "Retry",
+    "@retryAction": {
+        "description": "Button text to retry an action"
     }
 }

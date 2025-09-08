@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 class ModifyPlanNameDialog extends StatefulWidget {
   final String currentPlanName;
@@ -33,14 +34,15 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
   }
 
   String? _validateInput(String value) {
+    final localizations = AppLocalizations.of(context)!;
     if (value.trim().isEmpty) {
-      return 'Plan name cannot be empty';
+      return localizations.planNameCannotBeEmpty;
     }
     if (value.trim().length < 2) {
-      return 'Plan name must be at least 2 characters long';
+      return localizations.planNameMinLength;
     }
     if (value.trim().length > 50) {
-      return 'Plan name must be less than 50 characters';
+      return localizations.planNameMaxLength;
     }
     return null;
   }
@@ -77,7 +79,7 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update plan name: $e'),
+            content: Text(AppLocalizations.of(context)!.failedToUpdatePlanName + e.toString()),
             backgroundColor: Colors.red,
           ),
         );
@@ -94,7 +96,7 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Modify Plan Name'),
+      title: Text(AppLocalizations.of(context)!.modifyPlanName),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -102,9 +104,9 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
             controller: _controller,
             autofocus: true,
             enabled: !_isLoading,
-            decoration: const InputDecoration(
-              hintText: 'Enter new plan name',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.enterNewPlanName,
+              border: const OutlineInputBorder(),
             ),
             onChanged: (value) {
               // Clear any previous validation errors
@@ -115,7 +117,7 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                _validateInput(_controller.text.trim()) ?? 'Valid name',
+                _validateInput(_controller.text.trim()) ?? AppLocalizations.of(context)!.validName,
                 style: TextStyle(
                   color: _validateInput(_controller.text.trim()) != null
                       ? Colors.red
@@ -129,7 +131,7 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _handleSave,
@@ -139,7 +141,7 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('Save'),
+              : Text(AppLocalizations.of(context)!.save),
         ),
       ],
     );
