@@ -5,6 +5,7 @@ import 'package:dima_application/generated/flutter-models/Meal.dart';
 import 'package:dima_application/generated/flutter-models/MealNameEnum.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/providers/today_page_provider.dart';
+import 'package:dima_application/utils/error_dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -226,11 +227,50 @@ class MealDetailsDraggablePage extends ConsumerWidget {
             padding: const EdgeInsets.only(
                 left: 20.0, right: 20.0, top: 25.0, bottom: 10.0),
             child: ElevatedButton.icon(
-              onPressed: () {
-                // Use the existing provider to toggle meal status
-                ref
-                    .read(todayPageProvider.notifier)
-                    .toggleMealCompletion(meal.name, mealPlanId);
+              onPressed: () async {
+                try {
+                  // Use the existing provider to toggle meal status
+                  await ref
+                      .read(todayPageProvider.notifier)
+                      .toggleMealCompletion(meal.name, mealPlanId);
+                } catch (e) {
+                  // Show error dialog on server failure
+                  if (context.mounted) {
+                    // Determine if it's a network error or database error
+                    if (e.toString().toLowerCase().contains('network') || 
+                        e.toString().toLowerCase().contains('connection')) {
+                      await ErrorDialogUtils.showNetworkError(
+                        context,
+                        onRetry: () async {
+                          try {
+                            await ref
+                                .read(todayPageProvider.notifier)
+                                .toggleMealCompletion(meal.name, mealPlanId);
+                          } catch (retryError) {
+                            // If retry fails, show the database error
+                            if (context.mounted) {
+                              await ErrorDialogUtils.showMealCompletionError(context);
+                            }
+                          }
+                        },
+                      );
+                    } else {
+                      await ErrorDialogUtils.showMealCompletionError(
+                        context,
+                        onRetry: () async {
+                          try {
+                            await ref
+                                .read(todayPageProvider.notifier)
+                                .toggleMealCompletion(meal.name, mealPlanId);
+                          } catch (retryError) {
+                            // If retry fails again, don't show another dialog
+                            // The user can try again manually
+                          }
+                        },
+                      );
+                    }
+                  }
+                }
               },
               icon: Icon(
                 isMealCompleted ? Icons.check_circle : Icons.circle_outlined,

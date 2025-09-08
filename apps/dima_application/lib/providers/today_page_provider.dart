@@ -13,6 +13,8 @@ import 'package:dima_application/providers/isar_provider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 // **Import MealPlansService for real meal plan data**
 import 'package:dima_application/services/meal_plans_service.dart';
+// **Import MealCompletionService for server-first meal completion**
+import 'package:dima_application/services/meal_completion_service.dart';
 // Riverpod and Isar
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart'; // For date formatting
@@ -177,10 +179,12 @@ final todayPageProvider =
 class TodayPageNotifier extends StateNotifier<TodayPageState> {
   final Isar _isar;
   final MealPlansService _mealPlansService; // Use the injected MealPlansService
+  final MealCompletionService _mealCompletionService; // Use the injected MealCompletionService
   late final StateNotifierProviderRef<TodayPageNotifier, TodayPageState> _ref;
 
   TodayPageNotifier(this._isar, this._mealPlansService, this._ref)
-      : super(TodayPageState()) {
+      : _mealCompletionService = MealCompletionService(isar: _isar),
+        super(TodayPageState()) {
     _loadUserPlanAndData();
   }
 
@@ -431,13 +435,11 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
             "[TodayPageNotifier] Using cached active plan due to network issues: $chosenPlanId");
       }
       safePrint(
-          "[TodayPageNotifier] User has plan ID: $chosenPlanId. Fetching via MealPlansService...");
+          "[TodayPageNotifier] User has plan ID: $chosenPlanId. Attempting to fetch today's plan from server...");
 
-      // 2. Fetch Meal Plan using working getMealPlanById (but simplified)
-      // Let's go back to using getMealPlanById but with better error handling
+      // 2. Fetch meal plan using individual plan query (reliable method)
       try {
-        safePrint(
-            "[TodayPageNotifier] Fetching meal plan by ID: $chosenPlanId");
+        safePrint("[TodayPageNotifier] Fetching meal plan by ID: $chosenPlanId");
         mealPlan = await _mealPlansService.getMealPlanById(chosenPlanId);
 
         if (mealPlan == null) {
@@ -448,16 +450,11 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
         finalStatus = (wasFromCache && hasNetworkError)
             ? DataStatus.errorNetworkWithCache
             : DataStatus.loadedOnline;
-        // Try to get a meaningful timestamp (e.g., when it was last updated on backend)
-        // Fallback to now if updatedAt is null
-        planFetchTime =
-            mealPlan.updatedAt?.getDateTimeInUtc() ?? DateTime.now().toUtc();
-        safePrint(
-            "[TodayPageNotifier] MealPlansService success using listMyMealPlans. Status: $finalStatus. Plan Updated/Fetched At (UTC): $planFetchTime");
+        planFetchTime = mealPlan.updatedAt?.getDateTimeInUtc() ?? DateTime.now().toUtc();
+        safePrint("[TodayPageNotifier] MealPlansService success. Status: $finalStatus");
       } catch (e) {
-        // Handle any errors from MealPlansService
-        safePrint("[TodayPageNotifier] MealPlansService error: $e");
-
+        // Handle meal plan fetch errors
+        safePrint("[TodayPageNotifier] Meal plan fetch failed: $e");
         finalStatus = DataStatus.errorNetwork;
         errorMessage = "Failed to load meal plan: $e";
         planFetchTime = null;
@@ -527,18 +524,62 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
         safePrint(
             "[TodayPageNotifier] Found ${todaysMeals.length} meals for today. Loading completion...");
 
-        // 4. Load Today's DailyCompletion record from Isar (local state, independent of plan fetch)
+        // 4. Load Today's DailyCompletion record (try server first on refresh, fallback to local cache)
 
         final todayDateOnly = DailyCompletion.dateOnly(DateTime.now());
-        safePrint(
-            '[TodayPageNotifier] Looking for completition record for mealPlanId: $chosenPlanId & date: $todayDateOnly');
+        
+        // On refresh, try to get fresh completion data from server
+        if (forceRefresh) {
+          try {
+            safePrint('[TodayPageNotifier] Refresh: Attempting to fetch completion from server for plan $chosenPlanId on $todayDateOnly');
+            final serverCompletion = await _mealCompletionService.getPlanDayCompletion(
+              planId: chosenPlanId,
+              date: DateTime.now(),
+            );
+            
+            if (serverCompletion != null) {
+              // Convert server completion to Isar format
+              todaysCompletionRecord = DailyCompletion(
+                planId: serverCompletion.planId!,
+                date: todayDateOnly,
+                latestUpdate: DateTime.now(),
+                completedMealNames: serverCompletion.completedMealNames!.cast<MealNameEnum>(),
+              );
+              
+              // Cache the server data locally
+              try {
+                await _isar.writeTxn(() async {
+                  await _isar.dailyCompletions.put(todaysCompletionRecord!);
+                  safePrint("[Isar] Cached refreshed server completion data");
+                });
+              } catch (e) {
+                safePrint("[TodayPageNotifier] Error caching refreshed completion: $e");
+                // Don't throw - this is just caching
+              }
+              
+              safePrint('[TodayPageNotifier] Refresh: Got completion from server with ${todaysCompletionRecord!.completedMealNames.length} completed meals');
+            } else {
+              safePrint('[TodayPageNotifier] Refresh: No completion data on server');
+            }
+          } catch (e) {
+            safePrint('[TodayPageNotifier] Refresh: Failed to fetch completion from server (will use local cache): ${e.toString().split('\n').first}');
+            // Continue to load from local cache
+          }
+        }
+        
+        // If we don't have completion from server, load from local cache
+        if (todaysCompletionRecord == null) {
+          safePrint(
+              '[TodayPageNotifier] Loading completion from local cache for mealPlanId: $chosenPlanId & date: $todayDateOnly');
 
-        todaysCompletionRecord = await _isar.dailyCompletions
-            .where() // Use filter for potential optimization with index
-            .planIdDateEqualTo(chosenPlanId, todayDateOnly)
-            .findFirst();
+          todaysCompletionRecord = await _isar.dailyCompletions
+              .where()
+              .planIdDateEqualTo(chosenPlanId, todayDateOnly)
+              .findFirst();
+        }
+        
         safePrint(
-            "[TodayPageNotifier] Loaded completion record: ${todaysCompletionRecord?.completedMealNames ?? 'None'}");
+            "[TodayPageNotifier] Final completion record: ${todaysCompletionRecord?.completedMealNames ?? 'None'}");
 
         // 5. Calculate initial consumed macros based on loaded completion and today's meals
         final initialConsumed = _calculateConsumedMacros(
@@ -610,8 +651,8 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
     await _loadUserPlanAndData(forceRefresh: true);
   }
 
-  /// Toggles the completion status of a specific meal. Persists locally to Isar.
-  /// This logic remains primarily local Isar interaction.
+  /// Toggles the completion status of a specific meal using server-first approach.
+  /// Updates server first, then caches the result locally.
   Future<void> toggleMealCompletion(
       MealNameEnum meal, String mealPlanId) async {
     // Ensure we have meals loaded before allowing toggling
@@ -625,65 +666,79 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
     }
 
     final todayDateOnly = DailyCompletion.dateOnly(DateTime.now());
-    // Get current completion or create a new one for today if null
-    final DailyCompletion currentCompletion = state.dailyCompletion ??
+    final currentCompletion = state.dailyCompletion ??
         DailyCompletion.forDate(planId: mealPlanId, date: todayDateOnly);
+    
+    final wasCompleted = currentCompletion.completedMealNames.contains(meal);
+    
+    safePrint("[TodayPageNotifier] ${wasCompleted ? 'Unmarking' : 'Marking'} '$meal' as ${wasCompleted ? 'incomplete' : 'complete'} on server");
 
-    // Use a Set for efficient checking and manipulation
-    final Set<MealNameEnum> updatedNamesSet =
-        currentCompletion.completedMealNames.toSet();
-    final bool wasCompleted = updatedNamesSet.contains(meal);
-
-    if (wasCompleted) {
-      updatedNamesSet.remove(meal);
-      safePrint("[TodayPageNotifier] Marking '$meal' as incomplete.");
-    } else {
-      updatedNamesSet.add(meal);
-      safePrint("[TodayPageNotifier] Marking '$meal' as complete.");
-    }
-
-    // Create the updated Isar object
-    final updatedCompletion = DailyCompletion(
-      planId: mealPlanId, // Use the active plan ID
-      id: currentCompletion.id, // Preserve Isar ID if it exists for update
-      date: todayDateOnly,
-      latestUpdate: DateTime.now(), // Update timestamp
-      completedMealNames:
-          updatedNamesSet.toList(), // Convert back to list for storage
-    );
-
-    // Recalculate consumed macros using the updated completion status
-    final newConsumed = _calculateConsumedMacros(
-        updatedCompletion, state.todaysMeals); // Uses domain models
-
-    // Update state optimistically
-    state = state.copyWith(
-      dailyCompletion: updatedCompletion, // Update the Isar model in state
-      consumedMacros: newConsumed, // Update the domain model in state
-      // Preserve other relevant state fields
-      status: state.status,
-      todaysMeals: state.todaysMeals,
-      planLastFetched: state.planLastFetched,
-      errorMessage: state.errorMessage,
-      // Don't change isInitialLoad here
-    );
-    safePrint("[TodayPageNotifier] Optimistically updated state: $state");
-
-    // Persist change to Isar asynchronously
     try {
-      await _isar.writeTxn(() async {
-        // `put` handles insert or update based on Isar ID (@Id)
-        await _isar.dailyCompletions.put(updatedCompletion);
-        safePrint(
-            "[Isar] Saved DailyCompletion for $todayDateOnly: ${updatedCompletion.completedMealNames}");
-      });
-    } catch (e, stackTrace) {
-      safePrint(
-          "[TodayPageNotifier] Error saving completion to Isar: $e\n$stackTrace");
-      // Consider implementing state reversal or showing a specific error message
-      // For simplicity here, we just log the error.
+      PlanDayCompletion? serverCompletion;
+      
+      // Call appropriate GraphQL mutation based on current state
+      if (wasCompleted) {
+        serverCompletion = await _mealCompletionService.unmarkMealAsCompleted(
+          mealName: meal,
+          mealPlanId: mealPlanId,
+          date: DateTime.now(),
+        );
+      } else {
+        serverCompletion = await _mealCompletionService.markMealAsCompleted(
+          mealName: meal,
+          mealPlanId: mealPlanId,
+          date: DateTime.now(),
+        );
+      }
+
+      if (serverCompletion == null) {
+        throw Exception("Server returned null completion data");
+      }
+
+      // Convert server completion to local Isar format
+      final updatedCompletion = DailyCompletion(
+        planId: serverCompletion.planId!,
+        id: currentCompletion.id, // Preserve Isar ID
+        date: todayDateOnly,
+        latestUpdate: DateTime.now(),
+        completedMealNames: serverCompletion.completedMealNames!.cast<MealNameEnum>(),
+      );
+
+      // Recalculate consumed macros using the server-confirmed completion status
+      final newConsumed = _calculateConsumedMacros(
+          updatedCompletion, state.todaysMeals);
+
+      // Update state with server-confirmed data
       state = state.copyWith(
-          errorMessage: "Error saving completion status. Please try again.");
+        dailyCompletion: updatedCompletion,
+        consumedMacros: newConsumed,
+        // Preserve other relevant state fields
+        status: state.status,
+        todaysMeals: state.todaysMeals,
+        planLastFetched: state.planLastFetched,
+        errorMessage: null, // Clear any previous errors
+      );
+
+      // Cache the server response locally
+      try {
+        await _isar.writeTxn(() async {
+          await _isar.dailyCompletions.put(updatedCompletion);
+          safePrint(
+              "[Isar] Cached server completion for $todayDateOnly: ${updatedCompletion.completedMealNames}");
+        });
+      } catch (e) {
+        safePrint("[TodayPageNotifier] Error caching completion to Isar: $e");
+        // Don't throw here - the server operation succeeded
+      }
+
+      safePrint("[TodayPageNotifier] Successfully ${wasCompleted ? 'unmarked' : 'marked'} meal completion on server");
+
+    } catch (e, stackTrace) {
+      safePrint("[TodayPageNotifier] Error toggling meal completion on server: $e\n$stackTrace");
+      
+      // Server operation failed - don't update the state
+      // The user will see the error dialog and the UI will remain in the previous state
+      rethrow; // Let the UI layer handle the error dialog
     }
   }
 

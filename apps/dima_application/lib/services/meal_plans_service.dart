@@ -213,9 +213,7 @@ class MealPlansService {
         throw Exception('GraphQL query returned null data');
       }
 
-      safePrint(
-          '[MealPlansService] Raw response data type: ${response.data.runtimeType}');
-      safePrint('[MealPlansService] Raw response data: ${response.data}');
+      
 
       // Parse the JSON response manually like the working queries
       Map<String, dynamic> jsonData;
