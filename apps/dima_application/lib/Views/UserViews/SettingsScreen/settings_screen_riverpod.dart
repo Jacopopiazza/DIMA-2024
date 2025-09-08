@@ -189,7 +189,9 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                             subscriptionStatusAsync.when(
                               skipLoadingOnRefresh: true,
                               loading: () => _buildSectionLoadingState(
-                                  colorScheme, AppLocalizations.of(context)!.loadingSubscription),
+                                  colorScheme,
+                                  AppLocalizations.of(context)!
+                                      .loadingSubscription),
                               error: (error, stackTrace) =>
                                   _buildSubscriptionSectionErrorState(
                                       colorScheme, theme),
@@ -227,7 +229,8 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                             cognitoProfileAsync.when(
                               skipLoadingOnRefresh: true,
                               loading: () => _buildSectionLoadingState(
-                                  colorScheme, AppLocalizations.of(context)!.loadingProfile),
+                                  colorScheme,
+                                  AppLocalizations.of(context)!.loadingProfile),
                               error: (error, stackTrace) =>
                                   _buildNoProfileState(colorScheme, theme),
                               data: (data) {
@@ -266,7 +269,9 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                             userDetailsAsync.when(
                               skipLoadingOnRefresh: true,
                               loading: () => _buildSectionLoadingState(
-                                  colorScheme, AppLocalizations.of(context)!.loadingPreferences),
+                                  colorScheme,
+                                  AppLocalizations.of(context)!
+                                      .loadingPreferences),
                               error: (error, stackTrace) =>
                                   _buildSectionErrorState(colorScheme, theme),
                               data: (data) {
@@ -514,7 +519,8 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context)!.manageYourProfilePreferencesAndSecurity,
+            AppLocalizations.of(context)!
+                .manageYourProfilePreferencesAndSecurity,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
@@ -663,7 +669,8 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context)!.subscriptionStatusCurrentlyUnavailable,
+              AppLocalizations.of(context)!
+                  .subscriptionStatusCurrentlyUnavailable,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,

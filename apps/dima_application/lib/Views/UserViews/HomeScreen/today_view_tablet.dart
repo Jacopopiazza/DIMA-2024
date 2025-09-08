@@ -42,7 +42,7 @@ class _ViewConfiguration {
 /// tablet-specific UI adaptations.
 class TodayPageTablet extends ConsumerWidget {
   final VoidCallback? onNavigateToMealPlans;
-  
+
   const TodayPageTablet({super.key, this.onNavigateToMealPlans});
 
   @override
@@ -81,10 +81,13 @@ class TodayPageTablet extends ConsumerWidget {
             physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics(),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0), // Tablet padding
+            padding: const EdgeInsets.symmetric(
+                horizontal: 24.0, vertical: 16.0), // Tablet padding
             children: [
               ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight - 40), // Account for padding
+                constraints: BoxConstraints(
+                    minHeight:
+                        constraints.maxHeight - 40), // Account for padding
                 child: child,
               ),
             ],
@@ -104,7 +107,8 @@ class TodayPageTablet extends ConsumerWidget {
   Widget _buildNoPlanView(BuildContext context, TodayPageNotifier notifier) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 500), // Constrain width on large screens
+        constraints: const BoxConstraints(
+            maxWidth: 500), // Constrain width on large screens
         child: ChoosePlanCard(
           onChoosePlan: () async {
             if (onNavigateToMealPlans != null) {
@@ -135,9 +139,10 @@ class TodayPageTablet extends ConsumerWidget {
 
   /// Configuration for different UI states
   /// Gets localized state config message
-  Map<String, dynamic> _getStateConfig(BuildContext context, DataStatus status) {
+  Map<String, dynamic> _getStateConfig(
+      BuildContext context, DataStatus status) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     switch (status) {
       case DataStatus.loadedOffline:
         return {
@@ -208,7 +213,7 @@ class TodayPageTablet extends ConsumerWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isLandscape = constraints.maxWidth > constraints.maxHeight;
-        
+
         if (isLandscape) {
           // Two-column layout for landscape
           return Row(
@@ -233,10 +238,12 @@ class TodayPageTablet extends ConsumerWidget {
                   children: [
                     _buildShimmerText(180, 28),
                     const SizedBox(height: 16),
-                    ...List.generate(3, (index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: _buildMealCardSkeleton(context),
-                    )),
+                    ...List.generate(
+                        3,
+                        (index) => Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: _buildMealCardSkeleton(context),
+                            )),
                   ],
                 ),
               ),
@@ -250,10 +257,12 @@ class TodayPageTablet extends ConsumerWidget {
               const SizedBox(height: 32),
               _buildShimmerText(180, 28),
               const SizedBox(height: 16),
-              ...List.generate(3, (index) => Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: _buildMealCardSkeleton(context),
-              )),
+              ...List.generate(
+                  3,
+                  (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: _buildMealCardSkeleton(context),
+                      )),
             ],
           );
         }
@@ -285,7 +294,8 @@ class TodayPageTablet extends ConsumerWidget {
   }
 
   /// Determines the appropriate view configuration based on state
-  _ViewConfiguration _determineViewConfiguration(BuildContext context, TodayPageState state) {
+  _ViewConfiguration _determineViewConfiguration(
+      BuildContext context, TodayPageState state) {
     final hasMeals = _hasMealData(state);
     final hasEmptyMealData =
         state.todaysMeals != null && state.todaysMeals!.isEmpty;
@@ -338,7 +348,7 @@ class TodayPageTablet extends ConsumerWidget {
       BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
     final config = _getStateConfig(context, state.status);
     final localizations = AppLocalizations.of(context)!;
-    
+
     // Check if this looks like a network error (use raw error for detection)
     final rawError = state.errorMessage ?? "";
     final isNetworkError = rawError.toLowerCase().contains('network') ||
@@ -348,15 +358,16 @@ class TodayPageTablet extends ConsumerWidget {
         rawError.toLowerCase().contains('unreachable') ||
         rawError.contains('SocketException') ||
         rawError.contains('HttpException');
-    
+
     // Always show localized message to user, never raw error
     final displayMessage = isNetworkError
         ? localizations.failedToLoadDataCheckConnection
         : config['fallbackMessage'] ?? localizations.somethingWentWrong;
-        
+
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600), // Constrain width on tablets
+        constraints:
+            const BoxConstraints(maxWidth: 600), // Constrain width on tablets
         child: ErrorView(
           message: displayMessage,
           onRetry: () => notifier.refreshData(),
@@ -387,12 +398,14 @@ class TodayPageTablet extends ConsumerWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isLandscape = constraints.maxWidth > constraints.maxHeight;
-        final isWideEnough = constraints.maxWidth > 800; // Minimum width for two-column layout
-        
+        final isWideEnough =
+            constraints.maxWidth > 800; // Minimum width for two-column layout
+
         return Column(
           children: [
             if (config.requiresIndicator) ...[
-              _buildStaleDataIndicator(config.indicatorMessage!, state, notifier),
+              _buildStaleDataIndicator(
+                  config.indicatorMessage!, state, notifier),
               const SizedBox(height: 24),
             ],
             isLandscape && isWideEnough
@@ -405,7 +418,8 @@ class TodayPageTablet extends ConsumerWidget {
   }
 
   /// Builds two-column layout for landscape tablets
-  Widget _buildTwoColumnLayout(BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
+  Widget _buildTwoColumnLayout(
+      BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,7 +441,8 @@ class TodayPageTablet extends ConsumerWidget {
   }
 
   /// Builds single column layout for portrait tablets
-  Widget _buildSingleColumnLayout(BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
+  Widget _buildSingleColumnLayout(
+      BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -472,7 +487,8 @@ class TodayPageTablet extends ConsumerWidget {
         // Section title
         Text(
           localizations.todaysMeals,
-          style: theme.textTheme.headlineMedium?.copyWith( // Larger for tablet
+          style: theme.textTheme.headlineMedium?.copyWith(
+            // Larger for tablet
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -483,7 +499,7 @@ class TodayPageTablet extends ConsumerWidget {
           builder: (context, constraints) {
             final isWideEnough = constraints.maxWidth > 600;
             final mealCount = state.todaysMeals!.length;
-            
+
             if (isWideEnough && mealCount > 2) {
               // Grid layout for wider screens with multiple meals
               return _buildMealsGrid(context, state);
@@ -519,12 +535,14 @@ class TodayPageTablet extends ConsumerWidget {
   /// Builds meals in a list layout
   Widget _buildMealsList(BuildContext context, TodayPageState state) {
     return Column(
-      children: state.todaysMeals!.map((meal) => 
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: _buildMealCard(meal, state),
-        ),
-      ).toList(),
+      children: state.todaysMeals!
+          .map(
+            (meal) => Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: _buildMealCard(meal, state),
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -576,9 +594,11 @@ class TodayPageTablet extends ConsumerWidget {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 500), // Constrain width on large screens
+        constraints: const BoxConstraints(
+            maxWidth: 500), // Constrain width on large screens
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 60.0), // More padding for tablet
+          padding: const EdgeInsets.symmetric(
+              horizontal: 32.0, vertical: 60.0), // More padding for tablet
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -600,12 +620,14 @@ class TodayPageTablet extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32), // More spacing
-              FilledButton.icon( // More prominent button for tablet
+              FilledButton.icon(
+                // More prominent button for tablet
                 icon: const Icon(Icons.refresh, size: 20),
                 label: Text(localizations.refreshNow),
                 onPressed: () => notifier.refreshData(),
                 style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
               ),
             ],

@@ -43,7 +43,8 @@ void main() {
       test('ApiServiceException works correctly', () {
         final exception = ApiServiceException('Test error message');
         expect(exception.message, 'Test error message');
-        expect(exception.toString(), contains('ApiServiceException: Test error message'));
+        expect(exception.toString(),
+            contains('ApiServiceException: Test error message'));
       });
 
       test('NetworkException extends ApiServiceException', () {

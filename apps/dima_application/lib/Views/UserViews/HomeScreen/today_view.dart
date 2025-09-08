@@ -116,9 +116,10 @@ class TodayPage extends ConsumerWidget {
 
   /// Configuration for different UI states
   /// Gets localized state config message
-  Map<String, dynamic> _getStateConfig(BuildContext context, DataStatus status) {
+  Map<String, dynamic> _getStateConfig(
+      BuildContext context, DataStatus status) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     switch (status) {
       case DataStatus.loadedOffline:
         return {
@@ -185,7 +186,8 @@ class TodayPage extends ConsumerWidget {
   }
 
   /// Determines the appropriate view configuration based on state
-  _ViewConfiguration _determineViewConfiguration(BuildContext context, TodayPageState state) {
+  _ViewConfiguration _determineViewConfiguration(
+      BuildContext context, TodayPageState state) {
     final hasMeals = _hasMealData(state);
     final hasEmptyMealData =
         state.todaysMeals != null && state.todaysMeals!.isEmpty;

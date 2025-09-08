@@ -144,11 +144,11 @@ void main() {
         mockService.shouldThrowError = true;
 
         final notifier = container.read(cognitoProfileProvider.notifier);
-        
+
         // The provider doesn't throw exceptions, it stores them in the AsyncValue
         // Wait a bit for the initialization to complete
         await Future.delayed(Duration(milliseconds: 100));
-        
+
         final state = container.read(cognitoProfileProvider);
         expect(state.hasError, true);
       });

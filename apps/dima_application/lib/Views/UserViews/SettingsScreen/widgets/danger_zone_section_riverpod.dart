@@ -110,7 +110,8 @@ class _DangerZoneSectionRiverpodState
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      AppLocalizations.of(context)!.allYourMealPlansWillBeRemoved,
+                      AppLocalizations.of(context)!
+                          .allYourMealPlansWillBeRemoved,
                       style: TextStyle(
                         color: Colors.red.shade700,
                         fontSize: 12,
@@ -166,7 +167,8 @@ class _DangerZoneSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  Text(AppLocalizations.of(context)!.accountDeletedSuccessfully),
+                  Text(
+                      AppLocalizations.of(context)!.accountDeletedSuccessfully),
                 ],
               ),
               backgroundColor: Colors.green.shade600,
@@ -266,7 +268,8 @@ class _DangerZoneSectionRiverpodState
                           ),
                         ),
                         Text(
-                          AppLocalizations.of(context)!.irreversibleAndDestructiveActions,
+                          AppLocalizations.of(context)!
+                              .irreversibleAndDestructiveActions,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.red.shade600,
                           ),
@@ -316,7 +319,8 @@ class _DangerZoneSectionRiverpodState
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    AppLocalizations.of(context)!.criticalWarning,
+                                    AppLocalizations.of(context)!
+                                        .criticalWarning,
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.red.shade800,

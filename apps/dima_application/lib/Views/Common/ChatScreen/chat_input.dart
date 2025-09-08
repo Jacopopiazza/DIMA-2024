@@ -140,8 +140,8 @@ class _ChatInputState extends State<ChatInput>
                         maxLines: null,
                         enabled: !widget.isLoading,
                         decoration: InputDecoration(
-                          hintText:
-                              widget.placeholder ?? AppLocalizations.of(context)!.typeYourMessage,
+                          hintText: widget.placeholder ??
+                              AppLocalizations.of(context)!.typeYourMessage,
                           hintStyle: TextStyle(
                             color: colorScheme.onSurfaceVariant
                                 .withValues(alpha: 0.6),

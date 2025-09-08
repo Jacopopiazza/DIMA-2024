@@ -204,7 +204,8 @@ class ValidationMealPlanCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              plan.planName ?? AppLocalizations.of(context)!.unnamedPlan,
+                              plan.planName ??
+                                  AppLocalizations.of(context)!.unnamedPlan,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: isPendingReview
@@ -218,8 +219,8 @@ class ValidationMealPlanCard extends StatelessWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          _buildValidationChip(
-                              plan.validationStatus, colorScheme, theme, context),
+                          _buildValidationChip(plan.validationStatus,
+                              colorScheme, theme, context),
                           const Spacer(),
                           Icon(
                             Icons.chevron_right_rounded,
@@ -231,7 +232,8 @@ class ValidationMealPlanCard extends StatelessWidget {
                       if (plan.userFullName != null) ...[
                         const SizedBox(height: 4),
                         Text(
-                          AppLocalizations.of(context)!.clientLabel(plan.userFullName!),
+                          AppLocalizations.of(context)!
+                              .clientLabel(plan.userFullName!),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                             fontSize: 11,
@@ -242,19 +244,30 @@ class ValidationMealPlanCard extends StatelessWidget {
                       if (plan.generatedAt != null) ...[
                         const SizedBox(height: 4),
                         Text(
-                          AppLocalizations.of(context)!.createdLabel(DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(plan.generatedAt!.getDateTimeInUtc().toLocal())),
+                          AppLocalizations.of(context)!.createdLabel(
+                              DateFormat.yMMMd(Localizations.localeOf(context)
+                                      .toString())
+                                  .format(plan.generatedAt!
+                                      .getDateTimeInUtc()
+                                      .toLocal())),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                             fontSize: 11,
                           ),
                         ),
                       ],
-                      
+
                       // Add last updated date if available
                       if (plan.updatedAt != null) ...[
                         const SizedBox(height: 2),
                         Text(
-                          AppLocalizations.of(context)!.updatedLabel(DateFormat.yMMMd(Localizations.localeOf(context).toString()).add_Hm().format(plan.updatedAt!.getDateTimeInUtc().toLocal())),
+                          AppLocalizations.of(context)!.updatedLabel(
+                              DateFormat.yMMMd(Localizations.localeOf(context)
+                                      .toString())
+                                  .add_Hm()
+                                  .format(plan.updatedAt!
+                                      .getDateTimeInUtc()
+                                      .toLocal())),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                             fontSize: 11,

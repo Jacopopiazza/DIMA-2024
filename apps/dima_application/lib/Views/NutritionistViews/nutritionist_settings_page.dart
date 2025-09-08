@@ -142,7 +142,8 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.profileUpdatedSuccessfully),
+            content:
+                Text(AppLocalizations.of(context)!.profileUpdatedSuccessfully),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 2),
           ),
@@ -152,7 +153,8 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorUpdatingProfile(e.toString())),
+            content: Text(AppLocalizations.of(context)!
+                .errorUpdatingProfile(e.toString())),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
           ),
@@ -193,7 +195,8 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
               SnackBar(
                 content: Text(value
                     ? AppLocalizations.of(context)!.availableForConsultations
-                    : AppLocalizations.of(context)!.unavailableForConsultations),
+                    : AppLocalizations.of(context)!
+                        .unavailableForConsultations),
                 backgroundColor: Colors.green,
                 duration: const Duration(seconds: 2),
               ),
@@ -204,7 +207,8 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context)!.errorUpdatingAvailability(e.toString())),
+              content: Text(AppLocalizations.of(context)!
+                  .errorUpdatingAvailability(e.toString())),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 3),
             ),
@@ -462,7 +466,8 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return AppLocalizations.of(context)!.pleaseEnterSpecialization;
+                        return AppLocalizations.of(context)!
+                            .pleaseEnterSpecialization;
                       }
                       return null;
                     },
@@ -534,7 +539,9 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                               ),
                             )
                           : const Icon(Icons.save_rounded),
-                      label: Text(_isSaving ? AppLocalizations.of(context)!.saving : AppLocalizations.of(context)!.saveChanges),
+                      label: Text(_isSaving
+                          ? AppLocalizations.of(context)!.saving
+                          : AppLocalizations.of(context)!.saveChanges),
                     ),
                   ),
                 ],

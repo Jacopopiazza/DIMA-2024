@@ -149,11 +149,16 @@ void main() {
 
         test('formats single allergy correctly', () {
           final allergies = [AllergenEnum.GLUTEN_CEREALS];
-          expect(ClientDetailsService.formatAllergies(allergies), 'GLUTEN_CEREALS');
+          expect(ClientDetailsService.formatAllergies(allergies),
+              'GLUTEN_CEREALS');
         });
 
         test('formats multiple allergies correctly', () {
-          final allergies = [AllergenEnum.GLUTEN_CEREALS, AllergenEnum.NUTS, AllergenEnum.MILK];
+          final allergies = [
+            AllergenEnum.GLUTEN_CEREALS,
+            AllergenEnum.NUTS,
+            AllergenEnum.MILK
+          ];
           final result = ClientDetailsService.formatAllergies(allergies);
           expect(result, 'GLUTEN_CEREALS, NUTS, MILK');
         });
@@ -170,7 +175,7 @@ void main() {
             AllergenEnum.SOYBEANS,
             AllergenEnum.SESAME_SEEDS
           ];
-          
+
           final result = ClientDetailsService.formatAllergies(allergies);
           expect(result.contains('GLUTEN_CEREALS'), true);
           expect(result.contains('MILK'), true);

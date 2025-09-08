@@ -354,8 +354,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              AppLocalizations.of(context)!.completeProfileFirst),
+          content: Text(AppLocalizations.of(context)!.completeProfileFirst),
           backgroundColor: Colors.orange.shade700,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 3),
@@ -391,8 +390,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(
-                    AppLocalizations.of(context)!.mealPlanGenStarted),
+                child: Text(AppLocalizations.of(context)!.mealPlanGenStarted),
               ),
             ],
           ),
@@ -514,36 +512,36 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // Header section
-                          _buildHeaderSection(colorScheme, theme),
-                          const SizedBox(height: 32),
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Header section
+                            _buildHeaderSection(colorScheme, theme),
+                            const SizedBox(height: 32),
 
-                          // Profile Validation Status Section
-                          if (!hasValidProfile) ...[
-                            _buildProfileValidationCard(
-                                profileValidation, colorScheme, theme),
-                            const SizedBox(height: 24),
-                          ],
+                            // Profile Validation Status Section
+                            if (!hasValidProfile) ...[
+                              _buildProfileValidationCard(
+                                  profileValidation, colorScheme, theme),
+                              const SizedBox(height: 24),
+                            ],
 
-                          // User Details Status Section
-                          if (!hasUserDetails) ...[
-                            _buildNoUserDetailsCard(colorScheme, theme),
-                            const SizedBox(height: 24),
-                          ] else ...[
-                            _buildUserDetailsCard(
+                            // User Details Status Section
+                            if (!hasUserDetails) ...[
+                              _buildNoUserDetailsCard(colorScheme, theme),
+                              const SizedBox(height: 24),
+                            ] else ...[
+                              _buildUserDetailsCard(
+                                  userDetails, colorScheme, theme),
+                              const SizedBox(height: 24),
+                            ],
+
+                            // Preference Override Section
+                            _buildPreferenceOverrideSection(
                                 userDetails, colorScheme, theme),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 120), // Space for FAB
                           ],
-
-                          // Preference Override Section
-                          _buildPreferenceOverrideSection(
-                              userDetails, colorScheme, theme),
-                          const SizedBox(height: 120), // Space for FAB
-                        ],
+                        ),
                       ),
-                    ),
                     ),
                   ),
                 ],
@@ -875,7 +873,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       details.add('${userDetails.heightCm}cm');
     }
     if (userDetails.dailyMealsPreference != null) {
-      details.add(AppLocalizations.of(context)!.mealsPerDay(userDetails.dailyMealsPreference!));
+      details.add(AppLocalizations.of(context)!
+          .mealsPerDay(userDetails.dailyMealsPreference!));
     }
     if (userDetails.exerciseFrequency != null) {
       final freq = userDetails.exerciseFrequency!;
@@ -988,7 +987,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                     child: Text(
                       _useOverrides
                           ? AppLocalizations.of(context)!.usingCustomPreferences
-                          : AppLocalizations.of(context)!.usingProfilePreferences,
+                          : AppLocalizations.of(context)!
+                              .usingProfilePreferences,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: _useOverrides
                             ? Colors.orange.shade700
@@ -1015,8 +1015,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Physical Details Section
-        _buildSectionHeader(AppLocalizations.of(context)!.physicalDetails, Icons.monitor_weight_rounded,
-            colorScheme, theme),
+        _buildSectionHeader(AppLocalizations.of(context)!.physicalDetails,
+            Icons.monitor_weight_rounded, colorScheme, theme),
         const SizedBox(height: 12),
         // Weight
         _buildTextField(
@@ -1035,15 +1035,13 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   _isWeightValid() == true
                       ? Icons.check_circle_rounded
                       : Icons.error_outline_rounded,
-                  color: _isWeightValid() == true
-                      ? Colors.green
-                      : Colors.red,
+                  color: _isWeightValid() == true ? Colors.green : Colors.red,
                   size: 20,
                 ),
           onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: 16),
-        
+
         // Height
         _buildTextField(
           controller: _heightController,
@@ -1061,9 +1059,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   _isHeightValid() == true
                       ? Icons.check_circle_rounded
                       : Icons.error_outline_rounded,
-                  color: _isHeightValid() == true
-                      ? Colors.green
-                      : Colors.red,
+                  color: _isHeightValid() == true ? Colors.green : Colors.red,
                   size: 20,
                 ),
           onChanged: (_) => setState(() {}),
@@ -1071,15 +1067,17 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 24),
 
         // Meal Preferences Section
-        _buildSectionHeader(
-            AppLocalizations.of(context)!.mealPreferences, Icons.restaurant_rounded, colorScheme, theme),
+        _buildSectionHeader(AppLocalizations.of(context)!.mealPreferences,
+            Icons.restaurant_rounded, colorScheme, theme),
         const SizedBox(height: 12),
         _buildDropdownField<int>(
           value: _dailyMealsPreference,
           label: AppLocalizations.of(context)!.dailyMeals,
           items: [
             for (int i = 1; i <= 6; i++)
-              DropdownMenuItem(value: i, child: Text(AppLocalizations.of(context)!.mealsDropdown(i)))
+              DropdownMenuItem(
+                  value: i,
+                  child: Text(AppLocalizations.of(context)!.mealsDropdown(i)))
           ],
           onChanged: (value) => setState(() => _dailyMealsPreference = value),
           colorScheme: colorScheme,
@@ -1100,8 +1098,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 24),
 
         // Dietary Information Section
-        _buildSectionHeader(AppLocalizations.of(context)!.dietaryInformation, Icons.local_dining_rounded,
-            colorScheme, theme),
+        _buildSectionHeader(AppLocalizations.of(context)!.dietaryInformation,
+            Icons.local_dining_rounded, colorScheme, theme),
         const SizedBox(height: 12),
         _buildTextField(
           controller: _dietaryRestrictionsController,
@@ -1121,8 +1119,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 24),
 
         // Allergies Section
-        _buildSectionHeader(
-            AppLocalizations.of(context)!.allergies, Icons.warning_rounded, colorScheme, theme),
+        _buildSectionHeader(AppLocalizations.of(context)!.allergies,
+            Icons.warning_rounded, colorScheme, theme),
         const SizedBox(height: 12),
         _buildAllergiesSelection(colorScheme, theme),
       ],

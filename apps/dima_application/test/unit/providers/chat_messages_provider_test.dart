@@ -22,7 +22,7 @@ void main() {
     group('Initial state', () {
       test('builds successfully with chat ID', () async {
         final provider = chatMessagesProvider('test-chat-id');
-        
+
         // In test environment, expect PluginError due to unconfigured Amplify API
         expect(
           () async => await container.read(provider.future),
@@ -32,7 +32,7 @@ void main() {
 
       test('handles empty chat ID', () async {
         final provider = chatMessagesProvider('');
-        
+
         // In test environment, expect PluginError due to unconfigured Amplify API
         expect(
           () async => await container.read(provider.future),
@@ -240,7 +240,7 @@ void main() {
       test('handles very long chat ID', () async {
         final longChatId = 'a' * 1000;
         final provider = chatMessagesProvider(longChatId);
-        
+
         // In test environment, expect PluginError due to unconfigured Amplify API
         expect(
           () async => await container.read(provider.future),
@@ -251,7 +251,7 @@ void main() {
       test('handles special characters in chat ID', () async {
         final specialChatId = 'test-chat-!@#\$%^&*()';
         final provider = chatMessagesProvider(specialChatId);
-        
+
         // In test environment, expect PluginError due to unconfigured Amplify API
         expect(
           () async => await container.read(provider.future),

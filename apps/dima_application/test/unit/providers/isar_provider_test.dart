@@ -130,7 +130,8 @@ void main() {
         // Create a mock that implements Isar interface but might be invalid
         final containerWithOverride = ProviderContainer(
           overrides: [
-            isarProvider.overrideWithValue(await IsarTestHelper.createTestIsar()),
+            isarProvider
+                .overrideWithValue(await IsarTestHelper.createTestIsar()),
           ],
         );
 
@@ -145,7 +146,8 @@ void main() {
       test('provider can be read multiple times', () async {
         final containerWithOverride = ProviderContainer(
           overrides: [
-            isarProvider.overrideWithValue(await IsarTestHelper.createTestIsar()),
+            isarProvider
+                .overrideWithValue(await IsarTestHelper.createTestIsar()),
           ],
         );
 

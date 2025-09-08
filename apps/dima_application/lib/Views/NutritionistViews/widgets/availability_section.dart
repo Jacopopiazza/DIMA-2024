@@ -30,7 +30,7 @@ class _AvailabilitySectionState extends State<AvailabilitySection>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 0.95,
       end: 1.0,
@@ -38,7 +38,7 @@ class _AvailabilitySectionState extends State<AvailabilitySection>
       parent: _animationController,
       curve: Curves.elasticOut,
     ));
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.7,
       end: 1.0,
@@ -46,7 +46,7 @@ class _AvailabilitySectionState extends State<AvailabilitySection>
       parent: _animationController,
       curve: Curves.easeOut,
     ));
-    
+
     _animationController.forward();
   }
 
@@ -79,99 +79,103 @@ class _AvailabilitySectionState extends State<AvailabilitySection>
     final isAvailable = widget.profile?.isAvailable ?? false;
 
     return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Animated Status Banner
-            AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) {
-                return FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Animated Status Banner
+          AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return FadeTransition(
+                opacity: _fadeAnimation,
+                child: ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isAvailable
+                          ? Colors.green.withOpacity(0.15)
+                          : Colors.orange.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
                         color: isAvailable
-                            ? Colors.green.withOpacity(0.15)
-                            : Colors.orange.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: isAvailable
-                              ? Colors.green.withOpacity(0.4)
-                              : Colors.orange.withOpacity(0.4),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          TweenAnimationBuilder<double>(
-                            duration: const Duration(milliseconds: 300),
-                            tween: Tween(begin: 0.0, end: 1.0),
-                            builder: (context, value, child) {
-                              return Transform.scale(
-                                scale: 0.8 + (0.2 * value),
-                                child: Icon(
-                                  isAvailable ? Icons.check_circle : Icons.pause_circle,
-                                  color: isAvailable ? Colors.green : Colors.orange,
-                                  size: 20,
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              isAvailable
-                                  ? AppLocalizations.of(context)!.currentlyAvailableForConsultations
-                                  : AppLocalizations.of(context)!.currentlyUnavailableForConsultations,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: isAvailable
-                                    ? Colors.green.shade700
-                                    : Colors.orange.shade700,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
+                            ? Colors.green.withOpacity(0.4)
+                            : Colors.orange.withOpacity(0.4),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-
-            const SizedBox(height: 16),
-
-            // Toggle Switch
-            Material(
-              color: Colors.transparent,
-              child: SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(AppLocalizations.of(context)!.availableForConsultationsTitle),
-                subtitle: Text(
-                  isAvailable
-                      ? AppLocalizations.of(context)!.usersCanRequestConsultations
-                      : AppLocalizations.of(context)!.noNewConsultationRequests,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+                    child: Row(
+                      children: [
+                        TweenAnimationBuilder<double>(
+                          duration: const Duration(milliseconds: 300),
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          builder: (context, value, child) {
+                            return Transform.scale(
+                              scale: 0.8 + (0.2 * value),
+                              child: Icon(
+                                isAvailable
+                                    ? Icons.check_circle
+                                    : Icons.pause_circle,
+                                color:
+                                    isAvailable ? Colors.green : Colors.orange,
+                                size: 20,
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            isAvailable
+                                ? AppLocalizations.of(context)!
+                                    .currentlyAvailableForConsultations
+                                : AppLocalizations.of(context)!
+                                    .currentlyUnavailableForConsultations,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: isAvailable
+                                  ? Colors.green.shade700
+                                  : Colors.orange.shade700,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                value: isAvailable,
-                onChanged: widget.profile != null
-                    ? _handleAvailabilityChange
-                    : null,
-                activeColor: theme.colorScheme.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+              );
+            },
+          ),
+
+          const SizedBox(height: 16),
+
+          // Toggle Switch
+          Material(
+            color: Colors.transparent,
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                  AppLocalizations.of(context)!.availableForConsultationsTitle),
+              subtitle: Text(
+                isAvailable
+                    ? AppLocalizations.of(context)!.usersCanRequestConsultations
+                    : AppLocalizations.of(context)!.noNewConsultationRequests,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+              value: isAvailable,
+              onChanged:
+                  widget.profile != null ? _handleAvailabilityChange : null,
+              activeColor: theme.colorScheme.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-          ],
-        ),
-      
+          ),
+        ],
+      ),
     );
   }
 }

@@ -78,7 +78,8 @@ class _ProSubscriptionSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  Text(AppLocalizations.of(context)!.successfullySubscribedToPro),
+                  Text(AppLocalizations.of(context)!
+                      .successfullySubscribedToPro),
                 ],
               ),
               backgroundColor: Colors.green.shade600,
@@ -179,7 +180,8 @@ class _ProSubscriptionSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  Text(AppLocalizations.of(context)!.successfullyUnsubscribedToFree),
+                  Text(AppLocalizations.of(context)!
+                      .successfullyUnsubscribedToFree),
                 ],
               ),
               backgroundColor: Colors.orange.shade600,
@@ -311,7 +313,8 @@ class _ProSubscriptionSectionRiverpodState
                       Text(
                         isPro
                             ? AppLocalizations.of(context)!.activeSubscription
-                            : AppLocalizations.of(context)!.upgradeToUnlockPremiumFeatures,
+                            : AppLocalizations.of(context)!
+                                .upgradeToUnlockPremiumFeatures,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -347,7 +350,8 @@ class _ProSubscriptionSectionRiverpodState
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    AppLocalizations.of(context)!.currentStatus(_capitalizeFirst(status.name)),
+                    AppLocalizations.of(context)!
+                        .currentStatus(_capitalizeFirst(status.name)),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isPro
                           ? Colors.green.shade800
@@ -384,7 +388,8 @@ class _ProSubscriptionSectionRiverpodState
                       Text(
                         isPro
                             ? AppLocalizations.of(context)!.youHaveAccessTo
-                            : AppLocalizations.of(context)!.unlockPremiumFeatures,
+                            : AppLocalizations.of(context)!
+                                .unlockPremiumFeatures,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: isPro
@@ -395,10 +400,18 @@ class _ProSubscriptionSectionRiverpodState
                     ],
                   ),
                   const SizedBox(height: 12),
-                  _buildFeatureItem(theme, colorScheme,
-                      AppLocalizations.of(context)!.expertMealPlanningValidation, isPro),
-                  _buildFeatureItem(theme, colorScheme,
-                      AppLocalizations.of(context)!.personalNutritionistChatInApp, isPro),
+                  _buildFeatureItem(
+                      theme,
+                      colorScheme,
+                      AppLocalizations.of(context)!
+                          .expertMealPlanningValidation,
+                      isPro),
+                  _buildFeatureItem(
+                      theme,
+                      colorScheme,
+                      AppLocalizations.of(context)!
+                          .personalNutritionistChatInApp,
+                      isPro),
                 ],
               ),
             ),

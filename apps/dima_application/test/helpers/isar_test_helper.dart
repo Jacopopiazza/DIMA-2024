@@ -11,12 +11,12 @@ class IsarTestHelper {
   static bool _isInitialized = false;
 
   /// Initializes Isar for testing environment
-  /// 
+  ///
   /// This handles the native library loading that's required for Isar to work in tests.
   /// Must be called before creating any Isar instances.
   static Future<void> initialize() async {
     if (_isInitialized) return;
-    
+
     try {
       // First try to initialize with download enabled
       await Isar.initializeIsarCore(download: true);
@@ -39,11 +39,13 @@ class IsarTestHelper {
           _isInitialized = true;
         } catch (e3) {
           // Last resort: mark as initialized and let the actual instance creation handle it
-          print('Warning: All Isar initialization attempts failed. Error details:');
+          print(
+              'Warning: All Isar initialization attempts failed. Error details:');
           print('  Download=true: $e');
           print('  Download=false: $e2');
           print('  Temp instance: $e3');
-          print('Proceeding with test setup, but tests may fail if Isar native library is missing.');
+          print(
+              'Proceeding with test setup, but tests may fail if Isar native library is missing.');
           _isInitialized = true;
         }
       }
@@ -51,24 +53,24 @@ class IsarTestHelper {
   }
 
   /// Creates an in-memory Isar instance with all required schemas for testing
-  /// 
+  ///
   /// This method sets up a temporary in-memory database that includes all
   /// the Isar collections used in the application. The instance is isolated
   /// per test and will be automatically cleaned up when the test completes.
-  /// 
+  ///
   /// Usage:
   /// ```dart
   /// setUp(() async {
   ///   isar = await IsarTestHelper.createTestIsar();
   /// });
-  /// 
+  ///
   /// tearDown(() async {
   ///   await IsarTestHelper.closeTestIsar(isar);
   /// });
   /// ```
   static Future<Isar> createTestIsar({String? name}) async {
     await initialize();
-    
+
     try {
       // First try with empty directory for in-memory database
       return await Isar.open(
@@ -108,7 +110,7 @@ class IsarTestHelper {
   }
 
   /// Creates a test Isar instance and clears all data
-  /// 
+  ///
   /// This is useful when you want to ensure a completely clean state
   /// for your tests.
   static Future<Isar> createCleanTestIsar({String? name}) async {
@@ -129,7 +131,7 @@ class IsarTestHelper {
   }
 
   /// Closes the Isar instance and cleans up resources
-  /// 
+  ///
   /// Should be called in tearDown() of tests
   static Future<void> closeTestIsar(Isar isar) async {
     if (!isar.isOpen) return;

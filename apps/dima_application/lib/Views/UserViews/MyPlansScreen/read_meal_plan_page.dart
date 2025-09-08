@@ -80,7 +80,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = AppLocalizations.of(context)!.failedToLoadMealPlan + e.toString();
+          _errorMessage =
+              AppLocalizations.of(context)!.failedToLoadMealPlan + e.toString();
           _isLoading = false;
         });
       }
@@ -102,40 +103,40 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           // Modern back button positioned on top - only show if showBackButton is true
           if (widget.showBackButton)
             Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
-            left: 16,
-            child: Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surface.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.shadow.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-                border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.1),
-                ),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => Navigator.of(context).pop(),
+              top: MediaQuery.of(context).padding.top + 16,
+              left: 16,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.surface.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    child: Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: colorScheme.onSurface,
-                      size: 20,
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.shadow.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: colorScheme.outline.withOpacity(0.1),
+                  ),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: colorScheme.onSurface,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
       // Chat button - only show if chatId is available
@@ -160,9 +161,9 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
       opacity: _fadeAnimation,
       child: Padding(
         padding: EdgeInsets.fromLTRB(
-            16.0, 
+            16.0,
             widget.showBackButton ? 80.0 : 16.0, // Conditional top padding
-            16.0, 
+            16.0,
             16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,7 +275,9 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                 icon: Icon(isNetworkError
                     ? Icons.wifi_rounded
                     : Icons.refresh_rounded),
-                label: Text(isNetworkError ? AppLocalizations.of(context)!.reconnect : AppLocalizations.of(context)!.tryAgain),
+                label: Text(isNetworkError
+                    ? AppLocalizations.of(context)!.reconnect
+                    : AppLocalizations.of(context)!.tryAgain),
                 style: FilledButton.styleFrom(
                   backgroundColor:
                       isNetworkError ? Colors.orange.shade600 : null,
@@ -409,9 +412,13 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _buildInfoRow(AppLocalizations.of(context)!.planName,
-                      _mealPlan!.planName ?? AppLocalizations.of(context)!.unnamedPlan, colorScheme),
-                  _buildInfoRow(AppLocalizations.of(context)!.planIdLabel, _mealPlan!.mealPlanId, colorScheme),
+                  _buildInfoRow(
+                      AppLocalizations.of(context)!.planName,
+                      _mealPlan!.planName ??
+                          AppLocalizations.of(context)!.unnamedPlan,
+                      colorScheme),
+                  _buildInfoRow(AppLocalizations.of(context)!.planIdLabel,
+                      _mealPlan!.mealPlanId, colorScheme),
                   if (_mealPlan!.generatedAt != null)
                     _buildInfoRow(
                       AppLocalizations.of(context)!.generated,
@@ -454,7 +461,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                       colorScheme,
                     ),
                   // Show error details for failed meal plans
-                  if (_mealPlan!.status == PlanStatus.FAILED && _mealPlan!.errorDetails != null)
+                  if (_mealPlan!.status == PlanStatus.FAILED &&
+                      _mealPlan!.errorDetails != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Container(
@@ -648,20 +656,28 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   children: [
                     const Divider(),
                     const SizedBox(height: 16),
+                    _buildReadOnlyDayMeals(AppLocalizations.of(context)!.monday,
+                        dailyPlan.monday, colorScheme),
                     _buildReadOnlyDayMeals(
-                        AppLocalizations.of(context)!.monday, dailyPlan.monday, colorScheme),
+                        AppLocalizations.of(context)!.tuesday,
+                        dailyPlan.tuesday,
+                        colorScheme),
                     _buildReadOnlyDayMeals(
-                        AppLocalizations.of(context)!.tuesday, dailyPlan.tuesday, colorScheme),
+                        AppLocalizations.of(context)!.wednesday,
+                        dailyPlan.wednesday,
+                        colorScheme),
                     _buildReadOnlyDayMeals(
-                        AppLocalizations.of(context)!.wednesday, dailyPlan.wednesday, colorScheme),
+                        AppLocalizations.of(context)!.thursday,
+                        dailyPlan.thursday,
+                        colorScheme),
+                    _buildReadOnlyDayMeals(AppLocalizations.of(context)!.friday,
+                        dailyPlan.friday, colorScheme),
                     _buildReadOnlyDayMeals(
-                        AppLocalizations.of(context)!.thursday, dailyPlan.thursday, colorScheme),
-                    _buildReadOnlyDayMeals(
-                        AppLocalizations.of(context)!.friday, dailyPlan.friday, colorScheme),
-                    _buildReadOnlyDayMeals(
-                        AppLocalizations.of(context)!.saturday, dailyPlan.saturday, colorScheme),
-                    _buildReadOnlyDayMeals(
-                        AppLocalizations.of(context)!.sunday, dailyPlan.sunday, colorScheme),
+                        AppLocalizations.of(context)!.saturday,
+                        dailyPlan.saturday,
+                        colorScheme),
+                    _buildReadOnlyDayMeals(AppLocalizations.of(context)!.sunday,
+                        dailyPlan.sunday, colorScheme),
                   ],
                 ),
               ),
@@ -732,7 +748,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    AppLocalizations.of(context)!.mealsCount(meals?.length ?? 0),
+                    AppLocalizations.of(context)!
+                        .mealsCount(meals?.length ?? 0),
                     style: TextStyle(
                       color: colorScheme.onSurface,
                       fontSize: 12,
@@ -841,7 +858,9 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   if (meal.recipeName != null &&
                       meal.recipeName!.isNotEmpty) ...[
                     _buildSectionHeader(
-                        AppLocalizations.of(context)!.recipeName, Icons.restaurant_rounded, colorScheme),
+                        AppLocalizations.of(context)!.recipeName,
+                        Icons.restaurant_rounded,
+                        colorScheme),
                     const SizedBox(height: 8),
                     Text(
                       meal.recipeName!,
@@ -851,18 +870,22 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   ],
                   if (meal.recipe != null && meal.recipe!.isNotEmpty) ...[
                     _buildSectionHeader(
-                        AppLocalizations.of(context)!.instructions, Icons.list_alt_rounded, colorScheme),
+                        AppLocalizations.of(context)!.instructions,
+                        Icons.list_alt_rounded,
+                        colorScheme),
                     const SizedBox(height: 8),
                     _buildExpandableInstructions(meal.recipe!, colorScheme),
                     const SizedBox(height: 16),
                   ],
-                  _buildSectionHeader(AppLocalizations.of(context)!.nutritionInformation,
-                      Icons.local_fire_department_rounded, colorScheme),
+                  _buildSectionHeader(
+                      AppLocalizations.of(context)!.nutritionInformation,
+                      Icons.local_fire_department_rounded,
+                      colorScheme),
                   const SizedBox(height: 12),
                   _buildNutritionInfo(meal.totalMacros, colorScheme),
                   const SizedBox(height: 16),
-                  _buildSectionHeader(
-                      AppLocalizations.of(context)!.ingredients, Icons.eco_rounded, colorScheme),
+                  _buildSectionHeader(AppLocalizations.of(context)!.ingredients,
+                      Icons.eco_rounded, colorScheme),
                   const SizedBox(height: 12),
                   ...meal.ingredients.map((ingredient) =>
                       _buildIngredientRow(ingredient, colorScheme)),
@@ -1173,7 +1196,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
   bool _isToday(String localizedDayName) {
     final localizations = AppLocalizations.of(context)!;
     final englishDay = DateFormat('EEEE').format(DateTime.now());
-    
+
     // Map English day names to localized ones
     switch (englishDay) {
       case 'Monday':
@@ -1204,7 +1227,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     try {
       // Parse the outer JSON
       final outerJson = jsonDecode(errorDetails);
-      
+
       // Get the errorMessage field
       final errorMessage = outerJson['errorMessage'];
       if (errorMessage == null) {
@@ -1213,13 +1236,13 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
 
       // Parse the inner JSON (errorMessage is a JSON string)
       final innerJson = jsonDecode(errorMessage);
-      
+
       // Extract the actual error message
       final message = innerJson['error']?['message'];
       if (message != null && message is String && message.isNotEmpty) {
         // Check for overloaded model and provide user-friendly message
         final lowerMessage = message.toLowerCase();
-        if (lowerMessage.contains('overloaded') || 
+        if (lowerMessage.contains('overloaded') ||
             lowerMessage.contains('overload') ||
             lowerMessage.contains('too many requests') ||
             lowerMessage.contains('rate limit')) {
@@ -1351,7 +1374,9 @@ class _ExpandableInstructionsState extends State<ExpandableInstructions> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      _isExpanded ? AppLocalizations.of(context)!.showLess : AppLocalizations.of(context)!.readMore,
+                      _isExpanded
+                          ? AppLocalizations.of(context)!.showLess
+                          : AppLocalizations.of(context)!.readMore,
                       style: TextStyle(
                         color: widget.colorScheme.primary,
                         fontWeight: FontWeight.w500,

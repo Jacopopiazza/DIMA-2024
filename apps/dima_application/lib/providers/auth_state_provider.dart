@@ -65,7 +65,8 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
       // Keep state as unknown when we can't determine auth status
       // (e.g., when Amplify is not configured in tests)
       if (e.toString().contains('plugin has not been added')) {
-        print('[AuthStateProvider] Amplify not configured, keeping unknown state');
+        print(
+            '[AuthStateProvider] Amplify not configured, keeping unknown state');
         // state remains AuthState.unknown
       } else {
         state = AuthState.signedOut;
@@ -205,13 +206,13 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
   @override
   void dispose() {
     print('[AuthStateProvider] Disposing auth state listener...');
-    
+
     // Check if already disposed to prevent multiple dispose calls
     if (!mounted) {
       print('[AuthStateProvider] Already disposed, skipping...');
       return;
     }
-    
+
     _authSubscription?.cancel();
     super.dispose();
   }

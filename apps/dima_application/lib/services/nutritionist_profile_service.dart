@@ -45,7 +45,7 @@ class NutritionistProfileService {
 
       final responseData = json.decode(response.data!);
       final profileData = responseData['getMyNutritionistProfile'];
-      
+
       if (profileData == null) {
         return null;
       }

@@ -14,10 +14,12 @@ class ValidatePlansPageTablet extends ConsumerStatefulWidget {
   const ValidatePlansPageTablet({super.key});
 
   @override
-  ConsumerState<ValidatePlansPageTablet> createState() => _ValidatePlansPageTabletState();
+  ConsumerState<ValidatePlansPageTablet> createState() =>
+      _ValidatePlansPageTabletState();
 }
 
-class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTablet> {
+class _ValidatePlansPageTabletState
+    extends ConsumerState<ValidatePlansPageTablet> {
   List<MealPlan> _assignedMealPlans = [];
   bool _isLoading = true;
   String? _errorMessage;
@@ -66,14 +68,15 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
         setState(() {
           _assignedMealPlans = plans;
           _isLoading = false;
-          
+
           _ensureValidSelection(plans);
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = AppLocalizations.of(context)!.errorLoadingAssignedPlans(e.toString());
+          _errorMessage = AppLocalizations.of(context)!
+              .errorLoadingAssignedPlans(e.toString());
           _isLoading = false;
         });
       }
@@ -110,7 +113,7 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
     if (_isLoading) return _buildLoadingState(context);
     if (_errorMessage != null) return _buildErrorState(context, _errorMessage!);
     if (_assignedMealPlans.isEmpty) return _buildEmptyState(context);
-    
+
     return Row(
       children: [
         Flexible(
@@ -146,7 +149,7 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
 
   Widget _buildPlanTile(MealPlan plan, bool isLandscape) {
     final isSelected = plan.mealPlanId == _selectedPlanId;
-    
+
     return _ValidationPlanTile(
       plan: plan,
       isSelected: isSelected,
@@ -169,7 +172,7 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     // Check if this looks like a network error
     final isNetworkError = error.toLowerCase().contains('network') ||
         error.toLowerCase().contains('connection') ||
@@ -278,7 +281,7 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    
+
     return RefreshIndicator(
       onRefresh: _refreshPlans,
       backgroundColor: colorScheme.surface,
@@ -345,7 +348,8 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
   Widget _buildGrid(List<MealPlan> plans) {
     return Consumer(
       builder: (context, ref, child) {
-        final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+        final isLandscape =
+            MediaQuery.of(context).orientation == Orientation.landscape;
         const cardPadding = 12.0;
         const crossAxisCount = 2;
         final childAspectRatio = isLandscape ? 1.3 : 1.0;
@@ -361,7 +365,8 @@ class _ValidatePlansPageTabletState extends ConsumerState<ValidatePlansPageTable
               mainAxisSpacing: cardPadding,
             ),
             itemCount: plans.length,
-            itemBuilder: (context, index) => _buildPlanTile(plans[index], isLandscape),
+            itemBuilder: (context, index) =>
+                _buildPlanTile(plans[index], isLandscape),
           ),
         );
       },
@@ -401,9 +406,8 @@ class _ValidationPlanTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final borderColor = isSelected
-        ? colorScheme.primary
-        : colorScheme.outlineVariant;
+    final borderColor =
+        isSelected ? colorScheme.primary : colorScheme.outlineVariant;
 
     const cardPadding = 12.0;
     const titleMaxLines = 3;
@@ -417,7 +421,8 @@ class _ValidationPlanTile extends StatelessWidget {
       elevation: isSelected ? 3 : 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: borderColor.withValues(alpha: isSelected ? 0.7 : 0.3)),
+        side: BorderSide(
+            color: borderColor.withValues(alpha: isSelected ? 0.7 : 0.3)),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -453,7 +458,7 @@ class _ValidationPlanTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   _ValidationStatusIcon(
-                    plan: plan, 
+                    plan: plan,
                     isSelected: isSelected,
                     iconSize: iconSize,
                   ),
@@ -466,7 +471,8 @@ class _ValidationPlanTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      plan.planName ?? AppLocalizations.of(context)!.unnamedPlan,
+                      plan.planName ??
+                          AppLocalizations.of(context)!.unnamedPlan,
                       maxLines: titleMaxLines,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleSmall?.copyWith(
@@ -480,8 +486,11 @@ class _ValidationPlanTile extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
-                          DateFormat.yMMMd(Localizations.localeOf(context).toString())
-                              .format(plan.generatedAt!.getDateTimeInUtc().toLocal()),
+                          DateFormat.yMMMd(
+                                  Localizations.localeOf(context).toString())
+                              .format(plan.generatedAt!
+                                  .getDateTimeInUtc()
+                                  .toLocal()),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                             fontSize: isLandscape ? 9.0 : 10.0,
@@ -505,7 +514,7 @@ class _ValidationStatusIcon extends StatelessWidget {
   final double iconSize;
 
   const _ValidationStatusIcon({
-    required this.plan, 
+    required this.plan,
     required this.isSelected,
     required this.iconSize,
   });
@@ -513,7 +522,7 @@ class _ValidationStatusIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     IconData icon;
     Color bg;
     Color fg;
@@ -540,7 +549,8 @@ class _ValidationStatusIcon extends StatelessWidget {
         fg = colorScheme.onSurfaceVariant;
     }
 
-    final containerSize = iconSize * 1.6; // Container is proportionally larger than icon
+    final containerSize =
+        iconSize * 1.6; // Container is proportionally larger than icon
 
     return Container(
       width: containerSize,
@@ -633,7 +643,8 @@ class _ClientPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withValues(alpha: isDark ? 0.3 : 0.2),
+        color:
+            colorScheme.primaryContainer.withValues(alpha: isDark ? 0.3 : 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(

@@ -200,7 +200,8 @@ class _UserDetailsFormRiverpodState
                       color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
-                Text(AppLocalizations.of(context)!.profileUpdatedSuccessfullyShort),
+                Text(AppLocalizations.of(context)!
+                    .profileUpdatedSuccessfullyShort),
               ],
             ),
             backgroundColor: Colors.green.shade600,
@@ -210,7 +211,8 @@ class _UserDetailsFormRiverpodState
           ),
         );
       } else {
-        _showErrorSnackBar(AppLocalizations.of(context)!.failedToUpdateProfileShort);
+        _showErrorSnackBar(
+            AppLocalizations.of(context)!.failedToUpdateProfileShort);
       }
     }
   }
@@ -356,14 +358,13 @@ class _UserDetailsFormRiverpodState
                       _isWeightValid() == true
                           ? Icons.check_circle_rounded
                           : Icons.error_outline_rounded,
-                      color: _isWeightValid() == true
-                          ? Colors.green
-                          : Colors.red,
+                      color:
+                          _isWeightValid() == true ? Colors.green : Colors.red,
                       size: 20,
                     ),
             ),
             const SizedBox(height: 16),
-            
+
             // Height
             _buildTextField(
               controller: _heightController,
@@ -382,17 +383,16 @@ class _UserDetailsFormRiverpodState
                       _isHeightValid() == true
                           ? Icons.check_circle_rounded
                           : Icons.error_outline_rounded,
-                      color: _isHeightValid() == true
-                          ? Colors.green
-                          : Colors.red,
+                      color:
+                          _isHeightValid() == true ? Colors.green : Colors.red,
                       size: 20,
                     ),
             ),
             const SizedBox(height: 24),
 
             // Meal Preferences Section
-            _buildSectionHeader(AppLocalizations.of(context)!.mealPreferences, Icons.restaurant_rounded,
-                colorScheme, theme),
+            _buildSectionHeader(AppLocalizations.of(context)!.mealPreferences,
+                Icons.restaurant_rounded, colorScheme, theme),
             const SizedBox(height: 12),
             _buildDropdownField<int>(
               value: _dailyMealsPreference,
@@ -436,15 +436,18 @@ class _UserDetailsFormRiverpodState
             const SizedBox(height: 24),
 
             // Allergies Section
-            _buildSectionHeader(
-                AppLocalizations.of(context)!.allergies, Icons.warning_rounded, colorScheme, theme),
+            _buildSectionHeader(AppLocalizations.of(context)!.allergies,
+                Icons.warning_rounded, colorScheme, theme),
             const SizedBox(height: 12),
             _buildAllergiesSelection(colorScheme, theme),
             const SizedBox(height: 24),
 
             // Additional Preferences Section
-            _buildSectionHeader(AppLocalizations.of(context)!.additionalPreferences,
-                Icons.note_alt_rounded, colorScheme, theme),
+            _buildSectionHeader(
+                AppLocalizations.of(context)!.additionalPreferences,
+                Icons.note_alt_rounded,
+                colorScheme,
+                theme),
             const SizedBox(height: 12),
             _buildTextField(
               controller: _dietaryRestrictionsController,
@@ -483,7 +486,9 @@ class _UserDetailsFormRiverpodState
                         )
                       : const Icon(Icons.save_rounded, size: 20),
                   label: Text(
-                    _isLoading ? AppLocalizations.of(context)!.saving : AppLocalizations.of(context)!.saveChanges,
+                    _isLoading
+                        ? AppLocalizations.of(context)!.saving
+                        : AppLocalizations.of(context)!.saveChanges,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: _isDirty

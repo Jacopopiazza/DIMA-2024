@@ -51,7 +51,7 @@ void main() {
           mealPlanSubscriptionServiceProvider.overrideWithValue(mockService),
         ],
       );
-      
+
       // Trigger the provider initialization by reading it
       container.read(mealPlanNotificationProvider);
       // Wait a bit for initialization to complete
@@ -388,7 +388,7 @@ void main() {
             mealPlanSubscriptionServiceProvider.overrideWithValue(testService),
           ],
         );
-        
+
         // Just read the notifier to initialize it
         testContainer.read(mealPlanNotificationProvider.notifier);
 
@@ -535,7 +535,7 @@ void main() {
 
         // Dispose service first to prevent further notifications
         mockService.dispose();
-        
+
         // Try to add notification after disposal (should be ignored)
         final response = MealPlanResponse(
           mealPlanId: 'plan-123',
@@ -560,8 +560,9 @@ void main() {
             mealPlanSubscriptionServiceProvider.overrideWithValue(testService),
           ],
         );
-        
-        final notifier = testContainer.read(mealPlanNotificationProvider.notifier);
+
+        final notifier =
+            testContainer.read(mealPlanNotificationProvider.notifier);
 
         // Dispose notifier manually
         notifier.dispose();
@@ -569,7 +570,7 @@ void main() {
         // Operations should not crash
         expect(() => notifier.markAllAsRead(), returnsNormally);
         expect(() => notifier.clearNotifications(), returnsNormally);
-        
+
         // Clean up
         testService.dispose();
       });
