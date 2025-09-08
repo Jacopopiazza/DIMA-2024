@@ -43,6 +43,7 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -83,7 +84,7 @@ class _SignUpViewState extends State<SignUpView> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Create your account',
+                            l10n.signUp,
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: colorScheme.onSurface,
@@ -126,7 +127,7 @@ class _SignUpViewState extends State<SignUpView> {
                             borderRadius: BorderRadius.circular(12),
                             child: InputDecorator(
                               decoration: InputDecoration(
-                                labelText: 'Birthdate',
+                                labelText: l10n.birthdate,
                                 prefixIcon:
                                     const Icon(Icons.cake_rounded, size: 20),
                                 suffixIcon: const Icon(
@@ -156,7 +157,7 @@ class _SignUpViewState extends State<SignUpView> {
                               child: Text(
                                 _selectedDate != null
                                     ? '${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}'
-                                    : 'Select date',
+                                    : l10n.selectDate,
                                 style: TextStyle(
                                   color: _selectedDate != null
                                       ? colorScheme.onSurface
@@ -211,8 +212,8 @@ class _SignUpViewState extends State<SignUpView> {
                                       size: 20),
                               label: Text(
                                 _isLoading
-                                    ? 'Creating account...'
-                                    : 'Create Account',
+                                    ? l10n.loading
+                                    : l10n.signUp,
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.onPrimary,

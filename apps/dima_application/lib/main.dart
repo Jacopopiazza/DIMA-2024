@@ -13,11 +13,53 @@ import 'package:dima_application/providers/isar_provider.dart';
 import 'package:dima_application/providers/auth_state_provider.dart';
 import 'package:dima_application/providers/app_lifecycle_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io';
 
 import 'amplify_outputs.dart';
+
+/// Determines if the current device is a tablet using device_info_plus
+Future<bool> isTablet() async {
+  // Return true for web platform
+  if (kIsWeb) return true;
+  
+  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  
+  try {
+    if (Platform.isAndroid) {
+      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      // Android tablets typically have screen sizes >= 7 inches
+      // We can also check for tablet-specific features
+      final physicalSize = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
+      final devicePixelRatio = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
+      final logicalWidth = physicalSize.width / devicePixelRatio;
+      final logicalHeight = physicalSize.height / devicePixelRatio;
+      final largerDimension = logicalWidth > logicalHeight ? logicalWidth : logicalHeight;
+      
+      // Use 768px as tablet breakpoint for Android
+      return largerDimension >= 768.0;
+    } else if (Platform.isIOS) {
+      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      // iPad models - check device model
+      return iosInfo.model.toLowerCase().contains('ipad');
+    }
+  } catch (e) {
+    // Fallback to screen size if device info fails
+    final physicalSize = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
+    final devicePixelRatio = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
+    final logicalWidth = physicalSize.width / devicePixelRatio;
+    final logicalHeight = physicalSize.height / devicePixelRatio;
+    final largerDimension = logicalWidth > logicalHeight ? logicalWidth : logicalHeight;
+    return largerDimension >= 768.0;
+  }
+  
+  return false;
+}
 
 Future<void> _configureAmplify() async {
   try {
@@ -40,6 +82,20 @@ Future<void> _configureAmplify() async {
 Future<void> main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
+
+    final tablet = await isTablet();
+
+    if (!tablet) {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+    } else {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    }
 
     await _configureAmplify();
 

@@ -43,10 +43,15 @@ class NutritionistProfileService {
         return null;
       }
 
-      final Map<String, dynamic> profileData = Map<String, dynamic>.from(
-          json.decode(response.data!))['getMyNutritionistProfile'];
+      final responseData = json.decode(response.data!);
+      final profileData = responseData['getMyNutritionistProfile'];
+      
+      if (profileData == null) {
+        return null;
+      }
 
-      return NutritionistProfile.fromJson(profileData);
+      return NutritionistProfile.fromJson(
+          Map<String, dynamic>.from(profileData));
     } catch (e) {
       safePrint(
           '[NutritionistProfileService] Error loading nutritionist profile: $e');

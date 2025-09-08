@@ -54,8 +54,14 @@ class MealCard extends StatelessWidget {
     final skeletonColor =
         isDarkMode ? Colors.white.withAlpha(25) : Colors.grey[400]!;
 
+    // Responsive height for loading skeleton too
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth >= 768.0;
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final cardHeight = (isTablet && isLandscape) ? 220.0 : 180.0;
+
     return Container(
-      height: 180, // Fixed height matching the actual card
+      height: cardHeight, // Responsive height matching the actual card
       margin: const EdgeInsets.only(
           bottom: 16), // Consistent spacing below the card
       decoration: BoxDecoration(
@@ -153,20 +159,29 @@ class MealCard extends StatelessWidget {
                     mealPlanId: mealPlanId,
                   )),
         ),
-        child: Ink(
-          color: Colors
-              .transparent, // Allows the InkWell splash effect to show through
-          height: 180, // Fixed height for the card content area
-          width: double.infinity, // Card content takes the full available width
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = MediaQuery.of(context).size.width;
+            final isTablet = screenWidth >= 768.0;
+            final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+            
+            // Responsive card height - taller on tablet landscape for better image display
+            final cardHeight = (isTablet && isLandscape) ? 220.0 : 180.0;
+            
+            return Ink(
+              color: Colors
+                  .transparent, // Allows the InkWell splash effect to show through
+              height: cardHeight, // Responsive height for the card content area
+              width: double.infinity, // Card content takes the full available width
           child: Stack(
             alignment: Alignment
                 .bottomLeft, // Position children within the Stack relative to the bottom left
             children: [
               // The meal image, covering the card area
-              _buildMealImage(displayImageUrl, colorScheme),
+              _buildMealImage(displayImageUrl, colorScheme, cardHeight),
 
               // A gradient overlay on top of the image for better text readability
-              _buildGradientOverlay(),
+              _buildGradientOverlay(cardHeight),
 
               // The meal title text and recipe name, positioned at the bottom left over the gradient
               _buildMealTitleAndRecipe(context),
@@ -176,6 +191,8 @@ class MealCard extends StatelessWidget {
                   iconBackgroundColor, statusIconData, iconColor),
             ],
           ),
+        );
+          },
         ),
       ),
     );
@@ -183,19 +200,18 @@ class MealCard extends StatelessWidget {
 
   /// Builds the meal image widget with integrated loading and error handling.
   ///
-  /// Uses `Image.network` and provides `loadingBuilder` and `errorBuilder`
-  /// to show appropriate widgets during image loading or on failure.
-  Widget _buildMealImage(String url, ColorScheme colorScheme) {
+  /// Uses `Image.asset` and provides `errorBuilder`
+  /// to show appropriate widgets on failure.
+  Widget _buildMealImage(String url, ColorScheme colorScheme, double height) {
     return Image.asset(
       url,
-      height: 180, // Match the height of the card
+      height: height, // Use responsive height
       width: double.infinity, // Image takes the full width of its container
       errorBuilder: (context, error, stackTrace) {
         // Show an error placeholder if the image fails to load
-        return _buildImageErrorPlaceholder(colorScheme);
+        return _buildImageErrorPlaceholder(colorScheme, height);
       },
-      fit: BoxFit
-          .cover, // Scale the image to cover the available space without distortion
+      fit: BoxFit.cover, // Scale the image to cover the available space without distortion
     );
   }
 
@@ -220,9 +236,9 @@ class MealCard extends StatelessWidget {
   }
 
   /// Builds an error placeholder widget displayed when the image fails to load.
-  Widget _buildImageErrorPlaceholder(ColorScheme colorScheme) {
+  Widget _buildImageErrorPlaceholder(ColorScheme colorScheme, double height) {
     return Container(
-      height: 180, // Match image height
+      height: height, // Use responsive height
       color: colorScheme
           .surfaceContainerHighest, // Background color for the error area
       child: Center(
@@ -240,9 +256,9 @@ class MealCard extends StatelessWidget {
   ///
   /// This gradient helps improve the readability of text (like the meal title)
   /// placed over the image by providing a darker background.
-  Widget _buildGradientOverlay() {
+  Widget _buildGradientOverlay(double height) {
     return Container(
-      height: 180, // Cover the full height of the card
+      height: height, // Use responsive height
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [

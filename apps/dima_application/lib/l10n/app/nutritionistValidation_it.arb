@@ -1,0 +1,49 @@
+{
+    "@@locale": "it",
+    "noInternetConnectionValidation": "Nessuna connessione internet. Controlla la tua connessione e riprova.",
+    "errorLoadingAssignedPlans": "Errore nel caricamento dei piani alimentari assegnati: {error}",
+    "@errorLoadingAssignedPlans": {
+        "description": "Error message when loading assigned meal plans fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "loadingMealPlansValidation": "Caricamento piani alimentari...",
+    "validatedStatus": "Convalidato",
+    "pendingReviewStatus": "In Revisione",
+    "notValidatedStatus": "Non Convalidato",
+    "clientLabel": "Cliente: {clientName}",
+    "@clientLabel": {
+        "description": "Label showing the client name",
+        "placeholders": {
+            "clientName": {
+                "type": "String"
+            }
+        }
+    },
+    "createdLabel": "Creato: {date}",
+    "@createdLabel": {
+        "description": "Label showing creation date", 
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "updatedLabel": "Aggiornato: {date}",
+    "@updatedLabel": {
+        "description": "Label showing update date and time",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "noMealPlansToValidate": "Nessun Piano Alimentare da Convalidare",
+    "validationEmptyMessage": "I piani alimentari assegnati per la convalida appariranno qui.\nControlla più tardi o trascina per aggiornare.",
+    "refresh": "Aggiorna",
+    "errorLoadingPlansTitle": "Errore nel Caricamento dei Piani",
+    "tryAgain": "Riprova"
+}

@@ -1,4 +1,5 @@
 import 'package:dima_application/models/Chat/chat_message.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -119,7 +120,7 @@ class MessageBubble extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            _formatTimestamp(message.sentAt),
+                            _formatTimestamp(context, message.sentAt),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: isCurrentUser
                                   ? colorScheme.onPrimary.withOpacity(0.7)
@@ -147,7 +148,7 @@ class MessageBubble extends StatelessWidget {
     );
   }
 
-  String _formatTimestamp(DateTime dateTime) {
+  String _formatTimestamp(BuildContext context, DateTime dateTime) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
@@ -157,7 +158,7 @@ class MessageBubble extends StatelessWidget {
       return DateFormat('HH:mm').format(dateTime);
     } else if (messageDate == today.subtract(const Duration(days: 1))) {
       // Yesterday
-      return 'Yesterday ${DateFormat('HH:mm').format(dateTime)}';
+      return '${AppLocalizations.of(context)!.yesterday} ${DateFormat('HH:mm').format(dateTime)}';
     } else if (dateTime.isAfter(today.subtract(const Duration(days: 7)))) {
       // This week - show day and time
       return DateFormat('EEE HH:mm').format(dateTime);
@@ -254,7 +255,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
           Padding(
             padding: const EdgeInsets.only(left: 12, bottom: 4),
             child: Text(
-              '${widget.senderName} is typing...',
+              AppLocalizations.of(context)!.isTyping(widget.senderName),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 fontStyle: FontStyle.italic,

@@ -1,5 +1,5 @@
-// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -9,16 +9,270 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get completeYourProfile => 'Complete Your Profile';
+
+  @override
+  String get profileInformation => 'Profile Information';
+
+  @override
+  String get welcomeCompleteProfile => 'Welcome! Please complete your nutritionist profile';
+
+  @override
+  String get specialization => 'Specialization';
+
+  @override
+  String get specializationHint => 'e.g., Sports Nutrition, Weight Management';
+
+  @override
+  String get pleaseEnterSpecialization => 'Please enter your specialization';
+
+  @override
+  String get bio => 'Bio';
+
+  @override
+  String get bioHint => 'Tell clients about your expertise and approach';
+
+  @override
+  String get pleaseEnterBio => 'Please enter your bio';
+
+  @override
+  String get bioTooShort => 'Bio should be at least 50 characters';
+
+  @override
+  String get profilePicture => 'Profile Picture';
+
+  @override
+  String get tapToUploadProfilePicture => 'Tap to upload a profile picture';
+
+  @override
+  String get availableForNewClients => 'Available for new clients';
+
+  @override
+  String get clientsCanRequestServices => 'Clients can request your services';
+
+  @override
+  String get updateProfile => 'Update Profile';
+
+  @override
+  String get saveProfile => 'Save Profile';
+
+  @override
+  String get noInternetConnection => 'No internet connection. Please check your connection and try again.';
+
+  @override
+  String get profileSavedSuccessfully => 'Profile saved successfully!';
+
+  @override
+  String get errorSavingProfile => 'Error saving profile. Please try again.';
+
+  @override
+  String errorSavingProfileWith(String error) {
+    return 'Error saving profile: $error';
+  }
+
+  @override
+  String get loadingNutritionistSettings => 'Loading nutritionist settings...';
+
+  @override
+  String get nutritionistSettings => 'Nutritionist Settings';
+
+  @override
+  String get manageProfileMessage => 'Manage your professional profile, availability, and account settings.';
+
+  @override
+  String get editProfessionalDetails => 'Edit Professional Details';
+
+  @override
+  String get professionalBio => 'Professional Bio';
+
+  @override
+  String get availabilitySettings => 'Availability Settings';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profile updated successfully';
+
+  @override
+  String errorUpdatingProfile(String error) {
+    return 'Error updating profile: $error';
+  }
+
+  @override
+  String get bioMinLength => 'Bio should be at least 50 characters';
+
+  @override
+  String get saving => 'Saving...';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get availableForConsultations => 'You are now available for consultations';
+
+  @override
+  String get unavailableForConsultations => 'You are now unavailable for consultations';
+
+  @override
+  String errorUpdatingAvailability(String error) {
+    return 'Error updating availability: $error';
+  }
+
+  @override
+  String get validatePlans => 'Validate Plans';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get internetRequiredMessage => 'This app requires an internet connection to function properly. Please check your connection and try again.';
+
+  @override
+  String get connectionTips => 'Connection Tips';
+
+  @override
+  String get checkWifiConnection => 'Check your Wi-Fi or mobile data connection';
+
+  @override
+  String get turnOffAirplaneMode => 'Make sure airplane mode is turned off';
+
+  @override
+  String get moveForBetterSignal => 'Try moving to an area with better signal';
+
+  @override
+  String get restartRouter => 'Restart your router or mobile data';
+
+  @override
+  String get checking => 'Checking...';
+
+  @override
+  String get tryAgainButton => 'Try Again';
+
+  @override
+  String get connectionRestored => 'Connection restored!';
+
+  @override
+  String get stillNoInternet => 'Still no internet connection';
+
+  @override
+  String get tapToSelectPhoto => 'Tap to select photo';
+
+  @override
+  String get selectPhoto => 'Select Photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get selectFromExistingPhotos => 'Select from existing photos';
+
+  @override
+  String get removePhoto => 'Remove Photo';
+
+  @override
+  String get deleteCurrentProfilePicture => 'Delete current profile picture';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String errorUploadingImage(String error) {
+    return 'Error uploading image: $error';
+  }
+
+  @override
+  String errorRemovingImage(String error) {
+    return 'Error removing image: $error';
+  }
+
+  @override
+  String get availability => 'Availability';
+
+  @override
+  String get currentlyAvailableForConsultations => 'You are currently available for consultations';
+
+  @override
+  String get currentlyUnavailableForConsultations => 'You are currently unavailable for consultations';
+
+  @override
+  String get availableForConsultationsTitle => 'Available for Consultations';
+
+  @override
+  String get usersCanRequestConsultations => 'Users can request consultations from you';
+
+  @override
+  String get noNewConsultationRequests => 'You will not receive new consultation requests';
+
+  @override
+  String get signOut => 'Sign Out';
+
+  @override
+  String get signOutOfNutritionistAccount => 'Sign out of your nutritionist account';
+
+  @override
+  String errorSigningOut(String error) {
+    return 'Error signing out: $error';
+  }
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountPermanently => 'This action will permanently delete your nutritionist account and all associated data. This cannot be undone.';
+
+  @override
+  String get allDataWillBeRemoved => 'All your professional data, client interactions, and account information will be permanently removed.';
+
+  @override
+  String get confirmSignOutTitle => 'Sign Out';
+
+  @override
+  String get confirmSignOutMessage => 'Are you sure you want to sign out of your nutritionist account?';
+
+  @override
+  String get dangerZone => 'Danger Zone';
+
+  @override
+  String get irreversibleDestructiveActions => 'Irreversible and destructive actions';
+
+  @override
+  String get criticalWarning => 'Critical Warning';
+
+  @override
+  String get permanentActionWarning => 'The actions below are permanent and cannot be undone. All your nutritionist data, including profile information, client interactions, and professional settings will be permanently deleted.';
+
+  @override
+  String get deleteMyAccount => 'Delete My Account';
+
+  @override
+  String errorDeletingAccount(String error) {
+    return 'Error deleting account: $error';
+  }
+
+  @override
   String get settingsTitle => 'Settings';
+
+  @override
+  String get proPlanTitle => 'PRO Plan';
+
+  @override
+  String get unlockPremiumFeatures => 'Unlock premium features:';
+
+  @override
+  String get expertMealPlanningValidation => 'Expert meal planning validation';
+
+  @override
+  String get personalNutritionistChat => 'Personal nutritionist chat in-app';
+
+  @override
+  String get subscribeToPro => 'Subscribe to PRO';
 
   @override
   String get changePreferences => 'Change Preferences';
 
   @override
   String get clearCache => 'Clear Cache';
-
-  @override
-  String get deleteAccount => 'Delete Account';
 
   @override
   String get confirmClearCacheTitle => 'Confirm Clear Cache';
@@ -30,19 +284,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clear => 'Clear';
 
   @override
-  String get cancel => 'Cancel';
-
-  @override
   String get cacheClearedSuccessfully => 'Cache cleared successfully.';
 
   @override
   String get errorClearingCache => 'Error clearing cache.';
-
-  @override
-  String get confirmSignOutTitle => 'Confirm Sign Out';
-
-  @override
-  String get confirmSignOutMessage => 'Are you sure you want to sign out?';
 
   @override
   String get confirmDeleteAccountTitle => 'Confirm Account Deletion';
@@ -54,13 +299,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountDeletedSuccessfully => 'Account deleted successfully.';
 
   @override
-  String get errorDeletingAccount => 'Error deleting account. Please try again.';
-
-  @override
   String get errorDeleteAccountRequiresRecentLogin => 'Account deletion requires a recent sign-in. Please sign out and sign back in.';
-
-  @override
-  String get saveChanges => 'Save Changes';
 
   @override
   String get preferencesSavedSuccess => 'Preferences saved successfully.';
@@ -99,7 +338,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dietaryNeeds => 'Dietary Needs';
 
   @override
-  String get mealsPerDay => 'Meals Per Day';
+  String mealsPerDay(int count) {
+    return 'Meals Per Day';
+  }
 
   @override
   String get dietaryRestrictions => 'Dietary Restrictions';
@@ -219,6 +460,327 @@ class AppLocalizationsEn extends AppLocalizations {
   String get back => 'Back';
 
   @override
+  String get today => 'Today';
+
+  @override
+  String get mealPlans => 'Meal Plans';
+
+  @override
+  String get clientDetails => 'Client Details';
+
+  @override
+  String get loadingClientInformation => 'Loading client information...';
+
+  @override
+  String get healthProfilePreferences => 'Health profile and preferences';
+
+  @override
+  String get noClientDetailsAvailable => 'No client details available';
+
+  @override
+  String get loadingClientDetails => 'Loading client details...';
+
+  @override
+  String get physicalInformation => 'Physical Information';
+
+  @override
+  String get height => 'Height';
+
+  @override
+  String get weight => 'Weight';
+
+  @override
+  String get bmi => 'BMI';
+
+  @override
+  String get dietaryInformation => 'Dietary Information';
+
+  @override
+  String get dailyMealsPreference => 'Daily Meals Preference';
+
+  @override
+  String get dietaryRestrictionsLabel => 'Dietary Restrictions';
+
+  @override
+  String get additionalPreferences => 'Additional Preferences';
+
+  @override
+  String get accountInformation => 'Account Information';
+
+  @override
+  String get accountCreated => 'Account Created';
+
+  @override
+  String get lastUpdated => 'Last Updated';
+
+  @override
+  String get activePlanId => 'Active Plan ID';
+
+  @override
+  String get viewPlanDetails => 'View plan details';
+
+  @override
+  String get planIdLabel => 'Plan ID';
+
+  @override
+  String get generated => 'Generated';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get validation => 'Validation';
+
+  @override
+  String get nutritionist => 'Nutritionist';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get noMealPlanDataAvailable => 'No meal plan data available';
+
+  @override
+  String get sevenDayScheduleEditing => '7-day meal schedule (Editing)';
+
+  @override
+  String get sevenDayScheduleViewEdit => '7-day meal schedule (View/Edit)';
+
+  @override
+  String get sevenDayScheduleViewOnly => '7-day meal schedule (View Only)';
+
+  @override
+  String get noDailyPlanDataFound => 'No daily plan data found for this meal plan.';
+
+  @override
+  String get enterRecipeName => 'Enter recipe name';
+
+  @override
+  String get enterCookingInstructions => 'Enter cooking instructions...';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get noIngredientsAddedYet => 'No ingredients added yet';
+
+  @override
+  String get ingredientName => 'Ingredient Name';
+
+  @override
+  String get removeIngredient => 'Remove ingredient';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get unit => 'Unit';
+
+  @override
+  String get nutritionalValuesPerUnit => 'Nutritional Values (per unit)';
+
+  @override
+  String get calories => 'Calories';
+
+  @override
+  String get proteins => 'Proteins';
+
+  @override
+  String get carbs => 'Carbs';
+
+  @override
+  String get fats => 'Fats';
+
+  @override
+  String get chatWithPatient => 'Chat with Patient';
+
+  @override
+  String get validateMealPlan => 'Validate Meal Plan';
+
+  @override
+  String validateMealPlanConfirm(String planName) {
+    return 'Are you sure you want to validate \"$planName\"?';
+  }
+
+  @override
+  String get validate => 'Validate';
+
+  @override
+  String get rejectMealPlan => 'Reject Meal Plan';
+
+  @override
+  String rejectMealPlanConfirm(String planName) {
+    return 'Are you sure you want to reject \"$planName\"? This will reset the plan to not validated status.';
+  }
+
+  @override
+  String get reject => 'Reject';
+
+  @override
+  String get mealPlanValidatedSuccessfully => 'Meal plan validated successfully!';
+
+  @override
+  String get failedToValidateMealPlan => 'Failed to validate meal plan';
+
+  @override
+  String get mealPlanRejected => 'Meal plan rejected';
+
+  @override
+  String get failedToRejectMealPlan => 'Failed to reject meal plan';
+
+  @override
+  String get savingMealPlan => 'Saving meal plan...';
+
+  @override
+  String get mealPlanSavedSuccessfully => 'Meal plan saved successfully!';
+
+  @override
+  String get failedToSaveMealPlan => 'Failed to save meal plan';
+
+  @override
+  String get bmiUnderweight => 'Underweight';
+
+  @override
+  String get bmiNormalWeight => 'Normal weight';
+
+  @override
+  String get bmiOverweight => 'Overweight';
+
+  @override
+  String get bmiObese => 'Obese';
+
+  @override
+  String get noneReported => 'None reported';
+
+  @override
+  String get profileInfoNotAvailable => 'Profile information not available';
+
+  @override
+  String get notSpecified => 'Not specified';
+
+  @override
+  String get noExercise => 'No exercise';
+
+  @override
+  String get onceWeek => 'Once a week';
+
+  @override
+  String get twiceWeek => 'Twice a week';
+
+  @override
+  String get threeTimes => '3 times per week';
+
+  @override
+  String get fourTimes => '4 times per week';
+
+  @override
+  String get fiveTimes => '5 times per week';
+
+  @override
+  String get sixTimes => '6 times per week';
+
+  @override
+  String get everyDay => 'Every day';
+
+  @override
+  String get weightRange => 'Weight must be between 30 and 300 kg';
+
+  @override
+  String get heightRange => 'Height must be between 50 and 250 cm';
+
+  @override
+  String get completeProfileFirst => 'Complete Profile First';
+
+  @override
+  String get mealPlanGenStarted => 'Meal plan generation started! You\'ll receive a notification when it\'s ready.';
+
+  @override
+  String get failedToStartGeneration => 'Failed to start meal plan generation';
+
+  @override
+  String get createMealPlan => 'Create Meal Plan';
+
+  @override
+  String get loadingPreferences => 'Loading your preferences...';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get unableToLoadPreferences => 'Unable to load your preferences';
+
+  @override
+  String get personalizedMealPlan => 'Personalized Meal Plan';
+
+  @override
+  String get personalizedDescription => 'We\'ll create a customized weekly meal plan based on your preferences, dietary needs, and lifestyle.';
+
+  @override
+  String get profileIncomplete => 'Profile Incomplete';
+
+  @override
+  String get completeProfile => 'Complete Profile';
+
+  @override
+  String get completeProfileMustDo => 'You must complete your profile before generating a meal plan';
+
+  @override
+  String get noProfileDetailsFound => 'No Profile Details Found';
+
+  @override
+  String get noProfileDescription => 'For the most personalized meal plan, please set up your profile with your weight, height, dietary preferences, and allergies.';
+
+  @override
+  String get orContinueDefault => 'Or continue with default preferences below';
+
+  @override
+  String get profileDetailsFound => 'Profile Details Found';
+
+  @override
+  String get customPreferences => 'Custom Preferences';
+
+  @override
+  String get usingCustomPreferences => 'Using custom preferences for this meal plan';
+
+  @override
+  String get usingProfilePreferences => 'Using your profile preferences';
+
+  @override
+  String get physicalDetails => 'Physical Details';
+
+  @override
+  String get weightHelper => 'Allowed: 30–300 kg';
+
+  @override
+  String get heightHelper => 'Allowed: 50–250 cm';
+
+  @override
+  String get mealPreferences => 'Meal Preferences';
+
+  @override
+  String get dailyMeals => 'Daily Meals';
+
+  @override
+  String get additionalPreferencesHint => 'Any other food preferences or requirements';
+
+  @override
+  String get creatingMealPlan => 'Creating Meal Plan...';
+
+  @override
+  String get generateCustomPreferences => 'Generate with Custom Preferences';
+
+  @override
+  String mealsDropdown(int count) {
+    return '$count meals';
+  }
+
+  @override
+  String get generatePersonalizedPlan => 'Generate Personalized Plan';
+
+  @override
+  String get selectAllergies => 'Select any allergies you have:';
+
+  @override
   String get helloWorld => 'Hello World!';
 
   @override
@@ -246,6 +808,441 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otherGender => 'Other';
 
   @override
+  String get newMealPlanAvailable => 'New meal plan available!';
+
+  @override
+  String get mealPlanGenerationFailed => 'Meal plan generation failed: ';
+
+  @override
+  String get unknownError => 'Unknown error';
+
+  @override
+  String get loadingYourMealPlans => 'Loading your meal plans...';
+
+  @override
+  String get newPlan => 'New Plan';
+
+  @override
+  String get noMealPlansYet => 'No meal plans yet';
+
+  @override
+  String get createFirstMealPlan => 'Create your first personalized meal plan\nto get started with healthy eating';
+
+  @override
+  String get pullDownToRefresh => 'Pull down to refresh';
+
+  @override
+  String get connectionProblem => 'Connection Problem';
+
+  @override
+  String get unableToLoadPlansWithConnection => 'Unable to load your meal plans.\nCheck your internet connection and try again.';
+
+  @override
+  String get unableToLoadPlans => 'Unable to load your meal plans';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get active => 'ACTIVE';
+
+  @override
+  String get setActive => 'Set Active';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get generating => 'Generating';
+
+  @override
+  String get failed => 'Failed';
+
+  @override
+  String get validated => 'Validated';
+
+  @override
+  String get pendingValidation => 'Pending Validation';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get notValidated => 'Not validated';
+
+  @override
+  String get pleaseRetryLater => 'Please try again later';
+
+  @override
+  String get modelOverloadedMessage => 'The model is overloaded. Please request a new meal plan later.';
+
+  @override
+  String get setActivePlan => 'Set Active Plan';
+
+  @override
+  String makeActivePlanQuestion(Object planName) {
+    return 'Make \"$planName\" your active meal plan?';
+  }
+
+  @override
+  String get deleteMealPlan => 'Delete Meal Plan';
+
+  @override
+  String deletePlanConfirmation(Object planName) {
+    return 'Are you sure you want to delete \"$planName\"?';
+  }
+
+  @override
+  String get unnamedPlan => 'Unnamed Plan';
+
+  @override
+  String planId(Object planId) {
+    return 'Plan ID: $planId';
+  }
+
+  @override
+  String get viewPlan => 'View Plan';
+
+  @override
+  String get editName => 'Edit Name';
+
+  @override
+  String get requestValidation => 'Request Validation';
+
+  @override
+  String get seeDetailedMealPlan => 'See detailed meal plan';
+
+  @override
+  String get changePlanName => 'Change the plan name';
+
+  @override
+  String get getNutritionistApproval => 'Get nutritionist approval';
+
+  @override
+  String get proFeature => 'Pro feature';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get activeMealPlanUpdated => 'Active meal plan updated!';
+
+  @override
+  String get failedToSetActiveMealPlan => 'Failed to set active meal plan';
+
+  @override
+  String get mealPlanDeletedSuccessfully => 'Meal plan deleted successfully';
+
+  @override
+  String get failedToDeleteMealPlan => 'Failed to delete meal plan';
+
+  @override
+  String get actionFailed => 'Action failed: ';
+
+  @override
+  String get modifyPlanName => 'Modify Plan Name';
+
+  @override
+  String get enterNewPlanName => 'Enter new plan name';
+
+  @override
+  String get planNameCannotBeEmpty => 'Plan name cannot be empty';
+
+  @override
+  String get planNameMinLength => 'Plan name must be at least 2 characters long';
+
+  @override
+  String get planNameMaxLength => 'Plan name must be less than 50 characters';
+
+  @override
+  String get validName => 'Valid name';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get failedToUpdatePlanName => 'Failed to update plan name: ';
+
+  @override
+  String get requestNutritionistValidation => 'Request Nutritionist Validation';
+
+  @override
+  String selectNutritionistToReview(Object planName) {
+    return 'Select a nutritionist to review your meal plan \"$planName\":';
+  }
+
+  @override
+  String get errorLoadingNutritionists => 'Error loading nutritionists: ';
+
+  @override
+  String get pleaseSelectNutritionist => 'Please select a nutritionist';
+
+  @override
+  String get nutritionistNotAvailable => 'Selected nutritionist is not available for validation';
+
+  @override
+  String get validationRequestSent => 'Validation request sent successfully!';
+
+  @override
+  String get failedToSendValidationRequest => 'Failed to send validation request';
+
+  @override
+  String get errorSendingValidationRequest => 'Error sending validation request: ';
+
+  @override
+  String get available => 'Available';
+
+  @override
+  String get unavailable => 'Unavailable';
+
+  @override
+  String get noNutritionistsAvailable => 'No nutritionists available at the moment.';
+
+  @override
+  String get requestValidationButton => 'Request Validation';
+
+  @override
+  String get failedToLoadMealPlan => 'Failed to load meal plan: ';
+
+  @override
+  String get loadingYourMealPlan => 'Loading your meal plan...';
+
+  @override
+  String get connectionProblemView => 'Connection Problem';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops! Something went wrong';
+
+  @override
+  String get checkInternetConnection => 'Please check your internet connection and try again. Make sure you\'re connected to Wi-Fi or cellular data.';
+
+  @override
+  String get encounterErrorLoadingPlan => 'We encountered an error while loading your meal plan. This might be a temporary issue.';
+
+  @override
+  String get reconnect => 'Reconnect';
+
+  @override
+  String get mealPlanNotFound => 'Meal Plan Not Found';
+
+  @override
+  String get mealPlanMightDeleted => 'This meal plan might have been deleted or is no longer available. Please try refreshing or go back to select another plan.';
+
+  @override
+  String get planInformation => 'Plan Information';
+
+  @override
+  String get planName => 'Plan Name';
+
+  @override
+  String get errorDetails => 'Error Details';
+
+  @override
+  String get weeklyMealPlan => 'Weekly Meal Plan';
+
+  @override
+  String get sevenDayMealScheduleReadOnly => '7-day meal schedule';
+
+  @override
+  String mealsCount(int count) {
+    return '$count meals';
+  }
+
+  @override
+  String get noDailyPlanData => 'No daily plan data found for this meal plan.';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
+  String get noMealsScheduled => 'No meals scheduled for this day';
+
+  @override
+  String get unnamedMeal => 'Unnamed meal';
+
+  @override
+  String get recipeName => 'Recipe Name';
+
+  @override
+  String get instructions => 'Instructions';
+
+  @override
+  String get nutritionInformation => 'Nutrition Information';
+
+  @override
+  String get protein => 'Protein';
+
+  @override
+  String get fat => 'Fat';
+
+  @override
+  String get chatWithNutritionist => 'Chat with Nutritionist';
+
+  @override
+  String get showLess => 'Show less';
+
+  @override
+  String get readMore => 'Read more';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusGenerated => 'Generated';
+
+  @override
+  String get statusArchived => 'Archived';
+
+  @override
+  String get statusFailed => 'Failed';
+
+  @override
+  String get statusInProgress => 'In Progress';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusUnknown => 'Unknown';
+
+  @override
+  String get validationValidated => 'Validated';
+
+  @override
+  String get validationPendingReview => 'Pending Review';
+
+  @override
+  String get validationRejected => 'Rejected';
+
+  @override
+  String get validationNotValidated => 'Not Validated';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get typeYourMessage => 'Type your message...';
+
+  @override
+  String get patient => 'Patient';
+
+  @override
+  String get upgrade => 'Upgrade';
+
+  @override
+  String get failedToLoadOlderMessages => 'Failed to load older messages: ';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get message => 'Message...';
+
+  @override
+  String get pullDownToLoadOlder => 'Pull down to load older messages';
+
+  @override
+  String get loadingMessages => 'Loading messages...';
+
+  @override
+  String get failedToLoadChat => 'Failed to load chat';
+
+  @override
+  String get startTheConversation => 'Start the conversation';
+
+  @override
+  String get sendMessageToBegin => 'Send a message to begin chatting.';
+
+  @override
+  String messagesCount(int count) {
+    return '$count messages';
+  }
+
+  @override
+  String isTyping(String name) {
+    return '$name is typing...';
+  }
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgo(int minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String hoursAgo(int hours) {
+    return '${hours}h ago';
+  }
+
+  @override
+  String get upgradeToPro => 'Upgrade to PRO';
+
+  @override
+  String get chooseYourProPlan => 'Choose your PRO plan:';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get yearly => 'Yearly';
+
+  @override
+  String get lifetime => 'Lifetime';
+
+  @override
+  String get monthlyPrice => '\$9.99/month';
+
+  @override
+  String get yearlyPrice => '\$99/year';
+
+  @override
+  String get lifetimePrice => '\$299';
+
+  @override
+  String get monthlyDescription => 'Best for trying out';
+
+  @override
+  String get yearlyDescription => 'Save 17% (2 months free)';
+
+  @override
+  String get lifetimeDescription => 'One-time payment';
+
+  @override
+  String get subscribe => 'Subscribe';
+
+  @override
+  String get subscriptionFeatureComingSoon => 'Subscription feature coming soon!';
+
+  @override
+  String get confirmDelete => 'Confirm Delete';
+
+  @override
+  String get confirmDeleteMessage => 'Are you sure you want to delete your account?';
+
+  @override
   String get mealNameBREAKFAST => 'Breakfast';
 
   @override
@@ -267,22 +1264,397 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayProgress => 'Today\'s Progress';
 
   @override
-  String get calories => 'Calories';
-
-  @override
-  String get carbs => 'Carbs';
-
-  @override
-  String get fats => 'Fats';
-
-  @override
-  String get proteins => 'Proteins';
-
-  @override
   String get todaysMeals => 'Today\'s Meals';
 
   @override
+  String get showingStaleData => 'Showing stale data.';
+
+  @override
+  String get networkUnavailableCachedData => 'Network unavailable. Showing cached data.';
+
+  @override
+  String get refreshFailedPreviousData => 'Refresh failed. Displaying previous data.';
+
+  @override
+  String get failedToLoadDataCheckConnection => 'Failed to load data. Check connection.';
+
+  @override
+  String get refreshFailedNoMealsScheduled => 'Refresh failed. No meals scheduled.';
+
+  @override
+  String get errorMealDataMissing => 'Error: Meal data is missing.';
+
+  @override
+  String get noMealsForToday => 'No Meals For Today';
+
+  @override
+  String currentMealPlanNoMealsScheduled(String dayName) {
+    return 'Your current meal plan doesn\'t have any meals scheduled for $dayName.';
+  }
+
+  @override
+  String get refreshNow => 'Refresh Now';
+
+  @override
+  String get failedToLoadData => 'Failed to Load Data';
+
+  @override
+  String get retryAction => 'Retry';
+
+  @override
+  String get noMealPlanSelected => 'No Meal Plan Selected';
+
+  @override
+  String get selectMealPlanToStart => 'Select a meal plan to start tracking your daily meals and nutritional progress.';
+
+  @override
+  String get choosePlan => 'Choose a Plan';
+
+  @override
+  String get mealPlanReady => 'Meal Plan Ready!';
+
+  @override
+  String get generationFailed => 'Generation Failed';
+
+  @override
+  String get mealPlanReadyDescription => 'Your meal plan has been successfully generated.';
+
+  @override
+  String get generationFailedDescription => 'There was an error generating your meal plan. Please try again later.';
+
+  @override
+  String get loadingSettings => 'Loading settings...';
+
+  @override
+  String get unableToLoadSettings => 'Unable to load settings';
+
+  @override
+  String get notSignedIn => 'Not signed in';
+
+  @override
+  String get pleaseSignInToAccessSettings => 'Please sign in to access your settings';
+
+  @override
   String get signIn => 'Sign In';
+
+  @override
+  String get accountSettings => 'Account Settings';
+
+  @override
+  String get manageYourProfilePreferencesAndSecurity => 'Manage your profile, preferences, and account security settings.';
+
+  @override
+  String get loadingSubscription => 'Loading subscription...';
+
+  @override
+  String get loadingProfile => 'Loading profile...';
+
+  @override
+  String get profileUnavailable => 'Profile Unavailable';
+
+  @override
+  String get personalDataCurrentlyUnavailable => 'Personal data are currently unavailable. Please try refreshing or check back later.';
+
+  @override
+  String get preferencesUnavailable => 'Preferences Unavailable';
+
+  @override
+  String get preferencesDataCurrentlyUnavailable => 'Your preferences and settings data are currently unavailable. Please try refreshing or check back later.';
+
+  @override
+  String get subscriptionStatusUnavailable => 'Subscription Status Unavailable';
+
+  @override
+  String get subscriptionStatusCurrentlyUnavailable => 'Your subscription status is currently unavailable. Please try refreshing or check back later.';
+
+  @override
+  String get userProfile => 'User Profile';
+
+  @override
+  String get unsaved => 'Unsaved';
+
+  @override
+  String get givenName => 'Given Name';
+
+  @override
+  String get familyName => 'Family Name';
+
+  @override
+  String get givenNameRequired => 'Given Name is required';
+
+  @override
+  String get familyNameRequired => 'Family Name is required';
+
+  @override
+  String get nameFieldsReadOnly => 'Name fields are managed by your authentication provider and cannot be changed here.';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get birthdate => 'Birthdate';
+
+  @override
+  String get selectDate => 'Select date';
+
+  @override
+  String get failedToUpdateProfile => 'Failed to update profile. Please try again.';
+
+  @override
+  String get generationPreferences => 'Generation Preferences';
+
+  @override
+  String get weightAllowed => 'Allowed: 30–300 kg';
+
+  @override
+  String get weightMustBeBetween => 'Weight must be between 30 and 300 kg';
+
+  @override
+  String get heightAllowed => 'Allowed: 50–250 cm';
+
+  @override
+  String get heightMustBeBetween => 'Height must be between 50 and 250 cm';
+
+  @override
+  String get onceAWeek => 'Once a week';
+
+  @override
+  String get twiceAWeek => 'Twice a week';
+
+  @override
+  String get anySpecificDietaryRestriction => 'Any specific dietary restriction';
+
+  @override
+  String get dietaryPreferences => 'Dietary preferences';
+
+  @override
+  String get anySpecificDietaryPreference => 'Any specific dietary preference or notes';
+
+  @override
+  String get weightIsRequired => 'Weight is required';
+
+  @override
+  String get heightIsRequired => 'Height is required';
+
+  @override
+  String get pleaseEnterValidWeight => 'Please enter a valid weight';
+
+  @override
+  String get pleaseEnterValidHeight => 'Please enter a valid height';
+
+  @override
+  String get profileUpdatedSuccessfullyShort => 'Profile updated successfully';
+
+  @override
+  String get failedToUpdateProfileShort => 'Failed to update profile';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get updateYourAccountPassword => 'Update your account password';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get pleaseEnterCurrentPassword => 'Please enter your current password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get pleaseEnterNewPassword => 'Please enter a new password';
+
+  @override
+  String get passwordMustBeAtLeast8Characters => 'Password must be at least 8 characters';
+
+  @override
+  String get passwordMustContainUppercase => 'Password must contain uppercase, lowercase, and numbers';
+
+  @override
+  String get confirmNewPassword => 'Confirm New Password';
+
+  @override
+  String get pleaseConfirmNewPassword => 'Please confirm your new password';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get passwordRequirements => 'Password Requirements:';
+
+  @override
+  String get atLeast8Characters => 'At least 8 characters';
+
+  @override
+  String get uppercaseLetter => 'Uppercase letter (A-Z)';
+
+  @override
+  String get lowercaseLetter => 'Lowercase letter (a-z)';
+
+  @override
+  String get number => 'Number (0-9)';
+
+  @override
+  String get changingPassword => 'Changing Password...';
+
+  @override
+  String get changePasswordButton => 'Change Password';
+
+  @override
+  String get passwordChangedSuccessfully => 'Password changed successfully';
+
+  @override
+  String get failedToChangePassword => 'Failed to change password';
+
+  @override
+  String get tooShort => 'Too short';
+
+  @override
+  String get weak => 'Weak';
+
+  @override
+  String get fair => 'Fair';
+
+  @override
+  String get good => 'Good';
+
+  @override
+  String get strong => 'Strong';
+
+  @override
+  String get proPlan => 'PRO Plan';
+
+  @override
+  String get activeSubscription => 'Active subscription';
+
+  @override
+  String get upgradeToUnlockPremiumFeatures => 'Upgrade to unlock premium features';
+
+  @override
+  String currentStatus(Object status) {
+    return 'Current Status: $status';
+  }
+
+  @override
+  String get youHaveAccessTo => 'You have access to:';
+
+  @override
+  String get personalNutritionistChatInApp => 'Personal nutritionist chat in-app';
+
+  @override
+  String get unsubscribeFromPro => 'Unsubscribe from PRO';
+
+  @override
+  String get successfullySubscribedToPro => 'Successfully subscribed to PRO!';
+
+  @override
+  String get failedToSubscribe => 'Failed to subscribe. Please try again.';
+
+  @override
+  String get errorSubscribing => 'Error subscribing';
+
+  @override
+  String get successfullyUnsubscribedToFree => 'Successfully unsubscribed to FREE!';
+
+  @override
+  String get failedToUnsubscribe => 'Failed to unsubscribe. Please try again.';
+
+  @override
+  String get errorUnsubscribing => 'Error unsubscribing';
+
+  @override
+  String get quickActions => 'Quick Actions';
+
+  @override
+  String get refreshData => 'Refresh Data';
+
+  @override
+  String get clearCacheAndReload => 'Clear cache and reload your information';
+
+  @override
+  String get signOutOfYourAccount => 'Sign out of your account';
+
+  @override
+  String get dataRefreshedSuccessfully => 'Data refreshed successfully';
+
+  @override
+  String get areYouSureSignOut => 'Are you sure you want to sign out of your account?';
+
+  @override
+  String get irreversibleAndDestructiveActions => 'Irreversible and destructive actions';
+
+  @override
+  String get actionsArePermanent => 'The actions below are permanent and cannot be undone. All your data, including meal plans, preferences, and account information will be permanently deleted.';
+
+  @override
+  String get deletingAccount => 'Deleting Account...';
+
+  @override
+  String get thisActionWillPermanentlyDelete => 'This action will permanently delete your account and all associated data. This cannot be undone.';
+
+  @override
+  String get allYourMealPlansWillBeRemoved => 'All your meal plans, preferences, and personal data will be permanently removed.';
+
+  @override
+  String get failedToDeleteAccount => 'Failed to delete account';
+
+  @override
+  String get noInternetConnectionValidation => 'No internet connection. Please check your connection and try again.';
+
+  @override
+  String errorLoadingAssignedPlans(String error) {
+    return 'Error loading assigned meal plans: $error';
+  }
+
+  @override
+  String get loadingMealPlansValidation => 'Loading meal plans...';
+
+  @override
+  String get validatedStatus => 'Validated';
+
+  @override
+  String get pendingReviewStatus => 'Pending Review';
+
+  @override
+  String get notValidatedStatus => 'Not Validated';
+
+  @override
+  String clientLabel(String clientName) {
+    return 'Client: $clientName';
+  }
+
+  @override
+  String createdLabel(String date) {
+    return 'Created: $date';
+  }
+
+  @override
+  String updatedLabel(String date) {
+    return 'Updated: $date';
+  }
+
+  @override
+  String get noMealPlansToValidate => 'No Meal Plans to Validate';
+
+  @override
+  String get validationEmptyMessage => 'Meal plans assigned for validation will appear here.\nCheck back later or pull to refresh.';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get errorLoadingPlansTitle => 'Error Loading Plans';
 
   @override
   String get signUp => 'Create Account';
@@ -295,9 +1667,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get submit => 'Submit';
-
-  @override
-  String get changePassword => 'Change Password';
 
   @override
   String get sendCode => 'Send Code';
@@ -325,9 +1694,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copyKey => 'Copy Key';
-
-  @override
-  String get signOut => 'Sign Out';
 
   @override
   String backTo(String previousStep) {
@@ -1109,9 +2475,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password => 'Password';
 
   @override
-  String get newPassword => 'New Password';
-
-  @override
   String get email => 'Email';
 
   @override
@@ -1124,16 +2487,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get address => 'Address';
 
   @override
-  String get birthdate => 'Birthdate';
-
-  @override
-  String get familyName => 'Family Name';
-
-  @override
   String get middleName => 'Middle Name';
-
-  @override
-  String get gender => 'Gender';
 
   @override
   String genders(String gender) {
@@ -1147,9 +2501,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get givenName => 'Given Name';
 
   @override
   String get name => 'Name';
@@ -1223,9 +2574,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get passwordsDoNotMatch => 'Passwords do not match.';
-
-  @override
   String get rememberDevice => 'Remember Device?';
 
   @override
@@ -1250,6 +2598,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectEmail => 'Email';
+
+  @override
+  String get rolePlaceholder => 'Role';
 
   @override
   String codeSent(String destination) {

@@ -1,0 +1,79 @@
+{
+  "@@locale": "en",
+  "clientDetails": "Client Details",
+  "loadingClientInformation": "Loading client information...",
+  "healthProfilePreferences": "Health profile and preferences",
+  "noClientDetailsAvailable": "No client details available",
+  "loadingClientDetails": "Loading client details...",
+  "physicalInformation": "Physical Information",
+  "height": "Height",
+  "weight": "Weight",
+  "bmi": "BMI",
+  "exerciseFrequency": "Exercise Frequency",
+  "dietaryInformation": "Dietary Information",
+  "dailyMealsPreference": "Daily Meals Preference",
+  "dietaryRestrictionsLabel": "Dietary Restrictions",
+  "additionalPreferences": "Additional Preferences",
+  "accountInformation": "Account Information",
+  "accountCreated": "Account Created",
+  "lastUpdated": "Last Updated",
+  "activePlanId": "Active Plan ID",
+  "viewPlanDetails": "View plan details",
+  "planIdLabel": "Plan ID",
+  "generated": "Generated",
+  "status": "Status",
+  "validation": "Validation",
+  "nutritionist": "Nutritionist",
+  "user": "User",
+  "noMealPlanDataAvailable": "No meal plan data available",
+  "sevenDayScheduleEditing": "7-day meal schedule (Editing)",
+  "sevenDayScheduleViewEdit": "7-day meal schedule (View/Edit)",
+  "sevenDayScheduleViewOnly": "7-day meal schedule (View Only)",
+  "noDailyPlanDataFound": "No daily plan data found for this meal plan.",
+  "enterRecipeName": "Enter recipe name",
+  "enterCookingInstructions": "Enter cooking instructions...",
+  "add": "Add",
+  "noIngredientsAddedYet": "No ingredients added yet",
+  "ingredientName": "Ingredient Name",
+  "removeIngredient": "Remove ingredient",
+  "amount": "Amount",
+  "unit": "Unit",
+  "nutritionalValuesPerUnit": "Nutritional Values (per unit)",
+  "calories": "Calories",
+  "proteins": "Proteins",
+  "carbs": "Carbs",
+  "fats": "Fats",
+  "chatWithPatient": "Chat with Patient",
+  "validateMealPlan": "Validate Meal Plan",
+  "validateMealPlanConfirm": "Are you sure you want to validate \"{planName}\"?",
+  "@validateMealPlanConfirm": {
+    "placeholders": {
+      "planName": {
+        "type": "String"
+      }
+    }
+  },
+  "validate": "Validate",
+  "rejectMealPlan": "Reject Meal Plan",
+  "rejectMealPlanConfirm": "Are you sure you want to reject \"{planName}\"? This will reset the plan to not validated status.",
+  "@rejectMealPlanConfirm": {
+    "placeholders": {
+      "planName": {
+        "type": "String"
+      }
+    }
+  },
+  "reject": "Reject",
+  "mealPlanValidatedSuccessfully": "Meal plan validated successfully!",
+  "failedToValidateMealPlan": "Failed to validate meal plan",
+  "mealPlanRejected": "Meal plan rejected",
+  "failedToRejectMealPlan": "Failed to reject meal plan",
+  "savingMealPlan": "Saving meal plan...",
+  "mealPlanSavedSuccessfully": "Meal plan saved successfully!",
+  "failedToSaveMealPlan": "Failed to save meal plan",
+  "bmiUnderweight": "Underweight",
+  "bmiNormalWeight": "Normal weight",
+  "bmiOverweight": "Overweight",
+  "bmiObese": "Obese",
+  "noneReported": "None reported"
+}

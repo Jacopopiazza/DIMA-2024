@@ -3,6 +3,7 @@ import 'package:dima_application/navigation/route_observer.dart';
 import 'package:dima_application/providers/subscription_status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 import '../../../providers/cognito_profile_provider.dart';
 import '../../../providers/user_details_provider.dart';
@@ -188,7 +189,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                             subscriptionStatusAsync.when(
                               skipLoadingOnRefresh: true,
                               loading: () => _buildSectionLoadingState(
-                                  colorScheme, 'Loading subscription...'),
+                                  colorScheme, AppLocalizations.of(context)!.loadingSubscription),
                               error: (error, stackTrace) =>
                                   _buildSubscriptionSectionErrorState(
                                       colorScheme, theme),
@@ -226,7 +227,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                             cognitoProfileAsync.when(
                               skipLoadingOnRefresh: true,
                               loading: () => _buildSectionLoadingState(
-                                  colorScheme, 'Loading profile...'),
+                                  colorScheme, AppLocalizations.of(context)!.loadingProfile),
                               error: (error, stackTrace) =>
                                   _buildNoProfileState(colorScheme, theme),
                               data: (data) {
@@ -265,7 +266,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
                             userDetailsAsync.when(
                               skipLoadingOnRefresh: true,
                               loading: () => _buildSectionLoadingState(
-                                  colorScheme, 'Loading preferences...'),
+                                  colorScheme, AppLocalizations.of(context)!.loadingPreferences),
                               error: (error, stackTrace) =>
                                   _buildSectionErrorState(colorScheme, theme),
                               data: (data) {
@@ -371,7 +372,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
           ),
           const SizedBox(height: 24),
           Text(
-            'Loading settings...',
+            AppLocalizations.of(context)!.loadingSettings,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -403,7 +404,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 24),
             Text(
-              'Something went wrong',
+              AppLocalizations.of(context)!.somethingWentWrong,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -411,7 +412,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 12),
             Text(
-              'Unable to load settings',
+              AppLocalizations.of(context)!.unableToLoadSettings,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -420,7 +421,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             FilledButton.icon(
               onPressed: () => ref.refresh(userIdProvider),
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try Again'),
+              label: Text(AppLocalizations.of(context)!.tryAgain),
             ),
           ],
         ),
@@ -449,7 +450,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 24),
             Text(
-              'Not signed in',
+              AppLocalizations.of(context)!.notSignedIn,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -457,7 +458,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 12),
             Text(
-              'Please sign in to access your settings',
+              AppLocalizations.of(context)!.pleaseSignInToAccessSettings,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -466,7 +467,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             FilledButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.login_rounded),
-              label: const Text('Sign In'),
+              label: Text(AppLocalizations.of(context)!.signIn),
             ),
           ],
         ),
@@ -505,7 +506,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
           ),
           const SizedBox(height: 16),
           Text(
-            'Account Settings',
+            AppLocalizations.of(context)!.accountSettings,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: colorScheme.primary,
@@ -513,7 +514,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
           ),
           const SizedBox(height: 8),
           Text(
-            'Manage your profile, preferences, and account security settings.',
+            AppLocalizations.of(context)!.manageYourProfilePreferencesAndSecurity,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
@@ -575,7 +576,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
               ),
               const SizedBox(height: 16),
               Text(
-                'Profile Unavailable',
+                AppLocalizations.of(context)!.profileUnavailable,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: colorScheme.onSurface,
@@ -583,7 +584,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
               ),
               const SizedBox(height: 8),
               Text(
-                'Personal data are currently unavailable. Please try refreshing or check back later.',
+                AppLocalizations.of(context)!.personalDataCurrentlyUnavailable,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
@@ -614,7 +615,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 16),
             Text(
-              'Preferences Unavailable',
+              AppLocalizations.of(context)!.preferencesUnavailable,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -622,7 +623,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 8),
             Text(
-              'Your preferences and settings data are currently unavailable. Please try refreshing or check back later.',
+              AppLocalizations.of(context)!.preferencesDataCurrentlyUnavailable,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
@@ -654,7 +655,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 16),
             Text(
-              'Subscription Status Unavailable',
+              AppLocalizations.of(context)!.subscriptionStatusUnavailable,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -662,7 +663,7 @@ class _SettingsScreenRiverpodState extends ConsumerState<SettingsScreenRiverpod>
             ),
             const SizedBox(height: 8),
             Text(
-              'Your subscription status is currently unavailable. Please try refreshing or check back later.',
+              AppLocalizations.of(context)!.subscriptionStatusCurrentlyUnavailable,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,

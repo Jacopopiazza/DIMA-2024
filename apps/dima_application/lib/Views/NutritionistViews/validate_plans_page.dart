@@ -3,6 +3,7 @@ import 'package:dima_application/Views/NutritionistViews/widgets/validation_empt
 import 'package:dima_application/Views/NutritionistViews/widgets/validation_error_state.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/validation_meal_plan_card.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:dima_application/services/connectivity_service.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
         if (mounted) {
           setState(() {
             _errorMessage =
-                'No internet connection. Please check your connection and try again.';
+                AppLocalizations.of(context)!.noInternetConnectionValidation;
             _isLoading = false;
           });
         }
@@ -69,7 +70,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = 'Error loading assigned meal plans: $e';
+          _errorMessage = AppLocalizations.of(context)!.errorLoadingAssignedPlans(e.toString());
           _isLoading = false;
         });
       }
@@ -97,7 +98,7 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Loading meal plans...',
+            AppLocalizations.of(context)!.loadingMealPlansValidation,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),

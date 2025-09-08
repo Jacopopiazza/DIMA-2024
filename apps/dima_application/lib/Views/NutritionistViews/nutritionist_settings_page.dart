@@ -6,6 +6,7 @@ import 'package:dima_application/Views/NutritionistViews/widgets/availability_se
 import 'package:dima_application/Views/NutritionistViews/widgets/nutritionist_actions_section.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/nutritionist_profile_section.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/services/connectivity_service.dart';
 import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
@@ -140,10 +141,10 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
           _currentProfile = updatedProfile;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.profileUpdatedSuccessfully),
             backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
@@ -151,7 +152,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error updating profile: $e'),
+            content: Text(AppLocalizations.of(context)!.errorUpdatingProfile(e.toString())),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
           ),
@@ -191,8 +192,8 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(value
-                    ? 'You are now available for consultations'
-                    : 'You are now unavailable for consultations'),
+                    ? AppLocalizations.of(context)!.availableForConsultations
+                    : AppLocalizations.of(context)!.unavailableForConsultations),
                 backgroundColor: Colors.green,
                 duration: const Duration(seconds: 2),
               ),
@@ -203,7 +204,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error updating availability: $e'),
+              content: Text(AppLocalizations.of(context)!.errorUpdatingAvailability(e.toString())),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 3),
             ),
@@ -302,7 +303,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
           ),
           const SizedBox(height: 24),
           Text(
-            'Loading nutritionist settings...',
+            AppLocalizations.of(context)!.loadingNutritionistSettings,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -343,7 +344,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
           ),
           const SizedBox(height: 16),
           Text(
-            'Nutritionist Settings',
+            AppLocalizations.of(context)!.nutritionistSettings,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: colorScheme.primary,
@@ -351,7 +352,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
           ),
           const SizedBox(height: 8),
           Text(
-            'Manage your professional profile, availability, and account settings.',
+            AppLocalizations.of(context)!.manageProfileMessage,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
@@ -390,7 +391,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Profile Information',
+                  AppLocalizations.of(context)!.profileInformation,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onSurface,
@@ -438,7 +439,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Edit Professional Details',
+                  AppLocalizations.of(context)!.editProfessionalDetails,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onSurface,
@@ -454,14 +455,14 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                 children: [
                   TextFormField(
                     controller: _specializationController,
-                    decoration: const InputDecoration(
-                      labelText: 'Specialization',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.work_rounded),
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.specialization,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.work_rounded),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your specialization';
+                        return AppLocalizations.of(context)!.pleaseEnterSpecialization;
                       }
                       return null;
                     },
@@ -469,18 +470,18 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _bioController,
-                    decoration: const InputDecoration(
-                      labelText: 'Professional Bio',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.description_rounded),
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.professionalBio,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.description_rounded),
                     ),
                     maxLines: 4,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your bio';
+                        return AppLocalizations.of(context)!.pleaseEnterBio;
                       }
                       if (value.trim().length < 50) {
-                        return 'Bio should be at least 50 characters';
+                        return AppLocalizations.of(context)!.bioMinLength;
                       }
                       return null;
                     },
@@ -499,7 +500,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Profile Picture',
+                          AppLocalizations.of(context)!.profilePicture,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: colorScheme.onSurface,
@@ -533,7 +534,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                               ),
                             )
                           : const Icon(Icons.save_rounded),
-                      label: Text(_isSaving ? 'Saving...' : 'Save Changes'),
+                      label: Text(_isSaving ? AppLocalizations.of(context)!.saving : AppLocalizations.of(context)!.saveChanges),
                     ),
                   ),
                 ],
@@ -572,7 +573,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Availability Settings',
+                  AppLocalizations.of(context)!.availabilitySettings,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onSurface,

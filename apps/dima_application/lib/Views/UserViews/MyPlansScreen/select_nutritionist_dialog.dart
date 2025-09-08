@@ -1,4 +1,5 @@
 import 'package:dima_application/generated/flutter-models/NutritionistProfile.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SelectNutritionistDialog extends StatefulWidget {
@@ -48,7 +49,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error loading nutritionists: $e'),
+            content: Text(AppLocalizations.of(context)!.errorLoadingNutritionists + e.toString()),
             backgroundColor: Colors.red,
           ),
         );
@@ -60,8 +61,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
     if (_selectedNutritionistId == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a nutritionist'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.pleaseSelectNutritionist),
             backgroundColor: Colors.orange,
           ),
         );
@@ -77,9 +78,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
     if (selectedNutritionist.isAvailable != true) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                Text('Selected nutritionist is not available for validation'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.nutritionistNotAvailable),
             backgroundColor: Colors.red,
           ),
         );
@@ -103,18 +103,18 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
         if (success) {
           Navigator.of(context).pop(true);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Validation request sent successfully!'),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.validationRequestSent),
               backgroundColor: Colors.green,
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to send validation request'),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.failedToSendValidationRequest),
               backgroundColor: Colors.red,
-              duration: Duration(seconds: 3),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
@@ -123,7 +123,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error sending validation request: $e'),
+            content: Text(AppLocalizations.of(context)!.errorSendingValidationRequest + e.toString()),
             backgroundColor: Colors.red,
           ),
         );
@@ -228,9 +228,9 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4),
       color: isUnavailable
-          ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+          ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
           : isSelected
-              ? colorScheme.primary.withOpacity(0.1)
+              ? colorScheme.primary.withValues(alpha: 0.1)
               : colorScheme.surface,
       elevation: isSelected ? 2 : 1,
       child: InkWell(
@@ -265,7 +265,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.w600,
                         color: isUnavailable
-                            ? colorScheme.onSurfaceVariant.withOpacity(0.6)
+                            ? colorScheme.onSurfaceVariant.withValues(alpha: 0.6)
                             : isSelected
                                 ? colorScheme.primary
                                 : colorScheme.onSurface,
@@ -280,7 +280,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                         nutritionist.specialization!,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: isUnavailable
-                              ? colorScheme.onSurfaceVariant.withOpacity(0.5)
+                              ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
                               : colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w500,
                         ),
@@ -320,8 +320,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                           const SizedBox(width: 4),
                           Text(
                             nutritionist.isAvailable == true
-                                ? 'Available'
-                                : 'Unavailable',
+                                ? AppLocalizations.of(context)!.available
+                                : AppLocalizations.of(context)!.unavailable,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: nutritionist.isAvailable == true
                                   ? Colors.green
@@ -353,7 +353,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Request Nutritionist Validation'),
+      title: Text(AppLocalizations.of(context)!.requestNutritionistValidation),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -361,7 +361,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Select a nutritionist to review your meal plan "${widget.planName}":',
+              AppLocalizations.of(context)!.selectNutritionistToReview(widget.planName),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
@@ -373,7 +373,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                 ),
               )
             else if (_nutritionists.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
                   padding: EdgeInsets.all(32.0),
                   child: Column(
@@ -385,7 +385,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        'No nutritionists available at the moment.',
+                        AppLocalizations.of(context)!.noNutritionistsAvailable,
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                           color: Colors.grey,
@@ -412,7 +412,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
       actions: [
         TextButton(
           onPressed: _isAssigning ? null : () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         ElevatedButton(
           onPressed: _isAssigning ||
@@ -426,7 +426,7 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('Request Validation'),
+              : Text(AppLocalizations.of(context)!.requestValidationButton),
         ),
       ],
     );

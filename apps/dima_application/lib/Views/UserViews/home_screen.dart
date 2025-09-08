@@ -1,11 +1,12 @@
 import 'package:dima_application/Views/Common/in_app_notification.dart';
-import 'package:dima_application/Views/UserViews/MyPlansScreen/my_plans_page.dart';
+import 'package:dima_application/Views/UserViews/MyPlansScreen/my_plans_page_adaptive.dart';
 import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
-import 'HomeScreen/today_view.dart';
+import 'HomeScreen/today_view_adaptive.dart';
 
 class UserHomeScreen extends ConsumerStatefulWidget {
   const UserHomeScreen({Key? key}) : super(key: key);
@@ -29,12 +30,14 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
     });
   }
 
-  // List of widgets to display based on the selected tab
-  static const List<Widget> _widgetOptions = <Widget>[
-    TodayPage(), // Index 0
-    MyPlansPage(), // Index 1
-    SettingsScreenRiverpod(), // Index 2 - Using the new Riverpod version
-  ];
+  // Method to get widgets with navigation callbacks
+  List<Widget> _getWidgetOptions() {
+    return [
+      TodayPageAdaptive(onNavigateToMealPlans: () => _onItemTapped(1)), // Index 0 (adaptive: phone vs tablet)
+      const MyPlansPageAdaptive(), // Index 1 (adaptive: phone vs tablet)
+      const SettingsScreenRiverpod(), // Index 2 - Using the new Riverpod version
+    ];
+  }
 
   // Callback function when a bottom navigation item is tapped
   void _onItemTapped(int index) {
@@ -88,7 +91,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
       // Using SafeArea to avoid intrusions by system UI (like notches or status bars)
       body: SafeArea(
         // Display the widget corresponding to the currently selected index
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: _getWidgetOptions().elementAt(_selectedIndex),
       ),
       /*
       floatingActionButton: FloatingActionButton.extended(
@@ -122,21 +125,21 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
   // Helper method to build the BottomNavigationBar
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.wb_sunny_outlined), // Icon when tab is inactive
           activeIcon: Icon(Icons.wb_sunny), // Icon when tab is active
-          label: 'Today',
+          label: AppLocalizations.of(context)!.today,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.menu_book_outlined),
           activeIcon: Icon(Icons.menu_book),
-          label: 'Meal Plans',
+          label: AppLocalizations.of(context)!.mealPlans,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.settings_outlined),
           activeIcon: Icon(Icons.settings),
-          label: 'Settings',
+          label: AppLocalizations.of(context)!.settings,
         ),
       ],
       currentIndex: _selectedIndex, // Highlights the current tab

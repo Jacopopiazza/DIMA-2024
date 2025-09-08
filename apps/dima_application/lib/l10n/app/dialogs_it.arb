@@ -1,0 +1,19 @@
+{
+  "upgradeToPro": "Aggiorna a PRO",
+  "chooseYourProPlan": "Scegli il tuo piano PRO:",
+  "monthly": "Mensile",
+  "yearly": "Annuale", 
+  "lifetime": "A vita",
+  "monthlyPrice": "9,99€/mese",
+  "yearlyPrice": "99€/anno",
+  "lifetimePrice": "299€",
+  "monthlyDescription": "Ideale per provare",
+  "yearlyDescription": "Risparmia il 17% (2 mesi gratis)",
+  "lifetimeDescription": "Pagamento unico",
+  "cancel": "Annulla",
+  "subscribe": "Iscriviti",
+  "subscriptionFeatureComingSoon": "Funzionalità di abbonamento presto disponibile!",
+  "confirmDelete": "Conferma Eliminazione",
+  "confirmDeleteMessage": "Sei sicuro di voler eliminare il tuo account?",
+  "delete": "Elimina"
+}

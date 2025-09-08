@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 import '../../../../providers/user_details_provider.dart';
 
@@ -50,7 +51,7 @@ class ActionsSectionRiverpod extends ConsumerWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Quick Actions',
+                  AppLocalizations.of(context)!.quickActions,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onSurface,
@@ -67,8 +68,8 @@ class ActionsSectionRiverpod extends ConsumerWidget {
                   context,
                   ref,
                   icon: Icons.refresh_rounded,
-                  title: 'Refresh Data',
-                  subtitle: 'Clear cache and reload your information',
+                  title: AppLocalizations.of(context)!.refreshData,
+                  subtitle: AppLocalizations.of(context)!.clearCacheAndReload,
                   color: colorScheme.primary,
                   onTap: () => _handleRefreshData(context, ref),
                 ),
@@ -77,8 +78,8 @@ class ActionsSectionRiverpod extends ConsumerWidget {
                   context,
                   ref,
                   icon: Icons.logout_rounded,
-                  title: 'Sign Out',
-                  subtitle: 'Sign out of your account',
+                  title: AppLocalizations.of(context)!.signOut,
+                  subtitle: AppLocalizations.of(context)!.signOutOfYourAccount,
                   color: Colors.orange,
                   onTap: () => _handleSignOut(context, ref),
                 ),
@@ -174,7 +175,7 @@ class ActionsSectionRiverpod extends ConsumerWidget {
                   color: Colors.white, size: 16),
             ),
             const SizedBox(width: 12),
-            const Text('Data refreshed successfully'),
+            Text(AppLocalizations.of(context)!.dataRefreshedSuccessfully),
           ],
         ),
         backgroundColor: Colors.green.shade600,
@@ -198,22 +199,22 @@ class ActionsSectionRiverpod extends ConsumerWidget {
               size: 24,
             ),
             const SizedBox(width: 12),
-            const Text('Sign Out'),
+            Text(AppLocalizations.of(context)!.signOut),
           ],
         ),
         content:
-            const Text('Are you sure you want to sign out of your account?'),
+            Text(AppLocalizations.of(context)!.areYouSureSignOut),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
             style: FilledButton.styleFrom(
               backgroundColor: Colors.orange,
             ),
-            child: const Text('Sign Out'),
+            child: Text(AppLocalizations.of(context)!.signOut),
           ),
         ],
       ),

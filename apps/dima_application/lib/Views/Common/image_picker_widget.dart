@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -76,7 +77,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error uploading image: $e'),
+            content: Text(AppLocalizations.of(context)!.errorUploadingImage(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -112,7 +113,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error removing image: $e'),
+            content: Text(AppLocalizations.of(context)!.errorRemovingImage(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -164,7 +165,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     Padding(
                       padding: const EdgeInsets.all(20),
                       child: Text(
-                        'Select Photo',
+                        AppLocalizations.of(context)!.selectPhoto,
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -180,8 +181,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                           _buildImageSourceOption(
                             context: context,
                             icon: Icons.photo_library,
-                            title: 'Choose from Gallery',
-                            subtitle: 'Select from existing photos',
+                            title: AppLocalizations.of(context)!.chooseFromGallery,
+                            subtitle: AppLocalizations.of(context)!.selectFromExistingPhotos,
                             onTap: () async {
                               final image = await _imageUploadService.pickImage(
                                   source: ImageSource.gallery);
@@ -197,8 +198,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                             _buildImageSourceOption(
                               context: context,
                               icon: Icons.delete_outline,
-                              title: 'Remove Photo',
-                              subtitle: 'Delete current profile picture',
+                              title: AppLocalizations.of(context)!.removePhoto,
+                              subtitle: AppLocalizations.of(context)!.deleteCurrentProfilePicture,
                               isDestructive: true,
                               onTap: () {
                                 if (context.mounted) {
@@ -231,7 +232,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text('Cancel'),
+                          child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                       ),
                     ),
@@ -383,7 +384,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         // Simple instruction text
         if (_currentImageUrl == null)
           Text(
-            'Tap to select photo',
+            AppLocalizations.of(context)!.tapToSelectPhoto,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w500,

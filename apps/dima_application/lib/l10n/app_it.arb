@@ -1,5 +1,374 @@
 {
   "@@locale": "it",
+  "noInternetConnectionValidation": "Nessuna connessione internet. Controlla la tua connessione e riprova.",
+  "errorLoadingAssignedPlans": "Errore nel caricamento dei piani alimentari assegnati: {error}",
+  "@errorLoadingAssignedPlans": {
+    "description": "Error message when loading assigned meal plans fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingMealPlansValidation": "Caricamento piani alimentari...",
+  "validatedStatus": "Convalidato",
+  "pendingReviewStatus": "In Revisione",
+  "notValidatedStatus": "Non Convalidato",
+  "clientLabel": "Cliente: {clientName}",
+  "@clientLabel": {
+    "description": "Label showing the client name",
+    "placeholders": {
+      "clientName": {
+        "type": "String"
+      }
+    }
+  },
+  "createdLabel": "Creato: {date}",
+  "@createdLabel": {
+    "description": "Label showing creation date",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updatedLabel": "Aggiornato: {date}",
+  "@updatedLabel": {
+    "description": "Label showing update date and time",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noMealPlansToValidate": "Nessun Piano Alimentare da Convalidare",
+  "validationEmptyMessage": "I piani alimentari assegnati per la convalida appariranno qui.\nControlla più tardi o trascina per aggiornare.",
+  "refresh": "Aggiorna",
+  "errorLoadingPlansTitle": "Errore nel Caricamento dei Piani",
+  "tryAgain": "Riprova",
+  "mealPlanReady": "Piano Alimentare Pronto!",
+  "generationFailed": "Generazione Fallita",
+  "mealPlanReadyDescription": "Il tuo piano alimentare è pronto!",
+  "generationFailedDescription": "C'è stato un errore nella generazione del tuo piano alimentare. Riprova più tardi.",
+  "loadingSettings": "Caricamento impostazioni...",
+  "somethingWentWrong": "Qualcosa è andato storto",
+  "unableToLoadSettings": "Impossibile caricare le impostazioni",
+  "notSignedIn": "Non autenticato",
+  "pleaseSignInToAccessSettings": "Effettua l'accesso per accedere alle tue impostazioni",
+  "signIn": "Accedi",
+  "accountSettings": "Impostazioni Account",
+  "manageYourProfilePreferencesAndSecurity": "Gestisci il tuo profilo, le preferenze e le impostazioni di sicurezza dell'account.",
+  "loadingSubscription": "Caricamento abbonamento...",
+  "loadingProfile": "Caricamento profilo...",
+  "loadingPreferences": "Caricamento preferenze...",
+  "profileUnavailable": "Profilo Non Disponibile",
+  "personalDataCurrentlyUnavailable": "I dati personali sono attualmente non disponibili. Prova ad aggiornare o riprova più tardi.",
+  "preferencesUnavailable": "Preferenze Non Disponibili",
+  "preferencesDataCurrentlyUnavailable": "Le tue preferenze e i dati delle impostazioni sono attualmente non disponibili. Prova ad aggiornare o riprova più tardi.",
+  "subscriptionStatusUnavailable": "Stato Abbonamento Non Disponibile",
+  "subscriptionStatusCurrentlyUnavailable": "Il tuo stato dell'abbonamento è attualmente non disponibile. Prova ad aggiornare o riprova più tardi.",
+  "userProfile": "Profilo Utente",
+  "unsaved": "Non salvato",
+  "givenName": "Nome",
+  "familyName": "Cognome",
+  "givenNameRequired": "Il nome è obbligatorio",
+  "familyNameRequired": "Il cognome è obbligatorio",
+  "nameFieldsReadOnly": "I campi del nome sono gestiti dal tuo provider di autenticazione e non possono essere modificati qui.",
+  "gender": "Sesso",
+  "male": "Maschio",
+  "female": "Femmina",
+  "other": "Altro",
+  "birthdate": "Data di nascita",
+  "selectDate": "Seleziona data",
+  "saving": "Salvataggio...",
+  "saveChanges": "Salva Modifiche",
+  "profileUpdatedSuccessfully": "Profilo aggiornato con successo!",
+  "failedToUpdateProfile": "Impossibile aggiornare il profilo. Riprova.",
+  "errorUpdatingProfile": "Errore nell'aggiornamento del profilo",
+  "generationPreferences": "Preferenze di Generazione",
+  "physicalDetails": "Dettagli Fisici",
+  "weight": "Peso",
+  "weightAllowed": "Consentito: 30–300 kg",
+  "weightMustBeBetween": "Il peso deve essere tra 30 e 300 kg",
+  "height": "Altezza",
+  "heightAllowed": "Consentito: 50–250 cm",
+  "heightMustBeBetween": "L'altezza deve essere tra 50 e 250 cm",
+  "mealPreferences": "Preferenze Pasti",
+  "dailyMeals": "Pasti Giornalieri",
+  "mealsPerDay": "{count} pasti al giorno",
+  "exerciseFrequency": "Frequenza Esercizio",
+  "notSpecified": "Non specificato",
+  "noExercise": "Nessun esercizio",
+  "onceAWeek": "Una volta a settimana",
+  "twiceAWeek": "Due volte a settimana",
+  "threeTimes": "3 volte a settimana",
+  "fourTimes": "4 volte a settimana",
+  "fiveTimes": "5 volte a settimana",
+  "sixTimes": "6 volte a settimana",
+  "everyDay": "Ogni giorno",
+  "allergies": "Allergie",
+  "selectAllergies": "Seleziona eventuali allergie che hai:",
+  "additionalPreferences": "Preferenze Aggiuntive",
+  "dietaryRestrictions": "Restrizioni dietetiche",
+  "anySpecificDietaryRestriction": "Qualsiasi restrizione dietetica specifica",
+  "dietaryPreferences": "Preferenze dietetiche",
+  "anySpecificDietaryPreference": "Qualsiasi preferenza dietetica specifica o note",
+  "weightIsRequired": "Il peso è obbligatorio",
+  "heightIsRequired": "L'altezza è obbligatoria",
+  "pleaseEnterValidWeight": "Inserisci un peso valido",
+  "pleaseEnterValidHeight": "Inserisci un'altezza valida",
+  "profileUpdatedSuccessfullyShort": "Profilo aggiornato con successo",
+  "failedToUpdateProfileShort": "Impossibile aggiornare il profilo",
+  "changePassword": "Cambia Password",
+  "updateYourAccountPassword": "Aggiorna la password del tuo account",
+  "currentPassword": "Password Attuale",
+  "pleaseEnterCurrentPassword": "Inserisci la tua password attuale",
+  "newPassword": "Nuova Password",
+  "pleaseEnterNewPassword": "Inserisci una nuova password",
+  "passwordMustBeAtLeast8Characters": "La password deve essere di almeno 8 caratteri",
+  "passwordMustContainUppercase": "La password deve contenere maiuscole, minuscole e numeri",
+  "confirmNewPassword": "Conferma Nuova Password",
+  "pleaseConfirmNewPassword": "Conferma la tua nuova password",
+  "passwordsDoNotMatch": "Le password non corrispondono",
+  "passwordRequirements": "Requisiti Password:",
+  "atLeast8Characters": "Almeno 8 caratteri",
+  "uppercaseLetter": "Lettera maiuscola (A-Z)",
+  "lowercaseLetter": "Lettera minuscola (a-z)",
+  "number": "Numero (0-9)",
+  "changingPassword": "Cambiando Password...",
+  "changePasswordButton": "Cambia Password",
+  "passwordChangedSuccessfully": "Password cambiata con successo",
+  "failedToChangePassword": "Impossibile cambiare la password",
+  "tooShort": "Troppo corta",
+  "weak": "Debole",
+  "fair": "Discreta",
+  "good": "Buona",
+  "strong": "Forte",
+  "proPlan": "Piano PRO",
+  "activeSubscription": "Abbonamento attivo",
+  "upgradeToUnlockPremiumFeatures": "Aggiorna per sbloccare le funzionalità premium",
+  "currentStatus": "Stato Attuale: {status}",
+  "youHaveAccessTo": "Hai accesso a:",
+  "unlockPremiumFeatures": "Sblocca le funzionalità premium:",
+  "expertMealPlanningValidation": "Validazione esperta della pianificazione dei pasti",
+  "personalNutritionistChatInApp": "Chat personale con nutrizionista nell'app",
+  "unsubscribeFromPro": "Cancella Abbonamento PRO",
+  "subscribeToPro": "Iscriviti a PRO",
+  "successfullySubscribedToPro": "Iscritto con successo a PRO!",
+  "failedToSubscribe": "Impossibile iscriversi. Riprova.",
+  "errorSubscribing": "Errore durante l'iscrizione",
+  "successfullyUnsubscribedToFree": "Cancellato con successo e tornato a GRATUITO!",
+  "failedToUnsubscribe": "Impossibile cancellare l'abbonamento. Riprova.",
+  "errorUnsubscribing": "Errore durante la cancellazione",
+  "quickActions": "Azioni Rapide",
+  "refreshData": "Aggiorna Dati",
+  "clearCacheAndReload": "Svuota cache e ricarica le tue informazioni",
+  "signOut": "Disconnetti",
+  "signOutOfYourAccount": "Disconnetti dal tuo account",
+  "dataRefreshedSuccessfully": "Dati aggiornati con successo",
+  "areYouSureSignOut": "Sei sicuro di voler disconnetterti dal tuo account?",
+  "cancel": "Annulla",
+  "dangerZone": "Zona Pericolosa",
+  "irreversibleAndDestructiveActions": "Azioni irreversibili e distruttive",
+  "criticalWarning": "Avviso Critico",
+  "actionsArePermanent": "Le azioni qui sotto sono permanenti e non possono essere annullate. Tutti i tuoi dati, inclusi piani pasto, preferenze e informazioni dell'account verranno eliminati definitivamente.",
+  "deletingAccount": "Eliminazione Account...",
+  "deleteMyAccount": "Elimina Il Mio Account",
+  "deleteAccount": "Elimina Account",
+  "thisActionWillPermanentlyDelete": "Questa azione eliminerà permanentemente il tuo account e tutti i dati associati. Questa operazione non può essere annullata.",
+  "allYourMealPlansWillBeRemoved": "Tutti i tuoi piani pasto, preferenze e dati personali verranno rimossi definitivamente.",
+  "accountDeletedSuccessfully": "Account eliminato con successo",
+  "failedToDeleteAccount": "Impossibile eliminare l'account",
+  "upgradeToPro": "Aggiorna a PRO",
+  "chooseYourProPlan": "Scegli il tuo piano PRO:",
+  "monthly": "Mensile",
+  "yearly": "Annuale",
+  "lifetime": "A vita",
+  "monthlyPrice": "9,99€/mese",
+  "yearlyPrice": "99€/anno",
+  "lifetimePrice": "299€",
+  "monthlyDescription": "Ideale per provare",
+  "yearlyDescription": "Risparmia il 17% (2 mesi gratis)",
+  "lifetimeDescription": "Pagamento unico",
+  "subscribe": "Iscriviti",
+  "subscriptionFeatureComingSoon": "Funzionalità di abbonamento presto disponibile!",
+  "confirmDelete": "Conferma Eliminazione",
+  "confirmDeleteMessage": "Sei sicuro di voler eliminare il tuo account?",
+  "delete": "Elimina",
+  "yesterday": "Ieri",
+  "typeYourMessage": "Scrivi il tuo messaggio...",
+  "patient": "Paziente",
+  "nutritionist": "Nutrizionista",
+  "retry": "Riprova",
+  "upgrade": "Aggiorna",
+  "failedToLoadOlderMessages": "Impossibile caricare messaggi precedenti: ",
+  "loading": "Caricamento...",
+  "error": "Errore",
+  "message": "Messaggio...",
+  "pullDownToLoadOlder": "Trascina in basso per caricare messaggi precedenti",
+  "loadingMessages": "Caricamento messaggi...",
+  "failedToLoadChat": "Impossibile caricare la chat",
+  "startTheConversation": "Inizia la conversazione",
+  "sendMessageToBegin": "Invia un messaggio per iniziare a chattare.",
+  "messagesCount": "{count} messaggi",
+  "@messagesCount": {
+    "description": "Display count of messages in chat",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "isTyping": "{name} sta scrivendo...",
+  "@isTyping": {
+    "description": "Shows when someone is typing",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "justNow": "Proprio ora",
+  "minutesAgo": "{minutes} min fa",
+  "@minutesAgo": {
+    "description": "Shows time in minutes ago format",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{hours}h fa",
+  "@hoursAgo": {
+    "description": "Shows time in hours ago format",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "newMealPlanAvailable": "Nuovo piano alimentare disponibile!",
+  "mealPlanGenerationFailed": "Generazione piano alimentare fallita: ",
+  "unknownError": "Errore sconosciuto",
+  "loadingYourMealPlans": "Caricamento dei tuoi piani alimentari...",
+  "newPlan": "Nuovo Piano",
+  "noMealPlansYet": "Nessun Piano Alimentare",
+  "createFirstMealPlan": "Crea il tuo primo piano alimentare personalizzato\nper iniziare un'alimentazione sana",
+  "pullDownToRefresh": "Trascina in basso per aggiornare",
+  "connectionProblem": "Problema di Connessione",
+  "unableToLoadPlansWithConnection": "Impossibile caricare i tuoi piani alimentari.\nControlla la connessione internet e riprova.",
+  "unableToLoadPlans": "Impossibile caricare i tuoi piani alimentari",
+  "active": "ATTIVO",
+  "setActive": "Imposta Attivo",
+  "generating": "Generazione",
+  "failed": "Fallito",
+  "validated": "Convalidato",
+  "pendingValidation": "In Attesa di Convalida",
+  "rejected": "Respinto",
+  "notValidated": "Non convalidato",
+  "pleaseRetryLater": "Riprova più tardi",
+  "modelOverloadedMessage": "Il modello è sovraccarico. Richiedi un nuovo piano alimentare più tardi.",
+  "setActivePlan": "Imposta Piano Attivo",
+  "makeActivePlanQuestion": "Rendere \"{planName}\" il tuo piano alimentare attivo?",
+  "deleteMealPlan": "Elimina Piano Alimentare",
+  "deletePlanConfirmation": "Sei sicuro di voler eliminare \"{planName}\"?",
+  "unnamedPlan": "Piano Senza Nome",
+  "planId": "ID Piano: {planId}",
+  "viewPlan": "Visualizza Piano",
+  "editName": "Modifica Nome",
+  "requestValidation": "Richiedi Convalida",
+  "seeDetailedMealPlan": "Visualizza piano alimentare dettagliato",
+  "changePlanName": "Cambia il nome del piano",
+  "getNutritionistApproval": "Ottieni approvazione nutrizionista",
+  "proFeature": "Funzione Pro",
+  "pro": "PRO",
+  "activeMealPlanUpdated": "Piano alimentare attivo aggiornato!",
+  "failedToSetActiveMealPlan": "Impossibile impostare piano alimentare attivo",
+  "mealPlanDeletedSuccessfully": "Piano alimentare eliminato con successo",
+  "failedToDeleteMealPlan": "Impossibile eliminare il piano alimentare",
+  "actionFailed": "Azione fallita: ",
+  "modifyPlanName": "Modifica Nome Piano",
+  "enterNewPlanName": "Inserisci nuovo nome piano",
+  "planNameCannotBeEmpty": "Il nome del piano non può essere vuoto",
+  "planNameMinLength": "Il nome del piano deve essere almeno di 2 caratteri",
+  "planNameMaxLength": "Il nome del piano deve essere inferiore a 50 caratteri",
+  "validName": "Nome valido",
+  "save": "Salva",
+  "failedToUpdatePlanName": "Impossibile aggiornare il nome del piano: ",
+  "requestNutritionistValidation": "Richiedi Convalida Nutrizionista",
+  "selectNutritionistToReview": "Seleziona un nutrizionista per rivedere il tuo piano alimentare \"{planName}\":",
+  "errorLoadingNutritionists": "Errore nel caricamento dei nutrizionisti: ",
+  "pleaseSelectNutritionist": "Seleziona un nutrizionista",
+  "nutritionistNotAvailable": "Il nutrizionista selezionato non è disponibile per la convalida",
+  "validationRequestSent": "Richiesta di convalida inviata con successo!",
+  "failedToSendValidationRequest": "Impossibile inviare la richiesta di convalida",
+  "errorSendingValidationRequest": "Errore nell'invio della richiesta di convalida: ",
+  "available": "Disponibile",
+  "unavailable": "Non disponibile",
+  "noNutritionistsAvailable": "Nessun nutrizionista disponibile al momento.",
+  "requestValidationButton": "Richiedi Convalida",
+  "failedToLoadMealPlan": "Impossibile caricare il piano alimentare: ",
+  "loadingYourMealPlan": "Caricamento del tuo piano alimentare...",
+  "connectionProblemView": "Problema di Connessione",
+  "oopsSomethingWentWrong": "Ops! Qualcosa è andato storto",
+  "checkInternetConnection": "Controlla la tua connessione internet e riprova. Assicurati di essere connesso al Wi-Fi o ai dati cellulari.",
+  "encounterErrorLoadingPlan": "Abbiamo riscontrato un errore nel caricamento del tuo piano alimentare. Potrebbe essere un problema temporaneo.",
+  "reconnect": "Riconnetti",
+  "mealPlanNotFound": "Piano Alimentare Non Trovato",
+  "mealPlanMightDeleted": "Questo piano alimentare potrebbe essere stato eliminato o non è più disponibile. Prova ad aggiornare o torna indietro per selezionare un altro piano.",
+  "planInformation": "Informazioni Piano",
+  "viewPlanDetails": "Visualizza dettagli piano",
+  "planName": "Nome Piano",
+  "planIdLabel": "ID Piano",
+  "generated": "Generato",
+  "status": "Stato",
+  "validation": "Convalida",
+  "user": "Utente",
+  "errorDetails": "Dettagli Errore",
+  "weeklyMealPlan": "Piano Alimentare Settimanale",
+  "noMealPlanDataAvailable": "Nessun dato del piano alimentare disponibile",
+  "sevenDayMealScheduleReadOnly": "Piano alimentare di 7 giorni",
+  "mealsCount": "{count} pasti",
+  "@mealsCount": {
+    "description": "Shows the number of meals for a day",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noDailyPlanData": "Nessun dato di piano giornaliero trovato per questo piano alimentare.",
+  "monday": "Lunedì",
+  "tuesday": "Martedì",
+  "wednesday": "Mercoledì",
+  "thursday": "Giovedì",
+  "friday": "Venerdì",
+  "saturday": "Sabato",
+  "sunday": "Domenica",
+  "noMealsScheduled": "Nessun pasto programmato per questo giorno",
+  "unnamedMeal": "Pasto senza nome",
+  "recipeName": "Nome Ricetta",
+  "instructions": "Istruzioni",
+  "nutritionInformation": "Informazioni Nutrizionali",
+  "ingredients": "Ingredienti",
+  "calories": "Calorie",
+  "protein": "Proteine",
+  "carbs": "Carboidrati",
+  "fat": "Grassi",
+  "chatWithNutritionist": "Chatta con il Nutrizionista",
+  "showLess": "Mostra meno",
+  "readMore": "Leggi di più",
+  "statusActive": "Attivo",
+  "statusGenerated": "Generato",
+  "statusArchived": "Archiviato",
+  "statusFailed": "Fallito",
+  "statusInProgress": "In Corso",
+  "statusPending": "In Attesa",
+  "statusUnknown": "Sconosciuto",
+  "validationValidated": "Convalidato",
+  "validationPendingReview": "In Revisione",
+  "validationRejected": "Respinto",
+  "validationNotValidated": "Non Convalidato",
   "mealNameBREAKFAST": "Colazione",
   "mealNameDINNER": "Cena",
   "mealNameLUNCH": "Pranzo",
@@ -7,11 +376,69 @@
   "mealNameSNACK_AFTERNOON": "Snack (Pomeriggio)",
   "mealNameSNACK_EVENING": "Snack (Dopo cena)",
   "todayProgress": "Progressi di oggi",
-  "calories": "Calorie",
-  "carbs": "Carboidrati",
   "fats": "Grassi",
   "proteins": "Proteine",
   "todaysMeals": "Ricette odierne",
+  "showingStaleData": "Mostrando dati obsoleti.",
+  "networkUnavailableCachedData": "Rete non disponibile. Mostrando dati memorizzati.",
+  "refreshFailedPreviousData": "Aggiornamento fallito. Mostrando dati precedenti.",
+  "failedToLoadDataCheckConnection": "Caricamento dati fallito. Controlla la connessione.",
+  "refreshFailedNoMealsScheduled": "Aggiornamento fallito. Nessun pasto programmato.",
+  "errorMealDataMissing": "Errore: Dati del pasto mancanti.",
+  "noMealsForToday": "Nessun Pasto Per Oggi",
+  "currentMealPlanNoMealsScheduled": "Il tuo piano alimentare attuale non ha pasti programmati per {dayName}.",
+  "refreshNow": "Aggiorna Ora",
+  "failedToLoadData": "Caricamento Dati Fallito",
+  "retryAction": "Riprova",
+  "noMealPlanSelected": "Nessun Piano Alimentare Selezionato",
+  "selectMealPlanToStart": "Seleziona un piano alimentare per iniziare a monitorare i tuoi pasti giornalieri e i progressi nutrizionali.",
+  "choosePlan": "Scegli un Piano",
+  "profileInfoNotAvailable": "Informazioni profilo non disponibili",
+  "onceWeek": "Una volta a settimana",
+  "twiceWeek": "Due volte a settimana",
+  "weightRange": "Il peso deve essere tra 30 e 300 kg",
+  "heightRange": "L'altezza deve essere tra 50 e 250 cm",
+  "completeProfileFirst": "Completa Prima il Profilo",
+  "mealPlanGenStarted": "Generazione piano alimentare avviata! Riceverai una notifica quando sarà pronto.",
+  "failedToStartGeneration": "Impossibile avviare la generazione del piano alimentare",
+  "createMealPlan": "Crea Piano Alimentare",
+  "unableToLoadPreferences": "Impossibile caricare le tue preferenze",
+  "personalizedMealPlan": "Piano Alimentare Personalizzato",
+  "personalizedDescription": "Creeremo un piano alimentare settimanale personalizzato basato sulle tue preferenze, esigenze dietetiche e stile di vita.",
+  "profileIncomplete": "Profilo Incompleto",
+  "completeProfile": "Completa Profilo",
+  "completeProfileMustDo": "Devi completare il tuo profilo prima di generare un piano alimentare",
+  "noProfileDetailsFound": "Nessun Dettaglio Profilo Trovato",
+  "noProfileDescription": "Per il piano alimentare più personalizzato, configura il tuo profilo con peso, altezza, preferenze dietetiche e allergie.",
+  "orContinueDefault": "O continua con le preferenze predefinite qui sotto",
+  "profileDetailsFound": "Dettagli Profilo Trovati",
+  "customPreferences": "Preferenze Personalizzate",
+  "usingCustomPreferences": "Usando preferenze personalizzate per questo piano alimentare",
+  "usingProfilePreferences": "Usando le preferenze del tuo profilo",
+  "weightHelper": "Consentito: 30–300 kg",
+  "heightHelper": "Consentito: 50–250 cm",
+  "dietaryInformation": "Informazioni Dietetiche",
+  "additionalPreferencesHint": "Altre preferenze o requisiti alimentari",
+  "creatingMealPlan": "Creazione Piano Alimentare...",
+  "generateCustomPreferences": "Genera con Preferenze Personalizzate",
+  "@mealsPerDay": {
+    "description": "Shows meals per day in user details",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mealsDropdown": "{count} pasti",
+  "@mealsDropdown": {
+    "description": "Shows meals count in dropdown",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "generatePersonalizedPlan": "Genera Piano Personalizzato",
   "helloWorld": "Ciao Mondo!",
   "signedIn": "Loggato!",
   "userRole": "Utente",
@@ -21,8 +448,55 @@
   "maleGender": "Maschio",
   "femaleGender": "Femmina",
   "otherGender": "Altro",
+  "today": "Oggi",
+  "mealPlans": "Piani Pasto",
+  "settings": "Impostazioni",
+  "clientDetails": "Dettagli Cliente",
+  "loadingClientInformation": "Caricamento informazioni cliente...",
+  "healthProfilePreferences": "Profilo sanitario e preferenze",
+  "noClientDetailsAvailable": "Nessun dettaglio cliente disponibile",
+  "loadingClientDetails": "Caricamento dettagli cliente...",
+  "physicalInformation": "Informazioni Fisiche",
+  "bmi": "IMC",
+  "dailyMealsPreference": "Preferenza Pasti Giornalieri",
+  "dietaryRestrictionsLabel": "Restrizioni Dietetiche",
+  "accountInformation": "Informazioni Account",
+  "accountCreated": "Account Creato",
+  "lastUpdated": "Ultimo Aggiornamento",
+  "activePlanId": "ID Piano Attivo",
+  "sevenDayScheduleEditing": "Programma 7 giorni (Modifica)",
+  "sevenDayScheduleViewEdit": "Programma 7 giorni (Visualizza/Modifica)",
+  "sevenDayScheduleViewOnly": "Programma 7 giorni (Solo Visualizzazione)",
+  "noDailyPlanDataFound": "Nessun dato piano giornaliero trovato per questo piano pasti.",
+  "enterRecipeName": "Inserisci nome ricetta",
+  "enterCookingInstructions": "Inserisci istruzioni di cottura...",
+  "add": "Aggiungi",
+  "noIngredientsAddedYet": "Nessun ingrediente aggiunto ancora",
+  "ingredientName": "Nome Ingrediente",
+  "removeIngredient": "Rimuovi ingrediente",
+  "amount": "Quantità",
+  "unit": "Unità",
+  "nutritionalValuesPerUnit": "Valori Nutrizionali (per unità)",
+  "chatWithPatient": "Chat con Paziente",
+  "validateMealPlan": "Valida Piano Pasti",
+  "validateMealPlanConfirm": "Sei sicuro di voler validare \"{planName}\"?",
+  "validate": "Valida",
+  "rejectMealPlan": "Rifiuta Piano Pasti",
+  "rejectMealPlanConfirm": "Sei sicuro di voler rifiutare \"{planName}\"? Questo resetterà il piano allo stato non validato.",
+  "reject": "Rifiuta",
+  "mealPlanValidatedSuccessfully": "Piano pasti validato con successo!",
+  "failedToValidateMealPlan": "Impossibile validare il piano pasti",
+  "mealPlanRejected": "Piano pasti rifiutato",
+  "failedToRejectMealPlan": "Impossibile rifiutare il piano pasti",
+  "savingMealPlan": "Salvataggio piano pasti...",
+  "mealPlanSavedSuccessfully": "Piano pasti salvato con successo!",
+  "failedToSaveMealPlan": "Impossibile salvare il piano pasti",
+  "bmiUnderweight": "Sottopeso",
+  "bmiNormalWeight": "Peso normale",
+  "bmiOverweight": "Sovrappeso",
+  "bmiObese": "Obeso",
+  "noneReported": "Nessuno riportato",
   "energy": "Energia",
-  "ingredients": "Ingredienti",
   "recipe": "Ricetta",
   "noRecipe": "Ricetta non disponibile",
   "mealCompleted": "Già mangiato",
@@ -31,26 +505,21 @@
   "settingsTitle": "Impostazioni",
   "changePreferences": "Modifica Preferenze",
   "clearCache": "Svuota Cache",
-  "deleteAccount": "Elimina Account",
   "confirmClearCacheTitle": "Conferma Svuotamento Cache",
   "confirmClearCacheMessage": "Sei sicuro di voler eliminare tutti i dati memorizzati localmente nella cache? Potrebbe essere necessario scaricare nuovamente i piani alimentari e altre informazioni.",
   "clear": "Svuota",
-  "cancel": "Annulla",
   "cacheClearedSuccessfully": "Cache svuotata con successo.",
   "errorClearingCache": "Errore durante lo svuotamento della cache.",
   "confirmSignOutTitle": "Conferma Uscita",
   "confirmSignOutMessage": "Sei sicuro di voler uscire?",
   "confirmDeleteAccountTitle": "Conferma Eliminazione Account",
   "confirmDeleteAccountMessage": "ATTENZIONE: Questa azione è irreversibile ed eliminerà permanentemente il tuo account e tutti i dati associati. Sei assolutamente sicuro di voler procedere?",
-  "accountDeletedSuccessfully": "Account eliminato con successo.",
   "errorDeletingAccount": "Errore durante l'eliminazione dell'account. Riprova.",
   "errorDeleteAccountRequiresRecentLogin": "L'eliminazione dell'account richiede un accesso recente. Effettua nuovamente l'accesso.",
-  "saveChanges": "Salva Modifiche",
   "preferencesSavedSuccess": "Preferenze salvate con successo.",
   "errorSavingPreferences": "Errore nel salvataggio delle preferenze.",
   "errorLoadingPreferences": "Errore nel caricamento delle preferenze.",
   "pleaseCorrectErrors": "Per favore, correggi gli errori nel modulo.",
-  "retry": "Riprova",
   "basicInfo": "Informazioni Base",
   "weightKg": "Peso (kg)",
   "heightCm": "Altezza (cm)",
@@ -58,12 +527,8 @@
   "invalidNumberFormat": "Inserisci un numero valido.",
   "caloriesOutOfRange": "Le calorie devono essere comprese tra 500 e 10000.",
   "dietaryNeeds": "Esigenze Alimentari",
-  "mealsPerDay": "Pasti al Giorno",
-  "dietaryRestrictions": "Restrizioni Alimentari",
   "dietaryRestrictionsHint": "es. Vegetariano, Vegano, Low-Carb",
-  "allergies": "Allergie",
   "lifestyle": "Stile di Vita",
-  "exerciseFrequency": "Frequenza Esercizio Fisico",
   "otherPreferences": "Altre Preferenze",
   "additionalNotes": "Note Aggiuntive",
   "additionalNotesHint": "Altri gusti, preferenze o obiettivi?",
@@ -96,6 +561,125 @@
   "exerciseFrequencyTWICE_A_WEEK": "Due volte a settimana",
   "@_ exerciseFrequencies": {
     "description": "Chiavi di localizzazione per i valori di ExerciseFrequency enum. Nota: 'Or' è escluso."
+  },
+  "proPlanTitle": "Piano PRO",
+  "personalNutritionistChat": "Chat personale con nutrizionista nell'app",
+  "editProfile": "Modifica Profilo",
+  "completeYourProfile": "Completa il Tuo Profilo",
+  "profileInformation": "Informazioni del Profilo",
+  "welcomeCompleteProfile": "Benvenuto! Completa il tuo profilo di nutrizionista",
+  "specialization": "Specializzazione",
+  "specializationHint": "es. Nutrizione Sportiva, Gestione del Peso",
+  "pleaseEnterSpecialization": "Inserisci la tua specializzazione",
+  "bio": "Biografia",
+  "bioHint": "Parla ai clienti della tua esperienza e del tuo approccio",
+  "pleaseEnterBio": "Inserisci la tua biografia",
+  "bioTooShort": "La biografia deve essere di almeno 50 caratteri",
+  "profilePicture": "Foto del Profilo",
+  "tapToUploadProfilePicture": "Tocca per caricare una foto del profilo",
+  "availableForNewClients": "Disponibile per nuovi clienti",
+  "clientsCanRequestServices": "I clienti possono richiedere i tuoi servizi",
+  "updateProfile": "Aggiorna Profilo",
+  "saveProfile": "Salva Profilo",
+  "noInternetConnection": "Nessuna connessione internet. Controlla la connessione e riprova.",
+  "profileSavedSuccessfully": "Profilo salvato con successo!",
+  "errorSavingProfile": "Errore nel salvataggio del profilo. Riprova.",
+  "errorSavingProfileWith": "Errore nel salvataggio del profilo: {error}",
+  "@errorSavingProfileWith": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingNutritionistSettings": "Caricamento impostazioni nutrizionista...",
+  "nutritionistSettings": "Impostazioni Nutrizionista",
+  "manageProfileMessage": "Gestisci il tuo profilo professionale, disponibilità e impostazioni account.",
+  "editProfessionalDetails": "Modifica Dettagli Professionali",
+  "professionalBio": "Bio Professionale",
+  "availabilitySettings": "Impostazioni Disponibilità",
+  "@errorUpdatingProfile": {
+    "description": "Error message when profile update fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "bioMinLength": "La bio deve essere di almeno 50 caratteri",
+  "availableForConsultations": "Ora sei disponibile per le consultazioni",
+  "unavailableForConsultations": "Ora non sei disponibile per le consultazioni",
+  "errorUpdatingAvailability": "Errore nell'aggiornamento della disponibilità: {error}",
+  "@errorUpdatingAvailability": {
+    "description": "Error message when availability update fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "validatePlans": "Convalida Piani",
+  "internetRequiredMessage": "Questa app richiede una connessione internet per funzionare correttamente. Controlla la tua connessione e riprova.",
+  "connectionTips": "Suggerimenti per la Connessione",
+  "checkWifiConnection": "Controlla la tua connessione Wi-Fi o dati mobili",
+  "turnOffAirplaneMode": "Assicurati che la modalità aereo sia spenta",
+  "moveForBetterSignal": "Prova a spostarti in un'area con segnale migliore",
+  "restartRouter": "Riavvia il tuo router o i dati mobili",
+  "checking": "Controllo...",
+  "tryAgainButton": "Riprova",
+  "connectionRestored": "Connessione ripristinata!",
+  "stillNoInternet": "Ancora nessuna connessione internet",
+  "tapToSelectPhoto": "Tocca per selezionare foto",
+  "selectPhoto": "Seleziona Foto",
+  "chooseFromGallery": "Scegli dalla Galleria",
+  "selectFromExistingPhotos": "Seleziona dalle foto esistenti",
+  "removePhoto": "Rimuovi Foto",
+  "deleteCurrentProfilePicture": "Elimina foto del profilo attuale",
+  "errorUploadingImage": "Errore nel caricamento dell'immagine: {error}",
+  "@errorUploadingImage": {
+    "description": "Error message when image upload fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorRemovingImage": "Errore nella rimozione dell'immagine: {error}",
+  "@errorRemovingImage": {
+    "description": "Error message when image removal fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "availability": "Disponibilità",
+  "currentlyAvailableForConsultations": "Attualmente sei disponibile per le consultazioni",
+  "currentlyUnavailableForConsultations": "Attualmente non sei disponibile per le consultazioni",
+  "availableForConsultationsTitle": "Disponibile per Consultazioni",
+  "usersCanRequestConsultations": "Gli utenti possono richiedere consultazioni da te",
+  "noNewConsultationRequests": "Non riceverai nuove richieste di consultazione",
+  "signOutOfNutritionistAccount": "Disconnetti dal tuo account nutrizionista",
+  "errorSigningOut": "Errore nella disconnessione: {error}",
+  "@errorSigningOut": {
+    "description": "Error message when sign out fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccountPermanently": "Questa azione eliminerà permanentemente il tuo account nutrizionista e tutti i dati associati. Non può essere annullata.",
+  "allDataWillBeRemoved": "Tutti i tuoi dati professionali, le interazioni con i clienti e le informazioni dell'account verranno rimossi permanentemente.",
+  "irreversibleDestructiveActions": "Azioni distruttive irreversibili",
+  "permanentActionWarning": "Le azioni seguenti sono permanenti e non possono essere annullate. Tutti i tuoi dati nutrizionista, incluse informazioni del profilo, interazioni con clienti e impostazioni professionali verranno eliminati permanentemente.",
+  "@errorDeletingAccount": {
+    "description": "Error message when account deletion fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   },
   "confirmSignUp": "Inserisci il tuo codice di conferma",
   "@confirmSignUp": {
@@ -1172,7 +1756,6 @@
   "@password": {
     "description": "User's chosen password."
   },
-  "newPassword": "Nuova Password",
   "@newPassword": {
     "description": "User's chosen new password."
   },
@@ -1195,12 +1778,10 @@
   "@address": {
     "description": "User's preferred postal address."
   },
-  "birthdate": "Data di Nascita",
   "@birthdate": {
     "description": "User's birthday, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.",
     "example": "1990-01-01"
   },
-  "familyName": "Cognome",
   "@familyName": {
     "description": "Surname(s) or last name(s) of the user."
   },
@@ -1208,7 +1789,6 @@
   "@middleName": {
     "description": "Middle name(s) of the user."
   },
-  "gender": "Genere",
   "@gender": {
     "description": "User's gender.",
     "example": "male"
@@ -1223,7 +1803,6 @@
       }
     }
   },
-  "givenName": "Nome",
   "@givenName": {
     "description": "Given name(s) or first name(s) of the user."
   },
@@ -1342,7 +1921,6 @@
       }
     }
   },
-  "passwordsDoNotMatch": "Le password non corrispondono.",
   "@passwordsDoNotMatch": {
     "description": "Message for conflicting password and confirm password fields."
   },
@@ -1386,7 +1964,10 @@
   "@selectEmail": {
     "description": "Label for the radio button to select email as the user's chosen MFA method."
   },
-  "signIn": "Accedi",
+  "rolePlaceholder": "Ruolo",
+  "@rolePlaceholder": {
+    "description": "Il ruolo dell'utente, ad esempio, utente, amministratore, ecc."
+  },
   "@signIn": {
     "description": "Label of the button to sign in the user."
   },
@@ -1406,7 +1987,6 @@
   "@submit": {
     "description": "Label of button to submit a form"
   },
-  "changePassword": "Cambia password",
   "@changePassword": {
     "description": "Label of button to change a password"
   },
@@ -1446,7 +2026,6 @@
   "@copyKey": {
     "description": "Label of button to copy a value."
   },
-  "signOut": "Esci",
   "@signOut": {
     "description": "Label of button to sign out the user"
   },

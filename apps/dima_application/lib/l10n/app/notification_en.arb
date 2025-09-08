@@ -1,0 +1,6 @@
+{
+  "mealPlanReady": "Meal Plan Ready!",
+  "generationFailed": "Generation Failed",
+  "mealPlanReadyDescription": "Your meal plan has been successfully generated.",
+  "generationFailedDescription": "There was an error generating your meal plan. Please try again later."
+}

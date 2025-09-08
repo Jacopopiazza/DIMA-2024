@@ -115,26 +115,37 @@ class TodayPage extends ConsumerWidget {
   }
 
   /// Configuration for different UI states
-  static const Map<DataStatus, Map<String, dynamic>> _stateConfig = {
-    DataStatus.loadedOffline: {
-      'defaultMessage': 'Showing stale data.',
-      'requiresIndicator': true,
-    },
-    DataStatus.errorNetworkWithCache: {
-      'defaultMessage': 'Network unavailable. Showing cached data.',
-      'requiresIndicator': true,
-    },
-    DataStatus.errorNetwork: {
-      'defaultMessage': 'Refresh failed. Displaying previous data.',
-      'fallbackMessage': 'Failed to load data. Check connection.',
-      'requiresIndicator': true,
-    },
-    DataStatus.errorOther: {
-      'defaultMessage': 'Refresh failed. Displaying previous data.',
-      'fallbackMessage': 'Failed to load data. Check connection.',
-      'requiresIndicator': true,
-    },
-  };
+  /// Gets localized state config message
+  Map<String, dynamic> _getStateConfig(BuildContext context, DataStatus status) {
+    final localizations = AppLocalizations.of(context)!;
+    
+    switch (status) {
+      case DataStatus.loadedOffline:
+        return {
+          'defaultMessage': localizations.showingStaleData,
+          'requiresIndicator': true,
+        };
+      case DataStatus.errorNetworkWithCache:
+        return {
+          'defaultMessage': localizations.networkUnavailableCachedData,
+          'requiresIndicator': true,
+        };
+      case DataStatus.errorNetwork:
+        return {
+          'defaultMessage': localizations.refreshFailedPreviousData,
+          'fallbackMessage': localizations.failedToLoadDataCheckConnection,
+          'requiresIndicator': true,
+        };
+      case DataStatus.errorOther:
+        return {
+          'defaultMessage': localizations.refreshFailedPreviousData,
+          'fallbackMessage': localizations.failedToLoadDataCheckConnection,
+          'requiresIndicator': true,
+        };
+      default:
+        return {};
+    }
+  }
 
   /// Builds the main content widget based on the current TodayPageState
   Widget _buildBody(
@@ -160,7 +171,7 @@ class TodayPage extends ConsumerWidget {
     }
 
     // Determine view type based on meal data
-    final viewConfig = _determineViewConfiguration(state);
+    final viewConfig = _determineViewConfiguration(context, state);
 
     // Build appropriate view
     switch (viewConfig.viewType) {
@@ -174,11 +185,12 @@ class TodayPage extends ConsumerWidget {
   }
 
   /// Determines the appropriate view configuration based on state
-  _ViewConfiguration _determineViewConfiguration(TodayPageState state) {
+  _ViewConfiguration _determineViewConfiguration(BuildContext context, TodayPageState state) {
     final hasMeals = _hasMealData(state);
     final hasEmptyMealData =
         state.todaysMeals != null && state.todaysMeals!.isEmpty;
-    final config = _stateConfig[state.status];
+    final config = _getStateConfig(context, state.status);
+    final localizations = AppLocalizations.of(context)!;
 
     // Determine view type
     _ViewType viewType;
@@ -205,9 +217,9 @@ class TodayPage extends ConsumerWidget {
     if (requiresIndicator) {
       if (viewType == _ViewType.noMeals && hasEmptyMealData) {
         indicatorMessage =
-            state.errorMessage ?? "Refresh failed. No meals scheduled.";
+            state.errorMessage ?? localizations.refreshFailedNoMealsScheduled;
       } else {
-        indicatorMessage = state.errorMessage ?? config!['defaultMessage'];
+        indicatorMessage = state.errorMessage ?? config['defaultMessage'];
       }
     }
 
@@ -216,20 +228,21 @@ class TodayPage extends ConsumerWidget {
       requiresIndicator: requiresIndicator,
       indicatorMessage: indicatorMessage,
       errorMessage: state.errorMessage ??
-          config?['fallbackMessage'] ??
-          "Something went wrong.",
+          config['fallbackMessage'] ??
+          localizations.somethingWentWrong,
     );
   }
 
   /// Builds error view
   Widget _buildErrorView(
       BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
-    final config = _stateConfig[state.status];
+    final config = _getStateConfig(context, state.status);
+    final localizations = AppLocalizations.of(context)!;
     return Center(
       child: ErrorView(
         message: state.errorMessage ??
-            config?['fallbackMessage'] ??
-            "Failed to load data. Check connection.",
+            config['fallbackMessage'] ??
+            localizations.failedToLoadDataCheckConnection,
         onRetry: () => notifier.refreshData(),
       ),
     );
@@ -288,7 +301,8 @@ class TodayPage extends ConsumerWidget {
   Widget _buildPlanDetailsViewContent(
       BuildContext context, TodayPageState state, TodayPageNotifier notifier) {
     if (state.todaysMeals == null) {
-      return const Center(child: Text("Error: Meal data is missing."));
+      final localizations = AppLocalizations.of(context)!;
+      return Center(child: Text(localizations.errorMealDataMissing));
     }
 
     final totalMacros = _calculateTotalMacros(state.todaysMeals);
@@ -347,11 +361,11 @@ class TodayPage extends ConsumerWidget {
   // --- Keep Existing Helper Methods ---
   /// Meal image URL mappings
   static const Map<MealNameEnum, String> _mealImages = {
-    MealNameEnum.BREAKFAST: 'assets/colazione.jpg',
+    MealNameEnum.BREAKFAST: 'assets/colazione.png',
     MealNameEnum.LUNCH: 'assets/pranzo.jpg',
     MealNameEnum.DINNER: 'assets/cena.png',
     MealNameEnum.SNACK_AFTERNOON: 'assets/snack-pomeridiano.png',
-    MealNameEnum.SNACK_MORNING: 'assets/snack-mattino.jpg',
+    MealNameEnum.SNACK_MORNING: 'assets/snack-mattino.png',
     MealNameEnum.SNACK_EVENING: 'assets/snack-serale.png',
   };
 
@@ -359,6 +373,7 @@ class TodayPage extends ConsumerWidget {
   Widget _buildNoMealsView(BuildContext context, TodayPageNotifier notifier,
       DataStatus currentStatus) {
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!;
     final today = DateFormat('EEEE').format(DateTime.now());
 
     return Center(
@@ -374,20 +389,20 @@ class TodayPage extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              "No Meals For Today",
+              localizations.noMealsForToday,
               style: theme.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
-              "Your current meal plan doesn't have any meals scheduled for $today.",
+              localizations.currentMealPlanNoMealsScheduled(today),
               style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             TextButton.icon(
               icon: const Icon(Icons.refresh, size: 18),
-              label: const Text("Refresh Now"),
+              label: Text(localizations.refreshNow),
               onPressed: () => notifier.refreshData(),
             ),
           ],

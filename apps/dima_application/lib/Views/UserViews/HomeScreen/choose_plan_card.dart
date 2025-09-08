@@ -1,5 +1,6 @@
 import 'dart:math'; // Import dart:math for max function
 
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// A card widget that prompts the user to choose a meal plan.
@@ -47,6 +48,7 @@ class ChoosePlanCard extends StatelessWidget {
     // Access theme for consistent styling across the app
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localizations = AppLocalizations.of(context)!;
 
     final mediaQueryData = MediaQuery.maybeOf(context);
     final screenWidth = mediaQueryData?.size.width ?? 0.0;
@@ -85,7 +87,7 @@ class ChoosePlanCard extends StatelessWidget {
 
             // Main heading
             Text(
-              "No Meal Plan Selected",
+              localizations.noMealPlanSelected,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -95,7 +97,7 @@ class ChoosePlanCard extends StatelessWidget {
 
             // Explanatory text
             Text(
-              "Select a meal plan to start tracking your daily meals and nutritional progress.",
+              localizations.selectMealPlanToStart,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
@@ -106,7 +108,7 @@ class ChoosePlanCard extends StatelessWidget {
             // Call-to-action button
             ElevatedButton.icon(
               icon: const Icon(Icons.add_task_outlined),
-              label: const Text("Choose a Plan"),
+              label: Text(localizations.choosePlan),
               style: ElevatedButton.styleFrom(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

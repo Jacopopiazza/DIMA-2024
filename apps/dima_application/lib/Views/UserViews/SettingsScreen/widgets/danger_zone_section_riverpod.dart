@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 import '../../../../providers/user_details_provider.dart';
 
@@ -81,7 +82,7 @@ class _DangerZoneSectionRiverpodState
             ),
             const SizedBox(width: 12),
             Text(
-              'Delete Account',
+              AppLocalizations.of(context)!.deleteAccount,
               style: TextStyle(color: colorScheme.onSurface),
             ),
           ],
@@ -90,8 +91,8 @@ class _DangerZoneSectionRiverpodState
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'This action will permanently delete your account and all associated data. This cannot be undone.',
+            Text(
+              AppLocalizations.of(context)!.thisActionWillPermanentlyDelete,
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 16),
@@ -109,7 +110,7 @@ class _DangerZoneSectionRiverpodState
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'All your meal plans, preferences, and personal data will be permanently removed.',
+                      AppLocalizations.of(context)!.allYourMealPlansWillBeRemoved,
                       style: TextStyle(
                         color: Colors.red.shade700,
                         fontSize: 12,
@@ -124,7 +125,7 @@ class _DangerZoneSectionRiverpodState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
@@ -132,8 +133,8 @@ class _DangerZoneSectionRiverpodState
               backgroundColor: Colors.red,
             ),
             child: Text(
-              'Delete Account',
-              style: TextStyle(color: colorScheme.onSurface),
+              AppLocalizations.of(context)!.deleteAccount,
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -165,7 +166,7 @@ class _DangerZoneSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Account deleted successfully'),
+                  Text(AppLocalizations.of(context)!.accountDeletedSuccessfully),
                 ],
               ),
               backgroundColor: Colors.green.shade600,
@@ -189,7 +190,7 @@ class _DangerZoneSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Failed to delete account'),
+                  Text(AppLocalizations.of(context)!.failedToDeleteAccount),
                 ],
               ),
               backgroundColor: Colors.red.shade600,
@@ -258,14 +259,14 @@ class _DangerZoneSectionRiverpodState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Danger Zone',
+                          AppLocalizations.of(context)!.dangerZone,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.red.shade800,
                           ),
                         ),
                         Text(
-                          'Irreversible and destructive actions',
+                          AppLocalizations.of(context)!.irreversibleAndDestructiveActions,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.red.shade600,
                           ),
@@ -315,7 +316,7 @@ class _DangerZoneSectionRiverpodState
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    'Critical Warning',
+                                    AppLocalizations.of(context)!.criticalWarning,
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.red.shade800,
@@ -326,7 +327,7 @@ class _DangerZoneSectionRiverpodState
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'The actions below are permanent and cannot be undone. All your data, including meal plans, preferences, and account information will be permanently deleted.',
+                              AppLocalizations.of(context)!.actionsArePermanent,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: Colors.red.shade700,
                                 height: 1.4,
@@ -354,14 +355,14 @@ class _DangerZoneSectionRiverpodState
                                   ),
                                 )
                               : Icon(Icons.delete_forever_rounded,
-                                  size: 20, color: colorScheme.onSurface),
+                                  size: 20, color: Colors.white),
                           label: Text(
                             _isDeleting
-                                ? 'Deleting Account...'
-                                : 'Delete My Account',
+                                ? AppLocalizations.of(context)!.deletingAccount
+                                : AppLocalizations.of(context)!.deleteMyAccount,
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: colorScheme.onSurface,
+                              color: Colors.white,
                             ),
                           ),
                           style: FilledButton.styleFrom(

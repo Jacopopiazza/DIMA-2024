@@ -222,5 +222,9 @@
     "selectEmail": "Email",
     "@selectEmail": {
         "description": "Label for the radio button to select email as the user's chosen MFA method."
+    },
+    "rolePlaceholder": "Ruolo",
+    "@rolePlaceholder": {
+        "description": "Il ruolo dell'utente, ad esempio, utente, amministratore, ecc."
     }
-} 
+}

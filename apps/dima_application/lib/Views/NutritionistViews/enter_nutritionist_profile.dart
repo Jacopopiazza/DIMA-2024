@@ -2,6 +2,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Views/Common/image_picker_widget.dart';
 import 'package:dima_application/Views/Common/offline_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/nutritionist_home_screen.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/services/connectivity_service.dart';
 import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,8 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     // Check connectivity before attempting to save
     final connectivityService = ConnectivityService();
     final isConnected = await connectivityService.checkConnectivityManually();
@@ -70,17 +73,16 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
     if (!isConnected) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Row(
               children: [
-                Icon(Icons.wifi_off, color: Colors.white, size: 16),
-                SizedBox(width: 8),
-                Text(
-                    'No internet connection. Please check your connection and try again.'),
+                const Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                const SizedBox(width: 8),
+                Expanded(child: Text(l10n.noInternetConnection)),
               ],
             ),
             backgroundColor: Colors.red,
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -102,8 +104,8 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
       if (updatedProfile != null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Profile saved successfully!'),
+            SnackBar(
+              content: Text(l10n.profileSavedSuccessfully),
               backgroundColor: Colors.green,
             ),
           );
@@ -124,8 +126,8 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Error saving profile. Please try again.'),
+            SnackBar(
+              content: Text(l10n.errorSavingProfile),
               backgroundColor: Colors.red,
             ),
           );
@@ -135,7 +137,7 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error saving profile: $e'),
+            content: Text(l10n.errorSavingProfileWith(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -153,12 +155,14 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return OfflineScreen(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-              widget.isFromSettings ? 'Edit Profile' : 'Complete Your Profile'),
+          title: Text(widget.isFromSettings
+              ? l10n.editProfile
+              : l10n.completeYourProfile),
           automaticallyImplyLeading:
               widget.isFromSettings, // Allow back navigation from settings
         ),
@@ -196,15 +200,15 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Profile Information',
+                              l10n.profileInformation,
                               style: theme.textTheme.titleLarge,
                             ),
                           ],
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Welcome! Please complete your nutritionist profile',
-                          style: TextStyle(
+                        Text(
+                          l10n.welcomeCompleteProfile,
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                           textAlign: TextAlign.center,
@@ -214,16 +218,15 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
                         // Specialization
                         TextFormField(
                           controller: _specializationController,
-                          decoration: const InputDecoration(
-                            labelText: 'Specialization',
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.work),
-                            hintText:
-                                'e.g., Sports Nutrition, Weight Management',
+                          decoration: InputDecoration(
+                            labelText: l10n.specialization,
+                            border: const OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.work),
+                            hintText: l10n.specializationHint,
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return 'Please enter your specialization';
+                              return l10n.pleaseEnterSpecialization;
                             }
                             return null;
                           },
@@ -233,20 +236,19 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
                         // Bio
                         TextFormField(
                           controller: _bioController,
-                          decoration: const InputDecoration(
-                            labelText: 'Bio',
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.description),
-                            hintText:
-                                'Tell clients about your expertise and approach',
+                          decoration: InputDecoration(
+                            labelText: l10n.bio,
+                            border: const OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.description),
+                            hintText: l10n.bioHint,
                           ),
                           maxLines: 4,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return 'Please enter your bio';
+                              return l10n.pleaseEnterBio;
                             }
                             if (value.trim().length < 50) {
-                              return 'Bio should be at least 50 characters';
+                              return l10n.bioTooShort;
                             }
                             return null;
                           },
@@ -258,7 +260,7 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
                           child: Column(
                             children: [
                               Text(
-                                'Profile Picture',
+                                l10n.profilePicture,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -278,7 +280,7 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Tap to upload a profile picture',
+                                l10n.tapToUploadProfilePicture,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
@@ -290,9 +292,8 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
 
                         // Availability Toggle
                         SwitchListTile(
-                          title: const Text('Available for new clients'),
-                          subtitle:
-                              const Text('Clients can request your services'),
+                          title: Text(l10n.availableForNewClients),
+                          subtitle: Text(l10n.clientsCanRequestServices),
                           value: _isAvailable,
                           onChanged: (value) {
                             setState(() {
@@ -326,8 +327,8 @@ class _EnterNutritionistProfileState extends State<EnterNutritionistProfile> {
                                   )
                                 : Text(
                                     widget.isFromSettings
-                                        ? 'Update Profile'
-                                        : 'Save Profile',
+                                        ? l10n.updateProfile
+                                        : l10n.saveProfile,
                                     style: const TextStyle(fontSize: 16),
                                   ),
                           ),

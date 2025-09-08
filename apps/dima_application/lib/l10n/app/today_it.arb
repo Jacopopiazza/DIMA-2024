@@ -16,6 +16,20 @@
     "carbs": "Carboidrati",
     "fats": "Grassi",
     "proteins": "Proteine",
-    "todaysMeals": "Ricette odierne"
-
+    "todaysMeals": "Ricette odierne",
+    "showingStaleData": "Mostrando dati obsoleti.",
+    "networkUnavailableCachedData": "Rete non disponibile. Mostrando dati memorizzati.",
+    "refreshFailedPreviousData": "Aggiornamento fallito. Mostrando dati precedenti.",
+    "failedToLoadDataCheckConnection": "Caricamento dati fallito. Controlla la connessione.",
+    "refreshFailedNoMealsScheduled": "Aggiornamento fallito. Nessun pasto programmato.",
+    "somethingWentWrong": "Qualcosa è andato storto.",
+    "errorMealDataMissing": "Errore: Dati del pasto mancanti.",
+    "noMealsForToday": "Nessun Pasto Per Oggi",
+    "currentMealPlanNoMealsScheduled": "Il tuo piano alimentare attuale non ha pasti programmati per {dayName}.",
+    "refreshNow": "Aggiorna Ora",
+    "failedToLoadData": "Caricamento Dati Fallito",
+    "retryAction": "Riprova",
+    "noMealPlanSelected": "Nessun Piano Alimentare Selezionato",
+    "selectMealPlanToStart": "Seleziona un piano alimentare per iniziare a monitorare i tuoi pasti giornalieri e i progressi nutrizionali.",
+    "choosePlan": "Scegli un Piano"
 }

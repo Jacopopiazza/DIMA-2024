@@ -1,11 +1,12 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/Views/Common/offline_screen.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/services/connectivity_service.dart';
 import 'package:flutter/material.dart';
 
 import 'nutritionist_settings_page.dart';
-import 'validate_plans_page.dart';
+import 'validate_plans_page_adaptive.dart';
 
 class NutritionistHomeScreen extends StatefulWidget {
   final bool isOffline;
@@ -55,7 +56,7 @@ class _NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
 
   // List of widgets to display based on the selected tab
   static final List<Widget> _widgetOptions = <Widget>[
-    ValidatePlansPage(), // Index 0
+    ValidatePlansPageAdaptive(), // Index 0
     NutritionistSettingsPage(), // Index 1
   ];
 
@@ -85,16 +86,16 @@ class _NutritionistHomeScreenState extends State<NutritionistHomeScreen> {
   // Helper method to build the BottomNavigationBar
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.assignment_outlined),
-          activeIcon: Icon(Icons.assignment),
-          label: 'Validate Plans',
+          icon: const Icon(Icons.assignment_outlined),
+          activeIcon: const Icon(Icons.assignment),
+          label: AppLocalizations.of(context)!.validatePlans,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.settings_outlined),
-          activeIcon: Icon(Icons.settings),
-          label: 'Settings',
+          icon: const Icon(Icons.settings_outlined),
+          activeIcon: const Icon(Icons.settings),
+          label: AppLocalizations.of(context)!.settings,
         ),
       ],
       currentIndex: _selectedIndex, // Highlights the current tab

@@ -56,7 +56,7 @@ class _RoleSelectionFieldState extends State<RoleSelectionField> {
         key: _formFieldKey,
         focusNode: _focusNode,
         decoration: InputDecoration(
-          labelText: AppLocalizations.of(context)!.signUpDropdownText,
+          labelText: AppLocalizations.of(context)!.rolePlaceholder,
           labelStyle: TextStyle(
             color: _isFocused ? colorScheme.primary : null,
             fontWeight: FontWeight.w500,

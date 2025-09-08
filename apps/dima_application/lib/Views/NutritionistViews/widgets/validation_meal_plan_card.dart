@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../generated/flutter-models/ModelProvider.dart';
+import '../../../generated/l10n/app_localizations.dart';
 import '../nutritionist_read_meal_plan_page.dart';
 
 class ValidationMealPlanCard extends StatelessWidget {
@@ -19,23 +20,20 @@ class ValidationMealPlanCard extends StatelessWidget {
       _validationConfig = {
     MealPlanValidationStatus.VALIDATED: {
       'icon': Icons.verified_rounded,
-      'label': 'Validated',
       'color': Colors.green,
     },
     MealPlanValidationStatus.PENDING_REVIEW: {
       'icon': Icons.pending_rounded,
-      'label': 'Pending Review',
       'color': Colors.orange,
     },
     MealPlanValidationStatus.NOT_VALIDATED: {
       'icon': Icons.help_outline_rounded,
-      'label': 'Not Validated',
       'color': null, // Use theme colors
     },
   };
 
   Widget _buildValidationChip(MealPlanValidationStatus? validationStatus,
-      ColorScheme colorScheme, ThemeData theme) {
+      ColorScheme colorScheme, ThemeData theme, BuildContext context) {
     if (validationStatus == null ||
         !_validationConfig.containsKey(validationStatus)) {
       return const SizedBox.shrink();
@@ -46,6 +44,19 @@ class ValidationMealPlanCard extends StatelessWidget {
     final backgroundColor =
         baseColor?.shade100 ?? colorScheme.surfaceContainerHigh;
     final foregroundColor = baseColor?.shade800 ?? colorScheme.onSurfaceVariant;
+
+    // Get localized label
+    String getLocalizedLabel() {
+      switch (validationStatus) {
+        case MealPlanValidationStatus.VALIDATED:
+          return AppLocalizations.of(context)!.validatedStatus;
+        case MealPlanValidationStatus.PENDING_REVIEW:
+          return AppLocalizations.of(context)!.pendingReviewStatus;
+        case MealPlanValidationStatus.NOT_VALIDATED:
+        default:
+          return AppLocalizations.of(context)!.notValidatedStatus;
+      }
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -59,7 +70,7 @@ class ValidationMealPlanCard extends StatelessWidget {
           Icon(config['icon'], size: 14, color: foregroundColor),
           const SizedBox(width: 4),
           Text(
-            config['label'],
+            getLocalizedLabel(),
             style: theme.textTheme.labelSmall?.copyWith(
               color: foregroundColor,
               fontWeight: FontWeight.w500,
@@ -193,7 +204,7 @@ class ValidationMealPlanCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              plan.planName ?? 'Unnamed Plan',
+                              plan.planName ?? AppLocalizations.of(context)!.unnamedPlan,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: isPendingReview
@@ -208,14 +219,7 @@ class ValidationMealPlanCard extends StatelessWidget {
                       Row(
                         children: [
                           _buildValidationChip(
-                              plan.validationStatus, colorScheme, theme),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Plan ID: ${plan.mealPlanId.substring(0, 8)}...',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
+                              plan.validationStatus, colorScheme, theme, context),
                           const Spacer(),
                           Icon(
                             Icons.chevron_right_rounded,
@@ -224,21 +228,33 @@ class ValidationMealPlanCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                      if (plan.userFullName != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          AppLocalizations.of(context)!.clientLabel(plan.userFullName!),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                       if (plan.generatedAt != null) ...[
                         const SizedBox(height: 4),
                         Text(
-                          'Created: ${DateFormat('MMM dd, yyyy').format(plan.generatedAt!.getDateTimeInUtc().toLocal())}',
+                          AppLocalizations.of(context)!.createdLabel(DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(plan.generatedAt!.getDateTimeInUtc().toLocal())),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                             fontSize: 11,
                           ),
                         ),
                       ],
+                      
                       // Add last updated date if available
                       if (plan.updatedAt != null) ...[
                         const SizedBox(height: 2),
                         Text(
-                          'Updated: ${DateFormat('MMM dd, yyyy HH:mm').format(plan.updatedAt!.getDateTimeInUtc().toLocal())}',
+                          AppLocalizations.of(context)!.updatedLabel(DateFormat.yMMMd(Localizations.localeOf(context).toString()).add_Hm().format(plan.updatedAt!.getDateTimeInUtc().toLocal())),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                             fontSize: 11,

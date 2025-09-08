@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dima_application/Utils/localization_helpers.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/services/meal_plans_service.dart';
 import 'package:dima_application/Views/Common/ChatScreen/chat_page.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,13 @@ import 'package:intl/intl.dart';
 class ReadMealPlanPage extends StatefulWidget {
   final String mealPlanId;
   final String? initialPlanName;
+  final bool showBackButton;
 
   const ReadMealPlanPage({
     super.key,
     required this.mealPlanId,
     this.initialPlanName,
+    this.showBackButton = true,
   });
 
   @override
@@ -77,7 +80,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = 'Failed to load meal plan: $e';
+          _errorMessage = AppLocalizations.of(context)!.failedToLoadMealPlan + e.toString();
           _isLoading = false;
         });
       }
@@ -96,8 +99,9 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           SingleChildScrollView(
             child: _buildBody(theme, colorScheme),
           ),
-          // Modern back button positioned on top
-          Positioned(
+          // Modern back button positioned on top - only show if showBackButton is true
+          if (widget.showBackButton)
+            Positioned(
             top: MediaQuery.of(context).padding.top + 16,
             left: 16,
             child: Container(
@@ -155,8 +159,11 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-            16.0, 80.0, 16.0, 16.0), // Added top padding for floating button
+        padding: EdgeInsets.fromLTRB(
+            16.0, 
+            widget.showBackButton ? 80.0 : 16.0, // Conditional top padding
+            16.0, 
+            16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -183,7 +190,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             ),
             const SizedBox(height: 24),
             Text(
-              'Loading your meal plan...',
+              AppLocalizations.of(context)!.loadingYourMealPlan,
               style: TextStyle(
                 color: colorScheme.onSurfaceVariant,
                 fontSize: 16,
@@ -243,8 +250,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               const SizedBox(height: 24),
               Text(
                 isNetworkError
-                    ? 'Connection Problem'
-                    : 'Oops! Something went wrong',
+                    ? AppLocalizations.of(context)!.connectionProblemView
+                    : AppLocalizations.of(context)!.oopsSomethingWentWrong,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
@@ -254,8 +261,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               const SizedBox(height: 12),
               Text(
                 isNetworkError
-                    ? 'Please check your internet connection and try again. Make sure you\'re connected to Wi-Fi or cellular data.'
-                    : 'We encountered an error while loading your meal plan. This might be a temporary issue.',
+                    ? AppLocalizations.of(context)!.checkInternetConnection
+                    : AppLocalizations.of(context)!.encounterErrorLoadingPlan,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -267,7 +274,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                 icon: Icon(isNetworkError
                     ? Icons.wifi_rounded
                     : Icons.refresh_rounded),
-                label: Text(isNetworkError ? 'Reconnect' : 'Try Again'),
+                label: Text(isNetworkError ? AppLocalizations.of(context)!.reconnect : AppLocalizations.of(context)!.tryAgain),
                 style: FilledButton.styleFrom(
                   backgroundColor:
                       isNetworkError ? Colors.orange.shade600 : null,
@@ -310,7 +317,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               ),
               const SizedBox(height: 24),
               Text(
-                'Meal Plan Not Found',
+                AppLocalizations.of(context)!.mealPlanNotFound,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
@@ -319,7 +326,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               ),
               const SizedBox(height: 12),
               Text(
-                'This meal plan might have been deleted or is no longer available. Please try refreshing or go back to select another plan.',
+                AppLocalizations.of(context)!.mealPlanMightDeleted,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -329,7 +336,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
               FilledButton.icon(
                 onPressed: _loadMealPlan,
                 icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Try Again'),
+                label: Text(AppLocalizations.of(context)!.tryAgain),
                 style: FilledButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -382,14 +389,14 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             ),
           ),
           title: Text(
-            'Plan Information',
+            AppLocalizations.of(context)!.planInformation,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: colorScheme.onSurface,
             ),
           ),
           subtitle: Text(
-            'View plan details',
+            AppLocalizations.of(context)!.viewPlanDetails,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -402,20 +409,20 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _buildInfoRow('Plan Name',
-                      _mealPlan!.planName ?? 'Unnamed Plan', colorScheme),
-                  _buildInfoRow('Plan ID', _mealPlan!.mealPlanId, colorScheme),
+                  _buildInfoRow(AppLocalizations.of(context)!.planName,
+                      _mealPlan!.planName ?? AppLocalizations.of(context)!.unnamedPlan, colorScheme),
+                  _buildInfoRow(AppLocalizations.of(context)!.planIdLabel, _mealPlan!.mealPlanId, colorScheme),
                   if (_mealPlan!.generatedAt != null)
                     _buildInfoRow(
-                      'Generated',
+                      AppLocalizations.of(context)!.generated,
                       DateFormat('MMM dd, yyyy HH:mm').format(
                         _mealPlan!.generatedAt!.getDateTimeInUtc().toLocal(),
                       ),
                       colorScheme,
                     ),
                   _buildInfoRow(
-                    'Status',
-                    _formatEnumValue(
+                    AppLocalizations.of(context)!.status,
+                    _getLocalizedStatus(
                         _mealPlan!.status?.toString().split('.').last ??
                             'UNKNOWN'),
                     colorScheme,
@@ -423,8 +430,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                         _getStatusColor(_mealPlan!.status, colorScheme),
                   ),
                   _buildInfoRow(
-                    'Validation',
-                    _formatEnumValue(_mealPlan!.validationStatus
+                    AppLocalizations.of(context)!.validation,
+                    _getLocalizedValidation(_mealPlan!.validationStatus
                             ?.toString()
                             .split('.')
                             .last ??
@@ -435,14 +442,14 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   ),
                   if (_mealPlan!.assignedNutritionistId != null)
                     _buildInfoRow(
-                      'Nutritionist',
+                      AppLocalizations.of(context)!.nutritionist,
                       _mealPlan!.nutritionistFullName ??
                           _mealPlan!.assignedNutritionistId!,
                       colorScheme,
                     ),
                   if (_mealPlan!.userFullName != null)
                     _buildInfoRow(
-                      'User',
+                      AppLocalizations.of(context)!.user,
                       _mealPlan!.userFullName!,
                       colorScheme,
                     ),
@@ -473,7 +480,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Error Details',
+                                  AppLocalizations.of(context)!.errorDetails,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.red.shade800,
@@ -596,7 +603,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             ),
           ),
           title: Text(
-            'Weekly Meal Plan',
+            AppLocalizations.of(context)!.weeklyMealPlan,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: colorScheme.onSurface,
@@ -604,8 +611,8 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           ),
           subtitle: Text(
             dailyPlan == null
-                ? 'No meal plan data available'
-                : '7-day meal schedule (Read-only)',
+                ? AppLocalizations.of(context)!.noMealPlanDataAvailable
+                : AppLocalizations.of(context)!.sevenDayMealScheduleReadOnly,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -624,7 +631,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'No daily plan data found for this meal plan.',
+                      AppLocalizations.of(context)!.noDailyPlanData,
                       style: TextStyle(
                         color: colorScheme.onSurfaceVariant,
                         fontSize: 16,
@@ -642,19 +649,19 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                     const Divider(),
                     const SizedBox(height: 16),
                     _buildReadOnlyDayMeals(
-                        'Monday', dailyPlan.monday, colorScheme),
+                        AppLocalizations.of(context)!.monday, dailyPlan.monday, colorScheme),
                     _buildReadOnlyDayMeals(
-                        'Tuesday', dailyPlan.tuesday, colorScheme),
+                        AppLocalizations.of(context)!.tuesday, dailyPlan.tuesday, colorScheme),
                     _buildReadOnlyDayMeals(
-                        'Wednesday', dailyPlan.wednesday, colorScheme),
+                        AppLocalizations.of(context)!.wednesday, dailyPlan.wednesday, colorScheme),
                     _buildReadOnlyDayMeals(
-                        'Thursday', dailyPlan.thursday, colorScheme),
+                        AppLocalizations.of(context)!.thursday, dailyPlan.thursday, colorScheme),
                     _buildReadOnlyDayMeals(
-                        'Friday', dailyPlan.friday, colorScheme),
+                        AppLocalizations.of(context)!.friday, dailyPlan.friday, colorScheme),
                     _buildReadOnlyDayMeals(
-                        'Saturday', dailyPlan.saturday, colorScheme),
+                        AppLocalizations.of(context)!.saturday, dailyPlan.saturday, colorScheme),
                     _buildReadOnlyDayMeals(
-                        'Sunday', dailyPlan.sunday, colorScheme),
+                        AppLocalizations.of(context)!.sunday, dailyPlan.sunday, colorScheme),
                   ],
                 ),
               ),
@@ -666,7 +673,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
 
   Widget _buildReadOnlyDayMeals(
       String dayName, List<Meal>? meals, ColorScheme colorScheme) {
-    final isToday = DateFormat('EEEE').format(DateTime.now()) == dayName;
+    final isToday = _isToday(dayName);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -725,7 +732,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${meals?.length ?? 0} meals',
+                    AppLocalizations.of(context)!.mealsCount(meals?.length ?? 0),
                     style: TextStyle(
                       color: colorScheme.onSurface,
                       fontSize: 12,
@@ -748,7 +755,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'No meals scheduled for this day',
+                    AppLocalizations.of(context)!.noMealsScheduled,
                     style: TextStyle(
                       color: colorScheme.onSurfaceVariant,
                       fontStyle: FontStyle.italic,
@@ -812,7 +819,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             ),
           ),
           title: Text(
-            meal.recipeName ?? 'Unnamed meal',
+            meal.recipeName ?? AppLocalizations.of(context)!.unnamedMeal,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               color: colorScheme.onSurface,
@@ -834,7 +841,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   if (meal.recipeName != null &&
                       meal.recipeName!.isNotEmpty) ...[
                     _buildSectionHeader(
-                        'Recipe Name', Icons.restaurant_rounded, colorScheme),
+                        AppLocalizations.of(context)!.recipeName, Icons.restaurant_rounded, colorScheme),
                     const SizedBox(height: 8),
                     Text(
                       meal.recipeName!,
@@ -844,18 +851,18 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   ],
                   if (meal.recipe != null && meal.recipe!.isNotEmpty) ...[
                     _buildSectionHeader(
-                        'Instructions', Icons.list_alt_rounded, colorScheme),
+                        AppLocalizations.of(context)!.instructions, Icons.list_alt_rounded, colorScheme),
                     const SizedBox(height: 8),
                     _buildExpandableInstructions(meal.recipe!, colorScheme),
                     const SizedBox(height: 16),
                   ],
-                  _buildSectionHeader('Nutrition Information',
+                  _buildSectionHeader(AppLocalizations.of(context)!.nutritionInformation,
                       Icons.local_fire_department_rounded, colorScheme),
                   const SizedBox(height: 12),
                   _buildNutritionInfo(meal.totalMacros, colorScheme),
                   const SizedBox(height: 16),
                   _buildSectionHeader(
-                      'Ingredients', Icons.eco_rounded, colorScheme),
+                      AppLocalizations.of(context)!.ingredients, Icons.eco_rounded, colorScheme),
                   const SizedBox(height: 12),
                   ...meal.ingredients.map((ingredient) =>
                       _buildIngredientRow(ingredient, colorScheme)),
@@ -939,7 +946,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNutritionItem(
-            'Calories',
+            AppLocalizations.of(context)!.calories,
             '${macros.calories.round()}',
             'kcal',
             Icons.local_fire_department_rounded,
@@ -947,7 +954,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             colorScheme,
           ),
           _buildNutritionItem(
-            'Protein',
+            AppLocalizations.of(context)!.protein,
             '${macros.proteins.toStringAsFixed(1)}',
             'g',
             Icons.fitness_center_rounded,
@@ -955,7 +962,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             colorScheme,
           ),
           _buildNutritionItem(
-            'Carbs',
+            AppLocalizations.of(context)!.carbs,
             '${macros.carbohydrates.toStringAsFixed(1)}',
             'g',
             Icons.grain_rounded,
@@ -963,7 +970,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             colorScheme,
           ),
           _buildNutritionItem(
-            'Fat',
+            AppLocalizations.of(context)!.fat,
             '${macros.fats.toStringAsFixed(1)}',
             'g',
             Icons.opacity_rounded,
@@ -1003,7 +1010,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           '$value $unit',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 13,
             color: colorScheme.onSurface,
           ),
         ),
@@ -1110,7 +1117,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     if (statusString == 'GENERATED') return Colors.blue;
     if (statusString == 'ARCHIVED') return Colors.grey;
     if (statusString == 'FAILED') return Colors.red;
-    if (statusString == 'IN_PROGRESS') return Colors.orange;
+    if (statusString == 'IN_PROGRESS') return Colors.amber;
     if (statusString == 'PENDING') return Colors.amber;
     return colorScheme.primary;
   }
@@ -1125,17 +1132,73 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
     return colorScheme.outline;
   }
 
-  String _formatEnumValue(String enumValue) {
-    return enumValue
-        .split('_')
-        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-        .join(' ');
+  /// Returns localized status string
+  String _getLocalizedStatus(String statusString) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (statusString) {
+      case 'ACTIVE':
+        return localizations.statusActive;
+      case 'GENERATED':
+        return localizations.statusGenerated;
+      case 'ARCHIVED':
+        return localizations.statusArchived;
+      case 'FAILED':
+        return localizations.statusFailed;
+      case 'IN_PROGRESS':
+        return localizations.statusInProgress;
+      case 'PENDING':
+        return localizations.statusPending;
+      default:
+        return localizations.statusUnknown;
+    }
+  }
+
+  /// Returns localized validation status string
+  String _getLocalizedValidation(String validationString) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (validationString) {
+      case 'VALIDATED':
+        return localizations.validationValidated;
+      case 'PENDING_REVIEW':
+        return localizations.validationPendingReview;
+      case 'REJECTED':
+        return localizations.validationRejected;
+      case 'NOT_VALIDATED':
+      default:
+        return localizations.validationNotValidated;
+    }
+  }
+
+  /// Checks if the given localized day name corresponds to today
+  bool _isToday(String localizedDayName) {
+    final localizations = AppLocalizations.of(context)!;
+    final englishDay = DateFormat('EEEE').format(DateTime.now());
+    
+    // Map English day names to localized ones
+    switch (englishDay) {
+      case 'Monday':
+        return localizedDayName == localizations.monday;
+      case 'Tuesday':
+        return localizedDayName == localizations.tuesday;
+      case 'Wednesday':
+        return localizedDayName == localizations.wednesday;
+      case 'Thursday':
+        return localizedDayName == localizations.thursday;
+      case 'Friday':
+        return localizedDayName == localizations.friday;
+      case 'Saturday':
+        return localizedDayName == localizations.saturday;
+      case 'Sunday':
+        return localizedDayName == localizations.sunday;
+      default:
+        return false;
+    }
   }
 
   /// Safely parses error details JSON to extract user-friendly error message
   String _parseErrorMessage(String? errorDetails) {
     if (errorDetails == null || errorDetails.isEmpty) {
-      return 'Please try again later';
+      return AppLocalizations.of(context)!.pleaseRetryLater;
     }
 
     try {
@@ -1145,7 +1208,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
       // Get the errorMessage field
       final errorMessage = outerJson['errorMessage'];
       if (errorMessage == null) {
-        return 'Please try again later';
+        return AppLocalizations.of(context)!.pleaseRetryLater;
       }
 
       // Parse the inner JSON (errorMessage is a JSON string)
@@ -1160,15 +1223,15 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
             lowerMessage.contains('overload') ||
             lowerMessage.contains('too many requests') ||
             lowerMessage.contains('rate limit')) {
-          return 'The model is overloaded. Please request a new meal plan later.';
+          return AppLocalizations.of(context)!.modelOverloadedMessage;
         }
         return message;
       }
 
-      return 'Please try again later';
+      return AppLocalizations.of(context)!.pleaseRetryLater;
     } catch (e) {
       // If any parsing fails, return fallback message
-      return 'Please try again later';
+      return AppLocalizations.of(context)!.pleaseRetryLater;
     }
   }
 
@@ -1200,6 +1263,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         ],
       ),
       child: FloatingActionButton.extended(
+        heroTag: "read_meal_plan_chat_button", // Unique hero tag
         onPressed: _openChat,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -1208,7 +1272,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           color: colorScheme.onPrimary,
         ),
         label: Text(
-          'Chat with Nutritionist',
+          AppLocalizations.of(context)!.chatWithNutritionist,
           style: TextStyle(
             color: colorScheme.onPrimary,
             fontWeight: FontWeight.w600,
@@ -1287,7 +1351,7 @@ class _ExpandableInstructionsState extends State<ExpandableInstructions> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      _isExpanded ? 'Show less' : 'Read more',
+                      _isExpanded ? AppLocalizations.of(context)!.showLess : AppLocalizations.of(context)!.readMore,
                       style: TextStyle(
                         color: widget.colorScheme.primary,
                         fontWeight: FontWeight.w500,
