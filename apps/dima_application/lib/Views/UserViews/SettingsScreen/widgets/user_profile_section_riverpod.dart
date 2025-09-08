@@ -3,6 +3,7 @@ import 'package:dima_application/Utils/gender_type_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 import '../../../../providers/cognito_profile_provider.dart';
 
@@ -149,7 +150,7 @@ class _UserProfileSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Profile updated successfully!'),
+                  Text(AppLocalizations.of(context)!.profileUpdatedSuccessfully),
                 ],
               ),
               backgroundColor: Colors.green.shade600,
@@ -173,7 +174,7 @@ class _UserProfileSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Failed to update profile. Please try again.'),
+                  Text(AppLocalizations.of(context)!.failedToUpdateProfile),
                 ],
               ),
               backgroundColor: Colors.red.shade600,
@@ -200,7 +201,7 @@ class _UserProfileSectionRiverpodState
                       color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
-                Text('Error updating profile: $e'),
+                Text('${AppLocalizations.of(context)!.errorUpdatingProfile}: $e'),
               ],
             ),
             backgroundColor: Colors.red.shade600,
@@ -226,6 +227,7 @@ class _UserProfileSectionRiverpodState
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -275,7 +277,7 @@ class _UserProfileSectionRiverpodState
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'User Profile',
+                    AppLocalizations.of(context)!.userProfile,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
@@ -292,7 +294,7 @@ class _UserProfileSectionRiverpodState
                       border: Border.all(color: Colors.orange.shade300),
                     ),
                     child: Text(
-                      'Unsaved',
+                      AppLocalizations.of(context)!.unsaved,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: Colors.orange.shade800,
                         fontWeight: FontWeight.w500,
@@ -307,43 +309,37 @@ class _UserProfileSectionRiverpodState
               key: _formKey,
               child: Column(
                 children: [
-                  // Given Name & Family Name Row
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildTextField(
-                          key: const ValueKey('given_name_field'),
-                          controller: _givenNameController,
-                          label: 'Given Name',
-                          icon: Icons.person_outline_rounded,
-                          readOnly: true,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Given Name is required';
-                            }
-                            return null;
-                          },
-                          colorScheme: colorScheme,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildTextField(
-                          key: const ValueKey('family_name_field'),
-                          controller: _familyNameController,
-                          label: 'Family Name',
-                          icon: Icons.person_outline_rounded,
-                          readOnly: true,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Family Name is required';
-                            }
-                            return null;
-                          },
-                          colorScheme: colorScheme,
-                        ),
-                      ),
-                    ],
+                  // Given Name
+                  _buildTextField(
+                    key: const ValueKey('given_name_field'),
+                    controller: _givenNameController,
+                    label: AppLocalizations.of(context)!.givenName,
+                    icon: Icons.person_outline_rounded,
+                    readOnly: true,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return AppLocalizations.of(context)!.givenNameRequired;
+                      }
+                      return null;
+                    },
+                    colorScheme: colorScheme,
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Family Name
+                  _buildTextField(
+                    key: const ValueKey('family_name_field'),
+                    controller: _familyNameController,
+                    label: AppLocalizations.of(context)!.familyName,
+                    icon: Icons.person_outline_rounded,
+                    readOnly: true,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return AppLocalizations.of(context)!.familyNameRequired;
+                      }
+                      return null;
+                    },
+                    colorScheme: colorScheme,
                   ),
                   // Helper text for readonly fields
                   Padding(
@@ -358,7 +354,7 @@ class _UserProfileSectionRiverpodState
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            'Name fields are managed by your authentication provider and cannot be changed here.',
+                            AppLocalizations.of(context)!.nameFieldsReadOnly,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: colorScheme.onSurfaceVariant,
                               fontSize: 12,
@@ -373,12 +369,12 @@ class _UserProfileSectionRiverpodState
                   // Gender
                   _buildDropdownField<String>(
                     value: _selectedGender,
-                    label: 'Gender',
+                    label: AppLocalizations.of(context)!.gender,
                     icon: Icons.wc_rounded,
-                    items: const [
-                      DropdownMenuItem(value: 'male', child: Text('Male')),
-                      DropdownMenuItem(value: 'female', child: Text('Female')),
-                      DropdownMenuItem(value: 'other', child: Text('Other')),
+                    items: [
+                      DropdownMenuItem(value: 'male', child: Text(AppLocalizations.of(context)!.male)),
+                      DropdownMenuItem(value: 'female', child: Text(AppLocalizations.of(context)!.female)),
+                      DropdownMenuItem(value: 'other', child: Text(AppLocalizations.of(context)!.other)),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -396,7 +392,7 @@ class _UserProfileSectionRiverpodState
                     borderRadius: BorderRadius.circular(12),
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: 'Birthdate',
+                        labelText: AppLocalizations.of(context)!.birthdate,
                         prefixIcon: const Icon(Icons.cake_rounded, size: 20),
                         suffixIcon:
                             const Icon(Icons.calendar_today_rounded, size: 20),
@@ -421,8 +417,8 @@ class _UserProfileSectionRiverpodState
                       ),
                       child: Text(
                         _selectedDate != null
-                            ? DateFormat('MMM dd, yyyy').format(_selectedDate!)
-                            : 'Select date',
+                            ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
+                            : AppLocalizations.of(context)!.selectDate,
                         style: TextStyle(
                           color: _selectedDate != null
                               ? colorScheme.onSurface
@@ -452,7 +448,7 @@ class _UserProfileSectionRiverpodState
                               )
                             : const Icon(Icons.save_rounded, size: 20),
                         label: Text(
-                          _isLoading ? 'Saving...' : 'Save Changes',
+                          _isLoading ? AppLocalizations.of(context)!.saving : AppLocalizations.of(context)!.saveChanges,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: _isDirty

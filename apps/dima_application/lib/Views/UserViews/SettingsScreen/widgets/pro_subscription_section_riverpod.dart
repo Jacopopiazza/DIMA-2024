@@ -1,6 +1,7 @@
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 class ProSubscriptionSectionRiverpod extends ConsumerStatefulWidget {
   final SubscriptionStatusEnum? subscriptionStatus;
@@ -77,7 +78,7 @@ class _ProSubscriptionSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Successfully subscribed to PRO!'),
+                  Text(AppLocalizations.of(context)!.successfullySubscribedToPro),
                 ],
               ),
               backgroundColor: Colors.green.shade600,
@@ -101,7 +102,7 @@ class _ProSubscriptionSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Failed to subscribe. Please try again.'),
+                  Text(AppLocalizations.of(context)!.failedToSubscribe),
                 ],
               ),
               backgroundColor: Colors.red.shade600,
@@ -128,7 +129,7 @@ class _ProSubscriptionSectionRiverpodState
                       color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
-                Text('Error subscribing: $e'),
+                Text('${AppLocalizations.of(context)!.errorSubscribing}: $e'),
               ],
             ),
             backgroundColor: Colors.red.shade600,
@@ -178,7 +179,7 @@ class _ProSubscriptionSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Successfully unsubscribed to FREE!'),
+                  Text(AppLocalizations.of(context)!.successfullyUnsubscribedToFree),
                 ],
               ),
               backgroundColor: Colors.orange.shade600,
@@ -202,7 +203,7 @@ class _ProSubscriptionSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Failed to unsubscribe. Please try again.'),
+                  Text(AppLocalizations.of(context)!.failedToUnsubscribe),
                 ],
               ),
               backgroundColor: Colors.red.shade600,
@@ -229,7 +230,7 @@ class _ProSubscriptionSectionRiverpodState
                       color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
-                Text('Error unsubscribing: $e'),
+                Text('${AppLocalizations.of(context)!.errorUnsubscribing}: $e'),
               ],
             ),
             backgroundColor: Colors.red.shade600,
@@ -299,7 +300,7 @@ class _ProSubscriptionSectionRiverpodState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'PRO Plan',
+                        AppLocalizations.of(context)!.proPlan,
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: isPro
@@ -309,8 +310,8 @@ class _ProSubscriptionSectionRiverpodState
                       ),
                       Text(
                         isPro
-                            ? 'Active subscription'
-                            : 'Upgrade to unlock premium features',
+                            ? AppLocalizations.of(context)!.activeSubscription
+                            : AppLocalizations.of(context)!.upgradeToUnlockPremiumFeatures,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -346,7 +347,7 @@ class _ProSubscriptionSectionRiverpodState
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Current Status: ${_capitalizeFirst(status.name)}',
+                    AppLocalizations.of(context)!.currentStatus(_capitalizeFirst(status.name)),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isPro
                           ? Colors.green.shade800
@@ -382,8 +383,8 @@ class _ProSubscriptionSectionRiverpodState
                       const SizedBox(width: 8),
                       Text(
                         isPro
-                            ? 'You have access to:'
-                            : 'Unlock premium features:',
+                            ? AppLocalizations.of(context)!.youHaveAccessTo
+                            : AppLocalizations.of(context)!.unlockPremiumFeatures,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: isPro
@@ -395,9 +396,9 @@ class _ProSubscriptionSectionRiverpodState
                   ),
                   const SizedBox(height: 12),
                   _buildFeatureItem(theme, colorScheme,
-                      "Expert meal planning validation", isPro),
+                      AppLocalizations.of(context)!.expertMealPlanningValidation, isPro),
                   _buildFeatureItem(theme, colorScheme,
-                      "Personal nutritionist chat in-app", isPro),
+                      AppLocalizations.of(context)!.personalNutritionistChatInApp, isPro),
                 ],
               ),
             ),
@@ -422,7 +423,7 @@ class _ProSubscriptionSectionRiverpodState
                                 Icons.remove_circle_outline_rounded,
                                 size: 20),
                             label: Text(
-                              'Unsubscribe from PRO',
+                              AppLocalizations.of(context)!.unsubscribeFromPro,
                               style: theme.textTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: colorScheme.onSecondary,
@@ -442,7 +443,7 @@ class _ProSubscriptionSectionRiverpodState
                             onPressed: _subscribe,
                             icon: const Icon(Icons.upgrade_rounded, size: 20),
                             label: Text(
-                              'Subscribe to PRO',
+                              AppLocalizations.of(context)!.subscribeToPro,
                               style: theme.textTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: colorScheme.onSecondary,

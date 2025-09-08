@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../providers/user_details_provider.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 class PasswordChangeFormRiverpod extends ConsumerStatefulWidget {
   final Future<bool> Function(String oldPassword, String newPassword)
@@ -84,7 +85,7 @@ class _ModernPasswordChangeFormRiverpodState
 
   String _getPasswordStrength(String password) {
     if (password.isEmpty) return '';
-    if (password.length < 8) return 'Too short';
+    if (password.length < 8) return AppLocalizations.of(context)!.tooShort;
 
     int score = 0;
     if (password.contains(RegExp(r'[a-z]'))) score++;
@@ -92,25 +93,23 @@ class _ModernPasswordChangeFormRiverpodState
     if (password.contains(RegExp(r'[0-9]'))) score++;
     if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) score++;
 
-    if (score <= 1) return 'Weak';
-    if (score <= 2) return 'Fair';
-    if (score <= 3) return 'Good';
-    return 'Strong';
+    if (score <= 1) return AppLocalizations.of(context)!.weak;
+    if (score <= 2) return AppLocalizations.of(context)!.fair;
+    if (score <= 3) return AppLocalizations.of(context)!.good;
+    return AppLocalizations.of(context)!.strong;
   }
 
   Color _getPasswordStrengthColor(String strength) {
-    switch (strength) {
-      case 'Weak':
-        return Colors.red;
-      case 'Fair':
-        return Colors.orange;
-      case 'Good':
-        return Colors.blue;
-      case 'Strong':
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
+    final weak = AppLocalizations.of(context)!.weak;
+    final fair = AppLocalizations.of(context)!.fair;
+    final good = AppLocalizations.of(context)!.good;
+    final strong = AppLocalizations.of(context)!.strong;
+    
+    if (strength == weak) return Colors.red;
+    if (strength == fair) return Colors.orange;
+    if (strength == good) return Colors.blue;
+    if (strength == strong) return Colors.green;
+    return Colors.grey;
   }
 
   Future<void> _handleSubmit() async {
@@ -141,7 +140,7 @@ class _ModernPasswordChangeFormRiverpodState
                       color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
-                const Text('Password changed successfully'),
+                Text(AppLocalizations.of(context)!.passwordChangedSuccessfully),
               ],
             ),
             backgroundColor: Colors.green.shade600,
@@ -171,7 +170,7 @@ class _ModernPasswordChangeFormRiverpodState
                       color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
-                const Text('Failed to change password'),
+                Text(AppLocalizations.of(context)!.failedToChangePassword),
               ],
             ),
             backgroundColor: Colors.red.shade600,
@@ -231,14 +230,14 @@ class _ModernPasswordChangeFormRiverpodState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Change Password',
+                          AppLocalizations.of(context)!.changePassword,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: colorScheme.onSurface,
                           ),
                         ),
                         Text(
-                          'Update your account password',
+                          AppLocalizations.of(context)!.updateYourAccountPassword,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -276,7 +275,7 @@ class _ModernPasswordChangeFormRiverpodState
                           controller: _oldPasswordController,
                           obscureText: _obscureOldPassword,
                           decoration: InputDecoration(
-                            labelText: 'Current Password',
+                            labelText: AppLocalizations.of(context)!.currentPassword,
                             prefixIcon: const Icon(Icons.lock_outline_rounded,
                                 size: 20),
                             suffixIcon: IconButton(
@@ -300,7 +299,7 @@ class _ModernPasswordChangeFormRiverpodState
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your current password';
+                              return AppLocalizations.of(context)!.pleaseEnterCurrentPassword;
                             }
                             return null;
                           },
@@ -313,7 +312,7 @@ class _ModernPasswordChangeFormRiverpodState
                           obscureText: _obscureNewPassword,
                           onChanged: (value) => setState(() {}),
                           decoration: InputDecoration(
-                            labelText: 'New Password',
+                            labelText: AppLocalizations.of(context)!.newPassword,
                             prefixIcon:
                                 const Icon(Icons.lock_reset_rounded, size: 20),
                             suffixIcon: IconButton(
@@ -337,13 +336,13 @@ class _ModernPasswordChangeFormRiverpodState
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter a new password';
+                              return AppLocalizations.of(context)!.pleaseEnterNewPassword;
                             }
                             if (value.length < 8) {
-                              return 'Password must be at least 8 characters';
+                              return AppLocalizations.of(context)!.passwordMustBeAtLeast8Characters;
                             }
                             if (!_validatePassword(value)) {
-                              return 'Password must contain uppercase, lowercase, and numbers';
+                              return AppLocalizations.of(context)!.passwordMustContainUppercase;
                             }
                             return null;
                           },
@@ -381,7 +380,7 @@ class _ModernPasswordChangeFormRiverpodState
                           controller: _confirmPasswordController,
                           obscureText: _obscureConfirmPassword,
                           decoration: InputDecoration(
-                            labelText: 'Confirm New Password',
+                            labelText: AppLocalizations.of(context)!.confirmNewPassword,
                             prefixIcon: const Icon(Icons.lock_outline_rounded,
                                 size: 20),
                             suffixIcon: IconButton(
@@ -406,10 +405,10 @@ class _ModernPasswordChangeFormRiverpodState
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please confirm your new password';
+                              return AppLocalizations.of(context)!.pleaseConfirmNewPassword;
                             }
                             if (value != _newPasswordController.text) {
-                              return 'Passwords do not match';
+                              return AppLocalizations.of(context)!.passwordsDoNotMatch;
                             }
                             return null;
                           },
@@ -430,25 +429,25 @@ class _ModernPasswordChangeFormRiverpodState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Password Requirements:',
+                                AppLocalizations.of(context)!.passwordRequirements,
                                 style: theme.textTheme.labelMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.primary,
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              _buildRequirement('At least 8 characters',
+                              _buildRequirement(AppLocalizations.of(context)!.atLeast8Characters,
                                   _newPasswordController.text.length >= 8),
                               _buildRequirement(
-                                  'Uppercase letter (A-Z)',
+                                  AppLocalizations.of(context)!.uppercaseLetter,
                                   _newPasswordController.text
                                       .contains(RegExp(r'[A-Z]'))),
                               _buildRequirement(
-                                  'Lowercase letter (a-z)',
+                                  AppLocalizations.of(context)!.lowercaseLetter,
                                   _newPasswordController.text
                                       .contains(RegExp(r'[a-z]'))),
                               _buildRequirement(
-                                  'Number (0-9)',
+                                  AppLocalizations.of(context)!.number,
                                   _newPasswordController.text
                                       .contains(RegExp(r'[0-9]'))),
                             ],
@@ -472,8 +471,8 @@ class _ModernPasswordChangeFormRiverpodState
                               : const Icon(Icons.save_rounded, size: 20),
                           label: Text(
                             _isLoading
-                                ? 'Changing Password...'
-                                : 'Change Password',
+                                ? AppLocalizations.of(context)!.changingPassword
+                                : AppLocalizations.of(context)!.changePasswordButton,
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSecondary,

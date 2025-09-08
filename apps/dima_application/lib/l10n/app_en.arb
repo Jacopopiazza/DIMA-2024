@@ -472,7 +472,108 @@
   "@retryAction": {
     "description": "Button text to retry an action"
   },
+  "loadingSettings": "Loading settings...",
+  "unableToLoadSettings": "Unable to load settings",
+  "notSignedIn": "Not signed in",
+  "pleaseSignInToAccessSettings": "Please sign in to access your settings",
   "signIn": "Sign In",
+  "accountSettings": "Account Settings",
+  "manageYourProfilePreferencesAndSecurity": "Manage your profile, preferences, and account security settings.",
+  "loadingSubscription": "Loading subscription...",
+  "loadingProfile": "Loading profile...",
+  "profileUnavailable": "Profile Unavailable",
+  "personalDataCurrentlyUnavailable": "Personal data are currently unavailable. Please try refreshing or check back later.",
+  "preferencesUnavailable": "Preferences Unavailable",
+  "preferencesDataCurrentlyUnavailable": "Your preferences and settings data are currently unavailable. Please try refreshing or check back later.",
+  "subscriptionStatusUnavailable": "Subscription Status Unavailable",
+  "subscriptionStatusCurrentlyUnavailable": "Your subscription status is currently unavailable. Please try refreshing or check back later.",
+  "userProfile": "User Profile",
+  "unsaved": "Unsaved",
+  "givenName": "Given Name",
+  "familyName": "Family Name",
+  "givenNameRequired": "Given Name is required",
+  "familyNameRequired": "Family Name is required",
+  "nameFieldsReadOnly": "Name fields are managed by your authentication provider and cannot be changed here.",
+  "gender": "Gender",
+  "male": "Male",
+  "female": "Female",
+  "other": "Other",
+  "birthdate": "Birthdate",
+  "selectDate": "Select date",
+  "saving": "Saving...",
+  "profileUpdatedSuccessfully": "Profile updated successfully!",
+  "failedToUpdateProfile": "Failed to update profile. Please try again.",
+  "errorUpdatingProfile": "Error updating profile",
+  "generationPreferences": "Generation Preferences",
+  "weightAllowed": "Allowed: 30–300 kg",
+  "weightMustBeBetween": "Weight must be between 30 and 300 kg",
+  "heightAllowed": "Allowed: 50–250 cm",
+  "heightMustBeBetween": "Height must be between 50 and 250 cm",
+  "onceAWeek": "Once a week",
+  "twiceAWeek": "Twice a week",
+  "anySpecificDietaryRestriction": "Any specific dietary restriction",
+  "dietaryPreferences": "Dietary preferences",
+  "anySpecificDietaryPreference": "Any specific dietary preference or notes",
+  "weightIsRequired": "Weight is required",
+  "heightIsRequired": "Height is required",
+  "pleaseEnterValidWeight": "Please enter a valid weight",
+  "pleaseEnterValidHeight": "Please enter a valid height",
+  "profileUpdatedSuccessfullyShort": "Profile updated successfully",
+  "failedToUpdateProfileShort": "Failed to update profile",
+  "changePassword": "Change Password",
+  "updateYourAccountPassword": "Update your account password",
+  "currentPassword": "Current Password",
+  "pleaseEnterCurrentPassword": "Please enter your current password",
+  "newPassword": "New Password",
+  "pleaseEnterNewPassword": "Please enter a new password",
+  "passwordMustBeAtLeast8Characters": "Password must be at least 8 characters",
+  "passwordMustContainUppercase": "Password must contain uppercase, lowercase, and numbers",
+  "confirmNewPassword": "Confirm New Password",
+  "pleaseConfirmNewPassword": "Please confirm your new password",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "passwordRequirements": "Password Requirements:",
+  "atLeast8Characters": "At least 8 characters",
+  "uppercaseLetter": "Uppercase letter (A-Z)",
+  "lowercaseLetter": "Lowercase letter (a-z)",
+  "number": "Number (0-9)",
+  "changingPassword": "Changing Password...",
+  "changePasswordButton": "Change Password",
+  "passwordChangedSuccessfully": "Password changed successfully",
+  "failedToChangePassword": "Failed to change password",
+  "tooShort": "Too short",
+  "weak": "Weak",
+  "fair": "Fair",
+  "good": "Good",
+  "strong": "Strong",
+  "proPlan": "PRO Plan",
+  "activeSubscription": "Active subscription",
+  "upgradeToUnlockPremiumFeatures": "Upgrade to unlock premium features",
+  "currentStatus": "Current Status: {status}",
+  "youHaveAccessTo": "You have access to:",
+  "personalNutritionistChatInApp": "Personal nutritionist chat in-app",
+  "unsubscribeFromPro": "Unsubscribe from PRO",
+  "successfullySubscribedToPro": "Successfully subscribed to PRO!",
+  "failedToSubscribe": "Failed to subscribe. Please try again.",
+  "errorSubscribing": "Error subscribing",
+  "successfullyUnsubscribedToFree": "Successfully unsubscribed to FREE!",
+  "failedToUnsubscribe": "Failed to unsubscribe. Please try again.",
+  "errorUnsubscribing": "Error unsubscribing",
+  "quickActions": "Quick Actions",
+  "refreshData": "Refresh Data",
+  "clearCacheAndReload": "Clear cache and reload your information",
+  "signOut": "Sign Out",
+  "signOutOfYourAccount": "Sign out of your account",
+  "dataRefreshedSuccessfully": "Data refreshed successfully",
+  "areYouSureSignOut": "Are you sure you want to sign out of your account?",
+  "dangerZone": "Danger Zone",
+  "irreversibleAndDestructiveActions": "Irreversible and destructive actions",
+  "criticalWarning": "Critical Warning",
+  "actionsArePermanent": "The actions below are permanent and cannot be undone. All your data, including meal plans, preferences, and account information will be permanently deleted.",
+  "deletingAccount": "Deleting Account...",
+  "deleteMyAccount": "Delete My Account",
+  "thisActionWillPermanentlyDelete": "This action will permanently delete your account and all associated data. This cannot be undone.",
+  "allYourMealPlansWillBeRemoved": "All your meal plans, preferences, and personal data will be permanently removed.",
+  "failedToDeleteAccount": "Failed to delete account",
   "@signIn": {
     "description": "Label of the button to sign in the user."
   },
@@ -492,7 +593,6 @@
   "@submit": {
     "description": "Label of button to submit a form"
   },
-  "changePassword": "Change Password",
   "@changePassword": {
     "description": "Label of button to change a password"
   },
@@ -532,7 +632,6 @@
   "@copyKey": {
     "description": "Label of button to copy a value."
   },
-  "signOut": "Sign Out",
   "@signOut": {
     "description": "Label of button to sign out the user"
   },
@@ -1550,7 +1649,6 @@
   "@password": {
     "description": "User's chosen password."
   },
-  "newPassword": "New Password",
   "@newPassword": {
     "description": "User's chosen new password."
   },
@@ -1573,12 +1671,10 @@
   "@address": {
     "description": "User's preferred postal address."
   },
-  "birthdate": "Birthdate",
   "@birthdate": {
     "description": "User's birthday, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.",
     "example": "1990-01-01"
   },
-  "familyName": "Family Name",
   "@familyName": {
     "description": "Surname(s) or last name(s) of the user."
   },
@@ -1586,7 +1682,6 @@
   "@middleName": {
     "description": "Middle name(s) of the user."
   },
-  "gender": "Gender",
   "@gender": {
     "description": "User's gender.",
     "example": "male"
@@ -1601,7 +1696,6 @@
       }
     }
   },
-  "givenName": "Given Name",
   "@givenName": {
     "description": "Given name(s) or first name(s) of the user."
   },
@@ -1720,7 +1814,6 @@
       }
     }
   },
-  "passwordsDoNotMatch": "Passwords do not match.",
   "@passwordsDoNotMatch": {
     "description": "Message for conflicting password and confirm password fields."
   },

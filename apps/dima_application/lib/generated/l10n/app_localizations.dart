@@ -1895,11 +1895,617 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get retryAction;
 
+  /// No description provided for @loadingSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading settings...'**
+  String get loadingSettings;
+
+  /// No description provided for @unableToLoadSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load settings'**
+  String get unableToLoadSettings;
+
+  /// No description provided for @notSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Not signed in'**
+  String get notSignedIn;
+
+  /// No description provided for @pleaseSignInToAccessSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in to access your settings'**
+  String get pleaseSignInToAccessSettings;
+
   /// Label of the button to sign in the user.
   ///
   /// In en, this message translates to:
   /// **'Sign In'**
   String get signIn;
+
+  /// No description provided for @accountSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Settings'**
+  String get accountSettings;
+
+  /// No description provided for @manageYourProfilePreferencesAndSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your profile, preferences, and account security settings.'**
+  String get manageYourProfilePreferencesAndSecurity;
+
+  /// No description provided for @loadingSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading subscription...'**
+  String get loadingSubscription;
+
+  /// No description provided for @loadingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading profile...'**
+  String get loadingProfile;
+
+  /// No description provided for @profileUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Unavailable'**
+  String get profileUnavailable;
+
+  /// No description provided for @personalDataCurrentlyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal data are currently unavailable. Please try refreshing or check back later.'**
+  String get personalDataCurrentlyUnavailable;
+
+  /// No description provided for @preferencesUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences Unavailable'**
+  String get preferencesUnavailable;
+
+  /// No description provided for @preferencesDataCurrentlyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Your preferences and settings data are currently unavailable. Please try refreshing or check back later.'**
+  String get preferencesDataCurrentlyUnavailable;
+
+  /// No description provided for @subscriptionStatusUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription Status Unavailable'**
+  String get subscriptionStatusUnavailable;
+
+  /// No description provided for @subscriptionStatusCurrentlyUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Your subscription status is currently unavailable. Please try refreshing or check back later.'**
+  String get subscriptionStatusCurrentlyUnavailable;
+
+  /// No description provided for @userProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'User Profile'**
+  String get userProfile;
+
+  /// No description provided for @unsaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved'**
+  String get unsaved;
+
+  /// Given name(s) or first name(s) of the user.
+  ///
+  /// In en, this message translates to:
+  /// **'Given Name'**
+  String get givenName;
+
+  /// Surname(s) or last name(s) of the user.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Name'**
+  String get familyName;
+
+  /// No description provided for @givenNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Given Name is required'**
+  String get givenNameRequired;
+
+  /// No description provided for @familyNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Name is required'**
+  String get familyNameRequired;
+
+  /// No description provided for @nameFieldsReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Name fields are managed by your authentication provider and cannot be changed here.'**
+  String get nameFieldsReadOnly;
+
+  /// User's gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// User's birthday, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdate'**
+  String get birthdate;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get selectDate;
+
+  /// No description provided for @saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get saving;
+
+  /// No description provided for @profileUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully!'**
+  String get profileUpdatedSuccessfully;
+
+  /// No description provided for @failedToUpdateProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile. Please try again.'**
+  String get failedToUpdateProfile;
+
+  /// No description provided for @errorUpdatingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating profile'**
+  String get errorUpdatingProfile;
+
+  /// No description provided for @generationPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Generation Preferences'**
+  String get generationPreferences;
+
+  /// No description provided for @weightAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed: 30–300 kg'**
+  String get weightAllowed;
+
+  /// No description provided for @weightMustBeBetween.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight must be between 30 and 300 kg'**
+  String get weightMustBeBetween;
+
+  /// No description provided for @heightAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed: 50–250 cm'**
+  String get heightAllowed;
+
+  /// No description provided for @heightMustBeBetween.
+  ///
+  /// In en, this message translates to:
+  /// **'Height must be between 50 and 250 cm'**
+  String get heightMustBeBetween;
+
+  /// No description provided for @onceAWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a week'**
+  String get onceAWeek;
+
+  /// No description provided for @twiceAWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Twice a week'**
+  String get twiceAWeek;
+
+  /// No description provided for @anySpecificDietaryRestriction.
+  ///
+  /// In en, this message translates to:
+  /// **'Any specific dietary restriction'**
+  String get anySpecificDietaryRestriction;
+
+  /// No description provided for @dietaryPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary preferences'**
+  String get dietaryPreferences;
+
+  /// No description provided for @anySpecificDietaryPreference.
+  ///
+  /// In en, this message translates to:
+  /// **'Any specific dietary preference or notes'**
+  String get anySpecificDietaryPreference;
+
+  /// No description provided for @weightIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight is required'**
+  String get weightIsRequired;
+
+  /// No description provided for @heightIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Height is required'**
+  String get heightIsRequired;
+
+  /// No description provided for @pleaseEnterValidWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid weight'**
+  String get pleaseEnterValidWeight;
+
+  /// No description provided for @pleaseEnterValidHeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid height'**
+  String get pleaseEnterValidHeight;
+
+  /// No description provided for @profileUpdatedSuccessfullyShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccessfullyShort;
+
+  /// No description provided for @failedToUpdateProfileShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile'**
+  String get failedToUpdateProfileShort;
+
+  /// Label of button to change a password
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @updateYourAccountPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your account password'**
+  String get updateYourAccountPassword;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @pleaseEnterCurrentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your current password'**
+  String get pleaseEnterCurrentPassword;
+
+  /// User's chosen new password.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @pleaseEnterNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a new password'**
+  String get pleaseEnterNewPassword;
+
+  /// No description provided for @passwordMustBeAtLeast8Characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get passwordMustBeAtLeast8Characters;
+
+  /// No description provided for @passwordMustContainUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain uppercase, lowercase, and numbers'**
+  String get passwordMustContainUppercase;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm New Password'**
+  String get confirmNewPassword;
+
+  /// No description provided for @pleaseConfirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your new password'**
+  String get pleaseConfirmNewPassword;
+
+  /// Message for conflicting password and confirm password fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @passwordRequirements.
+  ///
+  /// In en, this message translates to:
+  /// **'Password Requirements:'**
+  String get passwordRequirements;
+
+  /// No description provided for @atLeast8Characters.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters'**
+  String get atLeast8Characters;
+
+  /// No description provided for @uppercaseLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'Uppercase letter (A-Z)'**
+  String get uppercaseLetter;
+
+  /// No description provided for @lowercaseLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowercase letter (a-z)'**
+  String get lowercaseLetter;
+
+  /// No description provided for @number.
+  ///
+  /// In en, this message translates to:
+  /// **'Number (0-9)'**
+  String get number;
+
+  /// No description provided for @changingPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing Password...'**
+  String get changingPassword;
+
+  /// No description provided for @changePasswordButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePasswordButton;
+
+  /// No description provided for @passwordChangedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully'**
+  String get passwordChangedSuccessfully;
+
+  /// No description provided for @failedToChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to change password'**
+  String get failedToChangePassword;
+
+  /// No description provided for @tooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Too short'**
+  String get tooShort;
+
+  /// No description provided for @weak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get weak;
+
+  /// No description provided for @fair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get fair;
+
+  /// No description provided for @good.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get good;
+
+  /// No description provided for @strong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get strong;
+
+  /// No description provided for @proPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'PRO Plan'**
+  String get proPlan;
+
+  /// No description provided for @activeSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Active subscription'**
+  String get activeSubscription;
+
+  /// No description provided for @upgradeToUnlockPremiumFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to unlock premium features'**
+  String get upgradeToUnlockPremiumFeatures;
+
+  /// No description provided for @currentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Status: {status}'**
+  String currentStatus(Object status);
+
+  /// No description provided for @youHaveAccessTo.
+  ///
+  /// In en, this message translates to:
+  /// **'You have access to:'**
+  String get youHaveAccessTo;
+
+  /// No description provided for @personalNutritionistChatInApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal nutritionist chat in-app'**
+  String get personalNutritionistChatInApp;
+
+  /// No description provided for @unsubscribeFromPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsubscribe from PRO'**
+  String get unsubscribeFromPro;
+
+  /// No description provided for @successfullySubscribedToPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully subscribed to PRO!'**
+  String get successfullySubscribedToPro;
+
+  /// No description provided for @failedToSubscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to subscribe. Please try again.'**
+  String get failedToSubscribe;
+
+  /// No description provided for @errorSubscribing.
+  ///
+  /// In en, this message translates to:
+  /// **'Error subscribing'**
+  String get errorSubscribing;
+
+  /// No description provided for @successfullyUnsubscribedToFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully unsubscribed to FREE!'**
+  String get successfullyUnsubscribedToFree;
+
+  /// No description provided for @failedToUnsubscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to unsubscribe. Please try again.'**
+  String get failedToUnsubscribe;
+
+  /// No description provided for @errorUnsubscribing.
+  ///
+  /// In en, this message translates to:
+  /// **'Error unsubscribing'**
+  String get errorUnsubscribing;
+
+  /// No description provided for @quickActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get quickActions;
+
+  /// No description provided for @refreshData.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Data'**
+  String get refreshData;
+
+  /// No description provided for @clearCacheAndReload.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear cache and reload your information'**
+  String get clearCacheAndReload;
+
+  /// Label of button to sign out the user
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get signOut;
+
+  /// No description provided for @signOutOfYourAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of your account'**
+  String get signOutOfYourAccount;
+
+  /// No description provided for @dataRefreshedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Data refreshed successfully'**
+  String get dataRefreshedSuccessfully;
+
+  /// No description provided for @areYouSureSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out of your account?'**
+  String get areYouSureSignOut;
+
+  /// No description provided for @dangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger Zone'**
+  String get dangerZone;
+
+  /// No description provided for @irreversibleAndDestructiveActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Irreversible and destructive actions'**
+  String get irreversibleAndDestructiveActions;
+
+  /// No description provided for @criticalWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Warning'**
+  String get criticalWarning;
+
+  /// No description provided for @actionsArePermanent.
+  ///
+  /// In en, this message translates to:
+  /// **'The actions below are permanent and cannot be undone. All your data, including meal plans, preferences, and account information will be permanently deleted.'**
+  String get actionsArePermanent;
+
+  /// No description provided for @deletingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting Account...'**
+  String get deletingAccount;
+
+  /// No description provided for @deleteMyAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete My Account'**
+  String get deleteMyAccount;
+
+  /// No description provided for @thisActionWillPermanentlyDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'This action will permanently delete your account and all associated data. This cannot be undone.'**
+  String get thisActionWillPermanentlyDelete;
+
+  /// No description provided for @allYourMealPlansWillBeRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'All your meal plans, preferences, and personal data will be permanently removed.'**
+  String get allYourMealPlansWillBeRemoved;
+
+  /// No description provided for @failedToDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete account'**
+  String get failedToDeleteAccount;
 
   /// Label of the button to sign up the user.
   ///
@@ -1924,12 +2530,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get submit;
-
-  /// Label of button to change a password
-  ///
-  /// In en, this message translates to:
-  /// **'Change Password'**
-  String get changePassword;
 
   /// Label of button to send a verification code to the user's device
   ///
@@ -1984,12 +2584,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy Key'**
   String get copyKey;
-
-  /// Label of button to sign out the user
-  ///
-  /// In en, this message translates to:
-  /// **'Sign Out'**
-  String get signOut;
 
   /// Label of button to return to the previous step
   ///
@@ -3491,12 +4085,6 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get password;
 
-  /// User's chosen new password.
-  ///
-  /// In en, this message translates to:
-  /// **'New Password'**
-  String get newPassword;
-
   /// User's preferred e-mail address.
   ///
   /// In en, this message translates to:
@@ -3521,41 +4109,17 @@ abstract class AppLocalizations {
   /// **'Address'**
   String get address;
 
-  /// User's birthday, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format.
-  ///
-  /// In en, this message translates to:
-  /// **'Birthdate'**
-  String get birthdate;
-
-  /// Surname(s) or last name(s) of the user.
-  ///
-  /// In en, this message translates to:
-  /// **'Family Name'**
-  String get familyName;
-
   /// Middle name(s) of the user.
   ///
   /// In en, this message translates to:
   /// **'Middle Name'**
   String get middleName;
 
-  /// User's gender.
-  ///
-  /// In en, this message translates to:
-  /// **'Gender'**
-  String get gender;
-
   /// No description provided for @genders.
   ///
   /// In en, this message translates to:
   /// **'{gender, select, male{male} female{female} other{other}}'**
   String genders(String gender);
-
-  /// Given name(s) or first name(s) of the user.
-  ///
-  /// In en, this message translates to:
-  /// **'Given Name'**
-  String get givenName;
 
   /// User's full name in displayable form including all name parts, possibly including titles and suffixes, ordered according to the user's locale and preferences.
   ///
@@ -3634,12 +4198,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'at least {numCharacters, plural, =1{1{characterType} character} other{{numCharacters}{characterType} characters}}'**
   String passwordRequirementsAtLeast(int numCharacters, String characterType);
-
-  /// Message for conflicting password and confirm password fields.
-  ///
-  /// In en, this message translates to:
-  /// **'Passwords do not match.'**
-  String get passwordsDoNotMatch;
 
   /// Label for the checkbox to remember the user's device in Cognito.
   ///
