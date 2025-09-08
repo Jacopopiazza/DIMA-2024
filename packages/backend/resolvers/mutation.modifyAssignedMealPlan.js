@@ -23,7 +23,13 @@ export function request(ctx) {
     util.error('userId is required');
   }
 
-  if (!input || (!input.planName && !input.dailyPlan && !input.ingredients && !input.totalMacros)) {
+  if (
+    !input ||
+    (!input.planName &&
+      !input.dailyPlan &&
+      !input.ingredients &&
+      !input.totalMacros)
+  ) {
     util.error(
       'At least one of planName, dailyPlan, ingredients, or totalMacros must be provided in input',
     );

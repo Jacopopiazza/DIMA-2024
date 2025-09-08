@@ -267,15 +267,12 @@ export class AppSyncApiStack extends cdk.Stack {
       },
     );
 
+    // --- Resolver for Mutation.markMealAsCompleted ---
     tableDS.createResolver('MutationMarkMealAsCompletedResolver', {
       typeName: 'Mutation',
       fieldName: 'markMealAsCompleted',
-      requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'templates/mutation.markMealAsCompleted-request.vtl',
-      ), // Ensure this file exists and has the Set logic
-      responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'templates/mutation.markMealAsCompleted-response.vtl',
-      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('resolvers/mutation.markMealAsCompleted.js'),
     });
 
     // --- Add Resolver for Unmark Meal ---
@@ -283,12 +280,18 @@ export class AppSyncApiStack extends cdk.Stack {
       // New Resolver definition
       typeName: 'Mutation',
       fieldName: 'unmarkMealAsCompleted', // New field name from updated schema
-      requestMappingTemplate: appsync.MappingTemplate.fromFile(
-        'templates/mutation.unmarkMealAsCompleted-request.vtl',
-      ), // New VTL file
-      responseMappingTemplate: appsync.MappingTemplate.fromFile(
-        'templates/mutation.unmarkMealAsCompleted-response.vtl',
-      ), // New VTL file
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset(
+        'resolvers/mutation.unmarkMealAsCompleted.js',
+      ),
+    });
+
+    // --- Resolver for Query.getPlanDayCompletion
+    tableDS.createResolver('QueryGetPlanDayCompletionResolver', {
+      typeName: 'Query',
+      fieldName: 'getPlanDayCompletion',
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+      code: appsync.Code.fromAsset('resolvers/query.getPlanDayCompletion.js'),
     });
 
     // --- Resolver for Mutation.createMealPlan ---
