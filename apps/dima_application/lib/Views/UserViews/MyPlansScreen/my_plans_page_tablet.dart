@@ -454,25 +454,109 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
 
   Widget _buildErrorState(BuildContext context, String error) {
     final l10n = AppLocalizations.of(context)!;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline,
-                size: 64, color: Theme.of(context).colorScheme.error),
-            const SizedBox(height: 12),
-            Text(l10n.failedToLoadMealPlan + (': ' + error)),
-            const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () {
-                ref.read(mealPlansProvider.notifier).listMyMealPlans();
-              },
-              child: Text(l10n.retry),
-            )
-          ],
-        ),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    // Check if this looks like a network error
+    final isNetworkError = error.toLowerCase().contains('network') ||
+        error.toLowerCase().contains('connection') ||
+        error.toLowerCase().contains('timeout') ||
+        error.toLowerCase().contains('socket') ||
+        error.toLowerCase().contains('unreachable') ||
+        error.contains('SocketException') ||
+        error.contains('HttpException');
+
+    return RefreshIndicator(
+      onRefresh: _refreshPlans,
+      backgroundColor: colorScheme.surface,
+      color: colorScheme.primary,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: isNetworkError
+                              ? Colors.orange.shade100
+                              : colorScheme.errorContainer,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(
+                          isNetworkError
+                              ? Icons.wifi_off_rounded
+                              : Icons.error_outline_rounded,
+                          size: 48,
+                          color: isNetworkError
+                              ? Colors.orange.shade700
+                              : colorScheme.onErrorContainer,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        isNetworkError
+                            ? l10n.connectionProblem
+                            : l10n.somethingWentWrong,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        isNetworkError
+                            ? l10n.unableToLoadPlansWithConnection
+                            : l10n.unableToLoadPlans,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          height: 1.4,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.pullDownToRefresh,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FilledButton.icon(
+                            onPressed: _refreshPlans,
+                            icon: const Icon(Icons.refresh_rounded),
+                            label: Text(l10n.tryAgain),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: isNetworkError
+                                  ? Colors.orange.shade600
+                                  : null,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
