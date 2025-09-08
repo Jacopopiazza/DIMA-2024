@@ -1,8 +1,15 @@
 import 'dart:convert';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 
 class ClientDetailsService {
+  final AmplifyGraphQL _amplifyGraphQL;
+
+  ClientDetailsService({AmplifyGraphQL? amplifyGraphQL})
+      : _amplifyGraphQL = amplifyGraphQL ?? AmplifyGraphQL();
+
   /// Get client details for nutritionist using the getClientDetails GraphQL query
   /// This query is restricted to nutritionists only via AWS Cognito groups
   Future<UserDetails?> getClientDetails(String userId) async {
@@ -34,7 +41,7 @@ class ClientDetailsService {
         decodePath: 'getClientDetails',
       );
 
-      final response = await Amplify.API.query(request: request).response;
+      final response = await _amplifyGraphQL.query(request: request).response;
 
       if (response.hasErrors) {
         safePrint(
@@ -47,7 +54,7 @@ class ClientDetailsService {
         return null;
       }
 
-      final Map<String, dynamic> clientData = Map<String, dynamic>.from(
+      final Map<String, dynamic>? clientData = Map<String, dynamic>.from(
           json.decode(response.data!))['getClientDetails'];
 
       if (clientData == null) {

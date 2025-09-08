@@ -834,7 +834,7 @@ class MealPlansService {
         },
         decodePath: 'modifyAssignedMealPlan',
       );
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
 
       // Enhanced debugging
       safePrint(
@@ -1045,7 +1045,7 @@ class MealPlansService {
         'mealPlanId': mealPlanId,
         'validationStatus': validationStatus.name,
       }}');
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint('[MealPlansService] GraphQL errors: ${response.errors}');
         return null;

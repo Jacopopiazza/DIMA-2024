@@ -118,7 +118,7 @@ class TodayPageState {
             .add_Hms()
             .format(planLastFetched!.toLocal()) // Display in local time
         : 'N/A';
-    return 'TodayPageState(status: $status, isInitial: $isInitialLoad, todaysMeals: $mealsInfo, completion: $completionInfo, consumed: ${consumedMacros.calories.round()} kCal, lastFetched: $lastFetchedInfo, error: $errorMessage)';
+    return 'TodayPageState(status: $status, isInitial: $isInitialLoad, mealPlanId: $mealPlanId, todaysMeals: $mealsInfo, completion: $completionInfo, consumed: ${consumedMacros.calories.round()} kCal, lastFetched: $lastFetchedInfo, error: $errorMessage)';
   }
 }
 
@@ -131,6 +131,7 @@ final todayPageProvider =
 
   // Watch for changes in the active meal plan ID specifically
   ref.listen(activeMealPlanIdProvider, (previous, next) {
+    if (!notifier.mounted) return;
     safePrint(
         "[TodayPageProvider] Active plan ID listener triggered: $previous -> $next (loading: ${notifier.state.status == DataStatus.loading})");
     if (previous != next && notifier.state.status != DataStatus.loading) {
@@ -142,6 +143,7 @@ final todayPageProvider =
 
   // ADDITIONAL: Watch for meal plans list changes to catch deletions
   ref.listen(mealPlansProvider, (previous, next) {
+    if (!notifier.mounted) return;
     // Only trigger if we currently have an active plan loaded
     if (notifier.state.mealPlanId != null &&
         notifier.state.status != DataStatus.loading) {
@@ -763,12 +765,13 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
   /// This can be called when the active meal plan changes
   Future<void> refreshTodayData() async {
     safePrint("[TodayPageNotifier] Refreshing data due to external trigger...");
+    if (!mounted) return;
     await _loadUserPlanAndData(forceRefresh: true);
   }
 
   @override
   void dispose() {
-    safePrint("[TodayPageNotifier] Disposed");
+    if (!mounted) return;
     super.dispose();
   }
 }

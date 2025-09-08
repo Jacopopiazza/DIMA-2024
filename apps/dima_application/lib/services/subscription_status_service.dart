@@ -1,9 +1,15 @@
 import 'dart:convert';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 
 class SubscriptionStatusService {
+  final AmplifyGraphQL _amplifyGraphQL;
+
+  SubscriptionStatusService({AmplifyGraphQL? amplifyGraphQL})
+      : _amplifyGraphQL = amplifyGraphQL ?? AmplifyGraphQL();
+
   Future<UserSubscriptionStatus> getSubscriptionStatus() async {
     try {
       safePrint(
@@ -18,7 +24,7 @@ class SubscriptionStatusService {
       }
       ''', decodePath: "getUserSubscriptionStatus");
 
-      final response = await Amplify.API.query(request: request).response;
+      final response = await _amplifyGraphQL.query(request: request).response;
       if (response.hasErrors) {
         safePrint(
             '[SubscriptionStatusService] GraphQL errors: ${response.errors}');
@@ -60,7 +66,7 @@ class SubscriptionStatusService {
         decodePath: 'setUserSubscriptionStatus',
       );
 
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       if (response.hasErrors) {
         safePrint(
             '[SubscriptionStatusService] GraphQL errors: ${response.errors}');

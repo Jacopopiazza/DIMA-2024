@@ -1,10 +1,15 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 
 class NutritionistProfileService {
+  final AmplifyGraphQL _amplifyGraphQL;
+
+  NutritionistProfileService({AmplifyGraphQL? amplifyGraphQL})
+      : _amplifyGraphQL = amplifyGraphQL ?? AmplifyGraphQL();
+
   /// Get the authenticated nutritionist's profile
   Future<NutritionistProfile?> getMyProfile() async {
     try {
@@ -26,7 +31,7 @@ class NutritionistProfileService {
         decodePath: 'getMyNutritionistProfile',
       );
 
-      final response = await Amplify.API.query(request: request).response;
+      final response = await _amplifyGraphQL.query(request: request).response;
 
       if (response.hasErrors) {
         safePrint(
@@ -85,7 +90,7 @@ class NutritionistProfileService {
         decodePath: 'updateMyNutritionistProfile',
       );
 
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
 
       if (response.hasErrors) {
         safePrint(

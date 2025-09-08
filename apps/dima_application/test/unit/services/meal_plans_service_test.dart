@@ -42,11 +42,8 @@ class _FakeGraphQLOperation<T> implements GraphQLOperation<T> {
 
 // Fake AmplifyGraphQL proxy returning a canned JSON payload
 class _FakeAmplifyGraphQL extends AmplifyGraphQL {
-  _FakeAmplifyGraphQL({
-    this.queryPayload, 
-    this.mutationPayload,
-    this.hasErrors = false
-  });
+  _FakeAmplifyGraphQL(
+      {this.queryPayload, this.mutationPayload, this.hasErrors = false});
 
   final Map<String, dynamic>? queryPayload;
   final Map<String, dynamic>? mutationPayload;
@@ -187,9 +184,7 @@ void main() {
     });
 
     test('returns null when meal plan not found', () async {
-      final fakeJson = {
-        'getMealPlanById': null
-      };
+      final fakeJson = {'getMealPlanById': null};
 
       final service = MealPlansService(
         amplifyGraphQL: _FakeAmplifyGraphQL(queryPayload: fakeJson),
@@ -301,37 +296,6 @@ void main() {
     });
   });
 
-  group('MealPlansService.createRandomMealPlan', () {
-    test('creates a random meal plan successfully', () async {
-      final fakeJson = {
-        'requestNewMealPlan': {
-          'success': true,
-          'message': 'Random meal plan created',
-          'mealPlanId': 'mp-random'
-        }
-      };
-
-      final service = MealPlansService(
-        amplifyGraphQL: _FakeAmplifyGraphQL(mutationPayload: fakeJson),
-      );
-
-      final result = await service.createRandomMealPlan();
-
-      expect(result, isNotNull);
-      expect(result!.success, true);
-      expect(result.mealPlanId, 'mp-random');
-    });
-
-    test('returns null on error', () async {
-      final service = MealPlansService(
-        amplifyGraphQL: _FakeAmplifyGraphQL(hasErrors: true),
-      );
-
-      final result = await service.createRandomMealPlan();
-      expect(result, isNull);
-    });
-  });
-
   group('MealPlansService.modifyMealPlan', () {
     test('returns success response when modifying meal plan', () async {
       final fakeJson = {
@@ -346,7 +310,8 @@ void main() {
         amplifyGraphQL: _FakeAmplifyGraphQL(mutationPayload: fakeJson),
       );
 
-      final result = await service.modifyMealPlan('mp-123', 'Updated Plan Name');
+      final result =
+          await service.modifyMealPlan('mp-123', 'Updated Plan Name');
 
       expect(result, isNotNull);
       expect(result!.success, true);

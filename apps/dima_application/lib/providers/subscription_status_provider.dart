@@ -52,6 +52,9 @@ class SubscriptionStatusNotifier
 
   @override
   void dispose() {
+    if (!_mounted) {
+      return;
+    }
     _mounted = false;
     super.dispose();
   }

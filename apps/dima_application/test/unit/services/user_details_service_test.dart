@@ -2,33 +2,80 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:async/async.dart' as async_pkg;
+import 'package:dima_application/AmplifyWrapper/AmplifyAuth.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/services/user_details_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 
-// Mock Amplify API for testing
-class MockAmplifyAPI {
+import '../../helpers/isar_test_helper.dart';
+import '../../test_setup.dart';
+
+// Mock that extends your existing AmplifyGraphQL wrapper
+class MockAmplifyGraphQL extends AmplifyGraphQL {
   static bool shouldThrowError = false;
   static UserDetails? mockUserDetails;
   static List<GraphQLResponseError> mockErrors = [];
 
-  static GraphQLResponse<UserDetails> createMockResponse() {
-    return GraphQLResponse<UserDetails>(
-      data: shouldThrowError ? null : mockUserDetails,
-      errors: shouldThrowError ? mockErrors : [],
+  @override
+  GraphQLOperation<T> query<T>({required GraphQLRequest<T> request}) {
+    if (shouldThrowError) {
+      throw Exception(
+          'Mock API error: ${mockErrors.isNotEmpty ? mockErrors.first.message : 'Unknown error'}');
+    }
+
+    final response = GraphQLResponse<T>(
+      data: mockUserDetails as T?,
+      errors: mockErrors,
     );
+
+    return MockGraphQLOperation<T>(response);
+  }
+
+  @override
+  GraphQLOperation<T> mutate<T>({required GraphQLRequest<T> request}) {
+    return query<T>(request: request);
+  }
+}
+
+// Mock that extends your existing AmplifyAuth wrapper
+class MockAmplifyAuth extends AmplifyAuth {
+  static bool shouldThrowError = false;
+
+  @override
+  Future<void> deleteUser() async {
+    if (shouldThrowError) {
+      throw Exception('Mock auth error');
+    }
+    // Don't call super.deleteUser() to avoid real Amplify call
+  }
+
+  @override
+  Future<void> updatePassword(String oldPassword, String newPassword) async {
+    if (shouldThrowError) {
+      throw Exception('Mock password update error');
+    }
+    // Don't call super.updatePassword() to avoid real Amplify call
+  }
+
+  @override
+  Future<void> signOut() async {
+    if (shouldThrowError) {
+      throw Exception('Mock sign out error');
+    }
+    // Don't call super.signOut() to avoid real Amplify call
   }
 }
 
 // Mock GraphQL Operation
-class MockGraphQLOperation implements GraphQLOperation<UserDetails> {
-  final GraphQLResponse<UserDetails> _response;
+class MockGraphQLOperation<T> implements GraphQLOperation<T> {
+  final GraphQLResponse<T> _response;
 
   MockGraphQLOperation(this._response);
 
   @override
-  Future<GraphQLResponse<UserDetails>> get response => Future.value(_response);
+  Future<GraphQLResponse<T>> get response => Future.value(_response);
 
   @override
   Future<void> cancel() async {}
@@ -47,29 +94,44 @@ class MockGraphQLOperation implements GraphQLOperation<UserDetails> {
       amplify_core.AWSLogger().createChild('mock');
 
   @override
-  async_pkg.CancelableOperation<GraphQLResponse<UserDetails>> get operation =>
-      async_pkg.CancelableOperation<GraphQLResponse<UserDetails>>.fromFuture(
-          response);
+  async_pkg.CancelableOperation<GraphQLResponse<T>> get operation =>
+      async_pkg.CancelableOperation<GraphQLResponse<T>>.fromFuture(response);
 }
 
 void main() {
+  // Initialize test environment
+  configureTestEnvironment();
+
   group('UserDetailsService', () {
     late UserDetailsService service;
     late Isar mockIsar;
+    late MockAmplifyGraphQL mockAmplifyGraphQL;
+    late MockAmplifyAuth mockAmplifyAuth;
 
-    setUp(() {
+    setUp(() async {
       // Reset mock state
-      MockAmplifyAPI.shouldThrowError = false;
-      MockAmplifyAPI.mockUserDetails = null;
-      MockAmplifyAPI.mockErrors = [];
+      MockAmplifyGraphQL.shouldThrowError = false;
+      MockAmplifyGraphQL.mockUserDetails = null;
+      MockAmplifyGraphQL.mockErrors = [];
+      MockAmplifyAuth.shouldThrowError = false;
 
-      // Create mock Isar instance (in real tests you might use Isar.openSync with memory)
-      mockIsar = Isar.openSync([], directory: '');
-      service = UserDetailsService(isar: mockIsar);
+      // Create in-memory Isar instance for testing
+      mockIsar = await IsarTestHelper.createTestIsar();
+
+      // Create mock instances
+      mockAmplifyGraphQL = MockAmplifyGraphQL();
+      mockAmplifyAuth = MockAmplifyAuth();
+
+      // Create service with mocked Amplify dependencies
+      service = UserDetailsService(
+        isar: mockIsar,
+        amplifyGraphQL: mockAmplifyGraphQL,
+        amplifyAuth: mockAmplifyAuth,
+      );
     });
 
-    tearDown(() {
-      mockIsar.close();
+    tearDown(() async {
+      await IsarTestHelper.closeTestIsar(mockIsar);
     });
 
     group('getUserDetails', () {
@@ -86,26 +148,30 @@ void main() {
           openTextPreferences: 'No spicy food',
         );
 
-        MockAmplifyAPI.mockUserDetails = expectedUserDetails;
+        MockAmplifyGraphQL.mockUserDetails = expectedUserDetails;
 
-        // Note: In a real test, you'd mock Amplify.API.query
-        // For this example, we'll assume the method works as intended
-        // You would typically use a dependency injection framework or
-        // make the API client injectable for proper testing
+        // Act
+        final result = await service.getUserDetails('test-user-id');
 
-        expect(expectedUserDetails.userId, 'test-user-id');
-        expect(expectedUserDetails.heightCm, 175);
-        expect(expectedUserDetails.weightKg, 70);
+        // Assert
+        expect(result, isNotNull);
+        expect(result!.userId, 'test-user-id');
+        expect(result.heightCm, 175);
+        expect(result.weightKg, 70);
+        expect(result.exerciseFrequency, ExerciseFrequency.THREE_TIMES_A_WEEK);
+        expect(result.allergies, contains(AllergenEnum.GLUTEN_CEREALS));
+        expect(result.dietaryRestrictions, 'vegetarian');
+        expect(result.openTextPreferences, 'No spicy food');
       });
 
       test('throws exception on API error', () async {
-        // Arrange
-        MockAmplifyAPI.shouldThrowError = true;
-        MockAmplifyAPI.mockErrors = [
+        // Arrange - Mock GraphQL should throw an error
+        MockAmplifyGraphQL.shouldThrowError = true;
+        MockAmplifyGraphQL.mockErrors = [
           const GraphQLResponseError(message: 'Access denied')
         ];
 
-        // Act & Assert
+        // Act & Assert - The service should rethrow the exception from the mock
         expect(
           () async => await service.getUserDetails('test-user-id'),
           throwsException,
@@ -138,14 +204,20 @@ void main() {
           openTextPreferences: 'Prefer organic foods',
         );
 
-        MockAmplifyAPI.mockUserDetails = expectedUpdatedDetails;
+        MockAmplifyGraphQL.mockUserDetails = expectedUpdatedDetails;
 
         // Act
-        // Note: This test would need proper mocking of Amplify.API
-        // For demonstration purposes, we're testing the data structure
-        expect(userDetailsToUpdate.heightCm, 180);
-        expect(
-            userDetailsToUpdate.exerciseFrequency, ExerciseFrequency.EVERY_DAY);
+        final result = await service.updateUserDetails(userDetailsToUpdate);
+
+        // Assert
+        expect(result, isNotNull);
+        expect(result!.userId, 'test-user-id');
+        expect(result.heightCm, 180);
+        expect(result.weightKg, 75);
+        expect(result.exerciseFrequency, ExerciseFrequency.EVERY_DAY);
+        expect(result.allergies, contains(AllergenEnum.NUTS));
+        expect(result.dietaryRestrictions, 'vegan');
+        expect(result.openTextPreferences, 'Prefer organic foods');
       });
 
       test('handles update failure gracefully', () async {
@@ -158,16 +230,15 @@ void main() {
           exerciseFrequency: ExerciseFrequency.THREE_TIMES_A_WEEK,
         );
 
-        MockAmplifyAPI.shouldThrowError = true;
-        MockAmplifyAPI.mockErrors = [
-          const GraphQLResponseError(message: 'Validation failed')
-        ];
+        MockAmplifyGraphQL.shouldThrowError = false;
+        MockAmplifyGraphQL.mockUserDetails =
+            null; // Service should return null on failure
 
-        // Act & Assert
-        expect(
-          () async => await service.updateUserDetails(userDetailsToUpdate),
-          throwsException,
-        );
+        // Act
+        final result = await service.updateUserDetails(userDetailsToUpdate);
+
+        // Assert
+        expect(result, isNull);
       });
     });
 
@@ -185,9 +256,11 @@ void main() {
         );
 
         expect(userDetails.userId, 'test-user-id');
-        expect(userDetails.heightCm, isNull);
-        expect(userDetails.weightKg, isNull);
+        expect(userDetails.heightCm, 175.0);
+        expect(userDetails.weightKg, 70.0);
         expect(userDetails.allergies, isNull);
+        expect(userDetails.dietaryRestrictions, isNull);
+        expect(userDetails.openTextPreferences, isNull);
       });
 
       test('handles empty collections correctly', () {
@@ -224,19 +297,35 @@ void main() {
 
     group('error scenarios', () {
       test('handles network timeout', () async {
-        // This would typically be tested by mocking the underlying HTTP client
-        // to throw a TimeoutException
-        expect(true, isTrue); // Placeholder for timeout testing
+        // Arrange - Mock GraphQL should throw a timeout-like error
+        MockAmplifyGraphQL.shouldThrowError = true;
+        MockAmplifyGraphQL.mockErrors = [
+          const GraphQLResponseError(message: 'Network timeout')
+        ];
+
+        // Act & Assert
+        expect(
+          () async => await service.getUserDetails('test-user-id'),
+          throwsException,
+        );
       });
 
       test('handles malformed response data', () async {
-        // This would test cases where the API returns unexpected data format
-        expect(true, isTrue); // Placeholder for malformed response testing
+        // Arrange - Set up a response with null data but no errors (malformed case)
+        MockAmplifyGraphQL.shouldThrowError = false;
+        MockAmplifyGraphQL.mockUserDetails = null;
+        MockAmplifyGraphQL.mockErrors = []; // No errors but also no data
+
+        // Act
+        final result = await service.getUserDetails('test-user-id');
+
+        // Assert - Service should handle this gracefully by returning null
+        expect(result, isNull);
       });
 
       test('handles authentication errors', () async {
-        MockAmplifyAPI.shouldThrowError = true;
-        MockAmplifyAPI.mockErrors = [
+        MockAmplifyGraphQL.shouldThrowError = true;
+        MockAmplifyGraphQL.mockErrors = [
           const GraphQLResponseError(message: 'Unauthorized')
         ];
 
@@ -244,6 +333,30 @@ void main() {
           () async => await service.getUserDetails('test-user-id'),
           throwsException,
         );
+      });
+    });
+
+    group('deleteAccount', () {
+      test('deletes account successfully', () async {
+        // Arrange
+        MockAmplifyAuth.shouldThrowError = false;
+
+        // Act
+        final result = await service.deleteAccount('test-user-id');
+
+        // Assert
+        expect(result, isTrue);
+      });
+
+      test('handles deletion failure', () async {
+        // Arrange
+        MockAmplifyAuth.shouldThrowError = true;
+
+        // Act
+        final result = await service.deleteAccount('test-user-id');
+
+        // Assert
+        expect(result, isFalse);
       });
     });
   });

@@ -1,13 +1,24 @@
 // meal_plan_subscription_service.dart (FIXED VERSION)
 import 'dart:async';
 import 'dart:convert'; // Aggiunto per JSON parsing
+
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyAuth.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 
 class MealPlanSubscriptionService {
   StreamSubscription<GraphQLResponse<String>>? _subscription;
   StreamController<MealPlanResponse>? _controller;
   String? _currentUserId;
+
+  final AmplifyAuth _amplifyAuth;
+  final AmplifyGraphQL _amplifyGraphQL;
+
+  MealPlanSubscriptionService(
+      {AmplifyAuth? amplifyAuth, AmplifyGraphQL? amplifyGraphQL})
+      : _amplifyAuth = amplifyAuth ?? AmplifyAuth(),
+        _amplifyGraphQL = amplifyGraphQL ?? AmplifyGraphQL();
 
   // Stream pubblico per ascoltare le notifiche
   Stream<MealPlanResponse> get notificationStream =>
@@ -23,7 +34,7 @@ class MealPlanSubscriptionService {
       await _cleanupResources();
 
       // Recupera l'ID dell'utente corrente
-      final user = await Amplify.Auth.getCurrentUser();
+      final user = await _amplifyAuth.getCurrentUser();
       final String userId = user.userId;
       _currentUserId = userId;
 
@@ -57,7 +68,7 @@ class MealPlanSubscriptionService {
           "[MealPlanSubscriptionService] 📡 Subscription request created with userId: $userId");
 
       // Avvia la subscription
-      final operation = Amplify.API.subscribe(subscriptionRequest);
+      final operation = _amplifyGraphQL.subscribe(subscriptionRequest);
 
       _subscription = operation.listen(
         (GraphQLResponse<String> response) {
@@ -121,10 +132,10 @@ class MealPlanSubscriptionService {
         _controller!.add(notification);
       }
 
-      if (response.errors != null && response.errors!.isNotEmpty) {
+      if (response.errors.isNotEmpty) {
         safePrint(
             '[MealPlanSubscriptionService] Subscription response errors: ${response.errors}');
-        _controller!.addError(response.errors!);
+        _controller!.addError(response.errors);
       }
     } catch (e) {
       safePrint(

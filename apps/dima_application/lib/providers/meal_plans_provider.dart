@@ -6,6 +6,11 @@ import 'package:dima_application/models/MealPlanList/meal_plan_list.dart'
 import 'package:dima_application/services/meal_plans_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Provider for the meal plans service
+final mealPlansServiceProvider = Provider<MealPlansService>((ref) {
+  return MealPlansService();
+});
+
 class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
   late final MealPlansService _service;
   String? _cachedActiveMealPlanId;
@@ -13,7 +18,7 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
 
   @override
   FutureOr<List<LightMealPlan>> build() async {
-    _service = MealPlansService();
+    _service = ref.read(mealPlansServiceProvider);
     // Automatically load plans on initialization
     return await listMyMealPlans();
   }

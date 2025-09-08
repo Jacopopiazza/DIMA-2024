@@ -241,6 +241,13 @@ class AppLifecycleNotifier extends StateNotifier<AppLifecycleData>
   @override
   void dispose() {
     print('[AppLifecycleProvider] Disposing app lifecycle observer...');
+    
+    // Check if already disposed to prevent multiple dispose calls
+    if (!mounted) {
+      print('[AppLifecycleProvider] Already disposed, skipping...');
+      return;
+    }
+    
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

@@ -1,11 +1,19 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyAuth.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
 /// Service for handling image uploads to S3
 class ImageUploadService {
+  final AmplifyAuth _amplifyAuth;
+  final AmplifyStorage _amplifyStorage;
+
+  ImageUploadService({AmplifyAuth? amplifyAuth, AmplifyStorage? amplifyStorage})
+      : _amplifyAuth = amplifyAuth ?? AmplifyAuth(),
+        _amplifyStorage = amplifyStorage ?? AmplifyStorage();
   static const String _profilePicturesPrefix = 'profile-pictures/';
   static const int _maxFileSizeBytes = 5 * 1024 * 1024; // 5MB
   static const List<String> _allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
@@ -28,7 +36,7 @@ class ImageUploadService {
       }
 
       // Get current user ID
-      final user = await Amplify.Auth.getCurrentUser();
+      final user = await _amplifyAuth.getCurrentUser();
       final userId = user.userId;
 
       // Generate unique filename
@@ -40,7 +48,7 @@ class ImageUploadService {
       final fileBytes = await imageFile.readAsBytes();
 
       // Upload to S3
-      final uploadResult = await Amplify.Storage.uploadData(
+      final uploadResult = await _amplifyStorage.uploadData(
         data: StorageDataPayload.bytes(
           fileBytes,
           contentType: _getContentType(extension),
@@ -52,13 +60,13 @@ class ImageUploadService {
             'uploaded-by': 'mobile-app',
           },
         ),
-      ).result;
+      );
 
       safePrint(
           'Image uploaded successfully: ${uploadResult.uploadedItem.path}');
 
       // Get the URL for the uploaded file (maximum expiration allowed by AWS)
-      final urlResult = await Amplify.Storage.getUrl(
+      final urlResult = await _amplifyStorage.getUrl(
         path: StoragePath.fromString(s3Key),
         options: const StorageGetUrlOptions(
           pluginOptions: S3GetUrlPluginOptions(
@@ -66,7 +74,7 @@ class ImageUploadService {
             expiresIn: Duration(days: 7), // Maximum allowed by AWS S3
           ),
         ),
-      ).result;
+      );
 
       return urlResult.url.toString();
     } on StorageException catch (e) {
@@ -96,14 +104,14 @@ class ImageUploadService {
       }
 
       // Verify ownership - key should contain current user ID
-      final user = await Amplify.Auth.getCurrentUser();
+      final user = await _amplifyAuth.getCurrentUser();
       final userId = user.userId;
 
       if (!s3Key.contains(userId)) {
         throw Exception('Cannot delete image that doesn\'t belong to you');
       }
 
-      await Amplify.Storage.remove(path: StoragePath.fromString(s3Key)).result;
+      await _amplifyStorage.remove(path: StoragePath.fromString(s3Key));
       safePrint('Image deleted successfully: $s3Key');
     } on StorageException catch (e) {
       safePrint('Storage error deleting image: ${e.message}');
@@ -145,7 +153,7 @@ class ImageUploadService {
       }
 
       // Generate a new presigned URL (maximum expiration allowed by AWS)
-      final urlResult = await Amplify.Storage.getUrl(
+      final urlResult = await _amplifyStorage.getUrl(
         path: StoragePath.fromString(s3Key),
         options: const StorageGetUrlOptions(
           pluginOptions: S3GetUrlPluginOptions(
@@ -153,7 +161,7 @@ class ImageUploadService {
             expiresIn: Duration(days: 7), // Maximum allowed by AWS S3
           ),
         ),
-      ).result;
+      );
 
       return urlResult.url.toString();
     } on StorageException catch (e) {

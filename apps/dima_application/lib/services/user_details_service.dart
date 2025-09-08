@@ -1,14 +1,22 @@
-import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyAuth.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/models/UserDetails/user_details_cache.dart';
 import 'package:isar/isar.dart';
 
 class UserDetailsService {
   final Isar isar;
+  final AmplifyGraphQL _amplifyGraphQL;
+  final AmplifyAuth _amplifyAuth;
   static const Duration _cacheValidityDuration = Duration(hours: 24);
 
-  UserDetailsService({required this.isar});
+  UserDetailsService(
+      {required this.isar,
+      AmplifyGraphQL? amplifyGraphQL,
+      AmplifyAuth? amplifyAuth})
+      : _amplifyGraphQL = amplifyGraphQL ?? AmplifyGraphQL(),
+        _amplifyAuth = amplifyAuth ?? AmplifyAuth();
 
   // Get user details from API
   Future<UserDetails?> getUserDetails(String userId) async {
@@ -36,7 +44,7 @@ class UserDetailsService {
             ModelProvider.instance.getModelTypeByModelName('UserDetails'),
       );
 
-      final response = await Amplify.API.query(request: request).response;
+      final response = await _amplifyGraphQL.query(request: request).response;
       final userDetails = response.data;
       safePrint(
           '[UserDetailsService] Successfully fetched user details: $userDetails');
@@ -84,8 +92,7 @@ class UserDetailsService {
       // if (userDetails.dietaryRestrictions != null)
       //   'dietaryRestrictions': userDetails.dietaryRestrictions,
       if (userDetails.exerciseFrequency != null)
-        'exerciseFrequency':
-            userDetails.exerciseFrequency!.name, // Convert enum to string
+        'exerciseFrequency': userDetails.exerciseFrequency!.name,
       if (userDetails.heightCm != null) 'heightCm': userDetails.heightCm,
       if (userDetails.openTextPreferences != null)
         'openTextPreferences': userDetails.openTextPreferences,
@@ -119,7 +126,7 @@ class UserDetailsService {
             ModelProvider.instance.getModelTypeByModelName('UserDetails'),
       );
 
-      final response = await Amplify.API.mutate(request: request).response;
+      final response = await _amplifyGraphQL.mutate(request: request).response;
       final updatedUserDetails = response.data;
 
       if (response.hasErrors) {
@@ -152,7 +159,7 @@ class UserDetailsService {
   Future<bool> deleteAccount(String userId) async {
     safePrint('[UserDetailsService] Deleting account for userId: $userId');
     try {
-      await Amplify.Auth.deleteUser();
+      await _amplifyAuth.deleteUser();
       safePrint('Delete user succeeded');
       return true;
     } catch (e) {
@@ -165,10 +172,7 @@ class UserDetailsService {
   Future<bool> changePassword(String oldPassword, String newPassword) async {
     safePrint('[UserDetailsService] Changing password for user');
     try {
-      await Amplify.Auth.updatePassword(
-        oldPassword: oldPassword,
-        newPassword: newPassword,
-      );
+      await _amplifyAuth.updatePassword(oldPassword, newPassword);
       return true;
     } catch (e) {
       safePrint('[UserDetailsService] Error changing password: $e');
@@ -180,7 +184,7 @@ class UserDetailsService {
   Future<void> signOut(String userId) async {
     safePrint('[UserDetailsService] Signing out for userId: $userId');
     try {
-      await Amplify.Auth.signOut();
+      await _amplifyAuth.signOut();
       await clearCache(userId);
     } catch (e) {
       safePrint('[UserDetailsService] Error signing out: $e');

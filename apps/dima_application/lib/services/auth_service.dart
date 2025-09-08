@@ -1,11 +1,17 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyAuth.dart';
 
 class AuthService {
-  static Future<String?> getCurrentUserId() async {
+  final AmplifyAuth _amplifyAuth;
+
+  AuthService({AmplifyAuth? amplifyAuth})
+      : _amplifyAuth = amplifyAuth ?? AmplifyAuth();
+
+  Future<String?> getCurrentUserIdInstance() async {
     try {
-      final authSession = await Amplify.Auth.fetchAuthSession();
+      final authSession = await _amplifyAuth.fetchAuthSession();
       if (authSession.isSignedIn) {
-        final user = await Amplify.Auth.getCurrentUser();
+        final user = await _amplifyAuth.getCurrentUser();
         return user.userId;
       }
       return null;
@@ -13,5 +19,9 @@ class AuthService {
       safePrint('Error getting current user: $e');
       return null;
     }
+  }
+
+  static Future<String?> getCurrentUserId() {
+    return AuthService().getCurrentUserIdInstance();
   }
 }

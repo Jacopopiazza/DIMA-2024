@@ -7,20 +7,25 @@ import 'package:dima_application/models/UserDetails/user_details_cache.dart';
 import 'package:dima_application/services/api_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
+import '../../helpers/isar_test_helper.dart';
+import '../../test_setup.dart';
 
 void main() {
+  // Initialize test environment
+  configureTestEnvironment();
+
   group('ApiService', () {
     late ApiService apiService;
     late Isar mockIsar;
 
-    setUp(() {
-      // Create mock Isar instance (in real tests you might use Isar.openSync with memory)
-      mockIsar = Isar.openSync([], directory: '');
+    setUp(() async {
+      // Create in-memory Isar instance for testing
+      mockIsar = await IsarTestHelper.createTestIsar();
       apiService = ApiService(mockIsar);
     });
 
-    tearDown(() {
-      mockIsar.close();
+    tearDown(() async {
+      await IsarTestHelper.closeTestIsar(mockIsar);
     });
 
     group('Service initialization', () {

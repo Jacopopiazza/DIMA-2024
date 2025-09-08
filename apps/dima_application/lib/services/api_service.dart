@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io'; // Import for SocketException
 
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 // Make sure ModelProvider is correctly generated and imported
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 // Import domain/Amplify models
@@ -10,7 +11,6 @@ import 'package:dima_application/models/MealPlan/meal_plan.dart';
 // Import Isar cache models
 import 'package:dima_application/models/UserDetails/user_details_cache.dart'; // Isar model
 // Import input models
-import 'package:dima_application/models/input/update_user_details_input.dart';
 // Import Isar provider
 import 'package:dima_application/providers/isar_provider.dart'; // Adjust path if needed
 // Import MealPlansService
@@ -98,6 +98,7 @@ final apiServiceProvider = Provider<ApiService>((ref) {
 class ApiService {
   final Isar _isar;
   static const Duration _cacheValidityDuration = Duration(hours: 24);
+  final AmplifyGraphQL _amplifyGraphQL = AmplifyGraphQL();
 
   ApiService(this._isar);
 
@@ -113,7 +114,7 @@ class ApiService {
       safePrint(
           "[APIService] NETWORK: Attempting to fetch user details from AppSync...");
       // --- TODO: Replace with actual Amplify GraphQL Query ---
-      final operation = Amplify.API.query(
+      final operation = _amplifyGraphQL.query(
         request: GraphQLRequest<UserDetails>(
           document: '''
             query GetMyUserDetails {

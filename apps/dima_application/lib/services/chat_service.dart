@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyAuth.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/models/Chat/chat_messages_response.dart';
 import 'package:dima_application/models/Chat/chat_response.dart';
 import 'package:dima_application/models/Chat/send_message_input.dart';
@@ -11,6 +13,9 @@ class ChatService {
   static ChatService get instance => _instance ??= ChatService._internal();
 
   ChatService._internal();
+
+  final AmplifyAuth _amplifyAuth = AmplifyAuth();
+  final AmplifyGraphQL _amplifyGraphQL = AmplifyGraphQL();
 
   StreamSubscription<GraphQLResponse<String>>? _subscription;
   StreamController<ChatResponse>? _messageController;
@@ -35,7 +40,7 @@ class ChatService {
 
       await _cleanupResources();
 
-      final user = await Amplify.Auth.getCurrentUser();
+      final user = await _amplifyAuth.getCurrentUser();
       _currentUserId = user.userId;
 
       _messageController = StreamController<ChatResponse>.broadcast();
@@ -69,7 +74,7 @@ class ChatService {
 
       safePrint('[ChatService] Subscription request created');
 
-      final operation = Amplify.API.subscribe(subscriptionRequest);
+      final operation = _amplifyGraphQL.subscribe(subscriptionRequest);
 
       _subscription = operation.listen(
         (GraphQLResponse<String> response) {
@@ -273,7 +278,7 @@ class ChatService {
       print(
           "[ChatService] Requesting chat messages with variables: chatId=$chatId, beforeTimestamp=$beforeTimestamp, limit=$limit");
 
-      final operation = Amplify.API.query(
+      final operation = _amplifyGraphQL.query(
         request: GraphQLRequest<String>(
           document: queryDocument,
           variables: {
@@ -338,7 +343,7 @@ class ChatService {
 
       print("[ChatService] Mutation input: ${input.toJson()}");
 
-      final operation = Amplify.API.mutate(
+      final operation = _amplifyGraphQL.mutate(
         request: GraphQLRequest<String>(
           document: mutationDocument,
           variables: {

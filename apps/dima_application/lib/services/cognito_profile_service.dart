@@ -1,12 +1,18 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/AmplifyWrapper/AmplifyAuth.dart';
 
 /// Service for updating Cognito user attributes
 /// This service handles direct updates to Cognito user pool attributes
 class CognitoProfileService {
+  final AmplifyAuth _amplifyAuth;
+
+  CognitoProfileService({AmplifyAuth? amplifyAuth})
+      : _amplifyAuth = amplifyAuth ?? AmplifyAuth();
+
   /// Get current user profile attributes
   Future<Map<String, String>> getUserProfileAttributes() async {
     try {
-      final attributes = await Amplify.Auth.fetchUserAttributes();
+      final attributes = await _amplifyAuth.fetchUserAttributes();
       final profileAttributes = <String, String>{};
 
       for (final attr in attributes) {
@@ -81,9 +87,7 @@ class CognitoProfileService {
       safePrint(
           '[CognitoProfileService] Updating attributes: ${attributes.keys.join(', ')}');
 
-      await Amplify.Auth.updateUserAttributes(
-        attributes: cognitoAttributes,
-      );
+      await _amplifyAuth.updateUserAttributes(cognitoAttributes);
 
       safePrint(
           '[CognitoProfileService] Successfully updated profile attributes');

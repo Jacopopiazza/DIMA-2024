@@ -90,6 +90,8 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
 
   /// Handle incoming meal plan responses
   void _handleMealPlanResponse(MealPlanResponse response) {
+    if (!mounted) return;
+    
     final notification = MealPlanNotification.fromMealPlanResponse(response);
 
     // Add notification to the list
@@ -111,16 +113,20 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
 
   /// Mark all notifications as read
   void markAllAsRead() {
+    if (!mounted) return;
     state = state.copyWith(hasUnreadNotifications: false);
   }
 
   /// Clear all notifications
   void clearNotifications() {
+    if (!mounted) return;
     state = const NotificationState();
   }
 
   /// Restart the notification system (useful when user changes)
   Future<void> restart() async {
+    if (!mounted) return;
+    
     safePrint(
         '[MealPlanNotificationNotifier] Restarting notification system...');
 
@@ -151,8 +157,6 @@ class MealPlanNotificationNotifier extends StateNotifier<NotificationState> {
         '[MealPlanNotificationNotifier] Disposing notification provider...');
     _notificationSubscription?.cancel();
     _subscriptionService.dispose();
-    // Clear all notifications on disposal
-    state = const NotificationState();
     super.dispose();
     safePrint('[MealPlanNotificationNotifier] Notification provider disposed');
   }
