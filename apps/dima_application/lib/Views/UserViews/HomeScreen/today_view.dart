@@ -361,11 +361,11 @@ class TodayPage extends ConsumerWidget {
   // --- Keep Existing Helper Methods ---
   /// Meal image URL mappings
   static const Map<MealNameEnum, String> _mealImages = {
-    MealNameEnum.BREAKFAST: 'assets/colazione.jpg',
+    MealNameEnum.BREAKFAST: 'assets/colazione.png',
     MealNameEnum.LUNCH: 'assets/pranzo.jpg',
     MealNameEnum.DINNER: 'assets/cena.png',
     MealNameEnum.SNACK_AFTERNOON: 'assets/snack-pomeridiano.png',
-    MealNameEnum.SNACK_MORNING: 'assets/snack-mattino.jpg',
+    MealNameEnum.SNACK_MORNING: 'assets/snack-mattino.png',
     MealNameEnum.SNACK_EVENING: 'assets/snack-serale.png',
   };
 

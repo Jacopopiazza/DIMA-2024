@@ -383,7 +383,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
     const baseUrl = 'assets/';
     switch (meal) {
       case MealNameEnum.BREAKFAST:
-        return '${baseUrl}colazione.jpg';
+        return '${baseUrl}colazione.png';
       case MealNameEnum.LUNCH:
         return '${baseUrl}pranzo.jpg';
       case MealNameEnum.DINNER:
@@ -391,7 +391,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
       case MealNameEnum.SNACK_AFTERNOON:
         return '${baseUrl}snack-pomeridiano.png';
       case MealNameEnum.SNACK_MORNING:
-        return '${baseUrl}snack-mattino.jpg';
+        return '${baseUrl}snack-mattino.png';
       case MealNameEnum.SNACK_EVENING:
         return '${baseUrl}snack-serale.png';
     }
