@@ -1895,6 +1895,30 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get retryAction;
 
+  /// No description provided for @mealPlanReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Plan Ready!'**
+  String get mealPlanReady;
+
+  /// No description provided for @generationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Generation Failed'**
+  String get generationFailed;
+
+  /// No description provided for @mealPlanReadyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your meal plan has been successfully generated.'**
+  String get mealPlanReadyDescription;
+
+  /// No description provided for @generationFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'There was an error generating your meal plan. Please try again later.'**
+  String get generationFailedDescription;
+
   /// No description provided for @loadingSettings.
   ///
   /// In en, this message translates to:

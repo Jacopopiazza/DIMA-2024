@@ -1,5 +1,9 @@
 {
   "@@locale": "it",
+  "mealPlanReady": "Piano Alimentare Pronto!",
+  "generationFailed": "Generazione Fallita",
+  "mealPlanReadyDescription": "Il tuo piano alimentare è pronto!",
+  "generationFailedDescription": "C'è stato un errore nella generazione del tuo piano alimentare. Riprova più tardi.",
   "loadingSettings": "Caricamento impostazioni...",
   "somethingWentWrong": "Qualcosa è andato storto",
   "unableToLoadSettings": "Impossibile caricare le impostazioni",

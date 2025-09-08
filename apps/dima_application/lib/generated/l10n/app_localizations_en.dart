@@ -929,6 +929,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retryAction => 'Retry';
 
   @override
+  String get mealPlanReady => 'Meal Plan Ready!';
+
+  @override
+  String get generationFailed => 'Generation Failed';
+
+  @override
+  String get mealPlanReadyDescription => 'Your meal plan has been successfully generated.';
+
+  @override
+  String get generationFailedDescription => 'There was an error generating your meal plan. Please try again later.';
+
+  @override
   String get loadingSettings => 'Loading settings...';
 
   @override

@@ -472,6 +472,10 @@
   "@retryAction": {
     "description": "Button text to retry an action"
   },
+  "mealPlanReady": "Meal Plan Ready!",
+  "generationFailed": "Generation Failed",
+  "mealPlanReadyDescription": "Your meal plan has been successfully generated.",
+  "generationFailedDescription": "There was an error generating your meal plan. Please try again later.",
   "loadingSettings": "Loading settings...",
   "unableToLoadSettings": "Unable to load settings",
   "notSignedIn": "Not signed in",
