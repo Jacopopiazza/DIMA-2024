@@ -193,7 +193,10 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
       backgroundColor: colorScheme.surface,
       body: Stack(
         children: [
-          plansAsync.when(
+          // Wrap content with SafeArea when showing back button to avoid dynamic island overlap
+          widget.showBackButton
+              ? SafeArea(
+                  child: plansAsync.when(
             data: (plans) {
               final activePlanId = ref.watch(activeMealPlanIdProvider);
               String? resolvedActivePlanId = activePlanId;
@@ -252,7 +255,47 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
             ),
             error: (e, st) =>
                 _buildErrorState(context, e.toString(), colorScheme, theme),
-          ),
+          ))
+              : plansAsync.when(
+                  data: (plans) {
+                    final activePlanId = ref.watch(activeMealPlanIdProvider);
+                    String? resolvedActivePlanId = activePlanId;
+                    if (resolvedActivePlanId == null && plans.isNotEmpty) {
+                      final activeByStatus = plans
+                          .where((p) => p.status == PlanStatus.ACTIVE)
+                          .firstOrNull;
+                      resolvedActivePlanId = activeByStatus?.mealPlanId;
+                    }
+
+                    // Avvolgiamo TUTTO con RefreshIndicator, anche l'empty state
+                    return RefreshIndicator(
+                      onRefresh: _refreshPlans,
+                      backgroundColor: colorScheme.surface,
+                      color: colorScheme.primary,
+                      child: plans.isEmpty
+                          ? _buildEmptyState(context, colorScheme)
+                          : ListView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              itemCount: plans.length,
+                              itemBuilder: (context, index) {
+                                final plan = plans[index];
+                                final isActive =
+                                    plan.mealPlanId == resolvedActivePlanId;
+                                return _buildMealPlanCard(
+                                    context, plan, isActive, colorScheme, theme);
+                              }),
+                    );
+                  },
+                  loading: () => const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  error: (e, st) =>
+                      _buildErrorState(context, e.toString(), colorScheme, theme),
+                ),
           // Floating back button positioned on top
           if (widget.showBackButton)
             Positioned(

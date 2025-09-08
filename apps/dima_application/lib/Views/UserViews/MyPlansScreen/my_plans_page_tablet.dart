@@ -29,6 +29,7 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
   DateTime? _lastVisitTime;
   bool _isManuallyRefreshing = false;
   int _detailRefreshKey = 0; // Key to force refresh of detail pane
+  String? _settingActivePlanId; // Track which plan is being set as active
 
   @override
   void initState() {
@@ -137,16 +138,34 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
               // Set active - only for non-active, non-failed, non-rejected plans
               if (canSetActive)
                 ListTile(
-                  leading: const Icon(Icons.check_circle_rounded),
+                  leading: _settingActivePlanId == plan.mealPlanId
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.check_circle_rounded),
                   title: Text(l10n.setActive),
+                  enabled: _settingActivePlanId != plan.mealPlanId,
                   onTap: () async {
                     Navigator.of(context).pop();
-                    await ref
-                        .read(mealPlansProvider.notifier)
-                        .setActiveMealPlan(plan.mealPlanId);
-                    // Refresh detail pane if this plan is currently selected
-                    if (_selectedPlanId == plan.mealPlanId) {
-                      _refreshDetailPane();
+                    setState(() {
+                      _settingActivePlanId = plan.mealPlanId;
+                    });
+                    try {
+                      await ref
+                          .read(mealPlansProvider.notifier)
+                          .setActiveMealPlan(plan.mealPlanId);
+                      // Refresh detail pane if this plan is currently selected
+                      if (_selectedPlanId == plan.mealPlanId) {
+                        _refreshDetailPane();
+                      }
+                    } finally {
+                      if (mounted) {
+                        setState(() {
+                          _settingActivePlanId = null;
+                        });
+                      }
                     }
                   },
                 ),
@@ -345,15 +364,27 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
               plan: plan,
               isActive: isActive,
               isSelected: isSelected,
+              isSettingActive: _settingActivePlanId == plan.mealPlanId,
               onTap: () => setState(() => _selectedPlanId = plan.mealPlanId),
               onLongPress: () => _showPlanActions(context, plan, isActive),
               onSetActive: () async {
-                await ref
-                    .read(mealPlansProvider.notifier)
-                    .setActiveMealPlan(plan.mealPlanId);
-                // Refresh detail pane if this plan is currently selected
-                if (_selectedPlanId == plan.mealPlanId) {
-                  _refreshDetailPane();
+                setState(() {
+                  _settingActivePlanId = plan.mealPlanId;
+                });
+                try {
+                  await ref
+                      .read(mealPlansProvider.notifier)
+                      .setActiveMealPlan(plan.mealPlanId);
+                  // Refresh detail pane if this plan is currently selected
+                  if (_selectedPlanId == plan.mealPlanId) {
+                    _refreshDetailPane();
+                  }
+                } finally {
+                  if (mounted) {
+                    setState(() {
+                      _settingActivePlanId = null;
+                    });
+                  }
                 }
               },
               onOpen: () {
@@ -599,6 +630,7 @@ class _PlanTile extends StatelessWidget {
   final dynamic plan; // LightMealPlan
   final bool isActive;
   final bool isSelected;
+  final bool isSettingActive;
   final VoidCallback onTap;
   final VoidCallback onOpen;
   final VoidCallback onLongPress;
@@ -611,6 +643,7 @@ class _PlanTile extends StatelessWidget {
     required this.plan,
     required this.isActive,
     required this.isSelected,
+    required this.isSettingActive,
     required this.onTap,
   required this.onOpen,
   required this.onLongPress,
@@ -664,7 +697,7 @@ class _PlanTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  _StatusIcon(plan: plan, isActive: isActive),
+                  _StatusIcon(plan: plan, isActive: isActive, isSettingActive: isSettingActive),
                 ],
               ),
               const SizedBox(height: 6),
@@ -692,12 +725,36 @@ class _PlanTile extends StatelessWidget {
 class _StatusIcon extends StatelessWidget {
   final dynamic plan; // LightMealPlan
   final bool isActive;
+  final bool isSettingActive;
 
-  const _StatusIcon({required this.plan, required this.isActive});
+  const _StatusIcon({required this.plan, required this.isActive, required this.isSettingActive});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    
+    // Show loading indicator if setting active
+    if (isSettingActive) {
+      return Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: colorScheme.primary.withOpacity(0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+            ),
+          ),
+        ),
+      );
+    }
+    
     IconData icon;
     Color bg;
     Color fg;

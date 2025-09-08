@@ -28,5 +28,8 @@
     "currentMealPlanNoMealsScheduled": "Il tuo piano alimentare attuale non ha pasti programmati per {dayName}.",
     "refreshNow": "Aggiorna Ora",
     "failedToLoadData": "Caricamento Dati Fallito",
-    "retryAction": "Riprova"
+    "retryAction": "Riprova",
+    "noMealPlanSelected": "Nessun Piano Alimentare Selezionato",
+    "selectMealPlanToStart": "Seleziona un piano alimentare per iniziare a monitorare i tuoi pasti giornalieri e i progressi nutrizionali.",
+    "choosePlan": "Scegli un Piano"
 }

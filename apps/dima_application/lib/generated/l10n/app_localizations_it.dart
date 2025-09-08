@@ -929,6 +929,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get retryAction => 'Riprova';
 
   @override
+  String get noMealPlanSelected => 'Nessun Piano Alimentare Selezionato';
+
+  @override
+  String get selectMealPlanToStart => 'Seleziona un piano alimentare per iniziare a monitorare i tuoi pasti giornalieri e i progressi nutrizionali.';
+
+  @override
+  String get choosePlan => 'Scegli un Piano';
+
+  @override
   String get mealPlanReady => 'Piano Alimentare Pronto!';
 
   @override

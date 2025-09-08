@@ -101,5 +101,17 @@
     "retryAction": "Retry",
     "@retryAction": {
         "description": "Button text to retry an action"
+    },
+    "noMealPlanSelected": "No Meal Plan Selected",
+    "@noMealPlanSelected": {
+        "description": "Title when no meal plan is selected"
+    },
+    "selectMealPlanToStart": "Select a meal plan to start tracking your daily meals and nutritional progress.",
+    "@selectMealPlanToStart": {
+        "description": "Description for selecting a meal plan"
+    },
+    "choosePlan": "Choose a Plan",
+    "@choosePlan": {
+        "description": "Button text to choose a meal plan"
     }
 }

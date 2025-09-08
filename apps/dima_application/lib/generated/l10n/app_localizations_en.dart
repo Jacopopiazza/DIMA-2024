@@ -929,6 +929,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retryAction => 'Retry';
 
   @override
+  String get noMealPlanSelected => 'No Meal Plan Selected';
+
+  @override
+  String get selectMealPlanToStart => 'Select a meal plan to start tracking your daily meals and nutritional progress.';
+
+  @override
+  String get choosePlan => 'Choose a Plan';
+
+  @override
   String get mealPlanReady => 'Meal Plan Ready!';
 
   @override

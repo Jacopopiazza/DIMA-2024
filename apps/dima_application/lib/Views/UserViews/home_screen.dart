@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 
-import 'HomeScreen/today_view.dart';
+import 'HomeScreen/today_view_adaptive.dart';
 
 class UserHomeScreen extends ConsumerStatefulWidget {
   const UserHomeScreen({Key? key}) : super(key: key);
@@ -30,12 +30,14 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
     });
   }
 
-  // List of widgets to display based on the selected tab
-  static const List<Widget> _widgetOptions = <Widget>[
-    TodayPage(), // Index 0
-    MyPlansPageAdaptive(), // Index 1 (adaptive: phone vs tablet)
-    SettingsScreenRiverpod(), // Index 2 - Using the new Riverpod version
-  ];
+  // Method to get widgets with navigation callbacks
+  List<Widget> _getWidgetOptions() {
+    return [
+      TodayPageAdaptive(onNavigateToMealPlans: () => _onItemTapped(1)), // Index 0 (adaptive: phone vs tablet)
+      const MyPlansPageAdaptive(), // Index 1 (adaptive: phone vs tablet)
+      const SettingsScreenRiverpod(), // Index 2 - Using the new Riverpod version
+    ];
+  }
 
   // Callback function when a bottom navigation item is tapped
   void _onItemTapped(int index) {
@@ -89,7 +91,7 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
       // Using SafeArea to avoid intrusions by system UI (like notches or status bars)
       body: SafeArea(
         // Display the widget corresponding to the currently selected index
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: _getWidgetOptions().elementAt(_selectedIndex),
       ),
       /*
       floatingActionButton: FloatingActionButton.extended(

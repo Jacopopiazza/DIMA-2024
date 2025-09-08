@@ -1895,6 +1895,24 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get retryAction;
 
+  /// Title when no meal plan is selected
+  ///
+  /// In en, this message translates to:
+  /// **'No Meal Plan Selected'**
+  String get noMealPlanSelected;
+
+  /// Description for selecting a meal plan
+  ///
+  /// In en, this message translates to:
+  /// **'Select a meal plan to start tracking your daily meals and nutritional progress.'**
+  String get selectMealPlanToStart;
+
+  /// Button text to choose a meal plan
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a Plan'**
+  String get choosePlan;
+
   /// No description provided for @mealPlanReady.
   ///
   /// In en, this message translates to:
