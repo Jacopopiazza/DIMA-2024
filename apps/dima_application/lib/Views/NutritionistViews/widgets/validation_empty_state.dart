@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 class ValidationEmptyState extends StatelessWidget {
   final VoidCallback onRefresh;
@@ -25,7 +26,7 @@ class ValidationEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'No Meal Plans to Validate',
+              AppLocalizations.of(context)!.noMealPlansToValidate,
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -34,7 +35,7 @@ class ValidationEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Meal plans assigned for validation will appear here.\nCheck back later or pull to refresh.',
+              AppLocalizations.of(context)!.validationEmptyMessage,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -43,8 +44,11 @@ class ValidationEmptyState extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: onRefresh,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Refresh'),
+              icon: Icon(
+                Icons.refresh,
+                color: theme.colorScheme.onPrimary,
+              ),
+              label: Text(AppLocalizations.of(context)!.refresh),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
                 foregroundColor: theme.colorScheme.onPrimary,

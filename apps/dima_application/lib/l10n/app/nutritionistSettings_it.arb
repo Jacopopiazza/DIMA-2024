@@ -1,0 +1,112 @@
+{
+    "@@locale": "it",
+    "loadingNutritionistSettings": "Caricamento impostazioni nutrizionista...",
+    "nutritionistSettings": "Impostazioni Nutrizionista",
+    "manageProfileMessage": "Gestisci il tuo profilo professionale, disponibilità e impostazioni account.",
+    "profileInformation": "Informazioni Profilo",
+    "editProfessionalDetails": "Modifica Dettagli Professionali",
+    "specialization": "Specializzazione",
+    "professionalBio": "Bio Professionale",
+    "profilePicture": "Foto del Profilo",
+    "availabilitySettings": "Impostazioni Disponibilità",
+    "profileUpdatedSuccessfully": "Profilo aggiornato con successo",
+    "errorUpdatingProfile": "Errore nell'aggiornamento del profilo: {error}",
+    "@errorUpdatingProfile": {
+        "description": "Error message when profile update fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "pleaseEnterSpecialization": "Inserisci la tua specializzazione",
+    "pleaseEnterBio": "Inserisci la tua bio",
+    "bioMinLength": "La bio deve essere di almeno 50 caratteri",
+    "saving": "Salvataggio...",
+    "saveChanges": "Salva Modifiche",
+    "availableForConsultations": "Ora sei disponibile per le consultazioni",
+    "unavailableForConsultations": "Ora non sei disponibile per le consultazioni",
+    "errorUpdatingAvailability": "Errore nell'aggiornamento della disponibilità: {error}",
+    "@errorUpdatingAvailability": {
+        "description": "Error message when availability update fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "validatePlans": "Convalida Piani",
+    "settings": "Impostazioni",
+    "noInternetConnection": "Nessuna Connessione Internet",
+    "internetRequiredMessage": "Questa app richiede una connessione internet per funzionare correttamente. Controlla la tua connessione e riprova.",
+    "connectionTips": "Suggerimenti per la Connessione",
+    "checkWifiConnection": "Controlla la tua connessione Wi-Fi o dati mobili",
+    "turnOffAirplaneMode": "Assicurati che la modalità aereo sia spenta",
+    "moveForBetterSignal": "Prova a spostarti in un'area con segnale migliore",
+    "restartRouter": "Riavvia il tuo router o i dati mobili",
+    "checking": "Controllo...",
+    "tryAgainButton": "Riprova",
+    "connectionRestored": "Connessione ripristinata!",
+    "stillNoInternet": "Ancora nessuna connessione internet",
+    "tapToSelectPhoto": "Tocca per selezionare foto",
+    "selectPhoto": "Seleziona Foto",
+    "chooseFromGallery": "Scegli dalla Galleria",
+    "selectFromExistingPhotos": "Seleziona dalle foto esistenti",
+    "removePhoto": "Rimuovi Foto",
+    "deleteCurrentProfilePicture": "Elimina foto del profilo attuale",
+    "cancel": "Annulla",
+    "errorUploadingImage": "Errore nel caricamento dell'immagine: {error}",
+    "@errorUploadingImage": {
+        "description": "Error message when image upload fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "errorRemovingImage": "Errore nella rimozione dell'immagine: {error}",
+    "@errorRemovingImage": {
+        "description": "Error message when image removal fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "availability": "Disponibilità",
+    "currentlyAvailableForConsultations": "Attualmente sei disponibile per le consultazioni",
+    "currentlyUnavailableForConsultations": "Attualmente non sei disponibile per le consultazioni",
+    "availableForConsultationsTitle": "Disponibile per Consultazioni",
+    "usersCanRequestConsultations": "Gli utenti possono richiedere consultazioni da te",
+    "noNewConsultationRequests": "Non riceverai nuove richieste di consultazione",
+    "signOut": "Disconnetti",
+    "signOutOfNutritionistAccount": "Disconnetti dal tuo account nutrizionista",
+    "errorSigningOut": "Errore nella disconnessione: {error}",
+    "@errorSigningOut": {
+        "description": "Error message when sign out fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "deleteAccount": "Elimina Account",
+    "deleteAccountPermanently": "Questa azione eliminerà permanentemente il tuo account nutrizionista e tutti i dati associati. Non può essere annullata.",
+    "allDataWillBeRemoved": "Tutti i tuoi dati professionali, le interazioni con i clienti e le informazioni dell'account verranno rimossi permanentemente.",
+    "confirmSignOutTitle": "Disconnetti",
+    "confirmSignOutMessage": "Sei sicuro di voler disconnettere dal tuo account nutrizionista?",
+    "dangerZone": "Zona Pericolosa",
+    "irreversibleDestructiveActions": "Azioni distruttive irreversibili",
+    "criticalWarning": "Avviso Critico",
+    "permanentActionWarning": "Le azioni seguenti sono permanenti e non possono essere annullate. Tutti i tuoi dati nutrizionista, incluse informazioni del profilo, interazioni con clienti e impostazioni professionali verranno eliminati permanentemente.",
+    "deleteMyAccount": "Elimina il Mio Account",
+    "errorDeletingAccount": "Errore nell'eliminazione dell'account: {error}",
+    "@errorDeletingAccount": {
+        "description": "Error message when account deletion fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    }
+}

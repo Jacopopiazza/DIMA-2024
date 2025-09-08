@@ -1,6 +1,7 @@
 import 'package:dima_application/Utils/localization_helpers.dart';
 import 'package:dima_application/Views/Common/ChatScreen/chat_page.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:dima_application/services/client_details_service.dart';
 import 'package:flutter/material.dart';
@@ -376,9 +377,9 @@ class _NutritionistReadMealPlanPageState
 
   Future<void> _validateMealPlan() async {
     final confirmed = await _showConfirmationDialog(
-      'Validate Meal Plan',
-      'Are you sure you want to validate "${widget.mealPlan.planName ?? 'Unnamed Plan'}"?',
-      'Validate',
+      AppLocalizations.of(context)!.validateMealPlan,
+      AppLocalizations.of(context)!.validateMealPlanConfirm(widget.mealPlan.planName ?? AppLocalizations.of(context)!.unnamedPlan),
+      AppLocalizations.of(context)!.validate,
       Colors.green,
     );
 
@@ -394,11 +395,11 @@ class _NutritionistReadMealPlanPageState
 
       if (mounted) {
         if (success) {
-          _showSnackBar('Meal plan validated successfully!', Colors.green);
+          _showSnackBar(AppLocalizations.of(context)!.mealPlanValidatedSuccessfully, Colors.green);
           Navigator.of(context)
               .pop(true); // Return true to indicate changes were made
         } else {
-          _showSnackBar('Failed to validate meal plan', Colors.red);
+          _showSnackBar(AppLocalizations.of(context)!.failedToValidateMealPlan, Colors.red);
         }
       }
     } catch (e) {
@@ -410,9 +411,9 @@ class _NutritionistReadMealPlanPageState
 
   Future<void> _rejectMealPlan() async {
     final confirmed = await _showConfirmationDialog(
-      'Reject Meal Plan',
-      'Are you sure you want to reject "${widget.mealPlan.planName ?? 'Unnamed Plan'}"? This will reset the plan to not validated status.',
-      'Reject',
+      AppLocalizations.of(context)!.rejectMealPlan,
+      AppLocalizations.of(context)!.rejectMealPlanConfirm(widget.mealPlan.planName ?? AppLocalizations.of(context)!.unnamedPlan),
+      AppLocalizations.of(context)!.reject,
       Colors.red,
     );
 
@@ -428,11 +429,11 @@ class _NutritionistReadMealPlanPageState
 
       if (mounted) {
         if (success) {
-          _showSnackBar('Meal plan rejected', Colors.orange);
+          _showSnackBar(AppLocalizations.of(context)!.mealPlanRejected, Colors.orange);
           Navigator.of(context)
               .pop(true); // Return true to indicate changes were made
         } else {
-          _showSnackBar('Failed to reject meal plan', Colors.red);
+          _showSnackBar(AppLocalizations.of(context)!.failedToRejectMealPlan, Colors.red);
         }
       }
     } catch (e) {
@@ -444,7 +445,7 @@ class _NutritionistReadMealPlanPageState
 
   Future<void> _saveMealPlan() async {
     try {
-      _showSnackBar('Saving meal plan...', Colors.blue);
+      _showSnackBar(AppLocalizations.of(context)!.savingMealPlan, Colors.blue);
 
       // Update meals from controllers
       for (final entry in _editedMeals.entries) {
@@ -509,14 +510,14 @@ class _NutritionistReadMealPlanPageState
 
       if (mounted) {
         if (success) {
-          _showSnackBar('Meal plan saved successfully!', Colors.green);
+          _showSnackBar(AppLocalizations.of(context)!.mealPlanSavedSuccessfully, Colors.green);
           setState(() {
             _isEditing = false;
           });
           Navigator.of(context)
               .pop(true); // Return true to indicate changes were made
         } else {
-          _showSnackBar('Failed to save meal plan', Colors.red);
+          _showSnackBar(AppLocalizations.of(context)!.failedToSaveMealPlan, Colors.red);
         }
       }
     } catch (e) {
@@ -543,7 +544,7 @@ class _NutritionistReadMealPlanPageState
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () => Navigator.of(dialogContext).pop(true),
@@ -834,7 +835,7 @@ class _NutritionistReadMealPlanPageState
             size: 20,
           ),
           title: Text(
-            'Client Details',
+            AppLocalizations.of(context)!.clientDetails,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
@@ -842,7 +843,7 @@ class _NutritionistReadMealPlanPageState
           ),
           subtitle: _isLoadingClientDetails
               ? Text(
-                  'Loading client information...',
+                  AppLocalizations.of(context)!.loadingClientInformation,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -856,13 +857,13 @@ class _NutritionistReadMealPlanPageState
                     )
                   : _clientDetails != null
                       ? Text(
-                          'Health profile and preferences',
+                          AppLocalizations.of(context)!.healthProfilePreferences,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
                         )
                       : Text(
-                          'No client details available',
+                          AppLocalizations.of(context)!.noClientDetailsAvailable,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -880,7 +881,7 @@ class _NutritionistReadMealPlanPageState
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Loading client details...',
+                        AppLocalizations.of(context)!.loadingClientDetails,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -911,7 +912,7 @@ class _NutritionistReadMealPlanPageState
                     TextButton.icon(
                       onPressed: _loadClientDetails,
                       icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
+                      label: Text(AppLocalizations.of(context)!.retry),
                     ),
                   ],
                 ),
@@ -930,7 +931,7 @@ class _NutritionistReadMealPlanPageState
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'No client details available',
+                  AppLocalizations.of(context)!.noClientDetailsAvailable,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -956,19 +957,19 @@ class _NutritionistReadMealPlanPageState
         _buildDetailsSubsection(
           theme,
           colorScheme,
-          'Physical Information',
+          AppLocalizations.of(context)!.physicalInformation,
           Icons.fitness_center_rounded,
           [
             _buildDetailRow(
-                'Height', '${_clientDetails!.heightCm.toStringAsFixed(0)} cm'),
+                AppLocalizations.of(context)!.height, '${_clientDetails!.heightCm.toStringAsFixed(0)} cm'),
             _buildDetailRow(
-                'Weight', '${_clientDetails!.weightKg.toStringAsFixed(1)} kg'),
+                AppLocalizations.of(context)!.weight, '${_clientDetails!.weightKg.toStringAsFixed(1)} kg'),
             if (bmi != null)
-              _buildDetailRow('BMI',
-                  '${bmi.toStringAsFixed(1)} (${ClientDetailsService.getBMICategory(bmi)})'),
+              _buildDetailRow(AppLocalizations.of(context)!.bmi,
+                  '${bmi.toStringAsFixed(1)} (${_getLocalizedBMICategory(bmi)})'),
             _buildDetailRow(
-                'Exercise Frequency',
-                ClientDetailsService.formatExerciseFrequency(
+                AppLocalizations.of(context)!.exerciseFrequency,
+                _getLocalizedExerciseFrequency(
                     _clientDetails!.exerciseFrequency)),
           ],
         ),
@@ -979,20 +980,20 @@ class _NutritionistReadMealPlanPageState
         _buildDetailsSubsection(
           theme,
           colorScheme,
-          'Dietary Information',
+          AppLocalizations.of(context)!.dietaryInformation,
           Icons.restaurant_rounded,
           [
-            _buildDetailRow('Daily Meals Preference',
-                '${_clientDetails!.dailyMealsPreference} meals per day'),
+            _buildDetailRow(AppLocalizations.of(context)!.dailyMealsPreference,
+                AppLocalizations.of(context)!.mealsPerDay(_clientDetails!.dailyMealsPreference)),
             _buildDetailRow(
-                'Allergies',
-                ClientDetailsService.formatAllergies(
+                AppLocalizations.of(context)!.allergies,
+                _getLocalizedAllergies(
                     _clientDetails!.allergies)),
             if (_clientDetails!.dietaryRestrictions?.isNotEmpty == true)
               _buildDetailRow(
-                  'Dietary Restrictions', _clientDetails!.dietaryRestrictions!),
+                  AppLocalizations.of(context)!.dietaryRestrictionsLabel, _clientDetails!.dietaryRestrictions!),
             if (_clientDetails!.openTextPreferences?.isNotEmpty == true)
-              _buildDetailRow('Additional Preferences',
+              _buildDetailRow(AppLocalizations.of(context)!.additionalPreferences,
                   _clientDetails!.openTextPreferences!),
           ],
         ),
@@ -1003,21 +1004,21 @@ class _NutritionistReadMealPlanPageState
         _buildDetailsSubsection(
           theme,
           colorScheme,
-          'Account Information',
+          AppLocalizations.of(context)!.accountInformation,
           Icons.info_rounded,
           [
             if (_clientDetails!.createdAt != null)
               _buildDetailRow(
-                  'Account Created',
-                  DateFormat('MMM dd, yyyy').format(
+                  AppLocalizations.of(context)!.accountCreated,
+                  DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(
                       _clientDetails!.createdAt!.getDateTimeInUtc().toLocal())),
             if (_clientDetails!.updatedAt != null)
               _buildDetailRow(
-                  'Last Updated',
-                  DateFormat('MMM dd, yyyy HH:mm').format(
+                  AppLocalizations.of(context)!.lastUpdated,
+                  DateFormat.yMMMd(Localizations.localeOf(context).toString()).add_Hm().format(
                       _clientDetails!.updatedAt!.getDateTimeInUtc().toLocal())),
             if (_clientDetails!.activeMealPlanId != null)
-              _buildDetailRow('Active Plan ID',
+              _buildDetailRow(AppLocalizations.of(context)!.activePlanId,
                   _clientDetails!.activeMealPlanId!.substring(0, 8) + '...'),
           ],
         ),
@@ -1135,14 +1136,14 @@ class _NutritionistReadMealPlanPageState
             ),
           ),
           title: Text(
-            'Plan Information',
+            AppLocalizations.of(context)!.planInformation,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: colorScheme.onSurface,
             ),
           ),
           subtitle: Text(
-            'View plan details',
+            AppLocalizations.of(context)!.viewPlanDetails,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -1155,14 +1156,14 @@ class _NutritionistReadMealPlanPageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _buildInfoRow('Plan Name',
-                      widget.mealPlan.planName ?? 'Unnamed Plan', colorScheme),
+                  _buildInfoRow(AppLocalizations.of(context)!.planName,
+                      widget.mealPlan.planName ?? AppLocalizations.of(context)!.unnamedPlan, colorScheme),
                   _buildInfoRow(
-                      'Plan ID', widget.mealPlan.mealPlanId, colorScheme),
+                      AppLocalizations.of(context)!.planIdLabel, widget.mealPlan.mealPlanId, colorScheme),
                   if (widget.mealPlan.generatedAt != null)
                     _buildInfoRow(
-                      'Generated',
-                      DateFormat('MMM dd, yyyy HH:mm').format(
+                      AppLocalizations.of(context)!.generated,
+                      DateFormat.yMMMd(Localizations.localeOf(context).toString()).add_Hm().format(
                         widget.mealPlan.generatedAt!
                             .getDateTimeInUtc()
                             .toLocal(),
@@ -1170,8 +1171,8 @@ class _NutritionistReadMealPlanPageState
                       colorScheme,
                     ),
                   _buildInfoRow(
-                    'Status',
-                    _formatEnumValue(
+                    AppLocalizations.of(context)!.status,
+                    _getLocalizedStatus(
                         widget.mealPlan.status?.toString().split('.').last ??
                             'UNKNOWN'),
                     colorScheme,
@@ -1179,8 +1180,8 @@ class _NutritionistReadMealPlanPageState
                         _getStatusColor(widget.mealPlan.status, colorScheme),
                   ),
                   _buildInfoRow(
-                    'Validation',
-                    _formatEnumValue(widget.mealPlan.validationStatus
+                    AppLocalizations.of(context)!.validation,
+                    _getLocalizedValidation(widget.mealPlan.validationStatus
                             ?.toString()
                             .split('.')
                             .last ??
@@ -1191,14 +1192,14 @@ class _NutritionistReadMealPlanPageState
                   ),
                   if (widget.mealPlan.assignedNutritionistId != null)
                     _buildInfoRow(
-                      'Nutritionist',
+                      AppLocalizations.of(context)!.nutritionist,
                       widget.mealPlan.nutritionistFullName ??
                           widget.mealPlan.assignedNutritionistId!,
                       colorScheme,
                     ),
                   if (widget.mealPlan.userFullName != null)
                     _buildInfoRow(
-                      'User',
+                      AppLocalizations.of(context)!.user,
                       widget.mealPlan.userFullName!,
                       colorScheme,
                     ),
@@ -1303,7 +1304,7 @@ class _NutritionistReadMealPlanPageState
             ),
           ),
           title: Text(
-            'Weekly Meal Plan',
+            AppLocalizations.of(context)!.weeklyMealPlan,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: colorScheme.onSurface,
@@ -1311,13 +1312,13 @@ class _NutritionistReadMealPlanPageState
           ),
           subtitle: Text(
             dailyPlan == null
-                ? 'No meal plan data available'
+                ? AppLocalizations.of(context)!.noMealPlanDataAvailable
                 : _isEditing
-                    ? '7-day meal schedule (Editing)'
+                    ? AppLocalizations.of(context)!.sevenDayScheduleEditing
                     : widget.mealPlan.validationStatus ==
                             MealPlanValidationStatus.PENDING_REVIEW
-                        ? '7-day meal schedule (View/Edit)'
-                        : '7-day meal schedule (View Only)',
+                        ? AppLocalizations.of(context)!.sevenDayScheduleViewEdit
+                        : AppLocalizations.of(context)!.sevenDayScheduleViewOnly,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -1353,19 +1354,19 @@ class _NutritionistReadMealPlanPageState
                   children: [
                     const Divider(),
                     const SizedBox(height: 16),
-                    _buildDayMeals('Monday', 'monday',
+                    _buildDayMeals(AppLocalizations.of(context)!.monday, 'monday',
                         _editedMeals['monday'] ?? [], colorScheme),
-                    _buildDayMeals('Tuesday', 'tuesday',
+                    _buildDayMeals(AppLocalizations.of(context)!.tuesday, 'tuesday',
                         _editedMeals['tuesday'] ?? [], colorScheme),
-                    _buildDayMeals('Wednesday', 'wednesday',
+                    _buildDayMeals(AppLocalizations.of(context)!.wednesday, 'wednesday',
                         _editedMeals['wednesday'] ?? [], colorScheme),
-                    _buildDayMeals('Thursday', 'thursday',
+                    _buildDayMeals(AppLocalizations.of(context)!.thursday, 'thursday',
                         _editedMeals['thursday'] ?? [], colorScheme),
-                    _buildDayMeals('Friday', 'friday',
+                    _buildDayMeals(AppLocalizations.of(context)!.friday, 'friday',
                         _editedMeals['friday'] ?? [], colorScheme),
-                    _buildDayMeals('Saturday', 'saturday',
+                    _buildDayMeals(AppLocalizations.of(context)!.saturday, 'saturday',
                         _editedMeals['saturday'] ?? [], colorScheme),
-                    _buildDayMeals('Sunday', 'sunday',
+                    _buildDayMeals(AppLocalizations.of(context)!.sunday, 'sunday',
                         _editedMeals['sunday'] ?? [], colorScheme),
                   ],
                 ),
@@ -1378,7 +1379,7 @@ class _NutritionistReadMealPlanPageState
 
   Widget _buildDayMeals(String dayName, String dayKey, List<Meal> meals,
       ColorScheme colorScheme) {
-    final isToday = DateFormat('EEEE').format(DateTime.now()) == dayName;
+    final isToday = DateFormat('EEEE', Localizations.localeOf(context).toString()).format(DateTime.now()) == dayName;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -1437,7 +1438,7 @@ class _NutritionistReadMealPlanPageState
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${meals.length} meals',
+                    AppLocalizations.of(context)!.mealsCount(meals.length),
                     style: TextStyle(
                       color: colorScheme.onSurface,
                       fontSize: 12,
@@ -1460,7 +1461,7 @@ class _NutritionistReadMealPlanPageState
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'No meals scheduled for this day',
+                    AppLocalizations.of(context)!.noMealsScheduled,
                     style: TextStyle(
                       color: colorScheme.onSurfaceVariant,
                       fontStyle: FontStyle.italic,
@@ -1561,7 +1562,7 @@ class _NutritionistReadMealPlanPageState
                 children: [
                   if (meal.recipe != null && meal.recipe!.isNotEmpty) ...[
                     _buildSectionHeader(
-                        'Instructions', Icons.list_alt_rounded, colorScheme),
+                        AppLocalizations.of(context)!.instructions, Icons.list_alt_rounded, colorScheme),
                     const SizedBox(height: 8),
                     (_isEditing &&
                             widget.mealPlan.validationStatus ==
@@ -1582,14 +1583,14 @@ class _NutritionistReadMealPlanPageState
                             meal.recipe!, colorScheme),
                     const SizedBox(height: 16),
                   ],
-                  _buildSectionHeader('Nutrition Information',
+                  _buildSectionHeader(AppLocalizations.of(context)!.nutritionInformation,
                       Icons.local_fire_department_rounded, colorScheme),
                   const SizedBox(height: 12),
                   _buildNutritionInfo(
                       meal.totalMacros, colorScheme, dayKey, mealIndex),
                   const SizedBox(height: 16),
                   _buildSectionHeader(
-                      'Ingredients', Icons.eco_rounded, colorScheme),
+                      AppLocalizations.of(context)!.ingredients, Icons.eco_rounded, colorScheme),
                   const SizedBox(height: 12),
                   _buildIngredientsSection(
                       meal.ingredients, colorScheme, dayKey, mealIndex),
@@ -1680,7 +1681,7 @@ class _NutritionistReadMealPlanPageState
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _buildNutritionItem(
-          'Calories',
+          AppLocalizations.of(context)!.calories,
           '${macros.calories.round()}',
           'kcal',
           Icons.local_fire_department_rounded,
@@ -1688,7 +1689,7 @@ class _NutritionistReadMealPlanPageState
           colorScheme,
         ),
         _buildNutritionItem(
-          'Protein',
+          AppLocalizations.of(context)!.protein,
           '${macros.proteins.toStringAsFixed(1)}',
           'g',
           Icons.fitness_center_rounded,
@@ -1696,7 +1697,7 @@ class _NutritionistReadMealPlanPageState
           colorScheme,
         ),
         _buildNutritionItem(
-          'Carbs',
+          AppLocalizations.of(context)!.carbs,
           '${macros.carbohydrates.toStringAsFixed(1)}',
           'g',
           Icons.grain_rounded,
@@ -1704,7 +1705,7 @@ class _NutritionistReadMealPlanPageState
           colorScheme,
         ),
         _buildNutritionItem(
-          'Fat',
+          AppLocalizations.of(context)!.fat,
           '${macros.fats.toStringAsFixed(1)}',
           'g',
           Icons.opacity_rounded,
@@ -1723,7 +1724,7 @@ class _NutritionistReadMealPlanPageState
           children: [
             Expanded(
               child: _buildEditableNutritionItem(
-                'Calories',
+                AppLocalizations.of(context)!.calories,
                 macros.calories,
                 'kcal',
                 Icons.local_fire_department_rounded,
@@ -1736,7 +1737,7 @@ class _NutritionistReadMealPlanPageState
             const SizedBox(width: 8),
             Expanded(
               child: _buildEditableNutritionItem(
-                'Protein',
+                AppLocalizations.of(context)!.proteins,
                 macros.proteins,
                 'g',
                 Icons.fitness_center_rounded,
@@ -1753,7 +1754,7 @@ class _NutritionistReadMealPlanPageState
           children: [
             Expanded(
               child: _buildEditableNutritionItem(
-                'Carbs',
+                AppLocalizations.of(context)!.carbs,
                 macros.carbohydrates,
                 'g',
                 Icons.grain_rounded,
@@ -1766,7 +1767,7 @@ class _NutritionistReadMealPlanPageState
             const SizedBox(width: 8),
             Expanded(
               child: _buildEditableNutritionItem(
-                'Fat',
+                AppLocalizations.of(context)!.fats,
                 macros.fats,
                 'g',
                 Icons.opacity_rounded,
@@ -1916,7 +1917,7 @@ class _NutritionistReadMealPlanPageState
           children: [
             Expanded(
               child: Text(
-                'Ingredients',
+                AppLocalizations.of(context)!.ingredients,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurface,
@@ -1927,7 +1928,7 @@ class _NutritionistReadMealPlanPageState
             ElevatedButton.icon(
               onPressed: () => _addIngredient(dayKey, mealIndex),
               icon: const Icon(Icons.add, size: 16),
-              label: const Text('Add'),
+              label: Text(AppLocalizations.of(context)!.add),
               style: ElevatedButton.styleFrom(
                 backgroundColor: colorScheme.primary,
                 foregroundColor: colorScheme.onPrimary,
@@ -1957,7 +1958,7 @@ class _NutritionistReadMealPlanPageState
             ),
             child: Center(
               child: Text(
-                'No ingredients added yet',
+                AppLocalizations.of(context)!.noIngredientsAddedYet,
                 style: TextStyle(
                   color: colorScheme.onSurfaceVariant,
                   fontStyle: FontStyle.italic,
@@ -1992,9 +1993,9 @@ class _NutritionistReadMealPlanPageState
               Expanded(
                 child: TextFormField(
                   initialValue: ingredient.name,
-                  decoration: const InputDecoration(
-                    labelText: 'Ingredient Name',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.ingredientName,
+                    border: const OutlineInputBorder(),
                     isDense: true,
                   ),
                   onChanged: (value) => _updateIngredientProperty(
@@ -2006,7 +2007,7 @@ class _NutritionistReadMealPlanPageState
                 onPressed: () =>
                     _removeIngredient(dayKey, mealIndex, ingredientIndex),
                 icon: const Icon(Icons.delete, color: Colors.red),
-                tooltip: 'Remove ingredient',
+                tooltip: AppLocalizations.of(context)!.removeIngredient,
               ),
             ],
           ),
@@ -2018,9 +2019,9 @@ class _NutritionistReadMealPlanPageState
                   initialValue: ingredient.amount.toStringAsFixed(1),
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(
-                    labelText: 'Amount',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.amount,
+                    border: const OutlineInputBorder(),
                     isDense: true,
                   ),
                   onChanged: (value) {
@@ -2036,9 +2037,9 @@ class _NutritionistReadMealPlanPageState
               Expanded(
                 child: TextFormField(
                   initialValue: ingredient.unit ?? '',
-                  decoration: const InputDecoration(
-                    labelText: 'Unit',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.unit,
+                    border: const OutlineInputBorder(),
                     isDense: true,
                   ),
                   onChanged: (value) => _updateIngredientProperty(
@@ -2049,7 +2050,7 @@ class _NutritionistReadMealPlanPageState
           ),
           const SizedBox(height: 8),
           Text(
-            'Nutritional Values (per unit)',
+            AppLocalizations.of(context)!.nutritionalValuesPerUnit,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               color: colorScheme.onSurface,
@@ -2060,7 +2061,7 @@ class _NutritionistReadMealPlanPageState
             children: [
               Expanded(
                 child: _buildIngredientMacroField(
-                  'Calories',
+                  AppLocalizations.of(context)!.calories,
                   ingredient.macros.calories,
                   (value) => _updateIngredientMacro(
                       dayKey, mealIndex, ingredientIndex, 'calories', value),
@@ -2070,7 +2071,7 @@ class _NutritionistReadMealPlanPageState
               const SizedBox(width: 8),
               Expanded(
                 child: _buildIngredientMacroField(
-                  'Proteins',
+                  AppLocalizations.of(context)!.proteins,
                   ingredient.macros.proteins,
                   (value) => _updateIngredientMacro(
                       dayKey, mealIndex, ingredientIndex, 'proteins', value),
@@ -2084,7 +2085,7 @@ class _NutritionistReadMealPlanPageState
             children: [
               Expanded(
                 child: _buildIngredientMacroField(
-                  'Carbs',
+                  AppLocalizations.of(context)!.carbs,
                   ingredient.macros.carbohydrates,
                   (value) => _updateIngredientMacro(dayKey, mealIndex,
                       ingredientIndex, 'carbohydrates', value),
@@ -2094,7 +2095,7 @@ class _NutritionistReadMealPlanPageState
               const SizedBox(width: 8),
               Expanded(
                 child: _buildIngredientMacroField(
-                  'Fats',
+                  AppLocalizations.of(context)!.fats,
                   ingredient.macros.fats,
                   (value) => _updateIngredientMacro(
                       dayKey, mealIndex, ingredientIndex, 'fats', value),
@@ -2231,11 +2232,125 @@ class _NutritionistReadMealPlanPageState
     return colorScheme.outline;
   }
 
-  String _formatEnumValue(String enumValue) {
-    return enumValue
-        .split('_')
-        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-        .join(' ');
+  /// Returns localized status string
+  String _getLocalizedStatus(String statusString) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (statusString) {
+      case 'ACTIVE':
+        return localizations.statusActive;
+      case 'GENERATED':
+        return localizations.statusGenerated;
+      case 'ARCHIVED':
+        return localizations.statusArchived;
+      case 'FAILED':
+        return localizations.statusFailed;
+      case 'IN_PROGRESS':
+        return localizations.statusInProgress;
+      case 'PENDING':
+        return localizations.statusPending;
+      default:
+        return localizations.statusUnknown;
+    }
+  }
+
+  /// Returns localized validation status string
+  String _getLocalizedValidation(String validationString) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (validationString) {
+      case 'VALIDATED':
+        return localizations.validationValidated;
+      case 'PENDING_REVIEW':
+        return localizations.validationPendingReview;
+      case 'REJECTED':
+        return localizations.validationRejected;
+      case 'NOT_VALIDATED':
+      default:
+        return localizations.validationNotValidated;
+    }
+  }
+
+  /// Returns localized BMI category string
+  String _getLocalizedBMICategory(double bmi) {
+    final localizations = AppLocalizations.of(context)!;
+    if (bmi < 18.5) {
+      return localizations.bmiUnderweight;
+    } else if (bmi < 25.0) {
+      return localizations.bmiNormalWeight;
+    } else if (bmi < 30.0) {
+      return localizations.bmiOverweight;
+    } else {
+      return localizations.bmiObese;
+    }
+  }
+
+  /// Returns localized exercise frequency string
+  String _getLocalizedExerciseFrequency(ExerciseFrequency? frequency) {
+    final localizations = AppLocalizations.of(context)!;
+    if (frequency == null) {
+      return localizations.exerciseFrequencyNOT_SPECIFIED;
+    }
+
+    switch (frequency) {
+      case ExerciseFrequency.EVERY_DAY:
+        return localizations.exerciseFrequencyEVERY_DAY;
+      case ExerciseFrequency.SIX_TIMES_A_WEEK:
+        return localizations.exerciseFrequencySIX_TIMES_A_WEEK;
+      case ExerciseFrequency.FIVE_TIMES_A_WEEK:
+        return localizations.exerciseFrequencyFIVE_TIMES_A_WEEK;
+      case ExerciseFrequency.FOUR_TIMES_A_WEEK:
+        return localizations.exerciseFrequencyFOUR_TIMES_A_WEEK;
+      case ExerciseFrequency.THREE_TIMES_A_WEEK:
+        return localizations.exerciseFrequencyTHREE_TIMES_A_WEEK;
+      case ExerciseFrequency.TWICE_A_WEEK:
+        return localizations.exerciseFrequencyTWICE_A_WEEK;
+      case ExerciseFrequency.ONCE_A_WEEK:
+        return localizations.exerciseFrequencyONCE_A_WEEK;
+      case ExerciseFrequency.NONE:
+        return localizations.exerciseFrequencyNONE;
+      case ExerciseFrequency.NOT_SPECIFIED:
+        return localizations.exerciseFrequencyNOT_SPECIFIED;
+    }
+  }
+
+  /// Returns localized allergies string
+  String _getLocalizedAllergies(List<AllergenEnum>? allergies) {
+    final localizations = AppLocalizations.of(context)!;
+    if (allergies == null || allergies.isEmpty) {
+      return localizations.noneReported;
+    }
+
+    return allergies.map((allergy) {
+      switch (allergy) {
+        case AllergenEnum.CELERY:
+          return localizations.allergenCELERY;
+        case AllergenEnum.CRUSTACEANS:
+          return localizations.allergenCRUSTACEANS;
+        case AllergenEnum.EGGS:
+          return localizations.allergenEGGS;
+        case AllergenEnum.FISH:
+          return localizations.allergenFISH;
+        case AllergenEnum.GLUTEN_CEREALS:
+          return localizations.allergenGLUTEN_CEREALS;
+        case AllergenEnum.LUPIN:
+          return localizations.allergenLUPIN;
+        case AllergenEnum.MILK:
+          return localizations.allergenMILK;
+        case AllergenEnum.MOLLUSCS:
+          return localizations.allergenMOLLUSCS;
+        case AllergenEnum.MUSTARD:
+          return localizations.allergenMUSTARD;
+        case AllergenEnum.NUTS:
+          return localizations.allergenNUTS;
+        case AllergenEnum.PEANUTS:
+          return localizations.allergenPEANUTS;
+        case AllergenEnum.SESAME_SEEDS:
+          return localizations.allergenSESAME_SEEDS;
+        case AllergenEnum.SOYBEANS:
+          return localizations.allergenSOYBEANS;
+        case AllergenEnum.SULPHITES:
+          return localizations.allergenSULPHITES;
+      }
+    }).join(', ');
   }
 
   Widget _buildChatButton(ColorScheme colorScheme) {
@@ -2272,7 +2387,7 @@ class _NutritionistReadMealPlanPageState
           color: colorScheme.onPrimary,
         ),
         label: Text(
-          'Chat with Patient',
+          AppLocalizations.of(context)!.chatWithPatient,
           style: TextStyle(
             color: colorScheme.onPrimary,
             fontWeight: FontWeight.w600,
@@ -2351,7 +2466,7 @@ class _ExpandableInstructionsState extends State<ExpandableInstructions> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      _isExpanded ? 'Show less' : 'Read more',
+                      _isExpanded ? AppLocalizations.of(context)!.showLess : AppLocalizations.of(context)!.readMore,
                       style: TextStyle(
                         color: widget.colorScheme.primary,
                         fontWeight: FontWeight.w500,

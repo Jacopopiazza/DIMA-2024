@@ -9,6 +9,201 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
+  String get loadingNutritionistSettings => 'Caricamento impostazioni nutrizionista...';
+
+  @override
+  String get nutritionistSettings => 'Impostazioni Nutrizionista';
+
+  @override
+  String get manageProfileMessage => 'Gestisci il tuo profilo professionale, disponibilità e impostazioni account.';
+
+  @override
+  String get profileInformation => 'Informazioni Profilo';
+
+  @override
+  String get editProfessionalDetails => 'Modifica Dettagli Professionali';
+
+  @override
+  String get specialization => 'Specializzazione';
+
+  @override
+  String get professionalBio => 'Bio Professionale';
+
+  @override
+  String get profilePicture => 'Foto del Profilo';
+
+  @override
+  String get availabilitySettings => 'Impostazioni Disponibilità';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profilo aggiornato con successo!';
+
+  @override
+  String errorUpdatingProfile(String error) {
+    return 'Errore nell\'aggiornamento del profilo';
+  }
+
+  @override
+  String get pleaseEnterSpecialization => 'Inserisci la tua specializzazione';
+
+  @override
+  String get pleaseEnterBio => 'Inserisci la tua bio';
+
+  @override
+  String get bioMinLength => 'La bio deve essere di almeno 50 caratteri';
+
+  @override
+  String get saving => 'Salvataggio...';
+
+  @override
+  String get saveChanges => 'Salva Modifiche';
+
+  @override
+  String get availableForConsultations => 'Ora sei disponibile per le consultazioni';
+
+  @override
+  String get unavailableForConsultations => 'Ora non sei disponibile per le consultazioni';
+
+  @override
+  String errorUpdatingAvailability(String error) {
+    return 'Errore nell\'aggiornamento della disponibilità: $error';
+  }
+
+  @override
+  String get validatePlans => 'Convalida Piani';
+
+  @override
+  String get settings => 'Impostazioni';
+
+  @override
+  String get noInternetConnection => 'Nessuna Connessione Internet';
+
+  @override
+  String get internetRequiredMessage => 'Questa app richiede una connessione internet per funzionare correttamente. Controlla la tua connessione e riprova.';
+
+  @override
+  String get connectionTips => 'Suggerimenti per la Connessione';
+
+  @override
+  String get checkWifiConnection => 'Controlla la tua connessione Wi-Fi o dati mobili';
+
+  @override
+  String get turnOffAirplaneMode => 'Assicurati che la modalità aereo sia spenta';
+
+  @override
+  String get moveForBetterSignal => 'Prova a spostarti in un\'area con segnale migliore';
+
+  @override
+  String get restartRouter => 'Riavvia il tuo router o i dati mobili';
+
+  @override
+  String get checking => 'Controllo...';
+
+  @override
+  String get tryAgainButton => 'Riprova';
+
+  @override
+  String get connectionRestored => 'Connessione ripristinata!';
+
+  @override
+  String get stillNoInternet => 'Ancora nessuna connessione internet';
+
+  @override
+  String get tapToSelectPhoto => 'Tocca per selezionare foto';
+
+  @override
+  String get selectPhoto => 'Seleziona Foto';
+
+  @override
+  String get chooseFromGallery => 'Scegli dalla Galleria';
+
+  @override
+  String get selectFromExistingPhotos => 'Seleziona dalle foto esistenti';
+
+  @override
+  String get removePhoto => 'Rimuovi Foto';
+
+  @override
+  String get deleteCurrentProfilePicture => 'Elimina foto del profilo attuale';
+
+  @override
+  String get cancel => 'Annulla';
+
+  @override
+  String errorUploadingImage(String error) {
+    return 'Errore nel caricamento dell\'immagine: $error';
+  }
+
+  @override
+  String errorRemovingImage(String error) {
+    return 'Errore nella rimozione dell\'immagine: $error';
+  }
+
+  @override
+  String get availability => 'Disponibilità';
+
+  @override
+  String get currentlyAvailableForConsultations => 'Attualmente sei disponibile per le consultazioni';
+
+  @override
+  String get currentlyUnavailableForConsultations => 'Attualmente non sei disponibile per le consultazioni';
+
+  @override
+  String get availableForConsultationsTitle => 'Disponibile per Consultazioni';
+
+  @override
+  String get usersCanRequestConsultations => 'Gli utenti possono richiedere consultazioni da te';
+
+  @override
+  String get noNewConsultationRequests => 'Non riceverai nuove richieste di consultazione';
+
+  @override
+  String get signOut => 'Disconnetti';
+
+  @override
+  String get signOutOfNutritionistAccount => 'Disconnetti dal tuo account nutrizionista';
+
+  @override
+  String errorSigningOut(String error) {
+    return 'Errore nella disconnessione: $error';
+  }
+
+  @override
+  String get deleteAccount => 'Elimina Account';
+
+  @override
+  String get deleteAccountPermanently => 'Questa azione eliminerà permanentemente il tuo account nutrizionista e tutti i dati associati. Non può essere annullata.';
+
+  @override
+  String get allDataWillBeRemoved => 'Tutti i tuoi dati professionali, le interazioni con i clienti e le informazioni dell\'account verranno rimossi permanentemente.';
+
+  @override
+  String get confirmSignOutTitle => 'Conferma Uscita';
+
+  @override
+  String get confirmSignOutMessage => 'Sei sicuro di voler uscire?';
+
+  @override
+  String get dangerZone => 'Zona Pericolosa';
+
+  @override
+  String get irreversibleDestructiveActions => 'Azioni distruttive irreversibili';
+
+  @override
+  String get criticalWarning => 'Avviso Critico';
+
+  @override
+  String get permanentActionWarning => 'Le azioni seguenti sono permanenti e non possono essere annullate. Tutti i tuoi dati nutrizionista, incluse informazioni del profilo, interazioni con clienti e impostazioni professionali verranno eliminati permanentemente.';
+
+  @override
+  String get deleteMyAccount => 'Elimina Il Mio Account';
+
+  @override
+  String errorDeletingAccount(String error) {
+    return 'Errore durante l\'eliminazione dell\'account. Riprova.';
+  }
+
+  @override
   String get settingsTitle => 'Impostazioni';
 
   @override
@@ -27,9 +222,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get subscribeToPro => 'Iscriviti a PRO';
 
   @override
-  String get deleteAccount => 'Elimina Account';
-
-  @override
   String get changePreferences => 'Modifica Preferenze';
 
   @override
@@ -45,19 +237,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get clear => 'Svuota';
 
   @override
-  String get cancel => 'Annulla';
-
-  @override
   String get cacheClearedSuccessfully => 'Cache svuotata con successo.';
 
   @override
   String get errorClearingCache => 'Errore durante lo svuotamento della cache.';
-
-  @override
-  String get confirmSignOutTitle => 'Conferma Uscita';
-
-  @override
-  String get confirmSignOutMessage => 'Sei sicuro di voler uscire?';
 
   @override
   String get confirmDeleteAccountTitle => 'Conferma Eliminazione Account';
@@ -69,13 +252,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountDeletedSuccessfully => 'Account eliminato con successo';
 
   @override
-  String get errorDeletingAccount => 'Errore durante l\'eliminazione dell\'account. Riprova.';
-
-  @override
   String get errorDeleteAccountRequiresRecentLogin => 'L\'eliminazione dell\'account richiede un accesso recente. Effettua nuovamente l\'accesso.';
-
-  @override
-  String get saveChanges => 'Salva Modifiche';
 
   @override
   String get preferencesSavedSuccess => 'Preferenze salvate con successo.';
@@ -242,7 +419,191 @@ class AppLocalizationsIt extends AppLocalizations {
   String get mealPlans => 'Piani Pasto';
 
   @override
-  String get settings => 'Impostazioni';
+  String get clientDetails => 'Dettagli Cliente';
+
+  @override
+  String get loadingClientInformation => 'Caricamento informazioni cliente...';
+
+  @override
+  String get healthProfilePreferences => 'Profilo sanitario e preferenze';
+
+  @override
+  String get noClientDetailsAvailable => 'Nessun dettaglio cliente disponibile';
+
+  @override
+  String get loadingClientDetails => 'Caricamento dettagli cliente...';
+
+  @override
+  String get physicalInformation => 'Informazioni Fisiche';
+
+  @override
+  String get height => 'Altezza';
+
+  @override
+  String get weight => 'Peso';
+
+  @override
+  String get bmi => 'BMI';
+
+  @override
+  String get dietaryInformation => 'Informazioni Dietetiche';
+
+  @override
+  String get dailyMealsPreference => 'Preferenza Pasti Giornalieri';
+
+  @override
+  String get dietaryRestrictionsLabel => 'Restrizioni Dietetiche';
+
+  @override
+  String get additionalPreferences => 'Preferenze Aggiuntive';
+
+  @override
+  String get accountInformation => 'Informazioni Account';
+
+  @override
+  String get accountCreated => 'Account Creato';
+
+  @override
+  String get lastUpdated => 'Ultimo Aggiornamento';
+
+  @override
+  String get activePlanId => 'ID Piano Attivo';
+
+  @override
+  String get viewPlanDetails => 'Visualizza dettagli piano';
+
+  @override
+  String get planIdLabel => 'ID Piano';
+
+  @override
+  String get generated => 'Generato';
+
+  @override
+  String get status => 'Stato';
+
+  @override
+  String get validation => 'Convalida';
+
+  @override
+  String get nutritionist => 'Nutrizionista';
+
+  @override
+  String get user => 'Utente';
+
+  @override
+  String get noMealPlanDataAvailable => 'Nessun dato del piano alimentare disponibile';
+
+  @override
+  String get sevenDayScheduleEditing => 'Programma 7 giorni (Modifica)';
+
+  @override
+  String get sevenDayScheduleViewEdit => 'Programma 7 giorni (Visualizza/Modifica)';
+
+  @override
+  String get sevenDayScheduleViewOnly => 'Programma 7 giorni (Solo Visualizzazione)';
+
+  @override
+  String get noDailyPlanDataFound => 'Nessun dato piano giornaliero trovato per questo piano pasti.';
+
+  @override
+  String get enterRecipeName => 'Inserisci nome ricetta';
+
+  @override
+  String get enterCookingInstructions => 'Inserisci istruzioni di cottura...';
+
+  @override
+  String get add => 'Aggiungi';
+
+  @override
+  String get noIngredientsAddedYet => 'Nessun ingrediente aggiunto ancora';
+
+  @override
+  String get ingredientName => 'Nome Ingrediente';
+
+  @override
+  String get removeIngredient => 'Rimuovi ingrediente';
+
+  @override
+  String get amount => 'Quantità';
+
+  @override
+  String get unit => 'Unità';
+
+  @override
+  String get nutritionalValuesPerUnit => 'Valori Nutrizionali (per unità)';
+
+  @override
+  String get calories => 'Calorie';
+
+  @override
+  String get proteins => 'Proteine';
+
+  @override
+  String get carbs => 'Carboidrati';
+
+  @override
+  String get fats => 'Grassi';
+
+  @override
+  String get chatWithPatient => 'Chat con Paziente';
+
+  @override
+  String get validateMealPlan => 'Valida Piano Pasti';
+
+  @override
+  String validateMealPlanConfirm(String planName) {
+    return 'Sei sicuro di voler validare \"$planName\"?';
+  }
+
+  @override
+  String get validate => 'Valida';
+
+  @override
+  String get rejectMealPlan => 'Rifiuta Piano Pasti';
+
+  @override
+  String rejectMealPlanConfirm(String planName) {
+    return 'Sei sicuro di voler rifiutare \"$planName\"? Questo resetterà il piano allo stato non validato.';
+  }
+
+  @override
+  String get reject => 'Rifiuta';
+
+  @override
+  String get mealPlanValidatedSuccessfully => 'Piano pasti validato con successo!';
+
+  @override
+  String get failedToValidateMealPlan => 'Impossibile validare il piano pasti';
+
+  @override
+  String get mealPlanRejected => 'Piano pasti rifiutato';
+
+  @override
+  String get failedToRejectMealPlan => 'Impossibile rifiutare il piano pasti';
+
+  @override
+  String get savingMealPlan => 'Salvataggio piano pasti...';
+
+  @override
+  String get mealPlanSavedSuccessfully => 'Piano pasti salvato con successo!';
+
+  @override
+  String get failedToSaveMealPlan => 'Impossibile salvare il piano pasti';
+
+  @override
+  String get bmiUnderweight => 'Sottopeso';
+
+  @override
+  String get bmiNormalWeight => 'Peso normale';
+
+  @override
+  String get bmiOverweight => 'Sovrappeso';
+
+  @override
+  String get bmiObese => 'Obeso';
+
+  @override
+  String get noneReported => 'Nessuno riportato';
 
   @override
   String get profileInfoNotAvailable => 'Informazioni profilo non disponibili';
@@ -341,13 +702,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get physicalDetails => 'Dettagli Fisici';
 
   @override
-  String get weight => 'Peso';
-
-  @override
   String get weightHelper => 'Consentito: 30–300 kg';
-
-  @override
-  String get height => 'Altezza';
 
   @override
   String get heightHelper => 'Consentito: 50–250 cm';
@@ -357,12 +712,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get dailyMeals => 'Pasti Giornalieri';
-
-  @override
-  String get dietaryInformation => 'Informazioni Dietetiche';
-
-  @override
-  String get additionalPreferences => 'Preferenze Aggiuntive';
 
   @override
   String get additionalPreferencesHint => 'Altre preferenze o requisiti alimentari';
@@ -636,37 +985,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get planInformation => 'Informazioni Piano';
 
   @override
-  String get viewPlanDetails => 'Visualizza dettagli piano';
-
-  @override
   String get planName => 'Nome Piano';
-
-  @override
-  String get planIdLabel => 'ID Piano';
-
-  @override
-  String get generated => 'Generato';
-
-  @override
-  String get status => 'Stato';
-
-  @override
-  String get validation => 'Convalida';
-
-  @override
-  String get nutritionist => 'Nutrizionista';
-
-  @override
-  String get user => 'Utente';
 
   @override
   String get errorDetails => 'Dettagli Errore';
 
   @override
   String get weeklyMealPlan => 'Piano Alimentare Settimanale';
-
-  @override
-  String get noMealPlanDataAvailable => 'Nessun dato del piano alimentare disponibile';
 
   @override
   String get sevenDayMealScheduleReadOnly => 'Piano alimentare di 7 giorni';
@@ -716,13 +1041,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get nutritionInformation => 'Informazioni Nutrizionali';
 
   @override
-  String get calories => 'Calorie';
-
-  @override
   String get protein => 'Proteine';
-
-  @override
-  String get carbs => 'Carboidrati';
 
   @override
   String get fat => 'Grassi';
@@ -898,12 +1217,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get todayProgress => 'Progressi di oggi';
 
   @override
-  String get fats => 'Grassi';
-
-  @override
-  String get proteins => 'Proteine';
-
-  @override
   String get todaysMeals => 'Ricette odierne';
 
   @override
@@ -1047,16 +1360,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectDate => 'Seleziona data';
 
   @override
-  String get saving => 'Salvataggio...';
-
-  @override
-  String get profileUpdatedSuccessfully => 'Profilo aggiornato con successo!';
-
-  @override
   String get failedToUpdateProfile => 'Impossibile aggiornare il profilo. Riprova.';
-
-  @override
-  String get errorUpdatingProfile => 'Errore nell\'aggiornamento del profilo';
 
   @override
   String get generationPreferences => 'Preferenze di Generazione';
@@ -1232,9 +1536,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get clearCacheAndReload => 'Svuota cache e ricarica le tue informazioni';
 
   @override
-  String get signOut => 'Disconnetti';
-
-  @override
   String get signOutOfYourAccount => 'Disconnetti dal tuo account';
 
   @override
@@ -1244,22 +1545,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get areYouSureSignOut => 'Sei sicuro di voler disconnetterti dal tuo account?';
 
   @override
-  String get dangerZone => 'Zona Pericolosa';
-
-  @override
   String get irreversibleAndDestructiveActions => 'Azioni irreversibili e distruttive';
-
-  @override
-  String get criticalWarning => 'Avviso Critico';
 
   @override
   String get actionsArePermanent => 'Le azioni qui sotto sono permanenti e non possono essere annullate. Tutti i tuoi dati, inclusi piani pasto, preferenze e informazioni dell\'account verranno eliminati definitivamente.';
 
   @override
   String get deletingAccount => 'Eliminazione Account...';
-
-  @override
-  String get deleteMyAccount => 'Elimina Il Mio Account';
 
   @override
   String get thisActionWillPermanentlyDelete => 'Questa azione eliminerà permanentemente il tuo account e tutti i dati associati. Questa operazione non può essere annullata.';
@@ -1269,6 +1561,53 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get failedToDeleteAccount => 'Impossibile eliminare l\'account';
+
+  @override
+  String get noInternetConnectionValidation => 'Nessuna connessione internet. Controlla la tua connessione e riprova.';
+
+  @override
+  String errorLoadingAssignedPlans(String error) {
+    return 'Errore nel caricamento dei piani alimentari assegnati: $error';
+  }
+
+  @override
+  String get loadingMealPlansValidation => 'Caricamento piani alimentari...';
+
+  @override
+  String get validatedStatus => 'Convalidato';
+
+  @override
+  String get pendingReviewStatus => 'In Revisione';
+
+  @override
+  String get notValidatedStatus => 'Non Convalidato';
+
+  @override
+  String clientLabel(String clientName) {
+    return 'Cliente: $clientName';
+  }
+
+  @override
+  String createdLabel(String date) {
+    return 'Creato: $date';
+  }
+
+  @override
+  String updatedLabel(String date) {
+    return 'Aggiornato: $date';
+  }
+
+  @override
+  String get noMealPlansToValidate => 'Nessun Piano Alimentare da Convalidare';
+
+  @override
+  String get validationEmptyMessage => 'I piani alimentari assegnati per la convalida appariranno qui.\nControlla più tardi o trascina per aggiornare.';
+
+  @override
+  String get refresh => 'Aggiorna';
+
+  @override
+  String get errorLoadingPlansTitle => 'Errore nel Caricamento dei Piani';
 
   @override
   String get signUp => 'Crea account';

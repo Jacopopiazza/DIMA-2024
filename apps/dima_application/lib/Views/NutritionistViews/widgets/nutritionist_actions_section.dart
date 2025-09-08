@@ -1,5 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class NutritionistActionsSection extends StatelessWidget {
@@ -23,7 +24,7 @@ class NutritionistActionsSection extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error signing out: ${e.message}'),
+            content: Text(AppLocalizations.of(context)!.errorSigningOut(e.message)),
             backgroundColor: Colors.red,
           ),
         );
@@ -40,7 +41,7 @@ class NutritionistActionsSection extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error deleting account: ${e.message}'),
+            content: Text(AppLocalizations.of(context)!.errorDeletingAccount(e.message)),
             backgroundColor: Colors.red,
           ),
         );
@@ -71,7 +72,7 @@ class NutritionistActionsSection extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Text(
-              'Delete Account',
+              AppLocalizations.of(context)!.deleteAccount,
               style: TextStyle(color: colorScheme.onSurface),
             ),
           ],
@@ -80,9 +81,9 @@ class NutritionistActionsSection extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'This action will permanently delete your nutritionist account and all associated data. This cannot be undone.',
-              style: TextStyle(fontWeight: FontWeight.w500),
+            Text(
+              AppLocalizations.of(context)!.deleteAccountPermanently,
+              style: const TextStyle(fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 16),
             Container(
@@ -99,7 +100,7 @@ class NutritionistActionsSection extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'All your professional data, client interactions, and account information will be permanently removed.',
+                      AppLocalizations.of(context)!.allDataWillBeRemoved,
                       style: TextStyle(
                         color: Colors.red.shade700,
                         fontSize: 12,
@@ -114,7 +115,7 @@ class NutritionistActionsSection extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
@@ -122,7 +123,7 @@ class NutritionistActionsSection extends StatelessWidget {
               backgroundColor: Colors.red,
             ),
             child: Text(
-              'Delete Account',
+              AppLocalizations.of(context)!.deleteAccount,
               style: TextStyle(color: colorScheme.onSurface),
             ),
           ),
@@ -148,22 +149,22 @@ class NutritionistActionsSection extends StatelessWidget {
               size: 24,
             ),
             const SizedBox(width: 12),
-            const Text('Sign Out'),
+            Text(AppLocalizations.of(context)!.confirmSignOutTitle),
           ],
         ),
-        content: const Text(
-            'Are you sure you want to sign out of your nutritionist account?'),
+        content: Text(
+            AppLocalizations.of(context)!.confirmSignOutMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
             style: FilledButton.styleFrom(
               backgroundColor: Colors.orange,
             ),
-            child: const Text('Sign Out'),
+            child: Text(AppLocalizations.of(context)!.signOut),
           ),
         ],
       ),
@@ -187,8 +188,8 @@ class NutritionistActionsSection extends StatelessWidget {
             _buildActionTile(
               context,
               icon: Icons.logout_rounded,
-              title: 'Sign Out',
-              subtitle: 'Sign out of your nutritionist account',
+              title: AppLocalizations.of(context)!.signOut,
+              subtitle: AppLocalizations.of(context)!.signOutOfNutritionistAccount,
               color: Colors.orange,
               onTap: () => _showSignOutConfirmation(context),
             ),
@@ -378,14 +379,14 @@ class _NutritionistDangerZoneState extends State<_NutritionistDangerZone>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Danger Zone',
+                          AppLocalizations.of(context)!.dangerZone,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.red.shade800,
                           ),
                         ),
                         Text(
-                          'Irreversible and destructive actions',
+                          AppLocalizations.of(context)!.irreversibleDestructiveActions,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.red.shade600,
                           ),
@@ -435,7 +436,7 @@ class _NutritionistDangerZoneState extends State<_NutritionistDangerZone>
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    'Critical Warning',
+                                    AppLocalizations.of(context)!.criticalWarning,
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.red.shade800,
@@ -446,7 +447,7 @@ class _NutritionistDangerZoneState extends State<_NutritionistDangerZone>
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'The actions below are permanent and cannot be undone. All your nutritionist data, including profile information, client interactions, and professional settings will be permanently deleted.',
+                              AppLocalizations.of(context)!.permanentActionWarning,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: Colors.red.shade700,
                                 height: 1.4,
@@ -462,13 +463,13 @@ class _NutritionistDangerZoneState extends State<_NutritionistDangerZone>
                         width: double.infinity,
                         child: FilledButton.icon(
                           onPressed: widget.onDeleteAccount,
-                          icon: Icon(Icons.delete_forever_rounded,
-                              size: 20, color: colorScheme.onSurface),
+                          icon: const Icon(Icons.delete_forever_rounded,
+                              size: 20, color: Colors.white),
                           label: Text(
-                            'Delete My Account',
+                            AppLocalizations.of(context)!.deleteMyAccount,
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: colorScheme.onSurface,
+                              color: Colors.white,
                             ),
                           ),
                           style: FilledButton.styleFrom(

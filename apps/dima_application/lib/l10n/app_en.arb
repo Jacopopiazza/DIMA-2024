@@ -1,28 +1,131 @@
 {
   "@@locale": "en",
+  "loadingNutritionistSettings": "Loading nutritionist settings...",
+  "nutritionistSettings": "Nutritionist Settings",
+  "manageProfileMessage": "Manage your professional profile, availability, and account settings.",
+  "profileInformation": "Profile Information",
+  "editProfessionalDetails": "Edit Professional Details",
+  "specialization": "Specialization",
+  "professionalBio": "Professional Bio",
+  "profilePicture": "Profile Picture",
+  "availabilitySettings": "Availability Settings",
+  "profileUpdatedSuccessfully": "Profile updated successfully",
+  "errorUpdatingProfile": "Error updating profile: {error}",
+  "@errorUpdatingProfile": {
+    "description": "Error message when profile update fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseEnterSpecialization": "Please enter your specialization",
+  "pleaseEnterBio": "Please enter your bio",
+  "bioMinLength": "Bio should be at least 50 characters",
+  "saving": "Saving...",
+  "saveChanges": "Save Changes",
+  "availableForConsultations": "You are now available for consultations",
+  "unavailableForConsultations": "You are now unavailable for consultations",
+  "errorUpdatingAvailability": "Error updating availability: {error}",
+  "@errorUpdatingAvailability": {
+    "description": "Error message when availability update fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "validatePlans": "Validate Plans",
+  "settings": "Settings",
+  "noInternetConnection": "No Internet Connection",
+  "internetRequiredMessage": "This app requires an internet connection to function properly. Please check your connection and try again.",
+  "connectionTips": "Connection Tips",
+  "checkWifiConnection": "Check your Wi-Fi or mobile data connection",
+  "turnOffAirplaneMode": "Make sure airplane mode is turned off",
+  "moveForBetterSignal": "Try moving to an area with better signal",
+  "restartRouter": "Restart your router or mobile data",
+  "checking": "Checking...",
+  "tryAgainButton": "Try Again",
+  "connectionRestored": "Connection restored!",
+  "stillNoInternet": "Still no internet connection",
+  "tapToSelectPhoto": "Tap to select photo",
+  "selectPhoto": "Select Photo",
+  "chooseFromGallery": "Choose from Gallery",
+  "selectFromExistingPhotos": "Select from existing photos",
+  "removePhoto": "Remove Photo",
+  "deleteCurrentProfilePicture": "Delete current profile picture",
+  "cancel": "Cancel",
+  "errorUploadingImage": "Error uploading image: {error}",
+  "@errorUploadingImage": {
+    "description": "Error message when image upload fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorRemovingImage": "Error removing image: {error}",
+  "@errorRemovingImage": {
+    "description": "Error message when image removal fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "availability": "Availability",
+  "currentlyAvailableForConsultations": "You are currently available for consultations",
+  "currentlyUnavailableForConsultations": "You are currently unavailable for consultations",
+  "availableForConsultationsTitle": "Available for Consultations",
+  "usersCanRequestConsultations": "Users can request consultations from you",
+  "noNewConsultationRequests": "You will not receive new consultation requests",
+  "signOut": "Sign Out",
+  "signOutOfNutritionistAccount": "Sign out of your nutritionist account",
+  "errorSigningOut": "Error signing out: {error}",
+  "@errorSigningOut": {
+    "description": "Error message when sign out fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccount": "Delete Account",
+  "deleteAccountPermanently": "This action will permanently delete your nutritionist account and all associated data. This cannot be undone.",
+  "allDataWillBeRemoved": "All your professional data, client interactions, and account information will be permanently removed.",
+  "confirmSignOutTitle": "Sign Out",
+  "confirmSignOutMessage": "Are you sure you want to sign out of your nutritionist account?",
+  "dangerZone": "Danger Zone",
+  "irreversibleDestructiveActions": "Irreversible and destructive actions",
+  "criticalWarning": "Critical Warning",
+  "permanentActionWarning": "The actions below are permanent and cannot be undone. All your nutritionist data, including profile information, client interactions, and professional settings will be permanently deleted.",
+  "deleteMyAccount": "Delete My Account",
+  "errorDeletingAccount": "Error deleting account: {error}",
+  "@errorDeletingAccount": {
+    "description": "Error message when account deletion fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "settingsTitle": "Settings",
   "proPlanTitle": "PRO Plan",
   "unlockPremiumFeatures": "Unlock premium features:",
   "expertMealPlanningValidation": "Expert meal planning validation",
   "personalNutritionistChat": "Personal nutritionist chat in-app",
   "subscribeToPro": "Subscribe to PRO",
-  "deleteAccount": "Delete Account",
   "changePreferences": "Change Preferences",
   "clearCache": "Clear Cache",
   "confirmClearCacheTitle": "Confirm Clear Cache",
   "confirmClearCacheMessage": "Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.",
   "clear": "Clear",
-  "cancel": "Cancel",
   "cacheClearedSuccessfully": "Cache cleared successfully.",
   "errorClearingCache": "Error clearing cache.",
-  "confirmSignOutTitle": "Confirm Sign Out",
-  "confirmSignOutMessage": "Are you sure you want to sign out?",
   "confirmDeleteAccountTitle": "Confirm Account Deletion",
   "confirmDeleteAccountMessage": "WARNING: This action is irreversible and will permanently delete your account and all associated data. Are you absolutely sure you want to proceed?",
   "accountDeletedSuccessfully": "Account deleted successfully.",
-  "errorDeletingAccount": "Error deleting account. Please try again.",
   "errorDeleteAccountRequiresRecentLogin": "Account deletion requires a recent sign-in. Please sign out and sign back in.",
-  "saveChanges": "Save Changes",
   "preferencesSavedSuccess": "Preferences saved successfully.",
   "errorSavingPreferences": "Error saving preferences.",
   "errorLoadingPreferences": "Error loading preferences.",
@@ -104,7 +207,81 @@
   },
   "today": "Today",
   "mealPlans": "Meal Plans",
-  "settings": "Settings",
+  "clientDetails": "Client Details",
+  "loadingClientInformation": "Loading client information...",
+  "healthProfilePreferences": "Health profile and preferences",
+  "noClientDetailsAvailable": "No client details available",
+  "loadingClientDetails": "Loading client details...",
+  "physicalInformation": "Physical Information",
+  "height": "Height",
+  "weight": "Weight",
+  "bmi": "BMI",
+  "dietaryInformation": "Dietary Information",
+  "dailyMealsPreference": "Daily Meals Preference",
+  "dietaryRestrictionsLabel": "Dietary Restrictions",
+  "additionalPreferences": "Additional Preferences",
+  "accountInformation": "Account Information",
+  "accountCreated": "Account Created",
+  "lastUpdated": "Last Updated",
+  "activePlanId": "Active Plan ID",
+  "viewPlanDetails": "View plan details",
+  "planIdLabel": "Plan ID",
+  "generated": "Generated",
+  "status": "Status",
+  "validation": "Validation",
+  "nutritionist": "Nutritionist",
+  "user": "User",
+  "noMealPlanDataAvailable": "No meal plan data available",
+  "sevenDayScheduleEditing": "7-day meal schedule (Editing)",
+  "sevenDayScheduleViewEdit": "7-day meal schedule (View/Edit)",
+  "sevenDayScheduleViewOnly": "7-day meal schedule (View Only)",
+  "noDailyPlanDataFound": "No daily plan data found for this meal plan.",
+  "enterRecipeName": "Enter recipe name",
+  "enterCookingInstructions": "Enter cooking instructions...",
+  "add": "Add",
+  "noIngredientsAddedYet": "No ingredients added yet",
+  "ingredientName": "Ingredient Name",
+  "removeIngredient": "Remove ingredient",
+  "amount": "Amount",
+  "unit": "Unit",
+  "nutritionalValuesPerUnit": "Nutritional Values (per unit)",
+  "calories": "Calories",
+  "proteins": "Proteins",
+  "carbs": "Carbs",
+  "fats": "Fats",
+  "chatWithPatient": "Chat with Patient",
+  "validateMealPlan": "Validate Meal Plan",
+  "validateMealPlanConfirm": "Are you sure you want to validate \"{planName}\"?",
+  "@validateMealPlanConfirm": {
+    "placeholders": {
+      "planName": {
+        "type": "String"
+      }
+    }
+  },
+  "validate": "Validate",
+  "rejectMealPlan": "Reject Meal Plan",
+  "rejectMealPlanConfirm": "Are you sure you want to reject \"{planName}\"? This will reset the plan to not validated status.",
+  "@rejectMealPlanConfirm": {
+    "placeholders": {
+      "planName": {
+        "type": "String"
+      }
+    }
+  },
+  "reject": "Reject",
+  "mealPlanValidatedSuccessfully": "Meal plan validated successfully!",
+  "failedToValidateMealPlan": "Failed to validate meal plan",
+  "mealPlanRejected": "Meal plan rejected",
+  "failedToRejectMealPlan": "Failed to reject meal plan",
+  "savingMealPlan": "Saving meal plan...",
+  "mealPlanSavedSuccessfully": "Meal plan saved successfully!",
+  "failedToSaveMealPlan": "Failed to save meal plan",
+  "bmiUnderweight": "Underweight",
+  "bmiNormalWeight": "Normal weight",
+  "bmiOverweight": "Overweight",
+  "bmiObese": "Obese",
+  "noneReported": "None reported",
   "profileInfoNotAvailable": "Profile information not available",
   "notSpecified": "Not specified",
   "noExercise": "No exercise",
@@ -137,14 +314,10 @@
   "usingCustomPreferences": "Using custom preferences for this meal plan",
   "usingProfilePreferences": "Using your profile preferences",
   "physicalDetails": "Physical Details",
-  "weight": "Weight",
   "weightHelper": "Allowed: 30–300 kg",
-  "height": "Height",
   "heightHelper": "Allowed: 50–250 cm",
   "mealPreferences": "Meal Preferences",
   "dailyMeals": "Daily Meals",
-  "dietaryInformation": "Dietary Information",
-  "additionalPreferences": "Additional Preferences",
   "additionalPreferencesHint": "Any other food preferences or requirements",
   "creatingMealPlan": "Creating Meal Plan...",
   "generateCustomPreferences": "Generate with Custom Preferences",
@@ -275,17 +448,9 @@
   "mealPlanNotFound": "Meal Plan Not Found",
   "mealPlanMightDeleted": "This meal plan might have been deleted or is no longer available. Please try refreshing or go back to select another plan.",
   "planInformation": "Plan Information",
-  "viewPlanDetails": "View plan details",
   "planName": "Plan Name",
-  "planIdLabel": "Plan ID",
-  "generated": "Generated",
-  "status": "Status",
-  "validation": "Validation",
-  "nutritionist": "Nutritionist",
-  "user": "User",
   "errorDetails": "Error Details",
   "weeklyMealPlan": "Weekly Meal Plan",
-  "noMealPlanDataAvailable": "No meal plan data available",
   "sevenDayMealScheduleReadOnly": "7-day meal schedule",
   "mealsCount": "{count} meals",
   "@mealsCount": {
@@ -309,9 +474,7 @@
   "recipeName": "Recipe Name",
   "instructions": "Instructions",
   "nutritionInformation": "Nutrition Information",
-  "calories": "Calories",
   "protein": "Protein",
-  "carbs": "Carbs",
   "fat": "Fat",
   "chatWithNutritionist": "Chat with Nutritionist",
   "showLess": "Show less",
@@ -426,11 +589,9 @@
   "@carbs": {
     "description": "Carbs display name"
   },
-  "fats": "Fats",
   "@fats": {
     "description": "Fats display name"
   },
-  "proteins": "Proteins",
   "@proteins": {
     "description": "Proteins display name"
   },
@@ -535,10 +696,7 @@
   "other": "Other",
   "birthdate": "Birthdate",
   "selectDate": "Select date",
-  "saving": "Saving...",
-  "profileUpdatedSuccessfully": "Profile updated successfully!",
   "failedToUpdateProfile": "Failed to update profile. Please try again.",
-  "errorUpdatingProfile": "Error updating profile",
   "generationPreferences": "Generation Preferences",
   "weightAllowed": "Allowed: 30–300 kg",
   "weightMustBeBetween": "Weight must be between 30 and 300 kg",
@@ -596,19 +754,60 @@
   "quickActions": "Quick Actions",
   "refreshData": "Refresh Data",
   "clearCacheAndReload": "Clear cache and reload your information",
-  "signOut": "Sign Out",
   "signOutOfYourAccount": "Sign out of your account",
   "dataRefreshedSuccessfully": "Data refreshed successfully",
   "areYouSureSignOut": "Are you sure you want to sign out of your account?",
-  "dangerZone": "Danger Zone",
   "irreversibleAndDestructiveActions": "Irreversible and destructive actions",
-  "criticalWarning": "Critical Warning",
   "actionsArePermanent": "The actions below are permanent and cannot be undone. All your data, including meal plans, preferences, and account information will be permanently deleted.",
   "deletingAccount": "Deleting Account...",
-  "deleteMyAccount": "Delete My Account",
   "thisActionWillPermanentlyDelete": "This action will permanently delete your account and all associated data. This cannot be undone.",
   "allYourMealPlansWillBeRemoved": "All your meal plans, preferences, and personal data will be permanently removed.",
   "failedToDeleteAccount": "Failed to delete account",
+  "noInternetConnectionValidation": "No internet connection. Please check your connection and try again.",
+  "errorLoadingAssignedPlans": "Error loading assigned meal plans: {error}",
+  "@errorLoadingAssignedPlans": {
+    "description": "Error message when loading assigned meal plans fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingMealPlansValidation": "Loading meal plans...",
+  "validatedStatus": "Validated",
+  "pendingReviewStatus": "Pending Review",
+  "notValidatedStatus": "Not Validated",
+  "clientLabel": "Client: {clientName}",
+  "@clientLabel": {
+    "description": "Label showing the client name",
+    "placeholders": {
+      "clientName": {
+        "type": "String"
+      }
+    }
+  },
+  "createdLabel": "Created: {date}",
+  "@createdLabel": {
+    "description": "Label showing creation date",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updatedLabel": "Updated: {date}",
+  "@updatedLabel": {
+    "description": "Label showing update date and time",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noMealPlansToValidate": "No Meal Plans to Validate",
+  "validationEmptyMessage": "Meal plans assigned for validation will appear here.\nCheck back later or pull to refresh.",
+  "refresh": "Refresh",
+  "errorLoadingPlansTitle": "Error Loading Plans",
   "@signIn": {
     "description": "Label of the button to sign in the user."
   },

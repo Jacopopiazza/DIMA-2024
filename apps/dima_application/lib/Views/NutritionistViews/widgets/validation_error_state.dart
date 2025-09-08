@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 class ValidationErrorState extends StatelessWidget {
   final String errorMessage;
@@ -27,7 +28,7 @@ class ValidationErrorState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Error Loading Plans',
+              AppLocalizations.of(context)!.errorLoadingPlansTitle,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
@@ -45,8 +46,11 @@ class ValidationErrorState extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: onRetry,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
+              icon: Icon(
+                Icons.refresh,
+                color: theme.colorScheme.onPrimary,
+              ),
+              label: Text(AppLocalizations.of(context)!.tryAgain),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
                 foregroundColor: theme.colorScheme.onPrimary,

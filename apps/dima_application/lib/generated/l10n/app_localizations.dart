@@ -95,6 +95,372 @@ abstract class AppLocalizations {
     Locale('it')
   ];
 
+  /// No description provided for @loadingNutritionistSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading nutritionist settings...'**
+  String get loadingNutritionistSettings;
+
+  /// No description provided for @nutritionistSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritionist Settings'**
+  String get nutritionistSettings;
+
+  /// No description provided for @manageProfileMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your professional profile, availability, and account settings.'**
+  String get manageProfileMessage;
+
+  /// No description provided for @profileInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Information'**
+  String get profileInformation;
+
+  /// No description provided for @editProfessionalDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Professional Details'**
+  String get editProfessionalDetails;
+
+  /// No description provided for @specialization.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialization'**
+  String get specialization;
+
+  /// No description provided for @professionalBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional Bio'**
+  String get professionalBio;
+
+  /// No description provided for @profilePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Picture'**
+  String get profilePicture;
+
+  /// No description provided for @availabilitySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability Settings'**
+  String get availabilitySettings;
+
+  /// No description provided for @profileUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccessfully;
+
+  /// Error message when profile update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating profile: {error}'**
+  String errorUpdatingProfile(String error);
+
+  /// No description provided for @pleaseEnterSpecialization.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your specialization'**
+  String get pleaseEnterSpecialization;
+
+  /// No description provided for @pleaseEnterBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your bio'**
+  String get pleaseEnterBio;
+
+  /// No description provided for @bioMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Bio should be at least 50 characters'**
+  String get bioMinLength;
+
+  /// No description provided for @saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get saving;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @availableForConsultations.
+  ///
+  /// In en, this message translates to:
+  /// **'You are now available for consultations'**
+  String get availableForConsultations;
+
+  /// No description provided for @unavailableForConsultations.
+  ///
+  /// In en, this message translates to:
+  /// **'You are now unavailable for consultations'**
+  String get unavailableForConsultations;
+
+  /// Error message when availability update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating availability: {error}'**
+  String errorUpdatingAvailability(String error);
+
+  /// No description provided for @validatePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate Plans'**
+  String get validatePlans;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @internetRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This app requires an internet connection to function properly. Please check your connection and try again.'**
+  String get internetRequiredMessage;
+
+  /// No description provided for @connectionTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection Tips'**
+  String get connectionTips;
+
+  /// No description provided for @checkWifiConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your Wi-Fi or mobile data connection'**
+  String get checkWifiConnection;
+
+  /// No description provided for @turnOffAirplaneMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure airplane mode is turned off'**
+  String get turnOffAirplaneMode;
+
+  /// No description provided for @moveForBetterSignal.
+  ///
+  /// In en, this message translates to:
+  /// **'Try moving to an area with better signal'**
+  String get moveForBetterSignal;
+
+  /// No description provided for @restartRouter.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart your router or mobile data'**
+  String get restartRouter;
+
+  /// No description provided for @checking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking...'**
+  String get checking;
+
+  /// No description provided for @tryAgainButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgainButton;
+
+  /// No description provided for @connectionRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection restored!'**
+  String get connectionRestored;
+
+  /// No description provided for @stillNoInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'Still no internet connection'**
+  String get stillNoInternet;
+
+  /// No description provided for @tapToSelectPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select photo'**
+  String get tapToSelectPhoto;
+
+  /// No description provided for @selectPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Photo'**
+  String get selectPhoto;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @selectFromExistingPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Select from existing photos'**
+  String get selectFromExistingPhotos;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Photo'**
+  String get removePhoto;
+
+  /// No description provided for @deleteCurrentProfilePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete current profile picture'**
+  String get deleteCurrentProfilePicture;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Error message when image upload fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error uploading image: {error}'**
+  String errorUploadingImage(String error);
+
+  /// Error message when image removal fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error removing image: {error}'**
+  String errorRemovingImage(String error);
+
+  /// No description provided for @availability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get availability;
+
+  /// No description provided for @currentlyAvailableForConsultations.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently available for consultations'**
+  String get currentlyAvailableForConsultations;
+
+  /// No description provided for @currentlyUnavailableForConsultations.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently unavailable for consultations'**
+  String get currentlyUnavailableForConsultations;
+
+  /// No description provided for @availableForConsultationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Available for Consultations'**
+  String get availableForConsultationsTitle;
+
+  /// No description provided for @usersCanRequestConsultations.
+  ///
+  /// In en, this message translates to:
+  /// **'Users can request consultations from you'**
+  String get usersCanRequestConsultations;
+
+  /// No description provided for @noNewConsultationRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'You will not receive new consultation requests'**
+  String get noNewConsultationRequests;
+
+  /// Label of button to sign out the user
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get signOut;
+
+  /// No description provided for @signOutOfNutritionistAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of your nutritionist account'**
+  String get signOutOfNutritionistAccount;
+
+  /// Error message when sign out fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error signing out: {error}'**
+  String errorSigningOut(String error);
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountPermanently.
+  ///
+  /// In en, this message translates to:
+  /// **'This action will permanently delete your nutritionist account and all associated data. This cannot be undone.'**
+  String get deleteAccountPermanently;
+
+  /// No description provided for @allDataWillBeRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'All your professional data, client interactions, and account information will be permanently removed.'**
+  String get allDataWillBeRemoved;
+
+  /// No description provided for @confirmSignOutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get confirmSignOutTitle;
+
+  /// No description provided for @confirmSignOutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out of your nutritionist account?'**
+  String get confirmSignOutMessage;
+
+  /// No description provided for @dangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger Zone'**
+  String get dangerZone;
+
+  /// No description provided for @irreversibleDestructiveActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Irreversible and destructive actions'**
+  String get irreversibleDestructiveActions;
+
+  /// No description provided for @criticalWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Warning'**
+  String get criticalWarning;
+
+  /// No description provided for @permanentActionWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'The actions below are permanent and cannot be undone. All your nutritionist data, including profile information, client interactions, and professional settings will be permanently deleted.'**
+  String get permanentActionWarning;
+
+  /// No description provided for @deleteMyAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete My Account'**
+  String get deleteMyAccount;
+
+  /// Error message when account deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting account: {error}'**
+  String errorDeletingAccount(String error);
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:
@@ -131,12 +497,6 @@ abstract class AppLocalizations {
   /// **'Subscribe to PRO'**
   String get subscribeToPro;
 
-  /// No description provided for @deleteAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete Account'**
-  String get deleteAccount;
-
   /// No description provided for @changePreferences.
   ///
   /// In en, this message translates to:
@@ -167,12 +527,6 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear;
 
-  /// No description provided for @cancel.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
-
   /// No description provided for @cacheClearedSuccessfully.
   ///
   /// In en, this message translates to:
@@ -184,18 +538,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error clearing cache.'**
   String get errorClearingCache;
-
-  /// No description provided for @confirmSignOutTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm Sign Out'**
-  String get confirmSignOutTitle;
-
-  /// No description provided for @confirmSignOutMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to sign out?'**
-  String get confirmSignOutMessage;
 
   /// No description provided for @confirmDeleteAccountTitle.
   ///
@@ -215,23 +557,11 @@ abstract class AppLocalizations {
   /// **'Account deleted successfully.'**
   String get accountDeletedSuccessfully;
 
-  /// No description provided for @errorDeletingAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Error deleting account. Please try again.'**
-  String get errorDeletingAccount;
-
   /// No description provided for @errorDeleteAccountRequiresRecentLogin.
   ///
   /// In en, this message translates to:
   /// **'Account deletion requires a recent sign-in. Please sign out and sign back in.'**
   String get errorDeleteAccountRequiresRecentLogin;
-
-  /// No description provided for @saveChanges.
-  ///
-  /// In en, this message translates to:
-  /// **'Save Changes'**
-  String get saveChanges;
 
   /// No description provided for @preferencesSavedSuccess.
   ///
@@ -557,11 +887,371 @@ abstract class AppLocalizations {
   /// **'Meal Plans'**
   String get mealPlans;
 
-  /// No description provided for @settings.
+  /// No description provided for @clientDetails.
   ///
   /// In en, this message translates to:
-  /// **'Settings'**
-  String get settings;
+  /// **'Client Details'**
+  String get clientDetails;
+
+  /// No description provided for @loadingClientInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading client information...'**
+  String get loadingClientInformation;
+
+  /// No description provided for @healthProfilePreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Health profile and preferences'**
+  String get healthProfilePreferences;
+
+  /// No description provided for @noClientDetailsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No client details available'**
+  String get noClientDetailsAvailable;
+
+  /// No description provided for @loadingClientDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading client details...'**
+  String get loadingClientDetails;
+
+  /// No description provided for @physicalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical Information'**
+  String get physicalInformation;
+
+  /// No description provided for @height.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get height;
+
+  /// No description provided for @weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight;
+
+  /// No description provided for @bmi.
+  ///
+  /// In en, this message translates to:
+  /// **'BMI'**
+  String get bmi;
+
+  /// No description provided for @dietaryInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary Information'**
+  String get dietaryInformation;
+
+  /// No description provided for @dailyMealsPreference.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Meals Preference'**
+  String get dailyMealsPreference;
+
+  /// No description provided for @dietaryRestrictionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary Restrictions'**
+  String get dietaryRestrictionsLabel;
+
+  /// No description provided for @additionalPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Preferences'**
+  String get additionalPreferences;
+
+  /// No description provided for @accountInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Information'**
+  String get accountInformation;
+
+  /// No description provided for @accountCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Created'**
+  String get accountCreated;
+
+  /// No description provided for @lastUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated'**
+  String get lastUpdated;
+
+  /// No description provided for @activePlanId.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Plan ID'**
+  String get activePlanId;
+
+  /// No description provided for @viewPlanDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View plan details'**
+  String get viewPlanDetails;
+
+  /// No description provided for @planIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan ID'**
+  String get planIdLabel;
+
+  /// No description provided for @generated.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated'**
+  String get generated;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Validation'**
+  String get validation;
+
+  /// No description provided for @nutritionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritionist'**
+  String get nutritionist;
+
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
+  /// No description provided for @noMealPlanDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No meal plan data available'**
+  String get noMealPlanDataAvailable;
+
+  /// No description provided for @sevenDayScheduleEditing.
+  ///
+  /// In en, this message translates to:
+  /// **'7-day meal schedule (Editing)'**
+  String get sevenDayScheduleEditing;
+
+  /// No description provided for @sevenDayScheduleViewEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'7-day meal schedule (View/Edit)'**
+  String get sevenDayScheduleViewEdit;
+
+  /// No description provided for @sevenDayScheduleViewOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'7-day meal schedule (View Only)'**
+  String get sevenDayScheduleViewOnly;
+
+  /// No description provided for @noDailyPlanDataFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No daily plan data found for this meal plan.'**
+  String get noDailyPlanDataFound;
+
+  /// No description provided for @enterRecipeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter recipe name'**
+  String get enterRecipeName;
+
+  /// No description provided for @enterCookingInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter cooking instructions...'**
+  String get enterCookingInstructions;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @noIngredientsAddedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No ingredients added yet'**
+  String get noIngredientsAddedYet;
+
+  /// No description provided for @ingredientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient Name'**
+  String get ingredientName;
+
+  /// No description provided for @removeIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove ingredient'**
+  String get removeIngredient;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @unit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unit;
+
+  /// No description provided for @nutritionalValuesPerUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritional Values (per unit)'**
+  String get nutritionalValuesPerUnit;
+
+  /// Calories display name
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get calories;
+
+  /// Proteins display name
+  ///
+  /// In en, this message translates to:
+  /// **'Proteins'**
+  String get proteins;
+
+  /// Carbs display name
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get carbs;
+
+  /// Fats display name
+  ///
+  /// In en, this message translates to:
+  /// **'Fats'**
+  String get fats;
+
+  /// No description provided for @chatWithPatient.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with Patient'**
+  String get chatWithPatient;
+
+  /// No description provided for @validateMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate Meal Plan'**
+  String get validateMealPlan;
+
+  /// No description provided for @validateMealPlanConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to validate \"{planName}\"?'**
+  String validateMealPlanConfirm(String planName);
+
+  /// No description provided for @validate.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate'**
+  String get validate;
+
+  /// No description provided for @rejectMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Meal Plan'**
+  String get rejectMealPlan;
+
+  /// No description provided for @rejectMealPlanConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reject \"{planName}\"? This will reset the plan to not validated status.'**
+  String rejectMealPlanConfirm(String planName);
+
+  /// No description provided for @reject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get reject;
+
+  /// No description provided for @mealPlanValidatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal plan validated successfully!'**
+  String get mealPlanValidatedSuccessfully;
+
+  /// No description provided for @failedToValidateMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to validate meal plan'**
+  String get failedToValidateMealPlan;
+
+  /// No description provided for @mealPlanRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal plan rejected'**
+  String get mealPlanRejected;
+
+  /// No description provided for @failedToRejectMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to reject meal plan'**
+  String get failedToRejectMealPlan;
+
+  /// No description provided for @savingMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving meal plan...'**
+  String get savingMealPlan;
+
+  /// No description provided for @mealPlanSavedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal plan saved successfully!'**
+  String get mealPlanSavedSuccessfully;
+
+  /// No description provided for @failedToSaveMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save meal plan'**
+  String get failedToSaveMealPlan;
+
+  /// No description provided for @bmiUnderweight.
+  ///
+  /// In en, this message translates to:
+  /// **'Underweight'**
+  String get bmiUnderweight;
+
+  /// No description provided for @bmiNormalWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal weight'**
+  String get bmiNormalWeight;
+
+  /// No description provided for @bmiOverweight.
+  ///
+  /// In en, this message translates to:
+  /// **'Overweight'**
+  String get bmiOverweight;
+
+  /// No description provided for @bmiObese.
+  ///
+  /// In en, this message translates to:
+  /// **'Obese'**
+  String get bmiObese;
+
+  /// No description provided for @noneReported.
+  ///
+  /// In en, this message translates to:
+  /// **'None reported'**
+  String get noneReported;
 
   /// No description provided for @profileInfoNotAvailable.
   ///
@@ -755,23 +1445,11 @@ abstract class AppLocalizations {
   /// **'Physical Details'**
   String get physicalDetails;
 
-  /// No description provided for @weight.
-  ///
-  /// In en, this message translates to:
-  /// **'Weight'**
-  String get weight;
-
   /// No description provided for @weightHelper.
   ///
   /// In en, this message translates to:
   /// **'Allowed: 30–300 kg'**
   String get weightHelper;
-
-  /// No description provided for @height.
-  ///
-  /// In en, this message translates to:
-  /// **'Height'**
-  String get height;
 
   /// No description provided for @heightHelper.
   ///
@@ -790,18 +1468,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Daily Meals'**
   String get dailyMeals;
-
-  /// No description provided for @dietaryInformation.
-  ///
-  /// In en, this message translates to:
-  /// **'Dietary Information'**
-  String get dietaryInformation;
-
-  /// No description provided for @additionalPreferences.
-  ///
-  /// In en, this message translates to:
-  /// **'Additional Preferences'**
-  String get additionalPreferences;
 
   /// No description provided for @additionalPreferencesHint.
   ///
@@ -1325,53 +1991,11 @@ abstract class AppLocalizations {
   /// **'Plan Information'**
   String get planInformation;
 
-  /// No description provided for @viewPlanDetails.
-  ///
-  /// In en, this message translates to:
-  /// **'View plan details'**
-  String get viewPlanDetails;
-
   /// No description provided for @planName.
   ///
   /// In en, this message translates to:
   /// **'Plan Name'**
   String get planName;
-
-  /// No description provided for @planIdLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan ID'**
-  String get planIdLabel;
-
-  /// No description provided for @generated.
-  ///
-  /// In en, this message translates to:
-  /// **'Generated'**
-  String get generated;
-
-  /// No description provided for @status.
-  ///
-  /// In en, this message translates to:
-  /// **'Status'**
-  String get status;
-
-  /// No description provided for @validation.
-  ///
-  /// In en, this message translates to:
-  /// **'Validation'**
-  String get validation;
-
-  /// No description provided for @nutritionist.
-  ///
-  /// In en, this message translates to:
-  /// **'Nutritionist'**
-  String get nutritionist;
-
-  /// No description provided for @user.
-  ///
-  /// In en, this message translates to:
-  /// **'User'**
-  String get user;
 
   /// No description provided for @errorDetails.
   ///
@@ -1384,12 +2008,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Weekly Meal Plan'**
   String get weeklyMealPlan;
-
-  /// No description provided for @noMealPlanDataAvailable.
-  ///
-  /// In en, this message translates to:
-  /// **'No meal plan data available'**
-  String get noMealPlanDataAvailable;
 
   /// No description provided for @sevenDayMealScheduleReadOnly.
   ///
@@ -1481,23 +2099,11 @@ abstract class AppLocalizations {
   /// **'Nutrition Information'**
   String get nutritionInformation;
 
-  /// Calories display name
-  ///
-  /// In en, this message translates to:
-  /// **'Calories'**
-  String get calories;
-
   /// No description provided for @protein.
   ///
   /// In en, this message translates to:
   /// **'Protein'**
   String get protein;
-
-  /// Carbs display name
-  ///
-  /// In en, this message translates to:
-  /// **'Carbs'**
-  String get carbs;
 
   /// No description provided for @fat.
   ///
@@ -1829,18 +2435,6 @@ abstract class AppLocalizations {
   /// **'Today\'s Progress'**
   String get todayProgress;
 
-  /// Fats display name
-  ///
-  /// In en, this message translates to:
-  /// **'Fats'**
-  String get fats;
-
-  /// Proteins display name
-  ///
-  /// In en, this message translates to:
-  /// **'Proteins'**
-  String get proteins;
-
   /// Today's Meals Label
   ///
   /// In en, this message translates to:
@@ -2123,29 +2717,11 @@ abstract class AppLocalizations {
   /// **'Select date'**
   String get selectDate;
 
-  /// No description provided for @saving.
-  ///
-  /// In en, this message translates to:
-  /// **'Saving...'**
-  String get saving;
-
-  /// No description provided for @profileUpdatedSuccessfully.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile updated successfully!'**
-  String get profileUpdatedSuccessfully;
-
   /// No description provided for @failedToUpdateProfile.
   ///
   /// In en, this message translates to:
   /// **'Failed to update profile. Please try again.'**
   String get failedToUpdateProfile;
-
-  /// No description provided for @errorUpdatingProfile.
-  ///
-  /// In en, this message translates to:
-  /// **'Error updating profile'**
-  String get errorUpdatingProfile;
 
   /// No description provided for @generationPreferences.
   ///
@@ -2489,12 +3065,6 @@ abstract class AppLocalizations {
   /// **'Clear cache and reload your information'**
   String get clearCacheAndReload;
 
-  /// Label of button to sign out the user
-  ///
-  /// In en, this message translates to:
-  /// **'Sign Out'**
-  String get signOut;
-
   /// No description provided for @signOutOfYourAccount.
   ///
   /// In en, this message translates to:
@@ -2513,23 +3083,11 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to sign out of your account?'**
   String get areYouSureSignOut;
 
-  /// No description provided for @dangerZone.
-  ///
-  /// In en, this message translates to:
-  /// **'Danger Zone'**
-  String get dangerZone;
-
   /// No description provided for @irreversibleAndDestructiveActions.
   ///
   /// In en, this message translates to:
   /// **'Irreversible and destructive actions'**
   String get irreversibleAndDestructiveActions;
-
-  /// No description provided for @criticalWarning.
-  ///
-  /// In en, this message translates to:
-  /// **'Critical Warning'**
-  String get criticalWarning;
 
   /// No description provided for @actionsArePermanent.
   ///
@@ -2542,12 +3100,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deleting Account...'**
   String get deletingAccount;
-
-  /// No description provided for @deleteMyAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete My Account'**
-  String get deleteMyAccount;
 
   /// No description provided for @thisActionWillPermanentlyDelete.
   ///
@@ -2566,6 +3118,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete account'**
   String get failedToDeleteAccount;
+
+  /// No description provided for @noInternetConnectionValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Please check your connection and try again.'**
+  String get noInternetConnectionValidation;
+
+  /// Error message when loading assigned meal plans fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading assigned meal plans: {error}'**
+  String errorLoadingAssignedPlans(String error);
+
+  /// No description provided for @loadingMealPlansValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading meal plans...'**
+  String get loadingMealPlansValidation;
+
+  /// No description provided for @validatedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Validated'**
+  String get validatedStatus;
+
+  /// No description provided for @pendingReviewStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Review'**
+  String get pendingReviewStatus;
+
+  /// No description provided for @notValidatedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Validated'**
+  String get notValidatedStatus;
+
+  /// Label showing the client name
+  ///
+  /// In en, this message translates to:
+  /// **'Client: {clientName}'**
+  String clientLabel(String clientName);
+
+  /// Label showing creation date
+  ///
+  /// In en, this message translates to:
+  /// **'Created: {date}'**
+  String createdLabel(String date);
+
+  /// Label showing update date and time
+  ///
+  /// In en, this message translates to:
+  /// **'Updated: {date}'**
+  String updatedLabel(String date);
+
+  /// No description provided for @noMealPlansToValidate.
+  ///
+  /// In en, this message translates to:
+  /// **'No Meal Plans to Validate'**
+  String get noMealPlansToValidate;
+
+  /// No description provided for @validationEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal plans assigned for validation will appear here.\nCheck back later or pull to refresh.'**
+  String get validationEmptyMessage;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @errorLoadingPlansTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error Loading Plans'**
+  String get errorLoadingPlansTitle;
 
   /// Label of the button to sign up the user.
   ///

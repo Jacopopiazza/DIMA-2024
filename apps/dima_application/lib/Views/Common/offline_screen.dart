@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/services/connectivity_service.dart';
 
 class OfflineScreen extends StatefulWidget {
@@ -74,11 +75,11 @@ class _OfflineScreenState extends State<OfflineScreen>
         // Connection restored - the StreamBuilder will handle the UI update
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Row(
+            content: Row(
               children: [
-                Icon(Icons.wifi, color: Colors.white, size: 16),
-                SizedBox(width: 8),
-                Text('Connection restored!'),
+                const Icon(Icons.wifi, color: Colors.white, size: 16),
+                const SizedBox(width: 8),
+                Text(AppLocalizations.of(context)!.connectionRestored),
               ],
             ),
             backgroundColor: Colors.green.shade600,
@@ -91,11 +92,11 @@ class _OfflineScreenState extends State<OfflineScreen>
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Row(
+            content: Row(
               children: [
-                Icon(Icons.wifi_off, color: Colors.white, size: 16),
-                SizedBox(width: 8),
-                Text('Still no internet connection'),
+                const Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                const SizedBox(width: 8),
+                Text(AppLocalizations.of(context)!.stillNoInternet),
               ],
             ),
             backgroundColor: Colors.red.shade600,
@@ -172,7 +173,7 @@ class _OfflineScreenState extends State<OfflineScreen>
 
                     // Title
                     Text(
-                      'No Internet Connection',
+                      AppLocalizations.of(context)!.noInternetConnection,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: colorScheme.onSurface,
@@ -184,7 +185,7 @@ class _OfflineScreenState extends State<OfflineScreen>
 
                     // Description
                     Text(
-                      'This app requires an internet connection to function properly. Please check your connection and try again.',
+                      AppLocalizations.of(context)!.internetRequiredMessage,
                       style: theme.textTheme.bodyLarge?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                         height: 1.5,
@@ -216,7 +217,7 @@ class _OfflineScreenState extends State<OfflineScreen>
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Connection Tips',
+                                AppLocalizations.of(context)!.connectionTips,
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: colorScheme.primary,
@@ -248,7 +249,7 @@ class _OfflineScreenState extends State<OfflineScreen>
                                 ),
                               )
                             : const Icon(Icons.refresh_rounded),
-                        label: Text(_isRetrying ? 'Checking...' : 'Try Again'),
+                        label: Text(_isRetrying ? AppLocalizations.of(context)!.checking : AppLocalizations.of(context)!.tryAgainButton),
                         style: FilledButton.styleFrom(
                           backgroundColor: colorScheme.primary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -270,10 +271,10 @@ class _OfflineScreenState extends State<OfflineScreen>
 
   List<Widget> _buildConnectionTips(ThemeData theme, ColorScheme colorScheme) {
     final tips = [
-      'Check your Wi-Fi or mobile data connection',
-      'Make sure airplane mode is turned off',
-      'Try moving to an area with better signal',
-      'Restart your router or mobile data',
+      AppLocalizations.of(context)!.checkWifiConnection,
+      AppLocalizations.of(context)!.turnOffAirplaneMode,
+      AppLocalizations.of(context)!.moveForBetterSignal,
+      AppLocalizations.of(context)!.restartRouter,
     ];
 
     return tips

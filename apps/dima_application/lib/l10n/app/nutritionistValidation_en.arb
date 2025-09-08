@@ -1,0 +1,49 @@
+{
+    "@@locale": "en",
+    "noInternetConnectionValidation": "No internet connection. Please check your connection and try again.",
+    "errorLoadingAssignedPlans": "Error loading assigned meal plans: {error}",
+    "@errorLoadingAssignedPlans": {
+        "description": "Error message when loading assigned meal plans fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "loadingMealPlansValidation": "Loading meal plans...",
+    "validatedStatus": "Validated",
+    "pendingReviewStatus": "Pending Review", 
+    "notValidatedStatus": "Not Validated",
+    "clientLabel": "Client: {clientName}",
+    "@clientLabel": {
+        "description": "Label showing the client name",
+        "placeholders": {
+            "clientName": {
+                "type": "String"
+            }
+        }
+    },
+    "createdLabel": "Created: {date}",
+    "@createdLabel": {
+        "description": "Label showing creation date",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "updatedLabel": "Updated: {date}",
+    "@updatedLabel": {
+        "description": "Label showing update date and time",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "noMealPlansToValidate": "No Meal Plans to Validate",
+    "validationEmptyMessage": "Meal plans assigned for validation will appear here.\nCheck back later or pull to refresh.",
+    "refresh": "Refresh",
+    "errorLoadingPlansTitle": "Error Loading Plans",
+    "tryAgain": "Try Again"
+}

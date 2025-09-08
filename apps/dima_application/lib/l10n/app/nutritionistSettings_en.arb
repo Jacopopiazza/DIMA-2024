@@ -1,0 +1,112 @@
+{
+    "@@locale": "en",
+    "loadingNutritionistSettings": "Loading nutritionist settings...",
+    "nutritionistSettings": "Nutritionist Settings",
+    "manageProfileMessage": "Manage your professional profile, availability, and account settings.",
+    "profileInformation": "Profile Information",
+    "editProfessionalDetails": "Edit Professional Details",
+    "specialization": "Specialization",
+    "professionalBio": "Professional Bio",
+    "profilePicture": "Profile Picture",
+    "availabilitySettings": "Availability Settings",
+    "profileUpdatedSuccessfully": "Profile updated successfully",
+    "errorUpdatingProfile": "Error updating profile: {error}",
+    "@errorUpdatingProfile": {
+        "description": "Error message when profile update fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "pleaseEnterSpecialization": "Please enter your specialization",
+    "pleaseEnterBio": "Please enter your bio",
+    "bioMinLength": "Bio should be at least 50 characters",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "availableForConsultations": "You are now available for consultations",
+    "unavailableForConsultations": "You are now unavailable for consultations",
+    "errorUpdatingAvailability": "Error updating availability: {error}",
+    "@errorUpdatingAvailability": {
+        "description": "Error message when availability update fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "validatePlans": "Validate Plans",
+    "settings": "Settings",
+    "noInternetConnection": "No Internet Connection",
+    "internetRequiredMessage": "This app requires an internet connection to function properly. Please check your connection and try again.",
+    "connectionTips": "Connection Tips",
+    "checkWifiConnection": "Check your Wi-Fi or mobile data connection",
+    "turnOffAirplaneMode": "Make sure airplane mode is turned off",
+    "moveForBetterSignal": "Try moving to an area with better signal",
+    "restartRouter": "Restart your router or mobile data",
+    "checking": "Checking...",
+    "tryAgainButton": "Try Again",
+    "connectionRestored": "Connection restored!",
+    "stillNoInternet": "Still no internet connection",
+    "tapToSelectPhoto": "Tap to select photo",
+    "selectPhoto": "Select Photo",
+    "chooseFromGallery": "Choose from Gallery",
+    "selectFromExistingPhotos": "Select from existing photos",
+    "removePhoto": "Remove Photo",
+    "deleteCurrentProfilePicture": "Delete current profile picture",
+    "cancel": "Cancel",
+    "errorUploadingImage": "Error uploading image: {error}",
+    "@errorUploadingImage": {
+        "description": "Error message when image upload fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "errorRemovingImage": "Error removing image: {error}",
+    "@errorRemovingImage": {
+        "description": "Error message when image removal fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "availability": "Availability",
+    "currentlyAvailableForConsultations": "You are currently available for consultations",
+    "currentlyUnavailableForConsultations": "You are currently unavailable for consultations",
+    "availableForConsultationsTitle": "Available for Consultations",
+    "usersCanRequestConsultations": "Users can request consultations from you",
+    "noNewConsultationRequests": "You will not receive new consultation requests",
+    "signOut": "Sign Out",
+    "signOutOfNutritionistAccount": "Sign out of your nutritionist account",
+    "errorSigningOut": "Error signing out: {error}",
+    "@errorSigningOut": {
+        "description": "Error message when sign out fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "deleteAccount": "Delete Account",
+    "deleteAccountPermanently": "This action will permanently delete your nutritionist account and all associated data. This cannot be undone.",
+    "allDataWillBeRemoved": "All your professional data, client interactions, and account information will be permanently removed.",
+    "confirmSignOutTitle": "Sign Out",
+    "confirmSignOutMessage": "Are you sure you want to sign out of your nutritionist account?",
+    "dangerZone": "Danger Zone",
+    "irreversibleDestructiveActions": "Irreversible and destructive actions",
+    "criticalWarning": "Critical Warning",
+    "permanentActionWarning": "The actions below are permanent and cannot be undone. All your nutritionist data, including profile information, client interactions, and professional settings will be permanently deleted.",
+    "deleteMyAccount": "Delete My Account",
+    "errorDeletingAccount": "Error deleting account: {error}",
+    "@errorDeletingAccount": {
+        "description": "Error message when account deletion fails",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    }
+}

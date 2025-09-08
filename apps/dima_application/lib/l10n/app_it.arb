@@ -1,5 +1,51 @@
 {
   "@@locale": "it",
+  "noInternetConnectionValidation": "Nessuna connessione internet. Controlla la tua connessione e riprova.",
+  "errorLoadingAssignedPlans": "Errore nel caricamento dei piani alimentari assegnati: {error}",
+  "@errorLoadingAssignedPlans": {
+    "description": "Error message when loading assigned meal plans fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingMealPlansValidation": "Caricamento piani alimentari...",
+  "validatedStatus": "Convalidato",
+  "pendingReviewStatus": "In Revisione",
+  "notValidatedStatus": "Non Convalidato",
+  "clientLabel": "Cliente: {clientName}",
+  "@clientLabel": {
+    "description": "Label showing the client name",
+    "placeholders": {
+      "clientName": {
+        "type": "String"
+      }
+    }
+  },
+  "createdLabel": "Creato: {date}",
+  "@createdLabel": {
+    "description": "Label showing creation date",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "updatedLabel": "Aggiornato: {date}",
+  "@updatedLabel": {
+    "description": "Label showing update date and time",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noMealPlansToValidate": "Nessun Piano Alimentare da Convalidare",
+  "validationEmptyMessage": "I piani alimentari assegnati per la convalida appariranno qui.\nControlla più tardi o trascina per aggiornare.",
+  "refresh": "Aggiorna",
+  "errorLoadingPlansTitle": "Errore nel Caricamento dei Piani",
+  "tryAgain": "Riprova",
   "mealPlanReady": "Piano Alimentare Pronto!",
   "generationFailed": "Generazione Fallita",
   "mealPlanReadyDescription": "Il tuo piano alimentare è pronto!",
@@ -7,7 +53,6 @@
   "loadingSettings": "Caricamento impostazioni...",
   "somethingWentWrong": "Qualcosa è andato storto",
   "unableToLoadSettings": "Impossibile caricare le impostazioni",
-  "tryAgain": "Riprova",
   "notSignedIn": "Non autenticato",
   "pleaseSignInToAccessSettings": "Effettua l'accesso per accedere alle tue impostazioni",
   "signIn": "Accedi",
@@ -406,6 +451,51 @@
   "today": "Oggi",
   "mealPlans": "Piani Pasto",
   "settings": "Impostazioni",
+  "clientDetails": "Dettagli Cliente",
+  "loadingClientInformation": "Caricamento informazioni cliente...",
+  "healthProfilePreferences": "Profilo sanitario e preferenze",
+  "noClientDetailsAvailable": "Nessun dettaglio cliente disponibile",
+  "loadingClientDetails": "Caricamento dettagli cliente...",
+  "physicalInformation": "Informazioni Fisiche",
+  "bmi": "BMI",
+  "dailyMealsPreference": "Preferenza Pasti Giornalieri",
+  "dietaryRestrictionsLabel": "Restrizioni Dietetiche",
+  "accountInformation": "Informazioni Account",
+  "accountCreated": "Account Creato",
+  "lastUpdated": "Ultimo Aggiornamento",
+  "activePlanId": "ID Piano Attivo",
+  "sevenDayScheduleEditing": "Programma 7 giorni (Modifica)",
+  "sevenDayScheduleViewEdit": "Programma 7 giorni (Visualizza/Modifica)",
+  "sevenDayScheduleViewOnly": "Programma 7 giorni (Solo Visualizzazione)",
+  "noDailyPlanDataFound": "Nessun dato piano giornaliero trovato per questo piano pasti.",
+  "enterRecipeName": "Inserisci nome ricetta",
+  "enterCookingInstructions": "Inserisci istruzioni di cottura...",
+  "add": "Aggiungi",
+  "noIngredientsAddedYet": "Nessun ingrediente aggiunto ancora",
+  "ingredientName": "Nome Ingrediente",
+  "removeIngredient": "Rimuovi ingrediente",
+  "amount": "Quantità",
+  "unit": "Unità",
+  "nutritionalValuesPerUnit": "Valori Nutrizionali (per unità)",
+  "chatWithPatient": "Chat con Paziente",
+  "validateMealPlan": "Valida Piano Pasti",
+  "validateMealPlanConfirm": "Sei sicuro di voler validare \"{planName}\"?",
+  "validate": "Valida",
+  "rejectMealPlan": "Rifiuta Piano Pasti",
+  "rejectMealPlanConfirm": "Sei sicuro di voler rifiutare \"{planName}\"? Questo resetterà il piano allo stato non validato.",
+  "reject": "Rifiuta",
+  "mealPlanValidatedSuccessfully": "Piano pasti validato con successo!",
+  "failedToValidateMealPlan": "Impossibile validare il piano pasti",
+  "mealPlanRejected": "Piano pasti rifiutato",
+  "failedToRejectMealPlan": "Impossibile rifiutare il piano pasti",
+  "savingMealPlan": "Salvataggio piano pasti...",
+  "mealPlanSavedSuccessfully": "Piano pasti salvato con successo!",
+  "failedToSaveMealPlan": "Impossibile salvare il piano pasti",
+  "bmiUnderweight": "Sottopeso",
+  "bmiNormalWeight": "Peso normale",
+  "bmiOverweight": "Sovrappeso",
+  "bmiObese": "Obeso",
+  "noneReported": "Nessuno riportato",
   "energy": "Energia",
   "recipe": "Ricetta",
   "noRecipe": "Ricetta non disponibile",
@@ -474,6 +564,101 @@
   },
   "proPlanTitle": "Piano PRO",
   "personalNutritionistChat": "Chat personale con nutrizionista nell'app",
+  "loadingNutritionistSettings": "Caricamento impostazioni nutrizionista...",
+  "nutritionistSettings": "Impostazioni Nutrizionista",
+  "manageProfileMessage": "Gestisci il tuo profilo professionale, disponibilità e impostazioni account.",
+  "profileInformation": "Informazioni Profilo",
+  "editProfessionalDetails": "Modifica Dettagli Professionali",
+  "specialization": "Specializzazione",
+  "professionalBio": "Bio Professionale",
+  "profilePicture": "Foto del Profilo",
+  "availabilitySettings": "Impostazioni Disponibilità",
+  "@errorUpdatingProfile": {
+    "description": "Error message when profile update fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseEnterSpecialization": "Inserisci la tua specializzazione",
+  "pleaseEnterBio": "Inserisci la tua bio",
+  "bioMinLength": "La bio deve essere di almeno 50 caratteri",
+  "availableForConsultations": "Ora sei disponibile per le consultazioni",
+  "unavailableForConsultations": "Ora non sei disponibile per le consultazioni",
+  "errorUpdatingAvailability": "Errore nell'aggiornamento della disponibilità: {error}",
+  "@errorUpdatingAvailability": {
+    "description": "Error message when availability update fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "validatePlans": "Convalida Piani",
+  "noInternetConnection": "Nessuna Connessione Internet",
+  "internetRequiredMessage": "Questa app richiede una connessione internet per funzionare correttamente. Controlla la tua connessione e riprova.",
+  "connectionTips": "Suggerimenti per la Connessione",
+  "checkWifiConnection": "Controlla la tua connessione Wi-Fi o dati mobili",
+  "turnOffAirplaneMode": "Assicurati che la modalità aereo sia spenta",
+  "moveForBetterSignal": "Prova a spostarti in un'area con segnale migliore",
+  "restartRouter": "Riavvia il tuo router o i dati mobili",
+  "checking": "Controllo...",
+  "tryAgainButton": "Riprova",
+  "connectionRestored": "Connessione ripristinata!",
+  "stillNoInternet": "Ancora nessuna connessione internet",
+  "tapToSelectPhoto": "Tocca per selezionare foto",
+  "selectPhoto": "Seleziona Foto",
+  "chooseFromGallery": "Scegli dalla Galleria",
+  "selectFromExistingPhotos": "Seleziona dalle foto esistenti",
+  "removePhoto": "Rimuovi Foto",
+  "deleteCurrentProfilePicture": "Elimina foto del profilo attuale",
+  "errorUploadingImage": "Errore nel caricamento dell'immagine: {error}",
+  "@errorUploadingImage": {
+    "description": "Error message when image upload fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorRemovingImage": "Errore nella rimozione dell'immagine: {error}",
+  "@errorRemovingImage": {
+    "description": "Error message when image removal fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "availability": "Disponibilità",
+  "currentlyAvailableForConsultations": "Attualmente sei disponibile per le consultazioni",
+  "currentlyUnavailableForConsultations": "Attualmente non sei disponibile per le consultazioni",
+  "availableForConsultationsTitle": "Disponibile per Consultazioni",
+  "usersCanRequestConsultations": "Gli utenti possono richiedere consultazioni da te",
+  "noNewConsultationRequests": "Non riceverai nuove richieste di consultazione",
+  "signOutOfNutritionistAccount": "Disconnetti dal tuo account nutrizionista",
+  "errorSigningOut": "Errore nella disconnessione: {error}",
+  "@errorSigningOut": {
+    "description": "Error message when sign out fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccountPermanently": "Questa azione eliminerà permanentemente il tuo account nutrizionista e tutti i dati associati. Non può essere annullata.",
+  "allDataWillBeRemoved": "Tutti i tuoi dati professionali, le interazioni con i clienti e le informazioni dell'account verranno rimossi permanentemente.",
+  "irreversibleDestructiveActions": "Azioni distruttive irreversibili",
+  "permanentActionWarning": "Le azioni seguenti sono permanenti e non possono essere annullate. Tutti i tuoi dati nutrizionista, incluse informazioni del profilo, interazioni con clienti e impostazioni professionali verranno eliminati permanentemente.",
+  "@errorDeletingAccount": {
+    "description": "Error message when account deletion fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "confirmSignUp": "Inserisci il tuo codice di conferma",
   "@confirmSignUp": {
     "description": "Title of the Confirm Sign Up step and form"
