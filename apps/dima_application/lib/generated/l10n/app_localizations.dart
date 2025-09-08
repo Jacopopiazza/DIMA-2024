@@ -275,11 +275,11 @@ abstract class AppLocalizations {
   /// **'Dietary Needs'**
   String get dietaryNeeds;
 
-  /// No description provided for @mealsPerDay.
+  /// Shows meals per day in user details
   ///
   /// In en, this message translates to:
   /// **'Meals Per Day'**
-  String get mealsPerDay;
+  String mealsPerDay(int count);
 
   /// No description provided for @dietaryRestrictions.
   ///
@@ -515,6 +515,282 @@ abstract class AppLocalizations {
   /// **'Back'**
   String get back;
 
+  /// No description provided for @profileInfoNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile information not available'**
+  String get profileInfoNotAvailable;
+
+  /// No description provided for @notSpecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get notSpecified;
+
+  /// No description provided for @noExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercise'**
+  String get noExercise;
+
+  /// No description provided for @onceWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a week'**
+  String get onceWeek;
+
+  /// No description provided for @twiceWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Twice a week'**
+  String get twiceWeek;
+
+  /// No description provided for @threeTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'3 times per week'**
+  String get threeTimes;
+
+  /// No description provided for @fourTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'4 times per week'**
+  String get fourTimes;
+
+  /// No description provided for @fiveTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'5 times per week'**
+  String get fiveTimes;
+
+  /// No description provided for @sixTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'6 times per week'**
+  String get sixTimes;
+
+  /// No description provided for @everyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get everyDay;
+
+  /// No description provided for @weightRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight must be between 30 and 300 kg'**
+  String get weightRange;
+
+  /// No description provided for @heightRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Height must be between 50 and 250 cm'**
+  String get heightRange;
+
+  /// No description provided for @completeProfileFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Profile First'**
+  String get completeProfileFirst;
+
+  /// No description provided for @mealPlanGenStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal plan generation started! You\'ll receive a notification when it\'s ready.'**
+  String get mealPlanGenStarted;
+
+  /// No description provided for @failedToStartGeneration.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to start meal plan generation'**
+  String get failedToStartGeneration;
+
+  /// No description provided for @createMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Meal Plan'**
+  String get createMealPlan;
+
+  /// No description provided for @loadingPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading your preferences...'**
+  String get loadingPreferences;
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @unableToLoadPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load your preferences'**
+  String get unableToLoadPreferences;
+
+  /// No description provided for @personalizedMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized Meal Plan'**
+  String get personalizedMealPlan;
+
+  /// No description provided for @personalizedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll create a customized weekly meal plan based on your preferences, dietary needs, and lifestyle.'**
+  String get personalizedDescription;
+
+  /// No description provided for @profileIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Incomplete'**
+  String get profileIncomplete;
+
+  /// No description provided for @completeProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Profile'**
+  String get completeProfile;
+
+  /// No description provided for @completeProfileMustDo.
+  ///
+  /// In en, this message translates to:
+  /// **'You must complete your profile before generating a meal plan'**
+  String get completeProfileMustDo;
+
+  /// No description provided for @noProfileDetailsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Profile Details Found'**
+  String get noProfileDetailsFound;
+
+  /// No description provided for @noProfileDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'For the most personalized meal plan, please set up your profile with your weight, height, dietary preferences, and allergies.'**
+  String get noProfileDescription;
+
+  /// No description provided for @orContinueDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Or continue with default preferences below'**
+  String get orContinueDefault;
+
+  /// No description provided for @profileDetailsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Details Found'**
+  String get profileDetailsFound;
+
+  /// No description provided for @customPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Preferences'**
+  String get customPreferences;
+
+  /// No description provided for @usingCustomPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Using custom preferences for this meal plan'**
+  String get usingCustomPreferences;
+
+  /// No description provided for @usingProfilePreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Using your profile preferences'**
+  String get usingProfilePreferences;
+
+  /// No description provided for @physicalDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical Details'**
+  String get physicalDetails;
+
+  /// No description provided for @weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight;
+
+  /// No description provided for @weightHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed: 30–300 kg'**
+  String get weightHelper;
+
+  /// No description provided for @height.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get height;
+
+  /// No description provided for @heightHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed: 50–250 cm'**
+  String get heightHelper;
+
+  /// No description provided for @mealPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Preferences'**
+  String get mealPreferences;
+
+  /// No description provided for @dailyMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Meals'**
+  String get dailyMeals;
+
+  /// No description provided for @dietaryInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary Information'**
+  String get dietaryInformation;
+
+  /// No description provided for @additionalPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Preferences'**
+  String get additionalPreferences;
+
+  /// No description provided for @additionalPreferencesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Any other food preferences or requirements'**
+  String get additionalPreferencesHint;
+
+  /// No description provided for @creatingMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating Meal Plan...'**
+  String get creatingMealPlan;
+
+  /// No description provided for @generateCustomPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate with Custom Preferences'**
+  String get generateCustomPreferences;
+
+  /// Shows meals count in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'{count} meals'**
+  String mealsDropdown(int count);
+
+  /// No description provided for @generatePersonalizedPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Personalized Plan'**
+  String get generatePersonalizedPlan;
+
+  /// No description provided for @selectAllergies.
+  ///
+  /// In en, this message translates to:
+  /// **'Select any allergies you have:'**
+  String get selectAllergies;
+
   /// The conventional newborn programmer greeting
   ///
   /// In en, this message translates to:
@@ -622,12 +898,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connection Problem'**
   String get connectionProblem;
-
-  /// Generic error message
-  ///
-  /// In en, this message translates to:
-  /// **'Something went wrong'**
-  String get somethingWentWrong;
 
   /// No description provided for @unableToLoadPlansWithConnection.
   ///
@@ -1073,6 +1343,18 @@ abstract class AppLocalizations {
   /// **'No meal plan data available'**
   String get noMealPlanDataAvailable;
 
+  /// No description provided for @sevenDayMealScheduleReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'7-day meal schedule'**
+  String get sevenDayMealScheduleReadOnly;
+
+  /// Shows the number of meals for a day
+  ///
+  /// In en, this message translates to:
+  /// **'{count} meals'**
+  String mealsCount(int count);
+
   /// No description provided for @noDailyPlanData.
   ///
   /// In en, this message translates to:
@@ -1192,6 +1474,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read more'**
   String get readMore;
+
+  /// No description provided for @statusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get statusActive;
+
+  /// No description provided for @statusGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated'**
+  String get statusGenerated;
+
+  /// No description provided for @statusArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get statusArchived;
+
+  /// No description provided for @statusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get statusFailed;
+
+  /// No description provided for @statusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get statusInProgress;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// No description provided for @statusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get statusUnknown;
+
+  /// No description provided for @validationValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'Validated'**
+  String get validationValidated;
+
+  /// No description provided for @validationPendingReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Review'**
+  String get validationPendingReview;
+
+  /// No description provided for @validationRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get validationRejected;
+
+  /// No description provided for @validationNotValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Validated'**
+  String get validationNotValidated;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @typeYourMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your message...'**
+  String get typeYourMessage;
+
+  /// No description provided for @patient.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient'**
+  String get patient;
+
+  /// No description provided for @upgrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get upgrade;
+
+  /// No description provided for @failedToLoadOlderMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load older messages: '**
+  String get failedToLoadOlderMessages;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @message.
+  ///
+  /// In en, this message translates to:
+  /// **'Message...'**
+  String get message;
+
+  /// No description provided for @pullDownToLoadOlder.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to load older messages'**
+  String get pullDownToLoadOlder;
+
+  /// No description provided for @loadingMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading messages...'**
+  String get loadingMessages;
+
+  /// No description provided for @failedToLoadChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load chat'**
+  String get failedToLoadChat;
+
+  /// No description provided for @startTheConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the conversation'**
+  String get startTheConversation;
+
+  /// No description provided for @sendMessageToBegin.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a message to begin chatting.'**
+  String get sendMessageToBegin;
+
+  /// Display count of messages in chat
+  ///
+  /// In en, this message translates to:
+  /// **'{count} messages'**
+  String messagesCount(int count);
+
+  /// Shows when someone is typing
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is typing...'**
+  String isTyping(String name);
 
   /// Breakfast meal display name
   ///

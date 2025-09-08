@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 
 class ChatInput extends StatefulWidget {
   final Function(String) onSendMessage;
@@ -140,7 +141,7 @@ class _ChatInputState extends State<ChatInput>
                         enabled: !widget.isLoading,
                         decoration: InputDecoration(
                           hintText:
-                              widget.placeholder ?? 'Type your message...',
+                              widget.placeholder ?? AppLocalizations.of(context)!.typeYourMessage,
                           hintStyle: TextStyle(
                             color: colorScheme.onSurfaceVariant
                                 .withValues(alpha: 0.6),

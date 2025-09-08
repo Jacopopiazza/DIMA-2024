@@ -2,6 +2,7 @@ import 'package:dima_application/Utils/error_handling_utils.dart';
 import 'package:dima_application/Views/Common/ChatScreen/chat_input.dart';
 import 'package:dima_application/Views/Common/ChatScreen/message_bubble.dart';
 import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/models/Chat/chat_message.dart';
 import 'package:dima_application/models/Chat/chat_state.dart';
 import 'package:dima_application/providers/chat_messages_provider.dart';
@@ -78,10 +79,10 @@ class _ChatPageState extends ConsumerState<ChatPage>
   String _getRecipientName() {
     if (widget.isCurrentUserNutritionist) {
       // Current user is nutritionist, show user/patient name
-      return widget.userName ?? 'Patient';
+      return widget.userName ?? AppLocalizations.of(context)!.patient;
     } else {
       // Current user is regular user, show nutritionist name  
-      return widget.nutritionistName ?? 'Nutritionist';
+      return widget.nutritionistName ?? AppLocalizations.of(context)!.nutritionist;
     }
   }
 
@@ -151,13 +152,13 @@ class _ChatPageState extends ConsumerState<ChatPage>
                 : Theme.of(context).colorScheme.error,
             action: isRetryable
                 ? SnackBarAction(
-                    label: 'Retry',
+                    label: AppLocalizations.of(context)!.retry,
                     textColor: Theme.of(context).colorScheme.onError,
                     onPressed: () => _onSendMessage(message),
                   )
                 : isSubscriptionError
                     ? SnackBarAction(
-                        label: 'Upgrade',
+                        label: AppLocalizations.of(context)!.upgrade,
                         textColor: Theme.of(context).colorScheme.onTertiary,
                         onPressed: () {
                           Navigator.push(
@@ -233,7 +234,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to load older messages: $e'),
+            content: Text('${AppLocalizations.of(context)!.failedToLoadOlderMessages}$e'),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -276,19 +277,19 @@ class _ChatPageState extends ConsumerState<ChatPage>
             ),
             chatAsync.when(
               data: (chatState) => Text(
-                '${chatState.messageCount} messages',
+                AppLocalizations.of(context)!.messagesCount(chatState.messageCount),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
               loading: () => Text(
-                'Loading...',
+                AppLocalizations.of(context)!.loading,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
               error: (_, __) => Text(
-                'Error',
+                AppLocalizations.of(context)!.error,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.error,
                 ),
@@ -323,7 +324,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
           ChatInput(
             onSendMessage: _onSendMessage,
             isLoading: false, // We handle loading in the async state now
-            placeholder: 'Message...',
+            placeholder: AppLocalizations.of(context)!.message,
           ),
         ],
       ),
@@ -384,7 +385,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
               padding: const EdgeInsets.all(16),
               alignment: Alignment.center,
               child: Text(
-                'Pull down to load older messages',
+                AppLocalizations.of(context)!.pullDownToLoadOlder,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                       fontStyle: FontStyle.italic,
@@ -449,7 +450,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
           ),
           const SizedBox(height: 24),
           Text(
-            'Loading messages...',
+            AppLocalizations.of(context)!.loadingMessages,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 16,
@@ -487,7 +488,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
             ),
             const SizedBox(height: 24),
             Text(
-              'Failed to load chat',
+              AppLocalizations.of(context)!.failedToLoadChat,
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
@@ -506,7 +507,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
             FilledButton.icon(
               onPressed: _onRefresh,
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try Again'),
+              label: Text(AppLocalizations.of(context)!.tryAgain),
             ),
           ],
         ),
@@ -539,7 +540,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
             ),
             const SizedBox(height: 24),
             Text(
-              'Start the conversation',
+              AppLocalizations.of(context)!.startTheConversation,
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
@@ -548,7 +549,7 @@ class _ChatPageState extends ConsumerState<ChatPage>
             ),
             const SizedBox(height: 12),
             Text(
-              'Send a message to begin chatting.',
+              AppLocalizations.of(context)!.sendMessageToBegin,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),

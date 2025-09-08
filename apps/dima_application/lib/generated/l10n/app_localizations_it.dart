@@ -99,10 +99,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dietaryNeeds => 'Esigenze Alimentari';
 
   @override
-  String get mealsPerDay => 'Pasti al Giorno';
+  String mealsPerDay(int count) {
+    return '$count pasti/giorno';
+  }
 
   @override
-  String get dietaryRestrictions => 'Restrizioni Alimentari';
+  String get dietaryRestrictions => 'Restrizioni Dietetiche';
 
   @override
   String get dietaryRestrictionsHint => 'es. Vegetariano, Vegano, Low-Carb';
@@ -114,7 +116,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get lifestyle => 'Stile di Vita';
 
   @override
-  String get exerciseFrequency => 'Frequenza Esercizio Fisico';
+  String get exerciseFrequency => 'Frequenza Esercizio';
 
   @override
   String get otherPreferences => 'Altre Preferenze';
@@ -219,6 +221,146 @@ class AppLocalizationsIt extends AppLocalizations {
   String get back => 'Indietro';
 
   @override
+  String get profileInfoNotAvailable => 'Informazioni profilo non disponibili';
+
+  @override
+  String get notSpecified => 'Non specificato';
+
+  @override
+  String get noExercise => 'Nessun esercizio';
+
+  @override
+  String get onceWeek => 'Una volta a settimana';
+
+  @override
+  String get twiceWeek => 'Due volte a settimana';
+
+  @override
+  String get threeTimes => '3 volte a settimana';
+
+  @override
+  String get fourTimes => '4 volte a settimana';
+
+  @override
+  String get fiveTimes => '5 volte a settimana';
+
+  @override
+  String get sixTimes => '6 volte a settimana';
+
+  @override
+  String get everyDay => 'Ogni giorno';
+
+  @override
+  String get weightRange => 'Il peso deve essere tra 30 e 300 kg';
+
+  @override
+  String get heightRange => 'L\'altezza deve essere tra 50 e 250 cm';
+
+  @override
+  String get completeProfileFirst => 'Completa Prima il Profilo';
+
+  @override
+  String get mealPlanGenStarted => 'Generazione piano alimentare avviata! Riceverai una notifica quando sarà pronto.';
+
+  @override
+  String get failedToStartGeneration => 'Impossibile avviare la generazione del piano alimentare';
+
+  @override
+  String get createMealPlan => 'Crea Piano Alimentare';
+
+  @override
+  String get loadingPreferences => 'Caricamento delle tue preferenze...';
+
+  @override
+  String get somethingWentWrong => 'Qualcosa è andato storto';
+
+  @override
+  String get unableToLoadPreferences => 'Impossibile caricare le tue preferenze';
+
+  @override
+  String get personalizedMealPlan => 'Piano Alimentare Personalizzato';
+
+  @override
+  String get personalizedDescription => 'Creeremo un piano alimentare settimanale personalizzato basato sulle tue preferenze, esigenze dietetiche e stile di vita.';
+
+  @override
+  String get profileIncomplete => 'Profilo Incompleto';
+
+  @override
+  String get completeProfile => 'Completa Profilo';
+
+  @override
+  String get completeProfileMustDo => 'Devi completare il tuo profilo prima di generare un piano alimentare';
+
+  @override
+  String get noProfileDetailsFound => 'Nessun Dettaglio Profilo Trovato';
+
+  @override
+  String get noProfileDescription => 'Per il piano alimentare più personalizzato, configura il tuo profilo con peso, altezza, preferenze dietetiche e allergie.';
+
+  @override
+  String get orContinueDefault => 'O continua con le preferenze predefinite qui sotto';
+
+  @override
+  String get profileDetailsFound => 'Dettagli Profilo Trovati';
+
+  @override
+  String get customPreferences => 'Preferenze Personalizzate';
+
+  @override
+  String get usingCustomPreferences => 'Usando preferenze personalizzate per questo piano alimentare';
+
+  @override
+  String get usingProfilePreferences => 'Usando le preferenze del tuo profilo';
+
+  @override
+  String get physicalDetails => 'Dettagli Fisici';
+
+  @override
+  String get weight => 'Peso';
+
+  @override
+  String get weightHelper => 'Consentito: 30–300 kg';
+
+  @override
+  String get height => 'Altezza';
+
+  @override
+  String get heightHelper => 'Consentito: 50–250 cm';
+
+  @override
+  String get mealPreferences => 'Preferenze Pasto';
+
+  @override
+  String get dailyMeals => 'Pasti Giornalieri';
+
+  @override
+  String get dietaryInformation => 'Informazioni Dietetiche';
+
+  @override
+  String get additionalPreferences => 'Preferenze Aggiuntive';
+
+  @override
+  String get additionalPreferencesHint => 'Altre preferenze o requisiti alimentari';
+
+  @override
+  String get creatingMealPlan => 'Creazione Piano Alimentare...';
+
+  @override
+  String get generateCustomPreferences => 'Genera con Preferenze Personalizzate';
+
+  @override
+  String mealsDropdown(int count) {
+    return '$count pasti';
+  }
+
+  @override
+  String get generatePersonalizedPlan => 'Genera Piano Personalizzato';
+
+  @override
+  String get selectAllergies => 'Seleziona eventuali allergie che hai:';
+
+  @override
   String get helloWorld => 'Ciao Mondo!';
 
   @override
@@ -271,9 +413,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get connectionProblem => 'Problema di Connessione';
-
-  @override
-  String get somethingWentWrong => 'Qualcosa è andato storto';
 
   @override
   String get unableToLoadPlansWithConnection => 'Impossibile caricare i tuoi piani alimentari.\nControlla la connessione internet e riprova.';
@@ -506,6 +645,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noMealPlanDataAvailable => 'Nessun dato del piano alimentare disponibile';
 
   @override
+  String get sevenDayMealScheduleReadOnly => 'Piano alimentare di 7 giorni';
+
+  @override
+  String mealsCount(int count) {
+    return '$count pasti';
+  }
+
+  @override
   String get noDailyPlanData => 'Nessun dato di piano giornaliero trovato per questo piano alimentare.';
 
   @override
@@ -564,6 +711,88 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get readMore => 'Leggi di più';
+
+  @override
+  String get statusActive => 'Attivo';
+
+  @override
+  String get statusGenerated => 'Generato';
+
+  @override
+  String get statusArchived => 'Archiviato';
+
+  @override
+  String get statusFailed => 'Fallito';
+
+  @override
+  String get statusInProgress => 'In Corso';
+
+  @override
+  String get statusPending => 'In Attesa';
+
+  @override
+  String get statusUnknown => 'Sconosciuto';
+
+  @override
+  String get validationValidated => 'Convalidato';
+
+  @override
+  String get validationPendingReview => 'In Revisione';
+
+  @override
+  String get validationRejected => 'Respinto';
+
+  @override
+  String get validationNotValidated => 'Non Convalidato';
+
+  @override
+  String get yesterday => 'Ieri';
+
+  @override
+  String get typeYourMessage => 'Scrivi il tuo messaggio...';
+
+  @override
+  String get patient => 'Paziente';
+
+  @override
+  String get upgrade => 'Aggiorna';
+
+  @override
+  String get failedToLoadOlderMessages => 'Impossibile caricare messaggi precedenti: ';
+
+  @override
+  String get loading => 'Caricamento...';
+
+  @override
+  String get error => 'Errore';
+
+  @override
+  String get message => 'Messaggio...';
+
+  @override
+  String get pullDownToLoadOlder => 'Trascina in basso per caricare messaggi precedenti';
+
+  @override
+  String get loadingMessages => 'Caricamento messaggi...';
+
+  @override
+  String get failedToLoadChat => 'Impossibile caricare la chat';
+
+  @override
+  String get startTheConversation => 'Inizia la conversazione';
+
+  @override
+  String get sendMessageToBegin => 'Invia un messaggio per iniziare a chattare.';
+
+  @override
+  String messagesCount(int count) {
+    return '$count messaggi';
+  }
+
+  @override
+  String isTyping(String name) {
+    return '$name sta scrivendo...';
+  }
 
   @override
   String get mealNameBREAKFAST => 'Colazione';

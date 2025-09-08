@@ -99,7 +99,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dietaryNeeds => 'Dietary Needs';
 
   @override
-  String get mealsPerDay => 'Meals Per Day';
+  String mealsPerDay(int count) {
+    return 'Meals Per Day';
+  }
 
   @override
   String get dietaryRestrictions => 'Dietary Restrictions';
@@ -219,6 +221,146 @@ class AppLocalizationsEn extends AppLocalizations {
   String get back => 'Back';
 
   @override
+  String get profileInfoNotAvailable => 'Profile information not available';
+
+  @override
+  String get notSpecified => 'Not specified';
+
+  @override
+  String get noExercise => 'No exercise';
+
+  @override
+  String get onceWeek => 'Once a week';
+
+  @override
+  String get twiceWeek => 'Twice a week';
+
+  @override
+  String get threeTimes => '3 times per week';
+
+  @override
+  String get fourTimes => '4 times per week';
+
+  @override
+  String get fiveTimes => '5 times per week';
+
+  @override
+  String get sixTimes => '6 times per week';
+
+  @override
+  String get everyDay => 'Every day';
+
+  @override
+  String get weightRange => 'Weight must be between 30 and 300 kg';
+
+  @override
+  String get heightRange => 'Height must be between 50 and 250 cm';
+
+  @override
+  String get completeProfileFirst => 'Complete Profile First';
+
+  @override
+  String get mealPlanGenStarted => 'Meal plan generation started! You\'ll receive a notification when it\'s ready.';
+
+  @override
+  String get failedToStartGeneration => 'Failed to start meal plan generation';
+
+  @override
+  String get createMealPlan => 'Create Meal Plan';
+
+  @override
+  String get loadingPreferences => 'Loading your preferences...';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get unableToLoadPreferences => 'Unable to load your preferences';
+
+  @override
+  String get personalizedMealPlan => 'Personalized Meal Plan';
+
+  @override
+  String get personalizedDescription => 'We\'ll create a customized weekly meal plan based on your preferences, dietary needs, and lifestyle.';
+
+  @override
+  String get profileIncomplete => 'Profile Incomplete';
+
+  @override
+  String get completeProfile => 'Complete Profile';
+
+  @override
+  String get completeProfileMustDo => 'You must complete your profile before generating a meal plan';
+
+  @override
+  String get noProfileDetailsFound => 'No Profile Details Found';
+
+  @override
+  String get noProfileDescription => 'For the most personalized meal plan, please set up your profile with your weight, height, dietary preferences, and allergies.';
+
+  @override
+  String get orContinueDefault => 'Or continue with default preferences below';
+
+  @override
+  String get profileDetailsFound => 'Profile Details Found';
+
+  @override
+  String get customPreferences => 'Custom Preferences';
+
+  @override
+  String get usingCustomPreferences => 'Using custom preferences for this meal plan';
+
+  @override
+  String get usingProfilePreferences => 'Using your profile preferences';
+
+  @override
+  String get physicalDetails => 'Physical Details';
+
+  @override
+  String get weight => 'Weight';
+
+  @override
+  String get weightHelper => 'Allowed: 30–300 kg';
+
+  @override
+  String get height => 'Height';
+
+  @override
+  String get heightHelper => 'Allowed: 50–250 cm';
+
+  @override
+  String get mealPreferences => 'Meal Preferences';
+
+  @override
+  String get dailyMeals => 'Daily Meals';
+
+  @override
+  String get dietaryInformation => 'Dietary Information';
+
+  @override
+  String get additionalPreferences => 'Additional Preferences';
+
+  @override
+  String get additionalPreferencesHint => 'Any other food preferences or requirements';
+
+  @override
+  String get creatingMealPlan => 'Creating Meal Plan...';
+
+  @override
+  String get generateCustomPreferences => 'Generate with Custom Preferences';
+
+  @override
+  String mealsDropdown(int count) {
+    return '$count meals';
+  }
+
+  @override
+  String get generatePersonalizedPlan => 'Generate Personalized Plan';
+
+  @override
+  String get selectAllergies => 'Select any allergies you have:';
+
+  @override
   String get helloWorld => 'Hello World!';
 
   @override
@@ -271,9 +413,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connectionProblem => 'Connection Problem';
-
-  @override
-  String get somethingWentWrong => 'Something went wrong';
 
   @override
   String get unableToLoadPlansWithConnection => 'Unable to load your meal plans.\nCheck your internet connection and try again.';
@@ -506,6 +645,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noMealPlanDataAvailable => 'No meal plan data available';
 
   @override
+  String get sevenDayMealScheduleReadOnly => '7-day meal schedule';
+
+  @override
+  String mealsCount(int count) {
+    return '$count meals';
+  }
+
+  @override
   String get noDailyPlanData => 'No daily plan data found for this meal plan.';
 
   @override
@@ -564,6 +711,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readMore => 'Read more';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusGenerated => 'Generated';
+
+  @override
+  String get statusArchived => 'Archived';
+
+  @override
+  String get statusFailed => 'Failed';
+
+  @override
+  String get statusInProgress => 'In Progress';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusUnknown => 'Unknown';
+
+  @override
+  String get validationValidated => 'Validated';
+
+  @override
+  String get validationPendingReview => 'Pending Review';
+
+  @override
+  String get validationRejected => 'Rejected';
+
+  @override
+  String get validationNotValidated => 'Not Validated';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get typeYourMessage => 'Type your message...';
+
+  @override
+  String get patient => 'Patient';
+
+  @override
+  String get upgrade => 'Upgrade';
+
+  @override
+  String get failedToLoadOlderMessages => 'Failed to load older messages: ';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get message => 'Message...';
+
+  @override
+  String get pullDownToLoadOlder => 'Pull down to load older messages';
+
+  @override
+  String get loadingMessages => 'Loading messages...';
+
+  @override
+  String get failedToLoadChat => 'Failed to load chat';
+
+  @override
+  String get startTheConversation => 'Start the conversation';
+
+  @override
+  String get sendMessageToBegin => 'Send a message to begin chatting.';
+
+  @override
+  String messagesCount(int count) {
+    return '$count messages';
+  }
+
+  @override
+  String isTyping(String name) {
+    return '$name is typing...';
+  }
 
   @override
   String get mealNameBREAKFAST => 'Breakfast';

@@ -416,7 +416,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                     ),
                   _buildInfoRow(
                     AppLocalizations.of(context)!.status,
-                    _formatEnumValue(
+                    _getLocalizedStatus(
                         _mealPlan!.status?.toString().split('.').last ??
                             'UNKNOWN'),
                     colorScheme,
@@ -425,7 +425,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                   ),
                   _buildInfoRow(
                     AppLocalizations.of(context)!.validation,
-                    _formatEnumValue(_mealPlan!.validationStatus
+                    _getLocalizedValidation(_mealPlan!.validationStatus
                             ?.toString()
                             .split('.')
                             .last ??
@@ -606,7 +606,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           subtitle: Text(
             dailyPlan == null
                 ? AppLocalizations.of(context)!.noMealPlanDataAvailable
-                : '7-day meal schedule (Read-only)',
+                : AppLocalizations.of(context)!.sevenDayMealScheduleReadOnly,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -667,7 +667,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
 
   Widget _buildReadOnlyDayMeals(
       String dayName, List<Meal>? meals, ColorScheme colorScheme) {
-    final isToday = DateFormat('EEEE').format(DateTime.now()) == dayName;
+    final isToday = _isToday(dayName);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -726,7 +726,7 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${meals?.length ?? 0} meals',
+                    AppLocalizations.of(context)!.mealsCount(meals?.length ?? 0),
                     style: TextStyle(
                       color: colorScheme.onSurface,
                       fontSize: 12,
@@ -1131,6 +1131,69 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         .split('_')
         .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
         .join(' ');
+  }
+
+  /// Returns localized status string
+  String _getLocalizedStatus(String statusString) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (statusString) {
+      case 'ACTIVE':
+        return localizations.statusActive;
+      case 'GENERATED':
+        return localizations.statusGenerated;
+      case 'ARCHIVED':
+        return localizations.statusArchived;
+      case 'FAILED':
+        return localizations.statusFailed;
+      case 'IN_PROGRESS':
+        return localizations.statusInProgress;
+      case 'PENDING':
+        return localizations.statusPending;
+      default:
+        return localizations.statusUnknown;
+    }
+  }
+
+  /// Returns localized validation status string
+  String _getLocalizedValidation(String validationString) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (validationString) {
+      case 'VALIDATED':
+        return localizations.validationValidated;
+      case 'PENDING_REVIEW':
+        return localizations.validationPendingReview;
+      case 'REJECTED':
+        return localizations.validationRejected;
+      case 'NOT_VALIDATED':
+      default:
+        return localizations.validationNotValidated;
+    }
+  }
+
+  /// Checks if the given localized day name corresponds to today
+  bool _isToday(String localizedDayName) {
+    final localizations = AppLocalizations.of(context)!;
+    final englishDay = DateFormat('EEEE').format(DateTime.now());
+    
+    // Map English day names to localized ones
+    switch (englishDay) {
+      case 'Monday':
+        return localizedDayName == localizations.monday;
+      case 'Tuesday':
+        return localizedDayName == localizations.tuesday;
+      case 'Wednesday':
+        return localizedDayName == localizations.wednesday;
+      case 'Thursday':
+        return localizedDayName == localizations.thursday;
+      case 'Friday':
+        return localizedDayName == localizations.friday;
+      case 'Saturday':
+        return localizedDayName == localizations.saturday;
+      case 'Sunday':
+        return localizedDayName == localizations.sunday;
+      default:
+        return false;
+    }
   }
 
   /// Safely parses error details JSON to extract user-friendly error message

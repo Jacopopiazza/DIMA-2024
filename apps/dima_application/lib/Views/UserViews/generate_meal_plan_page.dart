@@ -4,6 +4,7 @@ import 'package:dima_application/Utils/profile_validation_utils.dart';
 import 'package:dima_application/Views/UserViews/SettingsScreen/settings_screen_riverpod.dart';
 import 'package:dima_application/generated/flutter-models/AllergenEnum.dart';
 import 'package:dima_application/generated/flutter-models/ExerciseFrequency.dart';
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/providers/cognito_profile_provider.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:dima_application/providers/user_details_provider.dart';
@@ -148,9 +149,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
     final cognitoProfile = cognitoProfileAsync.value?.$1;
 
     if (cognitoProfile == null) {
-      return const ProfileValidationResult(
+      return ProfileValidationResult(
         isValid: false,
-        issues: ['Profile information not available'],
+        issues: [AppLocalizations.of(context)!.profileInfoNotAvailable],
       );
     }
 
@@ -262,23 +263,23 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
   String _getExerciseFrequencyDisplayText(ExerciseFrequency frequency) {
     switch (frequency) {
       case ExerciseFrequency.NOT_SPECIFIED:
-        return 'Not specified';
+        return AppLocalizations.of(context)!.notSpecified;
       case ExerciseFrequency.NONE:
-        return 'No exercise';
+        return AppLocalizations.of(context)!.noExercise;
       case ExerciseFrequency.ONCE_A_WEEK:
-        return 'Once a week';
+        return AppLocalizations.of(context)!.onceWeek;
       case ExerciseFrequency.TWICE_A_WEEK:
-        return 'Twice a week';
+        return AppLocalizations.of(context)!.twiceWeek;
       case ExerciseFrequency.THREE_TIMES_A_WEEK:
-        return '3 times a week';
+        return AppLocalizations.of(context)!.threeTimes;
       case ExerciseFrequency.FOUR_TIMES_A_WEEK:
-        return '4 times a week';
+        return AppLocalizations.of(context)!.fourTimes;
       case ExerciseFrequency.FIVE_TIMES_A_WEEK:
-        return '5 times a week';
+        return AppLocalizations.of(context)!.fiveTimes;
       case ExerciseFrequency.SIX_TIMES_A_WEEK:
-        return '6 times a week';
+        return AppLocalizations.of(context)!.sixTimes;
       case ExerciseFrequency.EVERY_DAY:
-        return 'Every day';
+        return AppLocalizations.of(context)!.everyDay;
     }
   }
 
@@ -319,9 +320,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
 
       String? errorMsg;
       if (weight != null && (weight < 30 || weight > 300)) {
-        errorMsg = 'Weight must be between 30 and 300 kg';
+        errorMsg = AppLocalizations.of(context)!.weightRange;
       } else if (height != null && (height < 50 || height > 250)) {
-        errorMsg = 'Height must be between 50 and 250 cm';
+        errorMsg = AppLocalizations.of(context)!.heightRange;
       }
 
       if (errorMsg != null) {
@@ -353,8 +354,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(
-              'Please complete your User Preferences in Settings before generating a plan.'),
+          content: Text(
+              AppLocalizations.of(context)!.completeProfileFirst),
           backgroundColor: Colors.orange.shade700,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 3),
@@ -389,9 +390,9 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 child: const Icon(Icons.check, color: Colors.white, size: 16),
               ),
               const SizedBox(width: 12),
-              const Expanded(
+              Expanded(
                 child: Text(
-                    'Meal plan generation started! You\'ll receive a notification when it\'s ready.'),
+                    AppLocalizations.of(context)!.mealPlanGenStarted),
               ),
             ],
           ),
@@ -418,7 +419,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                     color: Colors.white, size: 16),
               ),
               const SizedBox(width: 12),
-              const Text('Failed to start meal plan generation'),
+              Text(AppLocalizations.of(context)!.failedToStartGeneration),
             ],
           ),
           backgroundColor: Colors.red.shade600,
@@ -444,7 +445,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         elevation: 0,
         backgroundColor: colorScheme.surface,
         title: Text(
-          'Create Meal Plan',
+          AppLocalizations.of(context)!.createMealPlan,
           style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -469,7 +470,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
               ),
               const SizedBox(height: 24),
               Text(
-                'Loading your preferences...',
+                AppLocalizations.of(context)!.loadingPreferences,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -578,7 +579,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             ),
             const SizedBox(height: 24),
             Text(
-              'Something went wrong',
+              AppLocalizations.of(context)!.somethingWentWrong,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -586,7 +587,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             ),
             const SizedBox(height: 12),
             Text(
-              'Unable to load your preferences',
+              AppLocalizations.of(context)!.unableToLoadPreferences,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -595,7 +596,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             FilledButton.icon(
               onPressed: () => ref.refresh(userDetailsProvider),
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Try Again'),
+              label: Text(AppLocalizations.of(context)!.tryAgain),
             ),
           ],
         ),
@@ -634,7 +635,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
           ),
           const SizedBox(height: 16),
           Text(
-            'Personalized Meal Plan',
+            AppLocalizations.of(context)!.personalizedMealPlan,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: colorScheme.primary,
@@ -642,7 +643,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
           ),
           const SizedBox(height: 8),
           Text(
-            'We\'ll create a customized weekly meal plan based on your preferences, dietary needs, and lifestyle.',
+            AppLocalizations.of(context)!.personalizedDescription,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
@@ -680,7 +681,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             ),
             const SizedBox(height: 16),
             Text(
-              'Profile Incomplete',
+              AppLocalizations.of(context)!.profileIncomplete,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.red.shade800,
@@ -707,7 +708,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 );
               },
               icon: const Icon(Icons.person_rounded),
-              label: const Text('Complete Profile'),
+              label: Text(AppLocalizations.of(context)!.completeProfile),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.red.shade600,
                 foregroundColor: Colors.white,
@@ -723,7 +724,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'You must complete your profile before generating a meal plan',
+                AppLocalizations.of(context)!.completeProfileMustDo,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: Colors.red.shade700,
                   fontWeight: FontWeight.w500,
@@ -761,7 +762,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             ),
             const SizedBox(height: 16),
             Text(
-              'No Profile Details Found',
+              AppLocalizations.of(context)!.noProfileDetailsFound,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.orange.shade800,
@@ -769,7 +770,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             ),
             const SizedBox(height: 12),
             Text(
-              'For the most personalized meal plan, please set up your profile with your weight, height, dietary preferences, and allergies.',
+              AppLocalizations.of(context)!.noProfileDescription,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: Colors.orange.shade700,
@@ -788,7 +789,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 );
               },
               icon: const Icon(Icons.settings_rounded),
-              label: const Text('Complete Profile'),
+              label: Text(AppLocalizations.of(context)!.completeProfile),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.orange.shade600,
                 foregroundColor: Colors.white,
@@ -804,7 +805,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Or continue with default preferences below',
+                AppLocalizations.of(context)!.orContinueDefault,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: Colors.orange.shade700,
                   fontWeight: FontWeight.w500,
@@ -847,7 +848,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Profile Details Found',
+                    AppLocalizations.of(context)!.profileDetailsFound,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.green.shade800,
@@ -874,7 +875,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       details.add('${userDetails.heightCm}cm');
     }
     if (userDetails.dailyMealsPreference != null) {
-      details.add('${userDetails.dailyMealsPreference} meals/day');
+      details.add(AppLocalizations.of(context)!.mealsPerDay(userDetails.dailyMealsPreference!));
     }
     if (userDetails.exerciseFrequency != null) {
       final freq = userDetails.exerciseFrequency!;
@@ -937,7 +938,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Custom Preferences',
+                    AppLocalizations.of(context)!.customPreferences,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
@@ -986,8 +987,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   Expanded(
                     child: Text(
                       _useOverrides
-                          ? 'Using custom preferences for this meal plan'
-                          : 'Using your profile preferences',
+                          ? AppLocalizations.of(context)!.usingCustomPreferences
+                          : AppLocalizations.of(context)!.usingProfilePreferences,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: _useOverrides
                             ? Colors.orange.shade700
@@ -1014,7 +1015,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Physical Details Section
-        _buildSectionHeader('Physical Details', Icons.monitor_weight_rounded,
+        _buildSectionHeader(AppLocalizations.of(context)!.physicalDetails, Icons.monitor_weight_rounded,
             colorScheme, theme),
         const SizedBox(height: 12),
         Row(
@@ -1022,13 +1023,13 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             Expanded(
               child: _buildTextField(
                 controller: _weightController,
-                label: 'Weight',
+                label: AppLocalizations.of(context)!.weight,
                 suffix: 'kg',
                 keyboardType: TextInputType.number,
                 colorScheme: colorScheme,
-                helperText: 'Allowed: 30–300 kg',
+                helperText: AppLocalizations.of(context)!.weightHelper,
                 errorText: _isWeightValid() == false
-                    ? 'Weight must be between 30 and 300 kg'
+                    ? AppLocalizations.of(context)!.weightRange
                     : null,
                 suffixIcon: _isWeightValid() == null
                     ? null
@@ -1048,13 +1049,13 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             Expanded(
               child: _buildTextField(
                 controller: _heightController,
-                label: 'Height',
+                label: AppLocalizations.of(context)!.height,
                 suffix: 'cm',
                 keyboardType: TextInputType.number,
                 colorScheme: colorScheme,
-                helperText: 'Allowed: 50–250 cm',
+                helperText: AppLocalizations.of(context)!.heightHelper,
                 errorText: _isHeightValid() == false
-                    ? 'Height must be between 50 and 250 cm'
+                    ? AppLocalizations.of(context)!.heightRange
                     : null,
                 suffixIcon: _isHeightValid() == null
                     ? null
@@ -1076,14 +1077,14 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
 
         // Meal Preferences Section
         _buildSectionHeader(
-            'Meal Preferences', Icons.restaurant_rounded, colorScheme, theme),
+            AppLocalizations.of(context)!.mealPreferences, Icons.restaurant_rounded, colorScheme, theme),
         const SizedBox(height: 12),
         _buildDropdownField<int>(
           value: _dailyMealsPreference,
-          label: 'Daily Meals',
+          label: AppLocalizations.of(context)!.dailyMeals,
           items: [
             for (int i = 1; i <= 6; i++)
-              DropdownMenuItem(value: i, child: Text('$i meals'))
+              DropdownMenuItem(value: i, child: Text(AppLocalizations.of(context)!.mealsDropdown(i)))
           ],
           onChanged: (value) => setState(() => _dailyMealsPreference = value),
           colorScheme: colorScheme,
@@ -1091,7 +1092,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 16),
         _buildDropdownField<ExerciseFrequency>(
           value: _exerciseFrequency,
-          label: 'Exercise Frequency',
+          label: AppLocalizations.of(context)!.exerciseFrequency,
           items: ExerciseFrequency.values
               .map((freq) => DropdownMenuItem(
                     value: freq,
@@ -1104,12 +1105,12 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 24),
 
         // Dietary Information Section
-        _buildSectionHeader('Dietary Information', Icons.local_dining_rounded,
+        _buildSectionHeader(AppLocalizations.of(context)!.dietaryInformation, Icons.local_dining_rounded,
             colorScheme, theme),
         const SizedBox(height: 12),
         _buildTextField(
           controller: _dietaryRestrictionsController,
-          label: 'Dietary Restrictions',
+          label: AppLocalizations.of(context)!.dietaryRestrictions,
           hint: 'e.g., vegetarian, low-sodium, etc.',
           maxLines: 2,
           colorScheme: colorScheme,
@@ -1117,8 +1118,8 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         const SizedBox(height: 16),
         _buildTextField(
           controller: _openTextPreferencesController,
-          label: 'Additional Preferences',
-          hint: 'Any other food preferences or requirements',
+          label: AppLocalizations.of(context)!.additionalPreferences,
+          hint: AppLocalizations.of(context)!.additionalPreferencesHint,
           maxLines: 2,
           colorScheme: colorScheme,
         ),
@@ -1126,7 +1127,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
 
         // Allergies Section
         _buildSectionHeader(
-            'Allergies', Icons.warning_rounded, colorScheme, theme),
+            AppLocalizations.of(context)!.allergies, Icons.warning_rounded, colorScheme, theme),
         const SizedBox(height: 12),
         _buildAllergiesSelection(colorScheme, theme),
       ],
@@ -1258,12 +1259,12 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
               ),
         label: Text(
           _isGenerating
-              ? 'Creating Meal Plan...'
+              ? AppLocalizations.of(context)!.creatingMealPlan
               : !isProfileValid
-                  ? 'Complete Profile First'
+                  ? AppLocalizations.of(context)!.completeProfileFirst
                   : isCustom
-                      ? 'Generate with Custom Preferences'
-                      : 'Generate Personalized Plan',
+                      ? AppLocalizations.of(context)!.generateCustomPreferences
+                      : AppLocalizations.of(context)!.generatePersonalizedPlan,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: Colors.white,
@@ -1298,7 +1299,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Select any allergies you have:',
+            AppLocalizations.of(context)!.selectAllergies,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w500,

@@ -85,6 +85,16 @@
     "errorDetails": "Dettagli Errore",
     "weeklyMealPlan": "Piano Alimentare Settimanale",
     "noMealPlanDataAvailable": "Nessun dato del piano alimentare disponibile",
+    "sevenDayMealScheduleReadOnly": "Piano alimentare di 7 giorni",
+    "mealsCount": "{count} pasti",
+    "@mealsCount": {
+        "description": "Shows the number of meals for a day",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
     "noDailyPlanData": "Nessun dato di piano giornaliero trovato per questo piano alimentare.",
     "monday": "Lunedì",
     "tuesday": "Martedì",
@@ -105,5 +115,16 @@
     "fat": "Grassi",
     "chatWithNutritionist": "Chatta con il Nutrizionista",
     "showLess": "Mostra meno",
-    "readMore": "Leggi di più"
+    "readMore": "Leggi di più",
+    "statusActive": "Attivo",
+    "statusGenerated": "Generato",
+    "statusArchived": "Archiviato", 
+    "statusFailed": "Fallito",
+    "statusInProgress": "In Corso",
+    "statusPending": "In Attesa",
+    "statusUnknown": "Sconosciuto",
+    "validationValidated": "Convalidato",
+    "validationPendingReview": "In Revisione",
+    "validationRejected": "Respinto",
+    "validationNotValidated": "Non Convalidato"
 }

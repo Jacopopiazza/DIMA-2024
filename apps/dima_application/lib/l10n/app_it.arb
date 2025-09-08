@@ -1,5 +1,39 @@
 {
   "@@locale": "it",
+  "yesterday": "Ieri",
+  "typeYourMessage": "Scrivi il tuo messaggio...",
+  "patient": "Paziente",
+  "nutritionist": "Nutrizionista",
+  "retry": "Riprova",
+  "upgrade": "Aggiorna",
+  "failedToLoadOlderMessages": "Impossibile caricare messaggi precedenti: ",
+  "loading": "Caricamento...",
+  "error": "Errore",
+  "message": "Messaggio...",
+  "pullDownToLoadOlder": "Trascina in basso per caricare messaggi precedenti",
+  "loadingMessages": "Caricamento messaggi...",
+  "failedToLoadChat": "Impossibile caricare la chat",
+  "startTheConversation": "Inizia la conversazione",
+  "sendMessageToBegin": "Invia un messaggio per iniziare a chattare.",
+  "messagesCount": "{count} messaggi",
+  "@messagesCount": {
+    "description": "Display count of messages in chat",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tryAgain": "Riprova",
+  "isTyping": "{name} sta scrivendo...",
+  "@isTyping": {
+    "description": "Shows when someone is typing",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "newMealPlanAvailable": "Nuovo piano alimentare disponibile!",
   "mealPlanGenerationFailed": "Generazione piano alimentare fallita: ",
   "unknownError": "Errore sconosciuto",
@@ -12,7 +46,6 @@
   "somethingWentWrong": "Qualcosa è andato storto",
   "unableToLoadPlansWithConnection": "Impossibile caricare i tuoi piani alimentari.\nControlla la connessione internet e riprova.",
   "unableToLoadPlans": "Impossibile caricare i tuoi piani alimentari",
-  "tryAgain": "Riprova",
   "active": "ATTIVO",
   "setActive": "Imposta Attivo",
   "delete": "Elimina",
@@ -80,11 +113,20 @@
   "generated": "Generato",
   "status": "Stato",
   "validation": "Convalida",
-  "nutritionist": "Nutrizionista",
   "user": "Utente",
   "errorDetails": "Dettagli Errore",
   "weeklyMealPlan": "Piano Alimentare Settimanale",
   "noMealPlanDataAvailable": "Nessun dato del piano alimentare disponibile",
+  "sevenDayMealScheduleReadOnly": "Piano alimentare di 7 giorni",
+  "mealsCount": "{count} pasti",
+  "@mealsCount": {
+    "description": "Shows the number of meals for a day",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "noDailyPlanData": "Nessun dato di piano giornaliero trovato per questo piano alimentare.",
   "monday": "Lunedì",
   "tuesday": "Martedì",
@@ -106,6 +148,17 @@
   "chatWithNutritionist": "Chatta con il Nutrizionista",
   "showLess": "Mostra meno",
   "readMore": "Leggi di più",
+  "statusActive": "Attivo",
+  "statusGenerated": "Generato",
+  "statusArchived": "Archiviato",
+  "statusFailed": "Fallito",
+  "statusInProgress": "In Corso",
+  "statusPending": "In Attesa",
+  "statusUnknown": "Sconosciuto",
+  "validationValidated": "Convalidato",
+  "validationPendingReview": "In Revisione",
+  "validationRejected": "Respinto",
+  "validationNotValidated": "Non Convalidato",
   "mealNameBREAKFAST": "Colazione",
   "mealNameDINNER": "Cena",
   "mealNameLUNCH": "Pranzo",
@@ -127,6 +180,71 @@
   "refreshNow": "Aggiorna Ora",
   "failedToLoadData": "Caricamento Dati Fallito",
   "retryAction": "Riprova",
+  "profileInfoNotAvailable": "Informazioni profilo non disponibili",
+  "notSpecified": "Non specificato",
+  "noExercise": "Nessun esercizio",
+  "onceWeek": "Una volta a settimana",
+  "twiceWeek": "Due volte a settimana",
+  "threeTimes": "3 volte a settimana",
+  "fourTimes": "4 volte a settimana",
+  "fiveTimes": "5 volte a settimana",
+  "sixTimes": "6 volte a settimana",
+  "everyDay": "Ogni giorno",
+  "weightRange": "Il peso deve essere tra 30 e 300 kg",
+  "heightRange": "L'altezza deve essere tra 50 e 250 cm",
+  "completeProfileFirst": "Completa Prima il Profilo",
+  "mealPlanGenStarted": "Generazione piano alimentare avviata! Riceverai una notifica quando sarà pronto.",
+  "failedToStartGeneration": "Impossibile avviare la generazione del piano alimentare",
+  "createMealPlan": "Crea Piano Alimentare",
+  "loadingPreferences": "Caricamento delle tue preferenze...",
+  "unableToLoadPreferences": "Impossibile caricare le tue preferenze",
+  "personalizedMealPlan": "Piano Alimentare Personalizzato",
+  "personalizedDescription": "Creeremo un piano alimentare settimanale personalizzato basato sulle tue preferenze, esigenze dietetiche e stile di vita.",
+  "profileIncomplete": "Profilo Incompleto",
+  "completeProfile": "Completa Profilo",
+  "completeProfileMustDo": "Devi completare il tuo profilo prima di generare un piano alimentare",
+  "noProfileDetailsFound": "Nessun Dettaglio Profilo Trovato",
+  "noProfileDescription": "Per il piano alimentare più personalizzato, configura il tuo profilo con peso, altezza, preferenze dietetiche e allergie.",
+  "orContinueDefault": "O continua con le preferenze predefinite qui sotto",
+  "profileDetailsFound": "Dettagli Profilo Trovati",
+  "customPreferences": "Preferenze Personalizzate",
+  "usingCustomPreferences": "Usando preferenze personalizzate per questo piano alimentare",
+  "usingProfilePreferences": "Usando le preferenze del tuo profilo",
+  "physicalDetails": "Dettagli Fisici",
+  "weight": "Peso",
+  "weightHelper": "Consentito: 30–300 kg",
+  "height": "Altezza",
+  "heightHelper": "Consentito: 50–250 cm",
+  "mealPreferences": "Preferenze Pasto",
+  "dailyMeals": "Pasti Giornalieri",
+  "exerciseFrequency": "Frequenza Esercizio",
+  "dietaryInformation": "Informazioni Dietetiche",
+  "dietaryRestrictions": "Restrizioni Dietetiche",
+  "additionalPreferences": "Preferenze Aggiuntive",
+  "additionalPreferencesHint": "Altre preferenze o requisiti alimentari",
+  "allergies": "Allergie",
+  "creatingMealPlan": "Creazione Piano Alimentare...",
+  "generateCustomPreferences": "Genera con Preferenze Personalizzate",
+  "mealsPerDay": "{count} pasti/giorno",
+  "@mealsPerDay": {
+    "description": "Shows meals per day in user details",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mealsDropdown": "{count} pasti",
+  "@mealsDropdown": {
+    "description": "Shows meals count in dropdown",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "generatePersonalizedPlan": "Genera Piano Personalizzato",
+  "selectAllergies": "Seleziona eventuali allergie che hai:",
   "helloWorld": "Ciao Mondo!",
   "signedIn": "Loggato!",
   "userRole": "Utente",
@@ -163,7 +281,6 @@
   "errorSavingPreferences": "Errore nel salvataggio delle preferenze.",
   "errorLoadingPreferences": "Errore nel caricamento delle preferenze.",
   "pleaseCorrectErrors": "Per favore, correggi gli errori nel modulo.",
-  "retry": "Riprova",
   "basicInfo": "Informazioni Base",
   "weightKg": "Peso (kg)",
   "heightCm": "Altezza (cm)",
@@ -171,12 +288,8 @@
   "invalidNumberFormat": "Inserisci un numero valido.",
   "caloriesOutOfRange": "Le calorie devono essere comprese tra 500 e 10000.",
   "dietaryNeeds": "Esigenze Alimentari",
-  "mealsPerDay": "Pasti al Giorno",
-  "dietaryRestrictions": "Restrizioni Alimentari",
   "dietaryRestrictionsHint": "es. Vegetariano, Vegano, Low-Carb",
-  "allergies": "Allergie",
   "lifestyle": "Stile di Vita",
-  "exerciseFrequency": "Frequenza Esercizio Fisico",
   "otherPreferences": "Altre Preferenze",
   "additionalNotes": "Note Aggiuntive",
   "additionalNotesHint": "Altri gusti, preferenze o obiettivi?",

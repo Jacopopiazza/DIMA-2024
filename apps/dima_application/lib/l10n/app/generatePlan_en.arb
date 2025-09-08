@@ -1,0 +1,70 @@
+{
+    "@@locale": "en",
+    "profileInfoNotAvailable": "Profile information not available",
+    "notSpecified": "Not specified",
+    "noExercise": "No exercise",
+    "onceWeek": "Once a week",
+    "twiceWeek": "Twice a week",
+    "threeTimes": "3 times per week",
+    "fourTimes": "4 times per week",
+    "fiveTimes": "5 times per week",
+    "sixTimes": "6 times per week",
+    "everyDay": "Every day",
+    "weightRange": "Weight must be between 30 and 300 kg",
+    "heightRange": "Height must be between 50 and 250 cm",
+    "completeProfileFirst": "Please complete your User Preferences in Settings before generating a plan.",
+    "mealPlanGenStarted": "Meal plan generation started! You'll receive a notification when it's ready.",
+    "failedToStartGeneration": "Failed to start meal plan generation",
+    "createMealPlan": "Create Meal Plan",
+    "loadingPreferences": "Loading your preferences...",
+    "somethingWentWrong": "Something went wrong",
+    "unableToLoadPreferences": "Unable to load your preferences",
+    "personalizedMealPlan": "Personalized Meal Plan",
+    "personalizedDescription": "We'll create a customized weekly meal plan based on your preferences, dietary needs, and lifestyle.",
+    "profileIncomplete": "Profile Incomplete",
+    "completeProfile": "Complete Profile",
+    "completeProfileMustDo": "You must complete your profile before generating a meal plan",
+    "noProfileDetailsFound": "No Profile Details Found",
+    "noProfileDescription": "For the most personalized meal plan, please set up your profile with your weight, height, dietary preferences, and allergies.",
+    "orContinueDefault": "Or continue with default preferences below",
+    "profileDetailsFound": "Profile Details Found",
+    "customPreferences": "Custom Preferences",
+    "usingCustomPreferences": "Using custom preferences for this meal plan",
+    "usingProfilePreferences": "Using your profile preferences",
+    "physicalDetails": "Physical Details",
+    "weight": "Weight",
+    "weightHelper": "Allowed: 30–300 kg",
+    "height": "Height",
+    "heightHelper": "Allowed: 50–250 cm",
+    "mealPreferences": "Meal Preferences",
+    "dailyMeals": "Daily Meals",
+    "exerciseFrequency": "Exercise Frequency",
+    "dietaryInformation": "Dietary Information",
+    "dietaryRestrictions": "Dietary Restrictions",
+    "additionalPreferences": "Additional Preferences",
+    "additionalPreferencesHint": "Any other food preferences or requirements",
+    "allergies": "Allergies",
+    "creatingMealPlan": "Creating Meal Plan...",
+    "completeProfileFirst": "Complete Profile First",
+    "generateCustomPreferences": "Generate with Custom Preferences",
+    "mealsPerDay": "{count} meals/day",
+    "@mealsPerDay": {
+        "description": "Shows meals per day in user details",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "mealsDropdown": "{count} meals",
+    "@mealsDropdown": {
+        "description": "Shows meals count in dropdown",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "generatePersonalizedPlan": "Generate Personalized Plan",
+    "selectAllergies": "Select any allergies you have:"
+}

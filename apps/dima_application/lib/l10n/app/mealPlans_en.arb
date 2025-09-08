@@ -85,6 +85,16 @@
     "errorDetails": "Error Details",
     "weeklyMealPlan": "Weekly Meal Plan",
     "noMealPlanDataAvailable": "No meal plan data available",
+    "sevenDayMealScheduleReadOnly": "7-day meal schedule",
+    "mealsCount": "{count} meals",
+    "@mealsCount": {
+        "description": "Shows the number of meals for a day",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
     "noDailyPlanData": "No daily plan data found for this meal plan.",
     "monday": "Monday",
     "tuesday": "Tuesday", 
@@ -105,5 +115,16 @@
     "fat": "Fat",
     "chatWithNutritionist": "Chat with Nutritionist",
     "showLess": "Show less",
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "statusActive": "Active",
+    "statusGenerated": "Generated", 
+    "statusArchived": "Archived",
+    "statusFailed": "Failed",
+    "statusInProgress": "In Progress",
+    "statusPending": "Pending",
+    "statusUnknown": "Unknown",
+    "validationValidated": "Validated",
+    "validationPendingReview": "Pending Review",
+    "validationRejected": "Rejected", 
+    "validationNotValidated": "Not Validated"
 }

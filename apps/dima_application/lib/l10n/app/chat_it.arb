@@ -1,0 +1,37 @@
+{
+    "@@locale": "it",
+    "yesterday": "Ieri",
+    "typeYourMessage": "Scrivi il tuo messaggio...",
+    "patient": "Paziente",
+    "nutritionist": "Nutrizionista",
+    "retry": "Riprova",
+    "upgrade": "Aggiorna",
+    "failedToLoadOlderMessages": "Impossibile caricare messaggi precedenti: ",
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "message": "Messaggio...",
+    "pullDownToLoadOlder": "Trascina in basso per caricare messaggi precedenti",
+    "loadingMessages": "Caricamento messaggi...",
+    "failedToLoadChat": "Impossibile caricare la chat",
+    "startTheConversation": "Inizia la conversazione",
+    "sendMessageToBegin": "Invia un messaggio per iniziare a chattare.",
+    "messagesCount": "{count} messaggi",
+    "@messagesCount": {
+        "description": "Display count of messages in chat",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "tryAgain": "Riprova",
+    "isTyping": "{name} sta scrivendo...",
+    "@isTyping": {
+        "description": "Shows when someone is typing",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    }
+}

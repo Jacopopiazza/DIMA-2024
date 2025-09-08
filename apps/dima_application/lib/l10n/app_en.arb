@@ -97,6 +97,68 @@
   "@back": {
     "description": "back button label"
   },
+  "profileInfoNotAvailable": "Profile information not available",
+  "notSpecified": "Not specified",
+  "noExercise": "No exercise",
+  "onceWeek": "Once a week",
+  "twiceWeek": "Twice a week",
+  "threeTimes": "3 times per week",
+  "fourTimes": "4 times per week",
+  "fiveTimes": "5 times per week",
+  "sixTimes": "6 times per week",
+  "everyDay": "Every day",
+  "weightRange": "Weight must be between 30 and 300 kg",
+  "heightRange": "Height must be between 50 and 250 cm",
+  "completeProfileFirst": "Complete Profile First",
+  "mealPlanGenStarted": "Meal plan generation started! You'll receive a notification when it's ready.",
+  "failedToStartGeneration": "Failed to start meal plan generation",
+  "createMealPlan": "Create Meal Plan",
+  "loadingPreferences": "Loading your preferences...",
+  "somethingWentWrong": "Something went wrong",
+  "unableToLoadPreferences": "Unable to load your preferences",
+  "personalizedMealPlan": "Personalized Meal Plan",
+  "personalizedDescription": "We'll create a customized weekly meal plan based on your preferences, dietary needs, and lifestyle.",
+  "profileIncomplete": "Profile Incomplete",
+  "completeProfile": "Complete Profile",
+  "completeProfileMustDo": "You must complete your profile before generating a meal plan",
+  "noProfileDetailsFound": "No Profile Details Found",
+  "noProfileDescription": "For the most personalized meal plan, please set up your profile with your weight, height, dietary preferences, and allergies.",
+  "orContinueDefault": "Or continue with default preferences below",
+  "profileDetailsFound": "Profile Details Found",
+  "customPreferences": "Custom Preferences",
+  "usingCustomPreferences": "Using custom preferences for this meal plan",
+  "usingProfilePreferences": "Using your profile preferences",
+  "physicalDetails": "Physical Details",
+  "weight": "Weight",
+  "weightHelper": "Allowed: 30–300 kg",
+  "height": "Height",
+  "heightHelper": "Allowed: 50–250 cm",
+  "mealPreferences": "Meal Preferences",
+  "dailyMeals": "Daily Meals",
+  "dietaryInformation": "Dietary Information",
+  "additionalPreferences": "Additional Preferences",
+  "additionalPreferencesHint": "Any other food preferences or requirements",
+  "creatingMealPlan": "Creating Meal Plan...",
+  "generateCustomPreferences": "Generate with Custom Preferences",
+  "@mealsPerDay": {
+    "description": "Shows meals per day in user details",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mealsDropdown": "{count} meals",
+  "@mealsDropdown": {
+    "description": "Shows meals count in dropdown",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "generatePersonalizedPlan": "Generate Personalized Plan",
+  "selectAllergies": "Select any allergies you have:",
   "helloWorld": "Hello World!",
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"
@@ -142,7 +204,6 @@
   "createFirstMealPlan": "Create your first personalized meal plan\nto get started with healthy eating",
   "pullDownToRefresh": "Pull down to refresh",
   "connectionProblem": "Connection Problem",
-  "somethingWentWrong": "Something went wrong",
   "unableToLoadPlansWithConnection": "Unable to load your meal plans.\nCheck your internet connection and try again.",
   "unableToLoadPlans": "Unable to load your meal plans",
   "tryAgain": "Try Again",
@@ -217,6 +278,16 @@
   "errorDetails": "Error Details",
   "weeklyMealPlan": "Weekly Meal Plan",
   "noMealPlanDataAvailable": "No meal plan data available",
+  "sevenDayMealScheduleReadOnly": "7-day meal schedule",
+  "mealsCount": "{count} meals",
+  "@mealsCount": {
+    "description": "Shows the number of meals for a day",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "noDailyPlanData": "No daily plan data found for this meal plan.",
   "monday": "Monday",
   "tuesday": "Tuesday",
@@ -237,6 +308,48 @@
   "chatWithNutritionist": "Chat with Nutritionist",
   "showLess": "Show less",
   "readMore": "Read more",
+  "statusActive": "Active",
+  "statusGenerated": "Generated",
+  "statusArchived": "Archived",
+  "statusFailed": "Failed",
+  "statusInProgress": "In Progress",
+  "statusPending": "Pending",
+  "statusUnknown": "Unknown",
+  "validationValidated": "Validated",
+  "validationPendingReview": "Pending Review",
+  "validationRejected": "Rejected",
+  "validationNotValidated": "Not Validated",
+  "yesterday": "Yesterday",
+  "typeYourMessage": "Type your message...",
+  "patient": "Patient",
+  "upgrade": "Upgrade",
+  "failedToLoadOlderMessages": "Failed to load older messages: ",
+  "loading": "Loading...",
+  "error": "Error",
+  "message": "Message...",
+  "pullDownToLoadOlder": "Pull down to load older messages",
+  "loadingMessages": "Loading messages...",
+  "failedToLoadChat": "Failed to load chat",
+  "startTheConversation": "Start the conversation",
+  "sendMessageToBegin": "Send a message to begin chatting.",
+  "messagesCount": "{count} messages",
+  "@messagesCount": {
+    "description": "Display count of messages in chat",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "isTyping": "{name} is typing...",
+  "@isTyping": {
+    "description": "Shows when someone is typing",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "mealNameBREAKFAST": "Breakfast",
   "@mealNameBREAKFAST": {
     "description": "Breakfast meal display name"
