@@ -243,6 +243,12 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
             duration: const Duration(seconds: 2),
           ),
         );
+        
+        // If the notification is about the currently selected meal plan, refresh the detail pane
+        if (_selectedPlanId == latest.mealPlanId) {
+          _refreshDetailPane();
+        }
+        
         // Mark as read shortly after
         Future.microtask(
             () => ref.read(mealPlanNotificationProvider.notifier).markAllAsRead());
