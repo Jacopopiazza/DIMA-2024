@@ -448,7 +448,7 @@ class _ProgressCardState extends State<ProgressCard>
                         style: TextStyle(
                           color: secondaryTextColor,
                           fontSize:
-                              MediaQuery.of(context).size.width < 375 ? 14 : 16,
+                              MediaQuery.of(context).size.width < 375 ? 12 : 14,
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -469,8 +469,8 @@ class _ProgressCardState extends State<ProgressCard>
                               style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.width < 375
-                                        ? 16
-                                        : 18,
+                                        ? 12
+                                        : 14,
                                 fontWeight: FontWeight.bold,
                                 color: textColor,
                               ),
@@ -536,20 +536,20 @@ class _ProgressCardState extends State<ProgressCard>
                   // Apply screen-specific limits with safety margin
                   double maxWidthDiameter, minWidthDiameter;
                   if (isVeryCompactDevice) {
-                    maxWidthDiameter = 40.0;
-                    minWidthDiameter = 18.0;
-                  } else if (isCompactDevice) {
-                    maxWidthDiameter = 45.0;
+                    maxWidthDiameter = 44.0;
                     minWidthDiameter = 20.0;
-                  } else if (isVerySmallScreen) {
-                    maxWidthDiameter = 50.0;
+                  } else if (isCompactDevice) {
+                    maxWidthDiameter = 49.0;
                     minWidthDiameter = 22.0;
-                  } else if (isSmallScreen) {
+                  } else if (isVerySmallScreen) {
                     maxWidthDiameter = 55.0;
-                    minWidthDiameter = 25.0;
+                    minWidthDiameter = 24.0;
+                  } else if (isSmallScreen) {
+                    maxWidthDiameter = 60.0;
+                    minWidthDiameter = 27.0;
                   } else {
-                    maxWidthDiameter = 65.0;
-                    minWidthDiameter = 28.0;
+                    maxWidthDiameter = 70.0;
+                    minWidthDiameter = 30.0;
                   }
 
                   final double widthBasedDiameter = rawWidthDiameter.clamp(
@@ -564,19 +564,19 @@ class _ProgressCardState extends State<ProgressCard>
                               ? 0.7
                               : (isSmallScreen ? 0.75 : 0.8)));
                   double maxHeightDiameter = isVeryCompactDevice
-                      ? 45.0
+                      ? 49.0
                       : (isCompactDevice
-                          ? 50.0
+                          ? 55.0
                           : (isVerySmallScreen
-                              ? 55.0
-                              : (isSmallScreen ? 60.0 : 70.0)));
+                              ? 60.0
+                              : (isSmallScreen ? 65.0 : 75.0)));
                   double minHeightDiameter = isVeryCompactDevice
-                      ? 18.0
+                      ? 20.0
                       : (isCompactDevice
-                          ? 20.0
+                          ? 22.0
                           : (isVerySmallScreen
-                              ? 22.0
-                              : (isSmallScreen ? 25.0 : 28.0)));
+                              ? 24.0
+                              : (isSmallScreen ? 27.0 : 30.0)));
 
                   final double heightBasedDiameter =
                       (availableHeight * heightMultiplier)
