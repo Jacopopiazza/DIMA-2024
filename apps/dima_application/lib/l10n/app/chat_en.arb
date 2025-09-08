@@ -33,5 +33,24 @@
                 "type": "String"
             }
         }
+    },
+    "justNow": "Just now",
+    "minutesAgo": "{minutes}m ago",
+    "@minutesAgo": {
+        "description": "Shows time in minutes ago format",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
+    },
+    "hoursAgo": "{hours}h ago",
+    "@hoursAgo": {
+        "description": "Shows time in hours ago format",
+        "placeholders": {
+            "hours": {
+                "type": "int"
+            }
+        }
     }
 }

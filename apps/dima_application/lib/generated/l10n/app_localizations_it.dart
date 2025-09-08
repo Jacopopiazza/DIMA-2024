@@ -819,6 +819,19 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get justNow => 'Proprio ora';
+
+  @override
+  String minutesAgo(int minutes) {
+    return '$minutes min fa';
+  }
+
+  @override
+  String hoursAgo(int hours) {
+    return '${hours}h fa';
+  }
+
+  @override
   String get upgradeToPro => 'Aggiorna a PRO';
 
   @override

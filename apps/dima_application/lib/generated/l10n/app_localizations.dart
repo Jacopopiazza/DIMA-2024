@@ -1679,6 +1679,24 @@ abstract class AppLocalizations {
   /// **'{name} is typing...'**
   String isTyping(String name);
 
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// Shows time in minutes ago format
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m ago'**
+  String minutesAgo(int minutes);
+
+  /// Shows time in hours ago format
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h ago'**
+  String hoursAgo(int hours);
+
   /// No description provided for @upgradeToPro.
   ///
   /// In en, this message translates to:

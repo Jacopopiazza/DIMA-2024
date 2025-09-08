@@ -1,3 +1,4 @@
+import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/models/Chat/chat_message.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -225,7 +226,7 @@ class _ChatNotificationState extends State<ChatNotification>
                               const SizedBox(height: 4),
                               // Timestamp
                               Text(
-                                _formatTimestamp(widget.notification.timestamp),
+                                _formatTimestamp(widget.notification.timestamp, context),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: colorScheme.onPrimaryContainer
                                       .withOpacity(0.7),
@@ -271,16 +272,16 @@ class _ChatNotificationState extends State<ChatNotification>
     return '${content.substring(0, 77)}...';
   }
 
-  String _formatTimestamp(DateTime dateTime) {
+  String _formatTimestamp(DateTime dateTime, BuildContext context) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 1) {
-      return 'Just now';
+      return AppLocalizations.of(context)!.justNow;
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
+      return AppLocalizations.of(context)!.minutesAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
+      return AppLocalizations.of(context)!.hoursAgo(difference.inHours);
     } else {
       return DateFormat('MMM d, HH:mm').format(dateTime);
     }

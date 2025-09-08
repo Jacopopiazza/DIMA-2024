@@ -600,19 +600,19 @@ class _ProgressCardState extends State<ProgressCard>
 
                   if (isVeryCompactDevice) {
                     centerFontSize = centerFontSize.clamp(6.0, 9.0);
-                    labelFontSize = (centerFontSize * 0.85).clamp(5.0, 7.5);
+                    labelFontSize = (centerFontSize * 0.85).clamp(5.0, 9.0);
                   } else if (isCompactDevice) {
                     centerFontSize = centerFontSize.clamp(6.5, 10.0);
-                    labelFontSize = (centerFontSize * 0.85).clamp(5.5, 8.5);
+                    labelFontSize = (centerFontSize * 0.85).clamp(5.5, 10.0);
                   } else if (isVerySmallScreen) {
                     centerFontSize = centerFontSize.clamp(7.0, 11.0);
-                    labelFontSize = (centerFontSize * 0.85).clamp(6.0, 9.0);
+                    labelFontSize = (centerFontSize * 0.85).clamp(6.0, 11.0);
                   } else if (isSmallScreen) {
                     centerFontSize = centerFontSize.clamp(8.0, 12.0);
-                    labelFontSize = (centerFontSize * 0.85).clamp(7.0, 10.0);
+                    labelFontSize = (centerFontSize * 0.85).clamp(7.0, 12.0);
                   } else {
                     centerFontSize = centerFontSize.clamp(9.0, 14.0);
-                    labelFontSize = (centerFontSize * 0.85).clamp(7.5, 12.0);
+                    labelFontSize = (centerFontSize * 0.85).clamp(7.5, 14.0);
                   }
 
                   // Position indicators towards the right

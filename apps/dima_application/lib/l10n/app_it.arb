@@ -183,6 +183,25 @@
       }
     }
   },
+  "justNow": "Proprio ora",
+  "minutesAgo": "{minutes} min fa",
+  "@minutesAgo": {
+    "description": "Shows time in minutes ago format",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{hours}h fa",
+  "@hoursAgo": {
+    "description": "Shows time in hours ago format",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
   "newMealPlanAvailable": "Nuovo piano alimentare disponibile!",
   "mealPlanGenerationFailed": "Generazione piano alimentare fallita: ",
   "unknownError": "Errore sconosciuto",

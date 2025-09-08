@@ -819,6 +819,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgo(int minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String hoursAgo(int hours) {
+    return '${hours}h ago';
+  }
+
+  @override
   String get upgradeToPro => 'Upgrade to PRO';
 
   @override
