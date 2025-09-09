@@ -64,10 +64,13 @@ class ConnectivityService {
   Future<bool> _hasInternetAccess() async {
     try {
       final result = await InternetAddress.lookup('google.com')
-          .timeout(const Duration(seconds: 3));
+          .timeout(const Duration(seconds: 7));
       return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } catch (e) {
-      return false;
+      print('Internet access check failed: $e');
+      // During app initialization, fallback to basic connectivity check
+      // to avoid false negatives when network is busy
+      return true; // Assume connectivity if basic check passed
     }
   }
 

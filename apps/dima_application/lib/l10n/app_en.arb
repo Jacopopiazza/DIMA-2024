@@ -160,7 +160,6 @@
   "invalidNumberFormat": "Please enter a valid number.",
   "caloriesOutOfRange": "Calories must be between 500 and 10000.",
   "dietaryNeeds": "Dietary Needs",
-  "mealsPerDay": "Meals Per Day",
   "dietaryRestrictions": "Dietary Restrictions",
   "dietaryRestrictionsHint": "e.g., Vegetarian, Vegan, Low-Carb",
   "allergies": "Allergies",
@@ -410,6 +409,7 @@
   "additionalPreferencesHint": "Any other food preferences or requirements",
   "creatingMealPlan": "Creating Meal Plan...",
   "generateCustomPreferences": "Generate with Custom Preferences",
+  "mealsPerDay": "{count} meals/day",
   "@mealsPerDay": {
     "description": "Shows meals per day in user details",
     "placeholders": {

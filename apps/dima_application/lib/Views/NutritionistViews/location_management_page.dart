@@ -84,7 +84,8 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
         if (response.location!.address != null) {
           _addressController.text = response.location!.address!;
         } else {
-          _addressController.clear(); // Clear address field so user can enter manually
+          _addressController
+              .clear(); // Clear address field so user can enter manually
         }
 
         if (mounted) {

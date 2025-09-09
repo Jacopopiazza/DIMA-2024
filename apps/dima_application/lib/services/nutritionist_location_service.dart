@@ -358,17 +358,20 @@ class NutritionistLocationService {
       // Try to get address from coordinates using reverse geocoding
       String? address;
       try {
-        safePrint('[NutritionistLocationService] Starting reverse geocoding for lat: ${position.latitude}, lng: ${position.longitude}');
-        
+        safePrint(
+            '[NutritionistLocationService] Starting reverse geocoding for lat: ${position.latitude}, lng: ${position.longitude}');
+
         List<Placemark>? placemarks;
         try {
           placemarks = await placemarkFromCoordinates(
             position.latitude,
             position.longitude,
           );
-          safePrint('[NutritionistLocationService] placemarkFromCoordinates succeeded, found ${placemarks.length} placemarks');
+          safePrint(
+              '[NutritionistLocationService] placemarkFromCoordinates succeeded, found ${placemarks.length} placemarks');
         } catch (geocodingError) {
-          safePrint('[NutritionistLocationService] placemarkFromCoordinates failed: $geocodingError');
+          safePrint(
+              '[NutritionistLocationService] placemarkFromCoordinates failed: $geocodingError');
           address = null; // Let user enter address manually
           return CurrentLocationResult(
             success: true,
@@ -381,11 +384,12 @@ class NutritionistLocationService {
           );
         }
 
-        safePrint('[NutritionistLocationService] Received ${placemarks?.length ?? 0} placemarks');
+        safePrint(
+            '[NutritionistLocationService] Received ${placemarks?.length ?? 0} placemarks');
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final place = placemarks.first;
-          
+
           // Build a readable address safely
           List<String> addressParts = [];
 
@@ -394,22 +398,22 @@ class NutritionistLocationService {
           if (street != null && street.isNotEmpty) {
             addressParts.add(street);
           }
-          
+
           final subThoroughfare = place.subThoroughfare;
           if (subThoroughfare != null && subThoroughfare.isNotEmpty) {
             addressParts.add(subThoroughfare);
           }
-          
+
           final locality = place.locality;
           if (locality != null && locality.isNotEmpty) {
             addressParts.add(locality);
           }
-          
+
           final administrativeArea = place.administrativeArea;
           if (administrativeArea != null && administrativeArea.isNotEmpty) {
             addressParts.add(administrativeArea);
           }
-          
+
           final country = place.country;
           if (country != null && country.isNotEmpty) {
             addressParts.add(country);
@@ -418,7 +422,7 @@ class NutritionistLocationService {
           address = addressParts.isNotEmpty
               ? addressParts.join(', ')
               : null; // No address found, let user enter manually
-          
+
           safePrint('[NutritionistLocationService] Final address: $address');
         } else {
           safePrint('[NutritionistLocationService] No placemarks returned');
@@ -543,7 +547,8 @@ class NutritionistLocationService {
         List<String> addressParts = [];
 
         // Build address in logical order: street number, street, city, region, country
-        if (place.subThoroughfare != null && place.subThoroughfare!.isNotEmpty) {
+        if (place.subThoroughfare != null &&
+            place.subThoroughfare!.isNotEmpty) {
           addressParts.add(place.subThoroughfare!);
         }
         if (place.thoroughfare != null && place.thoroughfare!.isNotEmpty) {
@@ -552,7 +557,8 @@ class NutritionistLocationService {
         if (place.locality != null && place.locality!.isNotEmpty) {
           addressParts.add(place.locality!);
         }
-        if (place.administrativeArea != null && place.administrativeArea!.isNotEmpty) {
+        if (place.administrativeArea != null &&
+            place.administrativeArea!.isNotEmpty) {
           addressParts.add(place.administrativeArea!);
         }
         if (place.country != null && place.country!.isNotEmpty) {

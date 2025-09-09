@@ -114,6 +114,9 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     // since each provider handles user-specific data through userIdProvider
     Future.microtask(() async {
       if (mounted) {
+        // Small delay to allow auth state to fully stabilize
+        await Future.delayed(const Duration(milliseconds: 500));
+
         // Start chat service for new user session
         try {
           await ChatService.instance.startListening();

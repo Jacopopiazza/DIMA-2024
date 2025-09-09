@@ -406,10 +406,10 @@ class _ValidationPlanTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final screenSize = MediaQuery.of(context).size;
-    
+
     // Detect small tablets (close to phone threshold)
-    final isSmallTablet = screenSize.shortestSide < 700 || 
-                         (isLandscape && screenSize.height < 450);
+    final isSmallTablet = screenSize.shortestSide < 700 ||
+        (isLandscape && screenSize.height < 450);
 
     final borderColor =
         isSelected ? colorScheme.primary : colorScheme.outlineVariant;
@@ -417,21 +417,18 @@ class _ValidationPlanTile extends StatelessWidget {
     // Adaptive sizing based on tablet size
     final cardPadding = isSmallTablet ? 8.0 : 12.0;
     final titleMaxLines = isSmallTablet ? 1 : 3;
-    final titleFontSize = isSmallTablet 
+    final titleFontSize = isSmallTablet
         ? (isLandscape ? 10.0 : 11.0)
         : (isLandscape ? 12.0 : 13.0);
-    final clientFontSize = isSmallTablet 
-        ? (isLandscape ? 9.0 : 9.5)
-        : (isLandscape ? 10.0 : 10.5);
-    final statusFontSize = isSmallTablet 
-        ? (isLandscape ? 8.0 : 8.5)
-        : (isLandscape ? 9.0 : 9.5);
-    final iconSize = isSmallTablet 
+    final clientFontSize =
+        isSmallTablet ? (isLandscape ? 9.0 : 9.5) : (isLandscape ? 10.0 : 10.5);
+    final statusFontSize =
+        isSmallTablet ? (isLandscape ? 8.0 : 8.5) : (isLandscape ? 9.0 : 9.5);
+    final iconSize = isSmallTablet
         ? (isLandscape ? 18.0 : 20.0)
         : (isLandscape ? 22.0 : 24.0);
-    final verticalSpacing = isSmallTablet 
-        ? (isLandscape ? 4.0 : 5.0)
-        : (isLandscape ? 6.0 : 8.0);
+    final verticalSpacing =
+        isSmallTablet ? (isLandscape ? 4.0 : 5.0) : (isLandscape ? 6.0 : 8.0);
 
     return Card(
       elevation: isSelected ? 3 : 1,
@@ -505,12 +502,11 @@ class _ValidationPlanTile extends StatelessWidget {
                       Text(
                         DateFormat.yMMMd(
                                 Localizations.localeOf(context).toString())
-                            .format(plan.generatedAt!
-                                .getDateTimeInUtc()
-                                .toLocal()),
+                            .format(
+                                plan.generatedAt!.getDateTimeInUtc().toLocal()),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
-                          fontSize: isSmallTablet 
+                          fontSize: isSmallTablet
                               ? (isLandscape ? 7.0 : 8.0)
                               : (isLandscape ? 8.0 : 9.0),
                           height: 1.0,
@@ -629,9 +625,7 @@ class _ValidationStatusPill extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: isSmallTablet ? 6 : 8, 
-        vertical: isSmallTablet ? 2 : 3
-      ),
+          horizontal: isSmallTablet ? 6 : 8, vertical: isSmallTablet ? 2 : 3),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(12),
@@ -669,9 +663,7 @@ class _ClientPill extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: isSmallTablet ? 6 : 8, 
-        vertical: isSmallTablet ? 2 : 3
-      ),
+          horizontal: isSmallTablet ? 6 : 8, vertical: isSmallTablet ? 2 : 3),
       decoration: BoxDecoration(
         color:
             colorScheme.primaryContainer.withValues(alpha: isDark ? 0.3 : 0.2),

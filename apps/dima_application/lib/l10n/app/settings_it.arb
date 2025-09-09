@@ -30,7 +30,6 @@
     "invalidNumberFormat": "Inserisci un numero valido.",
     "caloriesOutOfRange": "Le calorie devono essere comprese tra 500 e 10000.",
     "dietaryNeeds": "Esigenze Alimentari",
-    "mealsPerDay": "Pasti al Giorno",
     "dietaryRestrictions": "Restrizioni Alimentari",
     "dietaryRestrictionsHint": "es. Vegetariano, Vegano, Low-Carb",
     "allergies": "Allergie",

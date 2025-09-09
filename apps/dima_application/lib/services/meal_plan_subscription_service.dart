@@ -33,9 +33,30 @@ class MealPlanSubscriptionService {
       // ALWAYS clean up existing resources first
       await _cleanupResources();
 
-      // Recupera l'ID dell'utente corrente
-      final user = await _amplifyAuth.getCurrentUser();
-      final String userId = user.userId;
+      // Wait for auth state to stabilize after sign-in transitions
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      // Retry logic for auth state stabilization
+      AuthUser? user;
+      int retries = 3;
+      while (retries > 0) {
+        try {
+          user = await _amplifyAuth.getCurrentUser();
+          break;
+        } catch (e) {
+          if (retries == 1) {
+            print(
+                "[MealPlanSubscriptionService] ❌ Failed to get user after retries: $e");
+            rethrow;
+          }
+          print(
+              "[MealPlanSubscriptionService] ⚠️ Auth not ready, retrying... ($retries attempts left)");
+          retries--;
+          await Future.delayed(const Duration(milliseconds: 500));
+        }
+      }
+
+      final String userId = user!.userId;
       _currentUserId = userId;
 
       print("[MealPlanSubscriptionService] 🔍 User ID: $userId");

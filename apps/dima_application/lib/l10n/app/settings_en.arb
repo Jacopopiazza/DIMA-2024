@@ -30,7 +30,6 @@
     "invalidNumberFormat": "Please enter a valid number.",
     "caloriesOutOfRange": "Calories must be between 500 and 10000.",
     "dietaryNeeds": "Dietary Needs",
-    "mealsPerDay": "Meals Per Day",
     "dietaryRestrictions": "Dietary Restrictions",
     "dietaryRestrictionsHint": "e.g., Vegetarian, Vegan, Low-Carb",
     "allergies": "Allergies",
