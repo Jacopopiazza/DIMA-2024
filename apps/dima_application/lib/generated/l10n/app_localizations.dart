@@ -62,7 +62,8 @@ import 'app_localizations_it.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +84,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -922,6 +925,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Twice a week'**
   String get exerciseFrequencyTWICE_A_WEEK;
+
+  /// No description provided for @nutritionistOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritionist Office'**
+  String get nutritionistOffice;
+
+  /// No description provided for @viewOfficeLocationAndDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'View office location and directions'**
+  String get viewOfficeLocationAndDirections;
+
+  /// User's preferred postal address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @directions.
+  ///
+  /// In en, this message translates to:
+  /// **'Directions'**
+  String get directions;
+
+  /// No description provided for @viewMap.
+  ///
+  /// In en, this message translates to:
+  /// **'View Map'**
+  String get viewMap;
+
+  /// No description provided for @getDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Directions'**
+  String get getDirections;
+
+  /// No description provided for @locationNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Not Available'**
+  String get locationNotAvailable;
+
+  /// No description provided for @couldNotLoadNutritionistLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load nutritionist location'**
+  String get couldNotLoadNutritionistLocation;
+
+  /// Error message when maps app fails to open
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open maps: {error}'**
+  String couldNotOpenMaps(String error);
+
+  /// Shows location coordinates when address is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Location coordinates: {latitude}, {longitude}'**
+  String locationCoordinates(String latitude, String longitude);
+
+  /// No description provided for @officeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Office Location'**
+  String get officeLocation;
+
+  /// No description provided for @coordinates.
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinates'**
+  String get coordinates;
+
+  /// No description provided for @latitude.
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get latitude;
+
+  /// No description provided for @longitude.
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get longitude;
+
+  /// No description provided for @useCurrentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Current Location'**
+  String get useCurrentLocation;
+
+  /// No description provided for @gettingLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting Location...'**
+  String get gettingLocation;
+
+  /// No description provided for @currentLocationRetrievedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Current location retrieved successfully'**
+  String get currentLocationRetrievedSuccessfully;
+
+  /// No description provided for @locationAndAddressRetrievedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Location and address retrieved successfully'**
+  String get locationAndAddressRetrievedSuccessfully;
+
+  /// No description provided for @locationServicesDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Services Disabled'**
+  String get locationServicesDisabled;
+
+  /// No description provided for @enableLocationServicesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable location services in your device settings to use this feature.'**
+  String get enableLocationServicesMessage;
+
+  /// No description provided for @locationPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission Required'**
+  String get locationPermissionRequired;
+
+  /// No description provided for @locationPermissionsPermanentlyDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permissions are permanently denied. Please enable them in app settings.'**
+  String get locationPermissionsPermanentlyDenied;
+
+  /// No description provided for @locationPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission Denied'**
+  String get locationPermissionDenied;
+
+  /// No description provided for @locationPermissionsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permissions are required to automatically detect your current position.'**
+  String get locationPermissionsRequired;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// No description provided for @saveLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Location'**
+  String get saveLocation;
+
+  /// No description provided for @locationUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Location updated successfully'**
+  String get locationUpdatedSuccessfully;
+
+  /// Error message when location save fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save location: {error}'**
+  String failedToSaveLocation(String error);
+
+  /// No description provided for @enterValidLatitudeLongitude.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid latitude and longitude'**
+  String get enterValidLatitudeLongitude;
+
+  /// No description provided for @enterBothCoordinatesOrNeither.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter both latitude and longitude or clear both to remove location'**
+  String get enterBothCoordinatesOrNeither;
+
+  /// No description provided for @removeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Location'**
+  String get removeLocation;
+
+  /// No description provided for @locationRemovedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Location removed successfully'**
+  String get locationRemovedSuccessfully;
+
+  /// No description provided for @clearLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Location'**
+  String get clearLocation;
+
+  /// No description provided for @removingLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Removing...'**
+  String get removingLocation;
+
+  /// No description provided for @officeAddressOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Office Address (Optional)'**
+  String get officeAddressOptional;
+
+  /// No description provided for @additionalNotesOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Notes (Optional)'**
+  String get additionalNotesOptional;
+
+  /// No description provided for @notesForPatients.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes for Patients'**
+  String get notesForPatients;
+
+  /// No description provided for @notesPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 2nd floor, ring doorbell 15'**
+  String get notesPlaceholder;
+
+  /// No description provided for @addressPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Via Roma 123, 10123 Torino TO, Italy'**
+  String get addressPlaceholder;
+
+  /// No description provided for @setOfficeLocationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your office location so patients can easily find you. This will be shown to users who have meal plans assigned to you.'**
+  String get setOfficeLocationDescription;
 
   /// Energy label
   ///
@@ -4883,12 +5126,6 @@ abstract class AppLocalizations {
   /// **'Verification Code'**
   String get verificationCode;
 
-  /// User's preferred postal address.
-  ///
-  /// In en, this message translates to:
-  /// **'Address'**
-  String get address;
-
   /// Middle name(s) of the user.
   ///
   /// In en, this message translates to:
@@ -5148,7 +5385,8 @@ abstract class AppLocalizations {
   String get verifyUser;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -5157,25 +5395,25 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'it'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'it'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'it': return AppLocalizationsIt();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'it':
+      return AppLocalizationsIt();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

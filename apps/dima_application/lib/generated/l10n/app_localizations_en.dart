@@ -18,7 +18,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileInformation => 'Profile Information';
 
   @override
-  String get welcomeCompleteProfile => 'Welcome! Please complete your nutritionist profile';
+  String get welcomeCompleteProfile =>
+      'Welcome! Please complete your nutritionist profile';
 
   @override
   String get specialization => 'Specialization';
@@ -60,7 +61,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveProfile => 'Save Profile';
 
   @override
-  String get noInternetConnection => 'No internet connection. Please check your connection and try again.';
+  String get noInternetConnection =>
+      'No internet connection. Please check your connection and try again.';
 
   @override
   String get profileSavedSuccessfully => 'Profile saved successfully!';
@@ -80,7 +82,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nutritionistSettings => 'Nutritionist Settings';
 
   @override
-  String get manageProfileMessage => 'Manage your professional profile, availability, and account settings.';
+  String get manageProfileMessage =>
+      'Manage your professional profile, availability, and account settings.';
 
   @override
   String get editProfessionalDetails => 'Edit Professional Details';
@@ -109,10 +112,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveChanges => 'Save Changes';
 
   @override
-  String get availableForConsultations => 'You are now available for consultations';
+  String get availableForConsultations =>
+      'You are now available for consultations';
 
   @override
-  String get unavailableForConsultations => 'You are now unavailable for consultations';
+  String get unavailableForConsultations =>
+      'You are now unavailable for consultations';
 
   @override
   String errorUpdatingAvailability(String error) {
@@ -126,13 +131,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
-  String get internetRequiredMessage => 'This app requires an internet connection to function properly. Please check your connection and try again.';
+  String get internetRequiredMessage =>
+      'This app requires an internet connection to function properly. Please check your connection and try again.';
 
   @override
   String get connectionTips => 'Connection Tips';
 
   @override
-  String get checkWifiConnection => 'Check your Wi-Fi or mobile data connection';
+  String get checkWifiConnection =>
+      'Check your Wi-Fi or mobile data connection';
 
   @override
   String get turnOffAirplaneMode => 'Make sure airplane mode is turned off';
@@ -190,25 +197,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get availability => 'Availability';
 
   @override
-  String get currentlyAvailableForConsultations => 'You are currently available for consultations';
+  String get currentlyAvailableForConsultations =>
+      'You are currently available for consultations';
 
   @override
-  String get currentlyUnavailableForConsultations => 'You are currently unavailable for consultations';
+  String get currentlyUnavailableForConsultations =>
+      'You are currently unavailable for consultations';
 
   @override
   String get availableForConsultationsTitle => 'Available for Consultations';
 
   @override
-  String get usersCanRequestConsultations => 'Users can request consultations from you';
+  String get usersCanRequestConsultations =>
+      'Users can request consultations from you';
 
   @override
-  String get noNewConsultationRequests => 'You will not receive new consultation requests';
+  String get noNewConsultationRequests =>
+      'You will not receive new consultation requests';
 
   @override
   String get signOut => 'Sign Out';
 
   @override
-  String get signOutOfNutritionistAccount => 'Sign out of your nutritionist account';
+  String get signOutOfNutritionistAccount =>
+      'Sign out of your nutritionist account';
 
   @override
   String errorSigningOut(String error) {
@@ -219,28 +231,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAccount => 'Delete Account';
 
   @override
-  String get deleteAccountPermanently => 'This action will permanently delete your nutritionist account and all associated data. This cannot be undone.';
+  String get deleteAccountPermanently =>
+      'This action will permanently delete your nutritionist account and all associated data. This cannot be undone.';
 
   @override
-  String get allDataWillBeRemoved => 'All your professional data, client interactions, and account information will be permanently removed.';
+  String get allDataWillBeRemoved =>
+      'All your professional data, client interactions, and account information will be permanently removed.';
 
   @override
   String get confirmSignOutTitle => 'Sign Out';
 
   @override
-  String get confirmSignOutMessage => 'Are you sure you want to sign out of your nutritionist account?';
+  String get confirmSignOutMessage =>
+      'Are you sure you want to sign out of your nutritionist account?';
 
   @override
   String get dangerZone => 'Danger Zone';
 
   @override
-  String get irreversibleDestructiveActions => 'Irreversible and destructive actions';
+  String get irreversibleDestructiveActions =>
+      'Irreversible and destructive actions';
 
   @override
   String get criticalWarning => 'Critical Warning';
 
   @override
-  String get permanentActionWarning => 'The actions below are permanent and cannot be undone. All your nutritionist data, including profile information, client interactions, and professional settings will be permanently deleted.';
+  String get permanentActionWarning =>
+      'The actions below are permanent and cannot be undone. All your nutritionist data, including profile information, client interactions, and professional settings will be permanently deleted.';
 
   @override
   String get deleteMyAccount => 'Delete My Account';
@@ -278,7 +295,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmClearCacheTitle => 'Confirm Clear Cache';
 
   @override
-  String get confirmClearCacheMessage => 'Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.';
+  String get confirmClearCacheMessage =>
+      'Are you sure you want to clear all locally cached data? This may require re-downloading meal plans and other information.';
 
   @override
   String get clear => 'Clear';
@@ -293,13 +311,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmDeleteAccountTitle => 'Confirm Account Deletion';
 
   @override
-  String get confirmDeleteAccountMessage => 'WARNING: This action is irreversible and will permanently delete your account and all associated data. Are you absolutely sure you want to proceed?';
+  String get confirmDeleteAccountMessage =>
+      'WARNING: This action is irreversible and will permanently delete your account and all associated data. Are you absolutely sure you want to proceed?';
 
   @override
   String get accountDeletedSuccessfully => 'Account deleted successfully.';
 
   @override
-  String get errorDeleteAccountRequiresRecentLogin => 'Account deletion requires a recent sign-in. Please sign out and sign back in.';
+  String get errorDeleteAccountRequiresRecentLogin =>
+      'Account deletion requires a recent sign-in. Please sign out and sign back in.';
 
   @override
   String get preferencesSavedSuccess => 'Preferences saved successfully.';
@@ -439,6 +459,142 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exerciseFrequencyTWICE_A_WEEK => 'Twice a week';
 
   @override
+  String get nutritionistOffice => 'Nutritionist Office';
+
+  @override
+  String get viewOfficeLocationAndDirections =>
+      'View office location and directions';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get directions => 'Directions';
+
+  @override
+  String get viewMap => 'View Map';
+
+  @override
+  String get getDirections => 'Get Directions';
+
+  @override
+  String get locationNotAvailable => 'Location Not Available';
+
+  @override
+  String get couldNotLoadNutritionistLocation =>
+      'Could not load nutritionist location';
+
+  @override
+  String couldNotOpenMaps(String error) {
+    return 'Could not open maps: $error';
+  }
+
+  @override
+  String locationCoordinates(String latitude, String longitude) {
+    return 'Location coordinates: $latitude, $longitude';
+  }
+
+  @override
+  String get officeLocation => 'Office Location';
+
+  @override
+  String get coordinates => 'Coordinates';
+
+  @override
+  String get latitude => 'Latitude';
+
+  @override
+  String get longitude => 'Longitude';
+
+  @override
+  String get useCurrentLocation => 'Use Current Location';
+
+  @override
+  String get gettingLocation => 'Getting Location...';
+
+  @override
+  String get currentLocationRetrievedSuccessfully =>
+      'Current location retrieved successfully';
+
+  @override
+  String get locationAndAddressRetrievedSuccessfully =>
+      'Location and address retrieved successfully';
+
+  @override
+  String get locationServicesDisabled => 'Location Services Disabled';
+
+  @override
+  String get enableLocationServicesMessage =>
+      'Please enable location services in your device settings to use this feature.';
+
+  @override
+  String get locationPermissionRequired => 'Location Permission Required';
+
+  @override
+  String get locationPermissionsPermanentlyDenied =>
+      'Location permissions are permanently denied. Please enable them in app settings.';
+
+  @override
+  String get locationPermissionDenied => 'Location Permission Denied';
+
+  @override
+  String get locationPermissionsRequired =>
+      'Location permissions are required to automatically detect your current position.';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get saveLocation => 'Save Location';
+
+  @override
+  String get locationUpdatedSuccessfully => 'Location updated successfully';
+
+  @override
+  String failedToSaveLocation(String error) {
+    return 'Failed to save location: $error';
+  }
+
+  @override
+  String get enterValidLatitudeLongitude =>
+      'Please enter valid latitude and longitude';
+
+  @override
+  String get enterBothCoordinatesOrNeither =>
+      'Please enter both latitude and longitude or clear both to remove location';
+
+  @override
+  String get removeLocation => 'Remove Location';
+
+  @override
+  String get locationRemovedSuccessfully => 'Location removed successfully';
+
+  @override
+  String get clearLocation => 'Clear Location';
+
+  @override
+  String get removingLocation => 'Removing...';
+
+  @override
+  String get officeAddressOptional => 'Office Address (Optional)';
+
+  @override
+  String get additionalNotesOptional => 'Additional Notes (Optional)';
+
+  @override
+  String get notesForPatients => 'Notes for Patients';
+
+  @override
+  String get notesPlaceholder => 'e.g. 2nd floor, ring doorbell 15';
+
+  @override
+  String get addressPlaceholder => 'Via Roma 123, 10123 Torino TO, Italy';
+
+  @override
+  String get setOfficeLocationDescription =>
+      'Set your office location so patients can easily find you. This will be shown to users who have meal plans assigned to you.';
+
+  @override
   String get energy => 'Energy';
 
   @override
@@ -550,7 +706,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sevenDayScheduleViewOnly => '7-day meal schedule (View Only)';
 
   @override
-  String get noDailyPlanDataFound => 'No daily plan data found for this meal plan.';
+  String get noDailyPlanDataFound =>
+      'No daily plan data found for this meal plan.';
 
   @override
   String get enterRecipeName => 'Enter recipe name';
@@ -617,7 +774,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reject => 'Reject';
 
   @override
-  String get mealPlanValidatedSuccessfully => 'Meal plan validated successfully!';
+  String get mealPlanValidatedSuccessfully =>
+      'Meal plan validated successfully!';
 
   @override
   String get failedToValidateMealPlan => 'Failed to validate meal plan';
@@ -692,7 +850,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completeProfileFirst => 'Complete Profile First';
 
   @override
-  String get mealPlanGenStarted => 'Meal plan generation started! You\'ll receive a notification when it\'s ready.';
+  String get mealPlanGenStarted =>
+      'Meal plan generation started! You\'ll receive a notification when it\'s ready.';
 
   @override
   String get failedToStartGeneration => 'Failed to start meal plan generation';
@@ -713,7 +872,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get personalizedMealPlan => 'Personalized Meal Plan';
 
   @override
-  String get personalizedDescription => 'We\'ll create a customized weekly meal plan based on your preferences, dietary needs, and lifestyle.';
+  String get personalizedDescription =>
+      'We\'ll create a customized weekly meal plan based on your preferences, dietary needs, and lifestyle.';
 
   @override
   String get profileIncomplete => 'Profile Incomplete';
@@ -722,13 +882,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completeProfile => 'Complete Profile';
 
   @override
-  String get completeProfileMustDo => 'You must complete your profile before generating a meal plan';
+  String get completeProfileMustDo =>
+      'You must complete your profile before generating a meal plan';
 
   @override
   String get noProfileDetailsFound => 'No Profile Details Found';
 
   @override
-  String get noProfileDescription => 'For the most personalized meal plan, please set up your profile with your weight, height, dietary preferences, and allergies.';
+  String get noProfileDescription =>
+      'For the most personalized meal plan, please set up your profile with your weight, height, dietary preferences, and allergies.';
 
   @override
   String get orContinueDefault => 'Or continue with default preferences below';
@@ -740,7 +902,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customPreferences => 'Custom Preferences';
 
   @override
-  String get usingCustomPreferences => 'Using custom preferences for this meal plan';
+  String get usingCustomPreferences =>
+      'Using custom preferences for this meal plan';
 
   @override
   String get usingProfilePreferences => 'Using your profile preferences';
@@ -761,7 +924,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyMeals => 'Daily Meals';
 
   @override
-  String get additionalPreferencesHint => 'Any other food preferences or requirements';
+  String get additionalPreferencesHint =>
+      'Any other food preferences or requirements';
 
   @override
   String get creatingMealPlan => 'Creating Meal Plan...';
@@ -796,7 +960,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signUpDropdownText => 'Register as';
 
   @override
-  String get socialSignUpNotice => 'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.';
+  String get socialSignUpNotice =>
+      'Signing up with a social account automatically creates a regular user account. Nutritionists must first sign up with email. If a user later logs in with a social account linked to the same email, the accounts will be merged automatically.';
 
   @override
   String get maleGender => 'Male';
@@ -826,7 +991,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noMealPlansYet => 'No meal plans yet';
 
   @override
-  String get createFirstMealPlan => 'Create your first personalized meal plan\nto get started with healthy eating';
+  String get createFirstMealPlan =>
+      'Create your first personalized meal plan\nto get started with healthy eating';
 
   @override
   String get pullDownToRefresh => 'Pull down to refresh';
@@ -835,7 +1001,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connectionProblem => 'Connection Problem';
 
   @override
-  String get unableToLoadPlansWithConnection => 'Unable to load your meal plans.\nCheck your internet connection and try again.';
+  String get unableToLoadPlansWithConnection =>
+      'Unable to load your meal plans.\nCheck your internet connection and try again.';
 
   @override
   String get unableToLoadPlans => 'Unable to load your meal plans';
@@ -874,7 +1041,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseRetryLater => 'Please try again later';
 
   @override
-  String get modelOverloadedMessage => 'The model is overloaded. Please request a new meal plan later.';
+  String get modelOverloadedMessage =>
+      'The model is overloaded. Please request a new meal plan later.';
 
   @override
   String get setActivePlan => 'Set Active Plan';
@@ -949,7 +1117,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planNameCannotBeEmpty => 'Plan name cannot be empty';
 
   @override
-  String get planNameMinLength => 'Plan name must be at least 2 characters long';
+  String get planNameMinLength =>
+      'Plan name must be at least 2 characters long';
 
   @override
   String get planNameMaxLength => 'Plan name must be less than 50 characters';
@@ -978,16 +1147,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseSelectNutritionist => 'Please select a nutritionist';
 
   @override
-  String get nutritionistNotAvailable => 'Selected nutritionist is not available for validation';
+  String get nutritionistNotAvailable =>
+      'Selected nutritionist is not available for validation';
 
   @override
   String get validationRequestSent => 'Validation request sent successfully!';
 
   @override
-  String get failedToSendValidationRequest => 'Failed to send validation request';
+  String get failedToSendValidationRequest =>
+      'Failed to send validation request';
 
   @override
-  String get errorSendingValidationRequest => 'Error sending validation request: ';
+  String get errorSendingValidationRequest =>
+      'Error sending validation request: ';
 
   @override
   String get available => 'Available';
@@ -996,7 +1168,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unavailable => 'Unavailable';
 
   @override
-  String get noNutritionistsAvailable => 'No nutritionists available at the moment.';
+  String get noNutritionistsAvailable =>
+      'No nutritionists available at the moment.';
 
   @override
   String get requestValidationButton => 'Request Validation';
@@ -1014,10 +1187,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get oopsSomethingWentWrong => 'Oops! Something went wrong';
 
   @override
-  String get checkInternetConnection => 'Please check your internet connection and try again. Make sure you\'re connected to Wi-Fi or cellular data.';
+  String get checkInternetConnection =>
+      'Please check your internet connection and try again. Make sure you\'re connected to Wi-Fi or cellular data.';
 
   @override
-  String get encounterErrorLoadingPlan => 'We encountered an error while loading your meal plan. This might be a temporary issue.';
+  String get encounterErrorLoadingPlan =>
+      'We encountered an error while loading your meal plan. This might be a temporary issue.';
 
   @override
   String get reconnect => 'Reconnect';
@@ -1026,7 +1201,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mealPlanNotFound => 'Meal Plan Not Found';
 
   @override
-  String get mealPlanMightDeleted => 'This meal plan might have been deleted or is no longer available. Please try refreshing or go back to select another plan.';
+  String get mealPlanMightDeleted =>
+      'This meal plan might have been deleted or is no longer available. Please try refreshing or go back to select another plan.';
 
   @override
   String get planInformation => 'Plan Information';
@@ -1234,13 +1410,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscribe => 'Subscribe';
 
   @override
-  String get subscriptionFeatureComingSoon => 'Subscription feature coming soon!';
+  String get subscriptionFeatureComingSoon =>
+      'Subscription feature coming soon!';
 
   @override
   String get confirmDelete => 'Confirm Delete';
 
   @override
-  String get confirmDeleteMessage => 'Are you sure you want to delete your account?';
+  String get confirmDeleteMessage =>
+      'Are you sure you want to delete your account?';
 
   @override
   String get mealNameBREAKFAST => 'Breakfast';
@@ -1270,16 +1448,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showingStaleData => 'Showing stale data.';
 
   @override
-  String get networkUnavailableCachedData => 'Network unavailable. Showing cached data.';
+  String get networkUnavailableCachedData =>
+      'Network unavailable. Showing cached data.';
 
   @override
-  String get refreshFailedPreviousData => 'Refresh failed. Displaying previous data.';
+  String get refreshFailedPreviousData =>
+      'Refresh failed. Displaying previous data.';
 
   @override
-  String get failedToLoadDataCheckConnection => 'Failed to load data. Check connection.';
+  String get failedToLoadDataCheckConnection =>
+      'Failed to load data. Check connection.';
 
   @override
-  String get refreshFailedNoMealsScheduled => 'Refresh failed. No meals scheduled.';
+  String get refreshFailedNoMealsScheduled =>
+      'Refresh failed. No meals scheduled.';
 
   @override
   String get errorMealDataMissing => 'Error: Meal data is missing.';
@@ -1305,7 +1487,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noMealPlanSelected => 'No Meal Plan Selected';
 
   @override
-  String get selectMealPlanToStart => 'Select a meal plan to start tracking your daily meals and nutritional progress.';
+  String get selectMealPlanToStart =>
+      'Select a meal plan to start tracking your daily meals and nutritional progress.';
 
   @override
   String get choosePlan => 'Choose a Plan';
@@ -1317,10 +1500,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generationFailed => 'Generation Failed';
 
   @override
-  String get mealPlanReadyDescription => 'Your meal plan has been successfully generated.';
+  String get mealPlanReadyDescription =>
+      'Your meal plan has been successfully generated.';
 
   @override
-  String get generationFailedDescription => 'There was an error generating your meal plan. Please try again later.';
+  String get generationFailedDescription =>
+      'There was an error generating your meal plan. Please try again later.';
 
   @override
   String get loadingSettings => 'Loading settings...';
@@ -1332,7 +1517,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notSignedIn => 'Not signed in';
 
   @override
-  String get pleaseSignInToAccessSettings => 'Please sign in to access your settings';
+  String get pleaseSignInToAccessSettings =>
+      'Please sign in to access your settings';
 
   @override
   String get signIn => 'Sign In';
@@ -1341,7 +1527,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountSettings => 'Account Settings';
 
   @override
-  String get manageYourProfilePreferencesAndSecurity => 'Manage your profile, preferences, and account security settings.';
+  String get manageYourProfilePreferencesAndSecurity =>
+      'Manage your profile, preferences, and account security settings.';
 
   @override
   String get loadingSubscription => 'Loading subscription...';
@@ -1353,19 +1540,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileUnavailable => 'Profile Unavailable';
 
   @override
-  String get personalDataCurrentlyUnavailable => 'Personal data are currently unavailable. Please try refreshing or check back later.';
+  String get personalDataCurrentlyUnavailable =>
+      'Personal data are currently unavailable. Please try refreshing or check back later.';
 
   @override
   String get preferencesUnavailable => 'Preferences Unavailable';
 
   @override
-  String get preferencesDataCurrentlyUnavailable => 'Your preferences and settings data are currently unavailable. Please try refreshing or check back later.';
+  String get preferencesDataCurrentlyUnavailable =>
+      'Your preferences and settings data are currently unavailable. Please try refreshing or check back later.';
 
   @override
   String get subscriptionStatusUnavailable => 'Subscription Status Unavailable';
 
   @override
-  String get subscriptionStatusCurrentlyUnavailable => 'Your subscription status is currently unavailable. Please try refreshing or check back later.';
+  String get subscriptionStatusCurrentlyUnavailable =>
+      'Your subscription status is currently unavailable. Please try refreshing or check back later.';
 
   @override
   String get userProfile => 'User Profile';
@@ -1386,7 +1576,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get familyNameRequired => 'Family Name is required';
 
   @override
-  String get nameFieldsReadOnly => 'Name fields are managed by your authentication provider and cannot be changed here.';
+  String get nameFieldsReadOnly =>
+      'Name fields are managed by your authentication provider and cannot be changed here.';
 
   @override
   String get gender => 'Gender';
@@ -1407,7 +1598,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectDate => 'Select date';
 
   @override
-  String get failedToUpdateProfile => 'Failed to update profile. Please try again.';
+  String get failedToUpdateProfile =>
+      'Failed to update profile. Please try again.';
 
   @override
   String get generationPreferences => 'Generation Preferences';
@@ -1431,13 +1623,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get twiceAWeek => 'Twice a week';
 
   @override
-  String get anySpecificDietaryRestriction => 'Any specific dietary restriction';
+  String get anySpecificDietaryRestriction =>
+      'Any specific dietary restriction';
 
   @override
   String get dietaryPreferences => 'Dietary preferences';
 
   @override
-  String get anySpecificDietaryPreference => 'Any specific dietary preference or notes';
+  String get anySpecificDietaryPreference =>
+      'Any specific dietary preference or notes';
 
   @override
   String get weightIsRequired => 'Weight is required';
@@ -1476,10 +1670,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterNewPassword => 'Please enter a new password';
 
   @override
-  String get passwordMustBeAtLeast8Characters => 'Password must be at least 8 characters';
+  String get passwordMustBeAtLeast8Characters =>
+      'Password must be at least 8 characters';
 
   @override
-  String get passwordMustContainUppercase => 'Password must contain uppercase, lowercase, and numbers';
+  String get passwordMustContainUppercase =>
+      'Password must contain uppercase, lowercase, and numbers';
 
   @override
   String get confirmNewPassword => 'Confirm New Password';
@@ -1539,7 +1735,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activeSubscription => 'Active subscription';
 
   @override
-  String get upgradeToUnlockPremiumFeatures => 'Upgrade to unlock premium features';
+  String get upgradeToUnlockPremiumFeatures =>
+      'Upgrade to unlock premium features';
 
   @override
   String currentStatus(Object status) {
@@ -1550,7 +1747,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youHaveAccessTo => 'You have access to:';
 
   @override
-  String get personalNutritionistChatInApp => 'Personal nutritionist chat in-app';
+  String get personalNutritionistChatInApp =>
+      'Personal nutritionist chat in-app';
 
   @override
   String get unsubscribeFromPro => 'Unsubscribe from PRO';
@@ -1565,7 +1763,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorSubscribing => 'Error subscribing';
 
   @override
-  String get successfullyUnsubscribedToFree => 'Successfully unsubscribed to FREE!';
+  String get successfullyUnsubscribedToFree =>
+      'Successfully unsubscribed to FREE!';
 
   @override
   String get failedToUnsubscribe => 'Failed to unsubscribe. Please try again.';
@@ -1589,28 +1788,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataRefreshedSuccessfully => 'Data refreshed successfully';
 
   @override
-  String get areYouSureSignOut => 'Are you sure you want to sign out of your account?';
+  String get areYouSureSignOut =>
+      'Are you sure you want to sign out of your account?';
 
   @override
-  String get irreversibleAndDestructiveActions => 'Irreversible and destructive actions';
+  String get irreversibleAndDestructiveActions =>
+      'Irreversible and destructive actions';
 
   @override
-  String get actionsArePermanent => 'The actions below are permanent and cannot be undone. All your data, including meal plans, preferences, and account information will be permanently deleted.';
+  String get actionsArePermanent =>
+      'The actions below are permanent and cannot be undone. All your data, including meal plans, preferences, and account information will be permanently deleted.';
 
   @override
   String get deletingAccount => 'Deleting Account...';
 
   @override
-  String get thisActionWillPermanentlyDelete => 'This action will permanently delete your account and all associated data. This cannot be undone.';
+  String get thisActionWillPermanentlyDelete =>
+      'This action will permanently delete your account and all associated data. This cannot be undone.';
 
   @override
-  String get allYourMealPlansWillBeRemoved => 'All your meal plans, preferences, and personal data will be permanently removed.';
+  String get allYourMealPlansWillBeRemoved =>
+      'All your meal plans, preferences, and personal data will be permanently removed.';
 
   @override
   String get failedToDeleteAccount => 'Failed to delete account';
 
   @override
-  String get noInternetConnectionValidation => 'No internet connection. Please check your connection and try again.';
+  String get noInternetConnectionValidation =>
+      'No internet connection. Please check your connection and try again.';
 
   @override
   String errorLoadingAssignedPlans(String error) {
@@ -1648,7 +1853,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noMealPlansToValidate => 'No Meal Plans to Validate';
 
   @override
-  String get validationEmptyMessage => 'Meal plans assigned for validation will appear here.\nCheck back later or pull to refresh.';
+  String get validationEmptyMessage =>
+      'Meal plans assigned for validation will appear here.\nCheck back later or pull to refresh.';
 
   @override
   String get refresh => 'Refresh';
@@ -2484,9 +2690,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verificationCode => 'Verification Code';
 
   @override
-  String get address => 'Address';
-
-  @override
   String get middleName => 'Middle Name';
 
   @override
@@ -2542,7 +2745,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get usernameRequirements => 'Username must only contain alphanumeric characters and symbols.';
+  String get usernameRequirements =>
+      'Username must only contain alphanumeric characters and symbols.';
 
   @override
   String get passwordRequirementsPreamble => 'Password must include:';
@@ -2594,7 +2798,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectTotp => 'Authenticator App (TOTP)';
 
   @override
-  String get totpCodePrompt => 'Please enter the code from your registered Authenticator app';
+  String get totpCodePrompt =>
+      'Please enter the code from your registered Authenticator app';
 
   @override
   String get selectEmail => 'Email';
@@ -2626,13 +2831,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totpStep3Title => 'Step 3: Verify your code';
 
   @override
-  String get totpStep1Body => 'Authenticator apps generate one-time codes that can be used to verify your identity';
+  String get totpStep1Body =>
+      'Authenticator apps generate one-time codes that can be used to verify your identity';
 
   @override
-  String get totpStep2Body => 'Open then Authenticator app and scan the QR code or enter the key to get your verification code';
+  String get totpStep2Body =>
+      'Open then Authenticator app and scan the QR code or enter the key to get your verification code';
 
   @override
-  String get totpStep3Body => 'Enter the 6 digit code from your Authenticator app';
+  String get totpStep3Body =>
+      'Enter the 6 digit code from your Authenticator app';
 
   @override
   String get confirmSignUp => 'Enter your confirmation code';
@@ -2647,7 +2855,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmSignInNewPassword => 'Change your password to sign in';
 
   @override
-  String get continueSignInWithMfaSelection => 'Select your preferred Two-Factor Auth method';
+  String get continueSignInWithMfaSelection =>
+      'Select your preferred Two-Factor Auth method';
 
   @override
   String get continueSignInWithTotpSetup => 'Enable Two-Factor Auth';
@@ -2659,5 +2868,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetPassword => 'Send Code';
 
   @override
-  String get verifyUser => 'Account recovery requires verified contact information';
+  String get verifyUser =>
+      'Account recovery requires verified contact information';
 }

@@ -40,6 +40,7 @@ import 'MealPlanList.dart';
 import 'MealPlanResponse.dart';
 import 'MealPlanResponseSubscription.dart';
 import 'MealWithStatus.dart';
+import 'NutritionistLocation.dart';
 import 'NutritionistProfileConnection.dart';
 import 'PlanRequestPreferences.dart';
 import 'TodaysPlan.dart';
@@ -67,6 +68,7 @@ export 'MealPlanResponse.dart';
 export 'MealPlanResponseSubscription.dart';
 export 'MealPlanValidationStatus.dart';
 export 'MealWithStatus.dart';
+export 'NutritionistLocation.dart';
 export 'NutritionistProfile.dart';
 export 'NutritionistProfileConnection.dart';
 export 'PlanDayCompletion.dart';
@@ -81,7 +83,7 @@ export 'WeekdayEnum.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "9b7971b1b8855eda99712bc1540111d1";
+  String version = "722316f42e98b01d3e40612170f4f07f";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [
     ChatMessage.schema,
@@ -107,6 +109,7 @@ class ModelProvider implements amplify_core.ModelProviderInterface {
     MealPlanResponse.schema,
     MealPlanResponseSubscription.schema,
     MealWithStatus.schema,
+    NutritionistLocation.schema,
     NutritionistProfileConnection.schema,
     PlanRequestPreferences.schema,
     TodaysPlan.schema,
