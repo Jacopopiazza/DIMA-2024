@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
 import 'package:dima_application/generated/flutter-models/NutritionistLocation.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
 class NutritionistLocationService {
   final AmplifyGraphQL _amplifyGraphQL;
@@ -54,8 +54,7 @@ class NutritionistLocationService {
       if (result.hasErrors) {
         safePrint(
             '[NutritionistLocationService] Error updating location: ${result.errors}');
-        throw Exception(
-            result.errors?.join(', ') ?? 'Failed to update location');
+        throw Exception(result.errors.join(', '));
       }
 
       if (result.data == null) {
@@ -122,39 +121,18 @@ class NutritionistLocationService {
 
       if (result.hasErrors) {
         safePrint(
-            '[NutritionistLocationService] Error fetching my location: ${result.errors}');
-        return null;
+            '[NutritionistLocationService] Error removing location: ${result.errors}');
+        throw Exception(result.errors.join(', '));
       }
 
       if (result.data == null) {
         safePrint(
-            '[NutritionistLocationService] No data returned for my location');
-        return null;
+            '[NutritionistLocationService] No data returned for removing location');
+        throw Exception('Failed to remove location: No data returned');
       }
 
-      Map<String, dynamic> jsonData;
-      if (result.data is String) {
-        safePrint(
-            '[NutritionistLocationService] Response is String, decoding JSON...');
-        jsonData = json.decode(result.data!);
-      } else if (result.data is Map<String, dynamic>) {
-        safePrint('[NutritionistLocationService] Response is already Map...');
-        jsonData = result.data as Map<String, dynamic>;
-      } else {
-        safePrint(
-            '[NutritionistLocationService] Unexpected response data type: ${result.data.runtimeType}');
-        throw Exception('GraphQL query failed with errors');
-      }
-
-      safePrint('[NutritionistLocationService] Parsed JSON data: $jsonData');
-
-      if (jsonData['removeNutritionistLocation'] != null) {
-        final locationData = jsonData['removeNutritionistLocation'];
-        safePrint(
-            '[NutritionistLocationService] Location data found: $locationData');
-        return;
-      }
-
+      // For remove operation, we just need to check if it completed successfully
+      // The actual data content doesn't matter as much as the absence of errors
       safePrint('[NutritionistLocationService] Location removed successfully');
     } catch (e) {
       safePrint(
@@ -265,8 +243,7 @@ class NutritionistLocationService {
       if (result.hasErrors) {
         safePrint(
             '[NutritionistLocationService] Error updating location: ${result.errors}');
-        throw Exception(
-            result.errors?.join(', ') ?? 'Failed to update location');
+        throw Exception(result.errors.join(', '));
       }
 
       if (result.data == null) {
@@ -385,9 +362,9 @@ class NutritionistLocationService {
         }
 
         safePrint(
-            '[NutritionistLocationService] Received ${placemarks?.length ?? 0} placemarks');
+            '[NutritionistLocationService] Received ${placemarks.length} placemarks');
 
-        if (placemarks != null && placemarks.isNotEmpty) {
+        if (placemarks.isNotEmpty) {
           final place = placemarks.first;
 
           // Build a readable address safely
