@@ -37,24 +37,20 @@ export function request(ctx) {
   // Track attributes to remove
   const removeExpr = [];
 
-  if (input.address !== undefined) {
-    exprNames['#address'] = 'address';
-    if (!input.address) {
-      removeExpr.push('#address');
-    } else {
-      setExpr.push('#address = :address');
-      exprValues[':address'] = util.dynamodb.toDynamoDB(input.address);
-    }
+  exprNames['#address'] = 'address';
+  if (!input.address) {
+    removeExpr.push('#address');
+  } else {
+    setExpr.push('#address = :address');
+    exprValues[':address'] = util.dynamodb.toDynamoDB(input.address);
   }
 
-  if (input.notes !== undefined) {
-    exprNames['#notes'] = 'notes';
-    if (!input.notes) {
-      removeExpr.push('#notes');
-    } else {
-      setExpr.push('#notes = :notes');
-      exprValues[':notes'] = util.dynamodb.toDynamoDB(input.notes);
-    }
+  exprNames['#notes'] = 'notes';
+  if (!input.notes) {
+    removeExpr.push('#notes');
+  } else {
+    setExpr.push('#notes = :notes');
+    exprValues[':notes'] = util.dynamodb.toDynamoDB(input.notes);
   }
 
   // Combine SET and REMOVE
