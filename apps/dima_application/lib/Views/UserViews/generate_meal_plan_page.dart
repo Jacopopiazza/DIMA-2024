@@ -115,10 +115,10 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
       }
     } else {
       // Set reasonable defaults
-      _weightController.text = '70';
-      _heightController.text = '170';
+      _weightController.text = '';
+      _heightController.text = '';
       _dailyMealsPreference = 3;
-      _exerciseFrequency = ExerciseFrequency.TWICE_A_WEEK;
+      _exerciseFrequency = ExerciseFrequency.NOT_SPECIFIED;
       _selectedAllergies = [];
       _dietaryRestrictionsController.text = '';
       _openTextPreferencesController.text = '';
