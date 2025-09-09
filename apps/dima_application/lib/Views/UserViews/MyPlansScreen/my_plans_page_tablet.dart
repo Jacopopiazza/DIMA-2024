@@ -2,6 +2,7 @@ import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:dima_application/providers/meal_plan_notification_provider.dart';
+import 'package:dima_application/providers/subscription_status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -119,7 +120,7 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
         status != PlanStatus.IN_PROGRESS;
 
     final canRequestValidation =
-        isNotValidated && !isFailed && status == PlanStatus.GENERATED;
+        isNotValidated && !isFailed && status != null && status != PlanStatus.PENDING && status != PlanStatus.IN_PROGRESS;
 
     final canRename =
         !isFailed && !isRejected; // Failed and rejected plans cannot be renamed
@@ -195,32 +196,73 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
                     );
                   },
                 ),
-              // Request validation - only for not validated, non-failed, generated plans
+              // Request validation - only for not validated, non-failed plans (pro feature)
               if (canRequestValidation)
-                ListTile(
-                  leading: const Icon(Icons.verified_user_rounded),
-                  title: Text(l10n.requestValidation),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    final mealPlans = ref.read(mealPlansProvider.notifier);
-                    await showDialog(
-                      context: context,
-                      builder: (_) => SelectNutritionistDialog(
-                        mealPlanId: plan.mealPlanId,
-                        planName: plan.planName ?? '',
-                        onLoadNutritionists: () =>
-                            mealPlans.listNutritionists(isAvailable: true),
-                        onAssignNutritionist:
-                            (mealPlanId, nutritionistId) async {
-                          await mealPlans.requestValidation(
-                              mealPlanId, nutritionistId);
-                          // Refresh detail pane if this plan is currently selected
-                          if (_selectedPlanId == plan.mealPlanId) {
-                            _refreshDetailPane();
-                          }
-                          return true;
-                        },
+                Consumer(
+                  builder: (context, ref, child) {
+                    final subscriptionAsync = ref.watch(subscriptionStatusProvider);
+                    final isPro = subscriptionAsync.maybeWhen(
+                      data: (data) => data.$1.subscriptionStatus == SubscriptionStatusEnum.PRO,
+                      orElse: () => false,
+                    );
+
+                    return ListTile(
+                      leading: Icon(
+                        Icons.verified_user_rounded,
+                        color: isPro ? null : Colors.grey,
                       ),
+                      title: Row(
+                        children: [
+                          Expanded(child: Text(l10n.requestValidation)),
+                          if (!isPro) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6, 
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.shade100,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                l10n.proFeature,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.amber.shade800,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      enabled: isPro,
+                      onTap: isPro
+                          ? () async {
+                              Navigator.of(context).pop();
+                              final mealPlans = ref.read(mealPlansProvider.notifier);
+                              await showDialog(
+                                context: context,
+                                builder: (_) => SelectNutritionistDialog(
+                                  mealPlanId: plan.mealPlanId,
+                                  planName: plan.planName ?? '',
+                                  onLoadNutritionists: () =>
+                                      mealPlans.listNutritionists(isAvailable: true),
+                                  onAssignNutritionist:
+                                      (mealPlanId, nutritionistId) async {
+                                    await mealPlans.requestValidation(
+                                        mealPlanId, nutritionistId);
+                                    // Refresh detail pane if this plan is currently selected
+                                    if (_selectedPlanId == plan.mealPlanId) {
+                                      _refreshDetailPane();
+                                    }
+                                    return true;
+                                  },
+                                ),
+                              );
+                            }
+                          : null,
                     );
                   },
                 ),
@@ -424,6 +466,13 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
                   );
                 },
                 onRequestValidation: () async {
+                  final subscriptionAsync = ref.read(subscriptionStatusProvider);
+                  final isPro = subscriptionAsync.maybeWhen(
+                    data: (data) => data.$1.subscriptionStatus == SubscriptionStatusEnum.PRO,
+                    orElse: () => false,
+                  );
+                  if (!isPro) return;
+                  
                   final mealPlans = ref.read(mealPlansProvider.notifier);
                   await showDialog(
                     context: context,
