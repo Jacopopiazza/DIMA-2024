@@ -845,10 +845,8 @@ void main() {
       test('handles malformed responses gracefully', () async {
         mockService.shouldThrowError = true;
 
-        await expectLater(
-          notifier.deleteMealPlan('plan-1'),
-          throwsA(isA<Exception>()),
-        );
+        final result = await notifier.deleteMealPlan('plan-1');
+        expect(result, false);
       });
 
       test('handles null responses gracefully', () async {

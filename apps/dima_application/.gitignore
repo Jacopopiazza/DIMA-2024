@@ -46,3 +46,7 @@ app.*.map.json
 
 # AWS Amplify config
 **/amplify_outputs*.dart
+
+# Isar test database files
+.isar_test/
+*.isar

@@ -103,25 +103,30 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
   Future<bool> deleteMealPlan(String mealPlanId) async {
     print('[MealPlansProvider] Starting deletion of meal plan: $mealPlanId');
 
-    final response = await _service.deleteMealPlan(mealPlanId);
-    print('[MealPlansProvider] Service response: $response');
+    try {
+      final response = await _service.deleteMealPlan(mealPlanId);
+      print('[MealPlansProvider] Service response: $response');
 
-    if (response == null) {
-      print('[MealPlansProvider] Response is null, returning false');
-      return false;
-    }
+      if (response == null) {
+        print('[MealPlansProvider] Response is null, returning false');
+        return false;
+      }
 
-    // Check if the deletion was successful based on the response
-    if (response.success == true) {
-      print('[MealPlansProvider] Deletion successful, refreshing list...');
-      // Refresh the list after successful deletion
-      await listMyMealPlans();
-      print(
-          '[MealPlansProvider] List refreshed, current state: ${state.value?.length} items');
-      return true;
-    } else {
-      print(
-          '[MealPlansProvider] Deletion failed, success: ${response.success}, message: ${response.message}');
+      // Check if the deletion was successful based on the response
+      if (response.success == true) {
+        print('[MealPlansProvider] Deletion successful, refreshing list...');
+        // Refresh the list after successful deletion
+        await listMyMealPlans();
+        print(
+            '[MealPlansProvider] List refreshed, current state: ${state.value?.length} items');
+        return true;
+      } else {
+        print(
+            '[MealPlansProvider] Deletion failed, success: ${response.success}, message: ${response.message}');
+        return false;
+      }
+    } catch (e) {
+      print('[MealPlansProvider] Exception during deletion: $e');
       return false;
     }
   }
@@ -218,22 +223,27 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
       String mealPlanId, String userId, Map<String, dynamic> input) async {
     print(
         '[MealPlansProvider] Modifying assigned meal plan: $mealPlanId for user: $userId with input: $input');
-    final response =
-        await _service.modifyAssignedMealPlan(mealPlanId, userId, input);
-    print('[MealPlansProvider] modifyAssignedMealPlan response: $response');
-    if (response == null) {
-      print(
-          '[MealPlansProvider] modifyAssignedMealPlan response is null, returning false');
-      return false;
-    }
-    if (response.success == true) {
-      print(
-          '[MealPlansProvider] Assigned meal plan modified successfully, refreshing list...');
-      await listMyAssignedMealPlans();
-      return true;
-    } else {
-      print(
-          '[MealPlansProvider] Failed to modify assigned meal plan, message: ${response.message}');
+    try {
+      final response =
+          await _service.modifyAssignedMealPlan(mealPlanId, userId, input);
+      print('[MealPlansProvider] modifyAssignedMealPlan response: $response');
+      if (response == null) {
+        print(
+            '[MealPlansProvider] modifyAssignedMealPlan response is null, returning false');
+        return false;
+      }
+      if (response.success == true) {
+        print(
+            '[MealPlansProvider] Assigned meal plan modified successfully, refreshing list...');
+        await listMyAssignedMealPlans();
+        return true;
+      } else {
+        print(
+            '[MealPlansProvider] Failed to modify assigned meal plan, message: ${response.message}');
+        return false;
+      }
+    } catch (e) {
+      print('[MealPlansProvider] Exception during assigned meal plan modification: $e');
       return false;
     }
   }
