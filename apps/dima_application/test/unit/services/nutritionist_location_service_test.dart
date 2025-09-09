@@ -291,7 +291,7 @@ void main() {
         expect(fromJson.longitude, equals(location.longitude));
         expect(fromJson.address, equals(location.address));
         expect(fromJson.notes, equals(location.notes));
-        expect(fromJson.updatedAt.format(), equals(updatedAt.format()));
+        expect(fromJson.updatedAt!.format(), equals(updatedAt.format()));
       });
     });
 

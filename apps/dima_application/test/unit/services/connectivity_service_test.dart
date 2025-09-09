@@ -24,7 +24,7 @@ void main() {
       test('returns the same instance', () {
         final instance1 = ConnectivityService();
         final instance2 = ConnectivityService();
-        
+
         expect(identical(instance1, instance2), isTrue);
       });
     });
@@ -46,12 +46,14 @@ void main() {
       });
 
       test('multiple listeners can subscribe to connection stream', () {
-        final subscription1 = connectivityService.connectionStream.listen((_) {});
-        final subscription2 = connectivityService.connectionStream.listen((_) {});
-        
+        final subscription1 =
+            connectivityService.connectionStream.listen((_) {});
+        final subscription2 =
+            connectivityService.connectionStream.listen((_) {});
+
         expect(subscription1, isNotNull);
         expect(subscription2, isNotNull);
-        
+
         subscription1.cancel();
         subscription2.cancel();
       });
@@ -71,7 +73,8 @@ void main() {
       });
 
       test('exposes checkConnectivityManually method', () {
-        expect(connectivityService.checkConnectivityManually, isA<Future<bool> Function()>());
+        expect(connectivityService.checkConnectivityManually,
+            isA<Future<bool> Function()>());
       });
 
       test('exposes dispose method', () {
