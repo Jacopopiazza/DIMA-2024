@@ -2034,6 +2034,8 @@
   "@rolePlaceholder": {
     "description": "Il ruolo dell'utente, ad esempio, utente, amministratore, ecc."
   },
+  "pleaseSelectRole": "Seleziona un ruolo",
+  "pleaseSelectGender": "Seleziona un genere",
   "@signIn": {
     "description": "Label of the button to sign in the user."
   },

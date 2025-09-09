@@ -2183,6 +2183,8 @@
   "@rolePlaceholder": {
     "description": "The user's role, e.g., user, admin, etc."
   },
+  "pleaseSelectRole": "Please select a role",
+  "pleaseSelectGender": "Please select a gender",
   "codeSent": "A confirmation code has been sent to {destination}.",
   "@codeSent": {
     "description": "The message that is displayed after a new confirmation code is sent via Email/SMS.",

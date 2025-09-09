@@ -114,7 +114,7 @@ class _RoleSelectionFieldState extends State<RoleSelectionField> {
         validator: widget.isRequired
             ? (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please select a role';
+                  return AppLocalizations.of(context)!.pleaseSelectRole;
                 }
                 return null;
               }

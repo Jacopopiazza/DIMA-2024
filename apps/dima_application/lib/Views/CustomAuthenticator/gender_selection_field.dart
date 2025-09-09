@@ -115,7 +115,7 @@ class _GenderSelectionFieldState extends State<GenderSelectionField> {
         validator: widget.isRequired
             ? (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please select a gender';
+                  return AppLocalizations.of(context)!.pleaseSelectGender;
                 }
                 return null;
               }

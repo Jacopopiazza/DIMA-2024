@@ -119,8 +119,11 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
         status != PlanStatus.PENDING &&
         status != PlanStatus.IN_PROGRESS;
 
-    final canRequestValidation =
-        isNotValidated && !isFailed && status != null && status != PlanStatus.PENDING && status != PlanStatus.IN_PROGRESS;
+    final canRequestValidation = isNotValidated &&
+        !isFailed &&
+        status != null &&
+        status != PlanStatus.PENDING &&
+        status != PlanStatus.IN_PROGRESS;
 
     final canRename =
         !isFailed && !isRejected; // Failed and rejected plans cannot be renamed
@@ -200,9 +203,12 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
               if (canRequestValidation)
                 Consumer(
                   builder: (context, ref, child) {
-                    final subscriptionAsync = ref.watch(subscriptionStatusProvider);
+                    final subscriptionAsync =
+                        ref.watch(subscriptionStatusProvider);
                     final isPro = subscriptionAsync.maybeWhen(
-                      data: (data) => data.$1.subscriptionStatus == SubscriptionStatusEnum.PRO,
+                      data: (data) =>
+                          data.$1.subscriptionStatus ==
+                          SubscriptionStatusEnum.PRO,
                       orElse: () => false,
                     );
 
@@ -218,7 +224,7 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 6, 
+                                horizontal: 6,
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
@@ -241,14 +247,15 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
                       onTap: isPro
                           ? () async {
                               Navigator.of(context).pop();
-                              final mealPlans = ref.read(mealPlansProvider.notifier);
+                              final mealPlans =
+                                  ref.read(mealPlansProvider.notifier);
                               await showDialog(
                                 context: context,
                                 builder: (_) => SelectNutritionistDialog(
                                   mealPlanId: plan.mealPlanId,
                                   planName: plan.planName ?? '',
-                                  onLoadNutritionists: () =>
-                                      mealPlans.listNutritionists(isAvailable: true),
+                                  onLoadNutritionists: () => mealPlans
+                                      .listNutritionists(isAvailable: true),
                                   onAssignNutritionist:
                                       (mealPlanId, nutritionistId) async {
                                     await mealPlans.requestValidation(
@@ -466,13 +473,16 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
                   );
                 },
                 onRequestValidation: () async {
-                  final subscriptionAsync = ref.read(subscriptionStatusProvider);
+                  final subscriptionAsync =
+                      ref.read(subscriptionStatusProvider);
                   final isPro = subscriptionAsync.maybeWhen(
-                    data: (data) => data.$1.subscriptionStatus == SubscriptionStatusEnum.PRO,
+                    data: (data) =>
+                        data.$1.subscriptionStatus ==
+                        SubscriptionStatusEnum.PRO,
                     orElse: () => false,
                   );
                   if (!isPro) return;
-                  
+
                   final mealPlans = ref.read(mealPlansProvider.notifier);
                   await showDialog(
                     context: context,
