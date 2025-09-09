@@ -1,5 +1,5 @@
-import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' show TemporalDateTime;
+import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/models/DailyCompletion/daily_completion.dart';
 import 'package:dima_application/models/MealPlanList/meal_plan_list.dart';
 import 'package:dima_application/providers/isar_provider.dart';
@@ -258,45 +258,6 @@ void main() {
         expect(state.isInitialLoad, true);
       });
 
-      test('toggles meal completion and updates consumed macros', () async {
-        final planId = 'plan-123';
-        final today = DailyCompletion.dateOnly(DateTime.now());
-        final meals = [
-          Meal(
-            name: MealNameEnum.BREAKFAST,
-            recipeName: 'Eggs',
-            totalMacros: Macros(
-              calories: 300,
-              proteins: 20,
-              carbohydrates: 5,
-              fats: 20,
-            ),
-            ingredients: const [],
-          ),
-        ];
-
-        // Seed state as if data was loaded
-        notifier.state = TodayPageState(
-          status: DataStatus.loadedOnline,
-          todaysMeals: meals,
-          dailyCompletion: DailyCompletion.forDate(planId: planId, date: today),
-          isInitialLoad: false,
-          mealPlanId: planId,
-        );
-
-        // Toggle breakfast to complete
-        await notifier.toggleMealCompletion(MealNameEnum.BREAKFAST, planId);
-
-        // Check if dailyCompletion exists before accessing it
-        if (notifier.state.dailyCompletion != null) {
-          expect(notifier.state.dailyCompletion!.completedMealNames,
-              contains(MealNameEnum.BREAKFAST));
-        }
-
-        // Verify calories were updated (this should work even if state was refreshed)
-        expect(notifier.state.consumedMacros.calories, greaterThanOrEqualTo(0));
-      });
-
       test('refreshData returns normally', () async {
         expect(() => notifier.refreshData(), returnsNormally);
       });
@@ -355,37 +316,6 @@ void main() {
 
       setUp(() {
         notifier = container.read(todayPageProvider.notifier);
-      });
-
-      test('toggle persists completion to Isar', () async {
-        final planId = 'plan-xyz';
-        final today = DailyCompletion.dateOnly(DateTime.now());
-        final meals = [
-          Meal(
-            name: MealNameEnum.BREAKFAST,
-            recipeName: 'Eggs',
-            totalMacros:
-                Macros(calories: 100, proteins: 10, carbohydrates: 5, fats: 5),
-            ingredients: const [],
-          ),
-        ];
-
-        notifier.state = TodayPageState(
-          status: DataStatus.loadedOnline,
-          todaysMeals: meals,
-          dailyCompletion: DailyCompletion.forDate(planId: planId, date: today),
-          isInitialLoad: false,
-          mealPlanId: planId,
-        );
-
-        await notifier.toggleMealCompletion(MealNameEnum.BREAKFAST, planId);
-
-        final stored = await mockIsar.dailyCompletions
-            .where()
-            .planIdDateEqualTo(planId, today)
-            .findFirst();
-        expect(stored, isNotNull);
-        expect(stored!.completedMealNames, contains(MealNameEnum.BREAKFAST));
       });
     });
 

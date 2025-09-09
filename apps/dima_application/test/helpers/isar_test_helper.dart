@@ -11,14 +11,14 @@ import 'package:path/path.dart' as path;
 /// Helper class for setting up in-memory Isar instances for testing
 class IsarTestHelper {
   static bool _isInitialized = false;
-  static late String _testDirectory;
+  static String? _testDirectory;
 
   /// Gets the dedicated test directory for Isar files
   static String get testDirectory {
-    if (!_isInitialized) {
+    if (_testDirectory == null) {
       _testDirectory = path.join(Directory.current.path, '.isar_test');
     }
-    return _testDirectory;
+    return _testDirectory!;
   }
 
   /// Ensures the test directory exists
@@ -38,6 +38,9 @@ class IsarTestHelper {
     if (_isInitialized) return;
 
     try {
+      // Ensure test directory exists early
+      _ensureTestDirectory();
+
       // First try to initialize with download enabled
       await Isar.initializeIsarCore(download: true);
       _isInitialized = true;
