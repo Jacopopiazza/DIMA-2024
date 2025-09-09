@@ -82,9 +82,16 @@ dev_dependencies:
   riverpod_lint: ^2.1.1
   isar_generator: ^3.1.0
   mockito: ^5.4.4
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/app-icon.png"
+  min_sdk_android: 21
 
 # The following section is specific to Flutter packages.
 flutter:

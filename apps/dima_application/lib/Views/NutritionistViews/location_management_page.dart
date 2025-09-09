@@ -81,16 +81,16 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
         _lngController.text = response.location!.longitude.toStringAsFixed(6);
 
         // Auto-fill address if it was retrieved
-        if (response.location!.address != null &&
-            response.location!.address != 'Current Location') {
+        if (response.location!.address != null) {
           _addressController.text = response.location!.address!;
+        } else {
+          _addressController.clear(); // Clear address field so user can enter manually
         }
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.location!.address != null &&
-                      response.location!.address != 'Current Location'
+              content: Text(response.location!.address != null
                   ? AppLocalizations.of(context)!
                       .locationAndAddressRetrievedSuccessfully
                   : AppLocalizations.of(context)!

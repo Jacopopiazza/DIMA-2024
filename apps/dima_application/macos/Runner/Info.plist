@@ -7,12 +7,14 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconFile</key>
-	<string></string>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
+	<string>WellPlate</string>
+	<key>CFBundleDisplayName</key>
 	<string>WellPlate</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
@@ -30,5 +32,13 @@
 	<string>NSApplication</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to your location to help you set your office location for patients to find you.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>This app needs access to your location to help you set your office location for patients to find you.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to allow you to select profile pictures and meal photos.</string>
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+	<key>com.apple.security.network.client</key>
+	<true/>
 </dict>
 </plist>

@@ -358,33 +358,75 @@ class NutritionistLocationService {
       // Try to get address from coordinates using reverse geocoding
       String? address;
       try {
-        List<Placemark> placemarks = await placemarkFromCoordinates(
-          position.latitude,
-          position.longitude,
-        );
+        safePrint('[NutritionistLocationService] Starting reverse geocoding for lat: ${position.latitude}, lng: ${position.longitude}');
+        
+        List<Placemark>? placemarks;
+        try {
+          placemarks = await placemarkFromCoordinates(
+            position.latitude,
+            position.longitude,
+          );
+          safePrint('[NutritionistLocationService] placemarkFromCoordinates succeeded, found ${placemarks.length} placemarks');
+        } catch (geocodingError) {
+          safePrint('[NutritionistLocationService] placemarkFromCoordinates failed: $geocodingError');
+          address = null; // Let user enter address manually
+          return CurrentLocationResult(
+            success: true,
+            message: 'Location retrieved successfully',
+            location: CurrentLocationData(
+              latitude: position.latitude,
+              longitude: position.longitude,
+              address: address,
+            ),
+          );
+        }
 
-        if (placemarks.isNotEmpty) {
+        safePrint('[NutritionistLocationService] Received ${placemarks?.length ?? 0} placemarks');
+
+        if (placemarks != null && placemarks.isNotEmpty) {
           final place = placemarks.first;
-          // Build a readable address
+          
+          // Build a readable address safely
           List<String> addressParts = [];
 
-          if (place.street?.isNotEmpty == true) addressParts.add(place.street!);
-          if (place.subThoroughfare?.isNotEmpty == true)
-            addressParts.add(place.subThoroughfare!);
-          if (place.locality?.isNotEmpty == true)
-            addressParts.add(place.locality!);
-          if (place.administrativeArea?.isNotEmpty == true)
-            addressParts.add(place.administrativeArea!);
-          if (place.country?.isNotEmpty == true)
-            addressParts.add(place.country!);
+          // Use safe string access
+          final street = place.street;
+          if (street != null && street.isNotEmpty) {
+            addressParts.add(street);
+          }
+          
+          final subThoroughfare = place.subThoroughfare;
+          if (subThoroughfare != null && subThoroughfare.isNotEmpty) {
+            addressParts.add(subThoroughfare);
+          }
+          
+          final locality = place.locality;
+          if (locality != null && locality.isNotEmpty) {
+            addressParts.add(locality);
+          }
+          
+          final administrativeArea = place.administrativeArea;
+          if (administrativeArea != null && administrativeArea.isNotEmpty) {
+            addressParts.add(administrativeArea);
+          }
+          
+          final country = place.country;
+          if (country != null && country.isNotEmpty) {
+            addressParts.add(country);
+          }
 
           address = addressParts.isNotEmpty
               ? addressParts.join(', ')
-              : 'Current Location';
+              : null; // No address found, let user enter manually
+          
+          safePrint('[NutritionistLocationService] Final address: $address');
+        } else {
+          safePrint('[NutritionistLocationService] No placemarks returned');
+          address = null; // No address found, let user enter manually
         }
       } catch (e) {
         safePrint('[NutritionistLocationService] Reverse geocoding failed: $e');
-        address = 'Current Location';
+        address = null; // Let user enter address manually
       }
 
       return CurrentLocationResult(
@@ -501,19 +543,19 @@ class NutritionistLocationService {
         List<String> addressParts = [];
 
         // Build address in logical order: street number, street, city, region, country
-        if (place.subThoroughfare?.isNotEmpty == true) {
+        if (place.subThoroughfare != null && place.subThoroughfare!.isNotEmpty) {
           addressParts.add(place.subThoroughfare!);
         }
-        if (place.thoroughfare?.isNotEmpty == true) {
+        if (place.thoroughfare != null && place.thoroughfare!.isNotEmpty) {
           addressParts.add(place.thoroughfare!);
         }
-        if (place.locality?.isNotEmpty == true) {
+        if (place.locality != null && place.locality!.isNotEmpty) {
           addressParts.add(place.locality!);
         }
-        if (place.administrativeArea?.isNotEmpty == true) {
+        if (place.administrativeArea != null && place.administrativeArea!.isNotEmpty) {
           addressParts.add(place.administrativeArea!);
         }
-        if (place.country?.isNotEmpty == true) {
+        if (place.country != null && place.country!.isNotEmpty) {
           addressParts.add(place.country!);
         }
 

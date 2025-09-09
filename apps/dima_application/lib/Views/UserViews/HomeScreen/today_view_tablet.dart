@@ -219,12 +219,12 @@ class TodayPageTablet extends ConsumerWidget {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Left column - Progress card
+              // Left column - Progress card only
               Expanded(
                 flex: 2,
                 child: Column(
                   children: [
-                    const LoadingShimmer(),
+                    ProgressCard(isLoading: true),
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -251,20 +251,7 @@ class TodayPageTablet extends ConsumerWidget {
           );
         } else {
           // Single column layout for portrait
-          return Column(
-            children: [
-              const LoadingShimmer(),
-              const SizedBox(height: 32),
-              _buildShimmerText(180, 28),
-              const SizedBox(height: 16),
-              ...List.generate(
-                  3,
-                  (index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: _buildMealCardSkeleton(context),
-                      )),
-            ],
-          );
+          return const LoadingShimmer();
         }
       },
     );
