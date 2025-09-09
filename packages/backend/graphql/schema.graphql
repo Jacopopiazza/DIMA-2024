@@ -525,6 +525,9 @@ type Mutation {
 #       QUERIES
 # ===================
 type Query {
+  getUrlForProfilePicture(s3Key: String!): AWSURL
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+
   getMealPlanById(mealPlanId: ID!): MealPlan
     @aws_auth(cognito_groups: ["USERS"])
   getPlanDayCompletion(planId: ID!, date: AWSDate!): PlanDayCompletion
