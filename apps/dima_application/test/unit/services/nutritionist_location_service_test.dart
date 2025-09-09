@@ -1,20 +1,85 @@
-import 'package:dima_application/services/nutritionist_location_service.dart';
-import 'package:dima_application/generated/flutter-models/NutritionistLocation.dart';
-import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
+import 'dart:convert';
 
-// Generate mocks using build_runner
-@GenerateNiceMocks([MockSpec<AmplifyGraphQL>()])
-import 'nutritionist_location_service_test.mocks.dart';
+import 'package:amplify_core/amplify_core.dart' as amplify_core;
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:async/async.dart' as async_pkg;
+import 'package:dima_application/AmplifyWrapper/AmplifyGraphQL.dart';
+import 'package:dima_application/generated/flutter-models/NutritionistLocation.dart';
+import 'package:dima_application/services/nutritionist_location_service.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+// Fake GraphQL Operation that returns a prebuilt response
+class _FakeGraphQLOperation<T> implements GraphQLOperation<T> {
+  _FakeGraphQLOperation(this._response);
+
+  final Future<GraphQLResponse<T>> _response;
+
+  @override
+  Future<GraphQLResponse<T>> get response => _response;
+
+  @override
+  Future<void> cancel() async {}
+
+  @override
+  Future<void> close() async {}
+
+  @override
+  String get id => 'fake-operation-id';
+
+  @override
+  amplify_core.AWSLogger get logger =>
+      amplify_core.AWSLogger().createChild('fake');
+
+  @override
+  String get runtimeTypeName => 'GraphQLOperation';
+
+  @override
+  async_pkg.CancelableOperation<GraphQLResponse<T>> get operation =>
+      async_pkg.CancelableOperation<GraphQLResponse<T>>.fromFuture(_response);
+}
+
+// Fake AmplifyGraphQL that returns canned responses
+class _FakeAmplifyGraphQL extends AmplifyGraphQL {
+  _FakeAmplifyGraphQL({
+    this.queryPayload,
+    this.mutationPayload,
+    this.hasErrors = false,
+  });
+
+  final Map<String, dynamic>? queryPayload;
+  final Map<String, dynamic>? mutationPayload;
+  final bool hasErrors;
+
+  @override
+  GraphQLOperation<String> query<String>(
+      {required GraphQLRequest<String> request}) {
+    final payload = queryPayload ?? {};
+    final response = GraphQLResponse<String>(
+      data: jsonEncode(payload) as String,
+      errors: hasErrors
+          ? [const GraphQLResponseError(message: 'fake query error')]
+          : const [],
+    );
+    return _FakeGraphQLOperation<String>(Future.value(response));
+  }
+
+  @override
+  GraphQLOperation<String> mutate<String>(
+      {required GraphQLRequest<String> request}) {
+    final payload = mutationPayload ?? {};
+    final response = GraphQLResponse<String>(
+      data: jsonEncode(payload) as String,
+      errors: hasErrors
+          ? [const GraphQLResponseError(message: 'fake mutation error')]
+          : const [],
+    );
+    return _FakeGraphQLOperation<String>(Future.value(response));
+  }
+}
 
 void main() {
   group('NutritionistLocationService', () {
-    late MockAmplifyGraphQL mockAmplifyGraphQL;
+    late _FakeAmplifyGraphQL fakeAmplifyGraphQL;
     late NutritionistLocationService service;
 
     setUpAll(() {
@@ -22,33 +87,29 @@ void main() {
     });
 
     setUp(() {
-      mockAmplifyGraphQL = MockAmplifyGraphQL();
-      service = NutritionistLocationService(amplifyGraphQL: mockAmplifyGraphQL);
+      fakeAmplifyGraphQL = _FakeAmplifyGraphQL();
+      service = NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
     });
 
     group('updateNutritionistLocation', () {
       test('returns NutritionistLocation when GraphQL succeeds', () async {
         // Arrange
-        final mockOperation = MockGraphQLOperation<String>();
         final updatedAt = TemporalDateTime.now();
+        final mutationPayload = {
+          'updateNutritionistLocation': {
+            'nutritionistId': 'test-nutritionist-id',
+            'latitude': 45.4642,
+            'longitude': 7.8994,
+            'address': 'Test Address',
+            'notes': 'Test Notes',
+            'updatedAt': updatedAt.format(),
+          }
+        };
 
-        final mockResponse = GraphQLResponse<String>(
-          data: {
-            'updateNutritionistLocation': {
-              'nutritionistId': 'test-nutritionist-id',
-              'latitude': 45.4642,
-              'longitude': 7.8994,
-              'address': 'Test Address',
-              'notes': 'Test Notes',
-              'updatedAt': updatedAt.format(),
-            }
-          } as dynamic,
-          errors: const [],
-        );
-
-        when(mockAmplifyGraphQL.mutate<String>(request: anyNamed('request')))
-            .thenReturn(mockOperation);
-        when(mockOperation.response).thenAnswer((_) async => mockResponse);
+        fakeAmplifyGraphQL =
+            _FakeAmplifyGraphQL(mutationPayload: mutationPayload);
+        service =
+            NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
 
         // Act
         final result = await service.updateNutritionistLocation(
@@ -69,15 +130,9 @@ void main() {
 
       test('throws exception when GraphQL returns errors', () async {
         // Arrange
-        final mockOperation = MockGraphQLOperation<String>();
-        final mockResponse = GraphQLResponse<String>(
-          data: null as dynamic,
-          errors: const [GraphQLResponseError(message: 'GraphQL Error')],
-        );
-
-        when(mockAmplifyGraphQL.mutate<String>(request: anyNamed('request')))
-            .thenReturn(mockOperation);
-        when(mockOperation.response).thenAnswer((_) async => mockResponse);
+        fakeAmplifyGraphQL = _FakeAmplifyGraphQL(hasErrors: true);
+        service =
+            NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
 
         // Act & Assert
         expect(
@@ -93,15 +148,11 @@ void main() {
     group('removeNutritionistLocation', () {
       test('completes successfully when GraphQL succeeds', () async {
         // Arrange
-        final mockOperation = MockGraphQLOperation<String>();
-        final mockResponse = GraphQLResponse<String>(
-          data: {'removeNutritionistLocation': null} as dynamic,
-          errors: const [],
-        );
-
-        when(mockAmplifyGraphQL.mutate<String>(request: anyNamed('request')))
-            .thenReturn(mockOperation);
-        when(mockOperation.response).thenAnswer((_) async => mockResponse);
+        final mutationPayload = {'removeNutritionistLocation': null};
+        fakeAmplifyGraphQL =
+            _FakeAmplifyGraphQL(mutationPayload: mutationPayload);
+        service =
+            NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
 
         // Act & Assert - should not throw
         await service.removeNutritionistLocation();
@@ -109,15 +160,9 @@ void main() {
 
       test('throws exception when GraphQL returns errors', () async {
         // Arrange
-        final mockOperation = MockGraphQLOperation<String>();
-        final mockResponse = GraphQLResponse<String>(
-          data: null as dynamic,
-          errors: const [GraphQLResponseError(message: 'Delete failed')],
-        );
-
-        when(mockAmplifyGraphQL.mutate<String>(request: anyNamed('request')))
-            .thenReturn(mockOperation);
-        when(mockOperation.response).thenAnswer((_) async => mockResponse);
+        fakeAmplifyGraphQL = _FakeAmplifyGraphQL(hasErrors: true);
+        service =
+            NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
 
         // Act & Assert
         expect(
@@ -130,26 +175,21 @@ void main() {
     group('getMyLocation', () {
       test('returns NutritionistLocation when location exists', () async {
         // Arrange
-        final mockOperation = MockGraphQLOperation<String>();
         final updatedAt = TemporalDateTime.now();
+        final queryPayload = {
+          'getMyLocation': {
+            'nutritionistId': 'test-nutritionist-id',
+            'latitude': 45.4642,
+            'longitude': 7.8994,
+            'address': 'My Office Address',
+            'notes': 'Second floor',
+            'updatedAt': updatedAt.format(),
+          }
+        };
 
-        final mockResponse = GraphQLResponse<String>(
-          data: {
-            'getMyLocation': {
-              'nutritionistId': 'test-nutritionist-id',
-              'latitude': 45.4642,
-              'longitude': 7.8994,
-              'address': 'My Office Address',
-              'notes': 'Second floor',
-              'updatedAt': updatedAt.format(),
-            }
-          } as dynamic,
-          errors: const [],
-        );
-
-        when(mockAmplifyGraphQL.query<String>(request: anyNamed('request')))
-            .thenReturn(mockOperation);
-        when(mockOperation.response).thenAnswer((_) async => mockResponse);
+        fakeAmplifyGraphQL = _FakeAmplifyGraphQL(queryPayload: queryPayload);
+        service =
+            NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
 
         // Act
         final result = await service.getMyLocation();
@@ -165,15 +205,10 @@ void main() {
 
       test('returns null when no location is set', () async {
         // Arrange
-        final mockOperation = MockGraphQLOperation<String>();
-        final mockResponse = GraphQLResponse<String>(
-          data: {'getMyLocation': null} as dynamic,
-          errors: const [],
-        );
-
-        when(mockAmplifyGraphQL.query<String>(request: anyNamed('request')))
-            .thenReturn(mockOperation);
-        when(mockOperation.response).thenAnswer((_) async => mockResponse);
+        final queryPayload = {'getMyLocation': null};
+        fakeAmplifyGraphQL = _FakeAmplifyGraphQL(queryPayload: queryPayload);
+        service =
+            NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
 
         // Act
         final result = await service.getMyLocation();
@@ -187,26 +222,21 @@ void main() {
       test('returns location for specific nutritionist', () async {
         // Arrange
         const nutritionistId = 'other-nutritionist-id';
-        final mockOperation = MockGraphQLOperation<String>();
         final updatedAt = TemporalDateTime.now();
+        final queryPayload = {
+          'getNutritionistLocation': {
+            'nutritionistId': nutritionistId,
+            'latitude': 46.0696,
+            'longitude': 11.1210,
+            'address': 'Nutritionist Office',
+            'notes': 'Call before visiting',
+            'updatedAt': updatedAt.format(),
+          }
+        };
 
-        final mockResponse = GraphQLResponse<String>(
-          data: {
-            'getNutritionistLocation': {
-              'nutritionistId': nutritionistId,
-              'latitude': 46.0696,
-              'longitude': 11.1210,
-              'address': 'Nutritionist Office',
-              'notes': 'Call before visiting',
-              'updatedAt': updatedAt.format(),
-            }
-          } as dynamic,
-          errors: const [],
-        );
-
-        when(mockAmplifyGraphQL.query<String>(request: anyNamed('request')))
-            .thenReturn(mockOperation);
-        when(mockOperation.response).thenAnswer((_) async => mockResponse);
+        fakeAmplifyGraphQL = _FakeAmplifyGraphQL(queryPayload: queryPayload);
+        service =
+            NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
 
         // Act
         final result = await service.getNutritionistLocation(nutritionistId);
@@ -220,15 +250,10 @@ void main() {
 
       test('returns null when nutritionist has no location', () async {
         // Arrange
-        final mockOperation = MockGraphQLOperation<String>();
-        final mockResponse = GraphQLResponse<String>(
-          data: {'getNutritionistLocation': null} as dynamic,
-          errors: const [],
-        );
-
-        when(mockAmplifyGraphQL.query<String>(request: anyNamed('request')))
-            .thenReturn(mockOperation);
-        when(mockOperation.response).thenAnswer((_) async => mockResponse);
+        final queryPayload = {'getNutritionistLocation': null};
+        fakeAmplifyGraphQL = _FakeAmplifyGraphQL(queryPayload: queryPayload);
+        service =
+            NutritionistLocationService(amplifyGraphQL: fakeAmplifyGraphQL);
 
         // Act
         final result = await service.getNutritionistLocation('test-id');
@@ -360,6 +385,3 @@ void main() {
     });
   });
 }
-
-// Mock classes for testing
-class MockGraphQLOperation<T> extends Mock implements GraphQLOperation<T> {}
