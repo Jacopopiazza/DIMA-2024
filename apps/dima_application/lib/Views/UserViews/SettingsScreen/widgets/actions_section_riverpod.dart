@@ -202,8 +202,7 @@ class ActionsSectionRiverpod extends ConsumerWidget {
             Text(AppLocalizations.of(context)!.signOut),
           ],
         ),
-        content:
-            Text(AppLocalizations.of(context)!.areYouSureSignOut),
+        content: Text(AppLocalizations.of(context)!.areYouSureSignOut),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),

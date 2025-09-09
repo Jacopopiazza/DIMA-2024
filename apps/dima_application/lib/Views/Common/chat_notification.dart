@@ -226,7 +226,8 @@ class _ChatNotificationState extends State<ChatNotification>
                               const SizedBox(height: 4),
                               // Timestamp
                               Text(
-                                _formatTimestamp(widget.notification.timestamp, context),
+                                _formatTimestamp(
+                                    widget.notification.timestamp, context),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: colorScheme.onPrimaryContainer
                                       .withOpacity(0.7),

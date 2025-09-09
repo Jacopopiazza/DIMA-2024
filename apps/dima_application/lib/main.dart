@@ -28,20 +28,23 @@ import 'amplify_outputs.dart';
 Future<bool> isTablet() async {
   // Return true for web platform
   if (kIsWeb) return true;
-  
+
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  
+
   try {
     if (Platform.isAndroid) {
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       // Android tablets typically have screen sizes >= 7 inches
       // We can also check for tablet-specific features
-      final physicalSize = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
-      final devicePixelRatio = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
+      final physicalSize =
+          WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
+      final devicePixelRatio = WidgetsBinding
+          .instance.platformDispatcher.views.first.devicePixelRatio;
       final logicalWidth = physicalSize.width / devicePixelRatio;
       final logicalHeight = physicalSize.height / devicePixelRatio;
-      final largerDimension = logicalWidth > logicalHeight ? logicalWidth : logicalHeight;
-      
+      final largerDimension =
+          logicalWidth > logicalHeight ? logicalWidth : logicalHeight;
+
       // Use 768px as tablet breakpoint for Android
       return largerDimension >= 768.0;
     } else if (Platform.isIOS) {
@@ -51,14 +54,17 @@ Future<bool> isTablet() async {
     }
   } catch (e) {
     // Fallback to screen size if device info fails
-    final physicalSize = WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
-    final devicePixelRatio = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
+    final physicalSize =
+        WidgetsBinding.instance.platformDispatcher.views.first.physicalSize;
+    final devicePixelRatio =
+        WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
     final logicalWidth = physicalSize.width / devicePixelRatio;
     final logicalHeight = physicalSize.height / devicePixelRatio;
-    final largerDimension = logicalWidth > logicalHeight ? logicalWidth : logicalHeight;
+    final largerDimension =
+        logicalWidth > logicalHeight ? logicalWidth : logicalHeight;
     return largerDimension >= 768.0;
   }
-  
+
   return false;
 }
 

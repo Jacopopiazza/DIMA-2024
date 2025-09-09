@@ -9,7 +9,7 @@ import 'today_view_tablet.dart';
 /// - Tablets/iPads: uses a tablet-optimized layout with better use of screen space
 class TodayPageAdaptive extends StatelessWidget {
   final VoidCallback? onNavigateToMealPlans;
-  
+
   const TodayPageAdaptive({super.key, this.onNavigateToMealPlans});
 
   bool _isLargeLayout(BuildContext context) {

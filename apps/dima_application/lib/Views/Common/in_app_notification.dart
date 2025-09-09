@@ -139,8 +139,10 @@ class _InAppNotificationState extends State<InAppNotification>
                             children: [
                               Text(
                                 widget.notification.success
-                                    ? AppLocalizations.of(context)!.mealPlanReady
-                                    : AppLocalizations.of(context)!.generationFailed,
+                                    ? AppLocalizations.of(context)!
+                                        .mealPlanReady
+                                    : AppLocalizations.of(context)!
+                                        .generationFailed,
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: widget.notification.success
@@ -151,8 +153,10 @@ class _InAppNotificationState extends State<InAppNotification>
                               const SizedBox(height: 2),
                               Text(
                                 widget.notification.success
-                                    ? AppLocalizations.of(context)!.mealPlanReadyDescription
-                                    : AppLocalizations.of(context)!.generationFailedDescription,
+                                    ? AppLocalizations.of(context)!
+                                        .mealPlanReadyDescription
+                                    : AppLocalizations.of(context)!
+                                        .generationFailedDescription,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: widget.notification.success
                                       ? theme.colorScheme.onPrimaryContainer

@@ -81,8 +81,9 @@ class _ChatPageState extends ConsumerState<ChatPage>
       // Current user is nutritionist, show user/patient name
       return widget.userName ?? AppLocalizations.of(context)!.patient;
     } else {
-      // Current user is regular user, show nutritionist name  
-      return widget.nutritionistName ?? AppLocalizations.of(context)!.nutritionist;
+      // Current user is regular user, show nutritionist name
+      return widget.nutritionistName ??
+          AppLocalizations.of(context)!.nutritionist;
     }
   }
 
@@ -234,7 +235,8 @@ class _ChatPageState extends ConsumerState<ChatPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${AppLocalizations.of(context)!.failedToLoadOlderMessages}$e'),
+            content: Text(
+                '${AppLocalizations.of(context)!.failedToLoadOlderMessages}$e'),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -277,7 +279,8 @@ class _ChatPageState extends ConsumerState<ChatPage>
             ),
             chatAsync.when(
               data: (chatState) => Text(
-                AppLocalizations.of(context)!.messagesCount(chatState.messageCount),
+                AppLocalizations.of(context)!
+                    .messagesCount(chatState.messageCount),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),

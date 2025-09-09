@@ -107,21 +107,22 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
     final validationStatus = plan.validationStatus;
     final isRejected = validationStatus == MealPlanValidationStatus.REJECTED;
     final isFailed = status == PlanStatus.FAILED;
-    final isNotValidated = validationStatus == null || validationStatus == MealPlanValidationStatus.NOT_VALIDATED;
-    
+    final isNotValidated = validationStatus == null ||
+        validationStatus == MealPlanValidationStatus.NOT_VALIDATED;
+
     // Determine which actions are available
-    final canSetActive = !isActive && 
-                        !isFailed && 
-                        !isRejected && 
-                        status != null && 
-                        status != PlanStatus.PENDING && 
-                        status != PlanStatus.IN_PROGRESS;
-    
-    final canRequestValidation = isNotValidated && 
-                                !isFailed && 
-                                status == PlanStatus.GENERATED;
-    
-    final canRename = !isFailed && !isRejected; // Failed and rejected plans cannot be renamed
+    final canSetActive = !isActive &&
+        !isFailed &&
+        !isRejected &&
+        status != null &&
+        status != PlanStatus.PENDING &&
+        status != PlanStatus.IN_PROGRESS;
+
+    final canRequestValidation =
+        isNotValidated && !isFailed && status == PlanStatus.GENERATED;
+
+    final canRename =
+        !isFailed && !isRejected; // Failed and rejected plans cannot be renamed
 
     showModalBottomSheet(
       context: context,
@@ -209,8 +210,10 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
                         planName: plan.planName ?? '',
                         onLoadNutritionists: () =>
                             mealPlans.listNutritionists(isAvailable: true),
-                        onAssignNutritionist: (mealPlanId, nutritionistId) async {
-                          await mealPlans.requestValidation(mealPlanId, nutritionistId);
+                        onAssignNutritionist:
+                            (mealPlanId, nutritionistId) async {
+                          await mealPlans.requestValidation(
+                              mealPlanId, nutritionistId);
                           // Refresh detail pane if this plan is currently selected
                           if (_selectedPlanId == plan.mealPlanId) {
                             _refreshDetailPane();
@@ -226,11 +229,13 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
                 const Divider(height: 1),
               // Delete - always available
               ListTile(
-                leading: const Icon(Icons.delete_outline_rounded, color: Colors.red),
+                leading:
+                    const Icon(Icons.delete_outline_rounded, color: Colors.red),
                 title: Text(l10n.delete, style: TextStyle(color: Colors.red)),
                 onTap: () async {
                   Navigator.of(context).pop();
-                  await _confirmDelete(context, plan.mealPlanId, plan.planName ?? l10n.unnamedPlan);
+                  await _confirmDelete(context, plan.mealPlanId,
+                      plan.planName ?? l10n.unnamedPlan);
                 },
               ),
               const SizedBox(height: 8),
@@ -262,15 +267,15 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
             duration: const Duration(seconds: 2),
           ),
         );
-        
+
         // If the notification is about the currently selected meal plan, refresh the detail pane
         if (_selectedPlanId == latest.mealPlanId) {
           _refreshDetailPane();
         }
-        
+
         // Mark as read shortly after
-        Future.microtask(
-            () => ref.read(mealPlanNotificationProvider.notifier).markAllAsRead());
+        Future.microtask(() =>
+            ref.read(mealPlanNotificationProvider.notifier).markAllAsRead());
       }
     });
 
@@ -287,7 +292,8 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
           error: (e, _) => _buildErrorState(context, e.toString()),
           data: (plans) {
             if (plans.isEmpty) return _buildEmptyState(context);
-            final activeId = ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId;
+            final activeId =
+                ref.read(mealPlansProvider.notifier).cachedActiveMealPlanId;
             // Ensure selection is valid
             final ids = plans.map((p) => p.mealPlanId).toSet();
             if (_selectedPlanId == null || !ids.contains(_selectedPlanId)) {
@@ -319,7 +325,8 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
                     child: _selectedPlanId == null
                         ? _buildNoSelection(context)
                         : ReadMealPlanPage(
-                            key: ValueKey('${_selectedPlanId}_$_detailRefreshKey'),
+                            key: ValueKey(
+                                '${_selectedPlanId}_$_detailRefreshKey'),
                             mealPlanId: _selectedPlanId!,
                             showBackButton: false, // No back button on tablet
                           ),
@@ -335,7 +342,8 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
     );
   }
 
-  Widget _buildGrid(ThemeData theme, ColorScheme colorScheme, List plans, String? activeId) {
+  Widget _buildGrid(
+      ThemeData theme, ColorScheme colorScheme, List plans, String? activeId) {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Responsive columns based on width
@@ -361,81 +369,83 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
               final isActive = plan.mealPlanId == activeId;
               final isSelected = plan.mealPlanId == _selectedPlanId;
               return _PlanTile(
-              plan: plan,
-              isActive: isActive,
-              isSelected: isSelected,
-              isSettingActive: _settingActivePlanId == plan.mealPlanId,
-              onTap: () => setState(() => _selectedPlanId = plan.mealPlanId),
-              onLongPress: () => _showPlanActions(context, plan, isActive),
-              onSetActive: () async {
-                setState(() {
-                  _settingActivePlanId = plan.mealPlanId;
-                });
-                try {
-                  await ref
-                      .read(mealPlansProvider.notifier)
-                      .setActiveMealPlan(plan.mealPlanId);
-                  // Refresh detail pane if this plan is currently selected
-                  if (_selectedPlanId == plan.mealPlanId) {
-                    _refreshDetailPane();
+                plan: plan,
+                isActive: isActive,
+                isSelected: isSelected,
+                isSettingActive: _settingActivePlanId == plan.mealPlanId,
+                onTap: () => setState(() => _selectedPlanId = plan.mealPlanId),
+                onLongPress: () => _showPlanActions(context, plan, isActive),
+                onSetActive: () async {
+                  setState(() {
+                    _settingActivePlanId = plan.mealPlanId;
+                  });
+                  try {
+                    await ref
+                        .read(mealPlansProvider.notifier)
+                        .setActiveMealPlan(plan.mealPlanId);
+                    // Refresh detail pane if this plan is currently selected
+                    if (_selectedPlanId == plan.mealPlanId) {
+                      _refreshDetailPane();
+                    }
+                  } finally {
+                    if (mounted) {
+                      setState(() {
+                        _settingActivePlanId = null;
+                      });
+                    }
                   }
-                } finally {
-                  if (mounted) {
-                    setState(() {
-                      _settingActivePlanId = null;
-                    });
-                  }
-                }
-              },
-              onOpen: () {
-                setState(() => _selectedPlanId = plan.mealPlanId);
-              },
-              onDelete: () async {
-                await _confirmDelete(
-                  context,
-                  plan.mealPlanId,
-                  plan.planName ?? AppLocalizations.of(context)!.unnamedPlan,
-                );
-              },
-              onRename: () async {
-                await showDialog(
-                  context: context,
-                  builder: (_) => ModifyPlanNameDialog(
-                    currentPlanName: plan.planName ?? '',
-                    mealPlanId: plan.mealPlanId,
-                    onSave: (id, name) async {
-                      await ref
-                          .read(mealPlansProvider.notifier)
-                          .modifyMealPlan(id, name);
-                      // Refresh detail pane if this plan is currently selected
-                      if (_selectedPlanId == plan.mealPlanId) {
-                        _refreshDetailPane();
-                      }
-                    },
-                  ),
-                );
-              },
-              onRequestValidation: () async {
-                final mealPlans = ref.read(mealPlansProvider.notifier);
-                await showDialog(
-                  context: context,
-                  builder: (_) => SelectNutritionistDialog(
-                    mealPlanId: plan.mealPlanId,
-                    planName: plan.planName ?? '',
-                    onLoadNutritionists: () => mealPlans.listNutritionists(isAvailable: true),
-                    onAssignNutritionist: (mealPlanId, nutritionistId) async {
-                      await mealPlans.requestValidation(mealPlanId, nutritionistId);
-                      // Refresh detail pane if this plan is currently selected
-                      if (_selectedPlanId == plan.mealPlanId) {
-                        _refreshDetailPane();
-                      }
-                      return true;
-                    },
-                  ),
-                );
-              },
-            );
-          },
+                },
+                onOpen: () {
+                  setState(() => _selectedPlanId = plan.mealPlanId);
+                },
+                onDelete: () async {
+                  await _confirmDelete(
+                    context,
+                    plan.mealPlanId,
+                    plan.planName ?? AppLocalizations.of(context)!.unnamedPlan,
+                  );
+                },
+                onRename: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (_) => ModifyPlanNameDialog(
+                      currentPlanName: plan.planName ?? '',
+                      mealPlanId: plan.mealPlanId,
+                      onSave: (id, name) async {
+                        await ref
+                            .read(mealPlansProvider.notifier)
+                            .modifyMealPlan(id, name);
+                        // Refresh detail pane if this plan is currently selected
+                        if (_selectedPlanId == plan.mealPlanId) {
+                          _refreshDetailPane();
+                        }
+                      },
+                    ),
+                  );
+                },
+                onRequestValidation: () async {
+                  final mealPlans = ref.read(mealPlansProvider.notifier);
+                  await showDialog(
+                    context: context,
+                    builder: (_) => SelectNutritionistDialog(
+                      mealPlanId: plan.mealPlanId,
+                      planName: plan.planName ?? '',
+                      onLoadNutritionists: () =>
+                          mealPlans.listNutritionists(isAvailable: true),
+                      onAssignNutritionist: (mealPlanId, nutritionistId) async {
+                        await mealPlans.requestValidation(
+                            mealPlanId, nutritionistId);
+                        // Refresh detail pane if this plan is currently selected
+                        if (_selectedPlanId == plan.mealPlanId) {
+                          _refreshDetailPane();
+                        }
+                        return true;
+                      },
+                    ),
+                  );
+                },
+              );
+            },
           ),
         );
       },
@@ -454,7 +464,7 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
         await ref.read(mealPlansProvider.notifier).listMyMealPlans();
       },
       icon: const Icon(Icons.add),
-  label: Text(localizations.newPlan),
+      label: Text(localizations.newPlan),
     );
   }
 
@@ -487,7 +497,7 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     // Check if this looks like a network error
     final isNetworkError = error.toLowerCase().contains('network') ||
         error.toLowerCase().contains('connection') ||
@@ -602,7 +612,8 @@ class _MyPlansPageTabletState extends ConsumerState<MyPlansPageTablet>
     );
   }
 
-  Future<void> _confirmDelete(BuildContext context, String planId, String planName) async {
+  Future<void> _confirmDelete(
+      BuildContext context, String planId, String planName) async {
     final l10n = AppLocalizations.of(context)!;
     await showDialog<void>(
       context: context,
@@ -645,8 +656,8 @@ class _PlanTile extends StatelessWidget {
     required this.isSelected,
     required this.isSettingActive,
     required this.onTap,
-  required this.onOpen,
-  required this.onLongPress,
+    required this.onOpen,
+    required this.onLongPress,
     required this.onSetActive,
     required this.onDelete,
     required this.onRename,
@@ -658,15 +669,15 @@ class _PlanTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final borderColor = isSelected
-        ? colorScheme.primary
-        : colorScheme.outlineVariant;
+    final borderColor =
+        isSelected ? colorScheme.primary : colorScheme.outlineVariant;
 
     return Card(
       elevation: isSelected ? 3 : 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: borderColor.withOpacity(isSelected ? 0.7 : 0.3)),
+        side:
+            BorderSide(color: borderColor.withOpacity(isSelected ? 0.7 : 0.3)),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -688,16 +699,23 @@ class _PlanTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _StatusPill(status: plan.status as PlanStatus?, isActive: isActive),
+                        _StatusPill(
+                            status: plan.status as PlanStatus?,
+                            isActive: isActive),
                         const SizedBox(height: 3),
                         // Only show validation pill for plans that are not generating (not IN_PROGRESS or PENDING)
-                        if (plan.status != PlanStatus.IN_PROGRESS && plan.status != PlanStatus.PENDING)
-                          _ValidationStatusPill(validationStatus: plan.validationStatus),
+                        if (plan.status != PlanStatus.IN_PROGRESS &&
+                            plan.status != PlanStatus.PENDING)
+                          _ValidationStatusPill(
+                              validationStatus: plan.validationStatus),
                       ],
                     ),
                   ),
                   const SizedBox(width: 6),
-                  _StatusIcon(plan: plan, isActive: isActive, isSettingActive: isSettingActive),
+                  _StatusIcon(
+                      plan: plan,
+                      isActive: isActive,
+                      isSettingActive: isSettingActive),
                 ],
               ),
               const SizedBox(height: 6),
@@ -727,12 +745,15 @@ class _StatusIcon extends StatelessWidget {
   final bool isActive;
   final bool isSettingActive;
 
-  const _StatusIcon({required this.plan, required this.isActive, required this.isSettingActive});
+  const _StatusIcon(
+      {required this.plan,
+      required this.isActive,
+      required this.isSettingActive});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     // Show loading indicator if setting active
     if (isSettingActive) {
       return Container(
@@ -754,7 +775,7 @@ class _StatusIcon extends StatelessWidget {
         ),
       );
     }
-    
+
     IconData icon;
     Color bg;
     Color fg;
@@ -820,13 +841,12 @@ class _StatusPill extends StatelessWidget {
     } else {
       switch (status) {
         case PlanStatus.IN_PROGRESS:
-                case PlanStatus.PENDING:
-
+        case PlanStatus.PENDING:
           label = l10n.generating;
           bg = Colors.amber.withOpacity(isDark ? 0.2 : 0.12);
           fg = isDark ? Colors.amber[300]! : Colors.amber[700]!;
           break;
-   
+
         case PlanStatus.FAILED:
           label = l10n.statusFailed;
           bg = Colors.red.withOpacity(isDark ? 0.2 : 0.12);
@@ -915,4 +935,3 @@ class _ValidationStatusPill extends StatelessWidget {
 }
 
 // Removed unused PlanStatus? extension
-

@@ -24,7 +24,8 @@ class NutritionistActionsSection extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorSigningOut(e.message)),
+            content:
+                Text(AppLocalizations.of(context)!.errorSigningOut(e.message)),
             backgroundColor: Colors.red,
           ),
         );
@@ -41,7 +42,8 @@ class NutritionistActionsSection extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorDeletingAccount(e.message)),
+            content: Text(
+                AppLocalizations.of(context)!.errorDeletingAccount(e.message)),
             backgroundColor: Colors.red,
           ),
         );
@@ -152,8 +154,7 @@ class NutritionistActionsSection extends StatelessWidget {
             Text(AppLocalizations.of(context)!.confirmSignOutTitle),
           ],
         ),
-        content: Text(
-            AppLocalizations.of(context)!.confirmSignOutMessage),
+        content: Text(AppLocalizations.of(context)!.confirmSignOutMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -189,7 +190,8 @@ class NutritionistActionsSection extends StatelessWidget {
               context,
               icon: Icons.logout_rounded,
               title: AppLocalizations.of(context)!.signOut,
-              subtitle: AppLocalizations.of(context)!.signOutOfNutritionistAccount,
+              subtitle:
+                  AppLocalizations.of(context)!.signOutOfNutritionistAccount,
               color: Colors.orange,
               onTap: () => _showSignOutConfirmation(context),
             ),
@@ -386,7 +388,8 @@ class _NutritionistDangerZoneState extends State<_NutritionistDangerZone>
                           ),
                         ),
                         Text(
-                          AppLocalizations.of(context)!.irreversibleDestructiveActions,
+                          AppLocalizations.of(context)!
+                              .irreversibleDestructiveActions,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.red.shade600,
                           ),
@@ -436,7 +439,8 @@ class _NutritionistDangerZoneState extends State<_NutritionistDangerZone>
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    AppLocalizations.of(context)!.criticalWarning,
+                                    AppLocalizations.of(context)!
+                                        .criticalWarning,
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.red.shade800,
@@ -447,7 +451,8 @@ class _NutritionistDangerZoneState extends State<_NutritionistDangerZone>
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              AppLocalizations.of(context)!.permanentActionWarning,
+                              AppLocalizations.of(context)!
+                                  .permanentActionWarning,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: Colors.red.shade700,
                                 height: 1.4,

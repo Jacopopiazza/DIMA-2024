@@ -23,7 +23,7 @@ void main() {
       test('returns same instance', () {
         final instance1 = ChatService.instance;
         final instance2 = ChatService.instance;
-        
+
         expect(instance1, same(instance2));
       });
     });
@@ -48,7 +48,7 @@ void main() {
       test('multiple calls to messageStream return consistent type', () {
         final stream1 = chatService.messageStream;
         final stream2 = chatService.messageStream;
-        
+
         expect(stream1.runtimeType, equals(stream2.runtimeType));
       });
     });
@@ -57,14 +57,14 @@ void main() {
       test('stopListening can be called multiple times safely', () async {
         await chatService.stopListening();
         await chatService.stopListening();
-        
+
         expect(chatService.isListening, false);
       });
 
       test('dispose can be called multiple times safely', () {
         chatService.dispose();
         chatService.dispose();
-        
+
         expect(true, isTrue); // Test passes if no exception is thrown
       });
 

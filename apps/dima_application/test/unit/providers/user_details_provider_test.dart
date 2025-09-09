@@ -108,7 +108,8 @@ void main() {
         overrides: [
           isarProvider.overrideWithValue(testIsar),
           userDetailsServiceProvider.overrideWith((ref) async => mockService),
-          userIdProvider.overrideWith((ref) => MockAuthService.getCurrentUserId()),
+          userIdProvider
+              .overrideWith((ref) => MockAuthService.getCurrentUserId()),
         ],
       );
     });
@@ -201,7 +202,7 @@ void main() {
 
         final notifier = container.read(userDetailsProvider.notifier);
         await notifier.loadUserDetails('user-123');
-        
+
         final state = container.read(userDetailsProvider);
         expect(state.hasError, true);
         expect(state.error, isA<Exception>());
@@ -280,10 +281,10 @@ void main() {
             userIdProvider.overrideWith((ref) async => null), // No user ID
           ],
         );
-        
+
         // Wait for initialization to complete with null user
         await Future.delayed(Duration(milliseconds: 100));
-        
+
         final notifier = freshContainer.read(userDetailsProvider.notifier);
         final updatedDetails = UserDetails(
           userId: 'user-123',
@@ -299,7 +300,7 @@ void main() {
         final result = await notifier.updateUserDetails(updatedDetails);
 
         expect(result, false);
-        
+
         freshContainer.dispose();
       });
 
@@ -448,7 +449,8 @@ void main() {
       test('sign out handles service errors', () async {
         mockService.shouldThrowError = true;
 
-        expect(() async => await notifier.signOut('user-123'), throwsA(isA<Exception>()));
+        expect(() async => await notifier.signOut('user-123'),
+            throwsA(isA<Exception>()));
       });
     });
 

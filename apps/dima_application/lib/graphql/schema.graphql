@@ -431,7 +431,10 @@ input MealPlanResponseInput {
 
 input ModifyAssignedMealPlanInput {
   dailyPlan: DailyPlanDataInput
+  #  Allow editing of all meal plan properties including ingredients and macronutrients
+  ingredients: [IngredientInput!]
   planName: String
+  totalMacros: MacrosInput
 }
 
 input PlanRequestPreferencesInput {

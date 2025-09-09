@@ -211,9 +211,7 @@ class _SignUpViewState extends State<SignUpView> {
                                   : const Icon(Icons.person_add_alt_1_rounded,
                                       size: 20),
                               label: Text(
-                                _isLoading
-                                    ? l10n.loading
-                                    : l10n.signUp,
+                                _isLoading ? l10n.loading : l10n.signUp,
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.onPrimary,

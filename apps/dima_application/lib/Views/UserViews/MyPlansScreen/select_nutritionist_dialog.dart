@@ -49,7 +49,9 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorLoadingNutritionists + e.toString()),
+            content: Text(
+                AppLocalizations.of(context)!.errorLoadingNutritionists +
+                    e.toString()),
             backgroundColor: Colors.red,
           ),
         );
@@ -62,7 +64,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.pleaseSelectNutritionist),
+            content:
+                Text(AppLocalizations.of(context)!.pleaseSelectNutritionist),
             backgroundColor: Colors.orange,
           ),
         );
@@ -79,7 +82,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.nutritionistNotAvailable),
+            content:
+                Text(AppLocalizations.of(context)!.nutritionistNotAvailable),
             backgroundColor: Colors.red,
           ),
         );
@@ -104,7 +108,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
           Navigator.of(context).pop(true);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context)!.validationRequestSent),
+              content:
+                  Text(AppLocalizations.of(context)!.validationRequestSent),
               backgroundColor: Colors.green,
               duration: const Duration(seconds: 2),
             ),
@@ -112,7 +117,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context)!.failedToSendValidationRequest),
+              content: Text(
+                  AppLocalizations.of(context)!.failedToSendValidationRequest),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 3),
             ),
@@ -123,7 +129,9 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorSendingValidationRequest + e.toString()),
+            content: Text(
+                AppLocalizations.of(context)!.errorSendingValidationRequest +
+                    e.toString()),
             backgroundColor: Colors.red,
           ),
         );
@@ -265,7 +273,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.w600,
                         color: isUnavailable
-                            ? colorScheme.onSurfaceVariant.withValues(alpha: 0.6)
+                            ? colorScheme.onSurfaceVariant
+                                .withValues(alpha: 0.6)
                             : isSelected
                                 ? colorScheme.primary
                                 : colorScheme.onSurface,
@@ -280,7 +289,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                         nutritionist.specialization!,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: isUnavailable
-                              ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
+                              ? colorScheme.onSurfaceVariant
+                                  .withValues(alpha: 0.5)
                               : colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w500,
                         ),
@@ -361,7 +371,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppLocalizations.of(context)!.selectNutritionistToReview(widget.planName),
+              AppLocalizations.of(context)!
+                  .selectNutritionistToReview(widget.planName),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),

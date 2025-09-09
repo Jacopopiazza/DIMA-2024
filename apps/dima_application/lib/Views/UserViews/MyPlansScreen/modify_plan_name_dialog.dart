@@ -79,7 +79,8 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.failedToUpdatePlanName + e.toString()),
+            content: Text(AppLocalizations.of(context)!.failedToUpdatePlanName +
+                e.toString()),
             backgroundColor: Colors.red,
           ),
         );
@@ -117,7 +118,8 @@ class _ModifyPlanNameDialogState extends State<ModifyPlanNameDialog> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                _validateInput(_controller.text.trim()) ?? AppLocalizations.of(context)!.validName,
+                _validateInput(_controller.text.trim()) ??
+                    AppLocalizations.of(context)!.validName,
                 style: TextStyle(
                   color: _validateInput(_controller.text.trim()) != null
                       ? Colors.red

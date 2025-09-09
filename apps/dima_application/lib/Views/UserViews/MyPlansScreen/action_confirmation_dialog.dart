@@ -47,7 +47,8 @@ class _ActionConfirmationDialogState extends State<ActionConfirmationDialog> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.actionFailed + e.toString()),
+            content:
+                Text(AppLocalizations.of(context)!.actionFailed + e.toString()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             shape:

@@ -154,7 +154,9 @@ class _GlobalChatNotificationHandlerState
       );
 
       // Mark chat as read
-      ref.read(chatNotificationProvider.notifier).markChatAsRead(message.chatId);
+      ref
+          .read(chatNotificationProvider.notifier)
+          .markChatAsRead(message.chatId);
     } catch (e) {
       debugPrint(
           '[GlobalChatNotificationHandler] Error opening chat from notification: $e');

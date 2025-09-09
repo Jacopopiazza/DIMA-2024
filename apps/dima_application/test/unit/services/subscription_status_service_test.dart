@@ -80,7 +80,7 @@ void main() {
       test('validates subscription status enum values', () {
         // Test all valid subscription status values
         const statuses = SubscriptionStatusEnum.values;
-        
+
         for (final status in statuses) {
           expect(status.name, isNotEmpty);
           expect(status, isA<SubscriptionStatusEnum>());
@@ -138,10 +138,7 @@ void main() {
       });
 
       test('validates required fields', () {
-        final validData = {
-          'userId': 'test-user',
-          'subscriptionStatus': 'PRO'
-        };
+        final validData = {'userId': 'test-user', 'subscriptionStatus': 'PRO'};
 
         expect(validData.containsKey('userId'), true);
         expect(validData.containsKey('subscriptionStatus'), true);
@@ -200,7 +197,7 @@ void main() {
       test('complete subscription workflow', () async {
         // Test a complete workflow: get status -> update status -> verify update
         expect(service, isNotNull);
-        
+
         // In a real integration test, you would:
         // 1. Get current subscription status
         // 2. Update to a different status
@@ -212,7 +209,7 @@ void main() {
         // Test upgrading from FREE to PRO
         const oldStatus = SubscriptionStatusEnum.FREE;
         const newStatus = SubscriptionStatusEnum.PRO;
-        
+
         expect(oldStatus, SubscriptionStatusEnum.FREE);
         expect(newStatus, SubscriptionStatusEnum.PRO);
         expect(oldStatus != newStatus, true);
@@ -222,7 +219,7 @@ void main() {
         // Test downgrading from PRO to FREE
         const oldStatus = SubscriptionStatusEnum.PRO;
         const newStatus = SubscriptionStatusEnum.FREE;
-        
+
         expect(oldStatus, SubscriptionStatusEnum.PRO);
         expect(newStatus, SubscriptionStatusEnum.FREE);
         expect(oldStatus != newStatus, true);
@@ -232,7 +229,7 @@ void main() {
         // Test updating to the same status
         const currentStatus = SubscriptionStatusEnum.PRO;
         const newStatus = SubscriptionStatusEnum.PRO;
-        
+
         expect(currentStatus, newStatus);
         // In a real test, verify that updating to the same status succeeds
       });
@@ -253,10 +250,7 @@ void main() {
 
       test('handles large user IDs', () {
         final longUserId = 'a' * 1000; // Very long user ID
-        final testData = {
-          'userId': longUserId,
-          'subscriptionStatus': 'PRO'
-        };
+        final testData = {'userId': longUserId, 'subscriptionStatus': 'PRO'};
 
         expect(testData['userId']!.length, 1000);
         expect(testData['subscriptionStatus'], 'PRO');

@@ -33,7 +33,9 @@ class _UserHomeScreenState extends ConsumerState<UserHomeScreen> {
   // Method to get widgets with navigation callbacks
   List<Widget> _getWidgetOptions() {
     return [
-      TodayPageAdaptive(onNavigateToMealPlans: () => _onItemTapped(1)), // Index 0 (adaptive: phone vs tablet)
+      TodayPageAdaptive(
+          onNavigateToMealPlans: () =>
+              _onItemTapped(1)), // Index 0 (adaptive: phone vs tablet)
       const MyPlansPageAdaptive(), // Index 1 (adaptive: phone vs tablet)
       const SettingsScreenRiverpod(), // Index 2 - Using the new Riverpod version
     ];

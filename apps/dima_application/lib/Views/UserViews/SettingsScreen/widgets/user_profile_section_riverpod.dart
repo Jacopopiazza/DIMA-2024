@@ -150,7 +150,8 @@ class _UserProfileSectionRiverpodState
                         color: Colors.white, size: 16),
                   ),
                   const SizedBox(width: 12),
-                  Text(AppLocalizations.of(context)!.profileUpdatedSuccessfully),
+                  Text(
+                      AppLocalizations.of(context)!.profileUpdatedSuccessfully),
                 ],
               ),
               backgroundColor: Colors.green.shade600,
@@ -201,7 +202,8 @@ class _UserProfileSectionRiverpodState
                       color: Colors.white, size: 16),
                 ),
                 const SizedBox(width: 12),
-                Text('${AppLocalizations.of(context)!.errorUpdatingProfile}: $e'),
+                Text(
+                    '${AppLocalizations.of(context)!.errorUpdatingProfile}: $e'),
               ],
             ),
             backgroundColor: Colors.red.shade600,
@@ -325,7 +327,7 @@ class _UserProfileSectionRiverpodState
                     colorScheme: colorScheme,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Family Name
                   _buildTextField(
                     key: const ValueKey('family_name_field'),
@@ -372,9 +374,15 @@ class _UserProfileSectionRiverpodState
                     label: AppLocalizations.of(context)!.gender,
                     icon: Icons.wc_rounded,
                     items: [
-                      DropdownMenuItem(value: 'male', child: Text(AppLocalizations.of(context)!.male)),
-                      DropdownMenuItem(value: 'female', child: Text(AppLocalizations.of(context)!.female)),
-                      DropdownMenuItem(value: 'other', child: Text(AppLocalizations.of(context)!.other)),
+                      DropdownMenuItem(
+                          value: 'male',
+                          child: Text(AppLocalizations.of(context)!.male)),
+                      DropdownMenuItem(
+                          value: 'female',
+                          child: Text(AppLocalizations.of(context)!.female)),
+                      DropdownMenuItem(
+                          value: 'other',
+                          child: Text(AppLocalizations.of(context)!.other)),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -448,7 +456,9 @@ class _UserProfileSectionRiverpodState
                               )
                             : const Icon(Icons.save_rounded, size: 20),
                         label: Text(
-                          _isLoading ? AppLocalizations.of(context)!.saving : AppLocalizations.of(context)!.saveChanges,
+                          _isLoading
+                              ? AppLocalizations.of(context)!.saving
+                              : AppLocalizations.of(context)!.saveChanges,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: _isDirty

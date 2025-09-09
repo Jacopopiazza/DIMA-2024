@@ -77,7 +77,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorUploadingImage(e.toString())),
+            content: Text(AppLocalizations.of(context)!
+                .errorUploadingImage(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -113,7 +114,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorRemovingImage(e.toString())),
+            content: Text(
+                AppLocalizations.of(context)!.errorRemovingImage(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -181,8 +183,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                           _buildImageSourceOption(
                             context: context,
                             icon: Icons.photo_library,
-                            title: AppLocalizations.of(context)!.chooseFromGallery,
-                            subtitle: AppLocalizations.of(context)!.selectFromExistingPhotos,
+                            title:
+                                AppLocalizations.of(context)!.chooseFromGallery,
+                            subtitle: AppLocalizations.of(context)!
+                                .selectFromExistingPhotos,
                             onTap: () async {
                               final image = await _imageUploadService.pickImage(
                                   source: ImageSource.gallery);
@@ -199,7 +203,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                               context: context,
                               icon: Icons.delete_outline,
                               title: AppLocalizations.of(context)!.removePhoto,
-                              subtitle: AppLocalizations.of(context)!.deleteCurrentProfilePicture,
+                              subtitle: AppLocalizations.of(context)!
+                                  .deleteCurrentProfilePicture,
                               isDestructive: true,
                               onTap: () {
                                 if (context.mounted) {

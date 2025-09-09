@@ -70,7 +70,8 @@ class _ValidatePlansPageState extends ConsumerState<ValidatePlansPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = AppLocalizations.of(context)!.errorLoadingAssignedPlans(e.toString());
+          _errorMessage = AppLocalizations.of(context)!
+              .errorLoadingAssignedPlans(e.toString());
           _isLoading = false;
         });
       }

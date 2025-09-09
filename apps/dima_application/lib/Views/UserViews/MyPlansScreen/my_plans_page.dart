@@ -148,7 +148,9 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 ? detailMessage
                 : localizations.newMealPlanAvailable)
             : localizations.mealPlanGenerationFailed +
-                (detailMessage.isNotEmpty ? detailMessage : localizations.unknownError);
+                (detailMessage.isNotEmpty
+                    ? detailMessage
+                    : localizations.unknownError);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -197,65 +199,65 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
           widget.showBackButton
               ? SafeArea(
                   child: plansAsync.when(
-            data: (plans) {
-              final activePlanId = ref.watch(activeMealPlanIdProvider);
-              String? resolvedActivePlanId = activePlanId;
-              if (resolvedActivePlanId == null && plans.isNotEmpty) {
-                final activeByStatus = plans
-                    .where((p) => p.status == PlanStatus.ACTIVE)
-                    .firstOrNull;
-                resolvedActivePlanId = activeByStatus?.mealPlanId;
-              }
+                  data: (plans) {
+                    final activePlanId = ref.watch(activeMealPlanIdProvider);
+                    String? resolvedActivePlanId = activePlanId;
+                    if (resolvedActivePlanId == null && plans.isNotEmpty) {
+                      final activeByStatus = plans
+                          .where((p) => p.status == PlanStatus.ACTIVE)
+                          .firstOrNull;
+                      resolvedActivePlanId = activeByStatus?.mealPlanId;
+                    }
 
-              // Avvolgiamo TUTTO con RefreshIndicator, anche l'empty state
-              return RefreshIndicator(
-                onRefresh: _refreshPlans,
-                backgroundColor: colorScheme.surface,
-                color: colorScheme.primary,
-                child: plans.isEmpty
-                    ? _buildEmptyState(context, colorScheme)
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        itemCount: plans.length,
-                        itemBuilder: (context, index) {
-                          final plan = plans[index];
-                          final isActive =
-                              plan.mealPlanId == resolvedActivePlanId;
-                          return _buildMealPlanCard(
-                              context, plan, isActive, colorScheme, theme);
-                        },
-                      ),
-              );
-            },
-            loading: () => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: CircularProgressIndicator(
+                    // Avvolgiamo TUTTO con RefreshIndicator, anche l'empty state
+                    return RefreshIndicator(
+                      onRefresh: _refreshPlans,
+                      backgroundColor: colorScheme.surface,
                       color: colorScheme.primary,
-                      strokeWidth: 3,
+                      child: plans.isEmpty
+                          ? _buildEmptyState(context, colorScheme)
+                          : ListView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              itemCount: plans.length,
+                              itemBuilder: (context, index) {
+                                final plan = plans[index];
+                                final isActive =
+                                    plan.mealPlanId == resolvedActivePlanId;
+                                return _buildMealPlanCard(context, plan,
+                                    isActive, colorScheme, theme);
+                              },
+                            ),
+                    );
+                  },
+                  loading: () => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primary.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: CircularProgressIndicator(
+                            color: colorScheme.primary,
+                            strokeWidth: 3,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          AppLocalizations.of(context)!.loadingYourMealPlans,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  Text(
-                    AppLocalizations.of(context)!.loadingYourMealPlans,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            error: (e, st) =>
-                _buildErrorState(context, e.toString(), colorScheme, theme),
-          ))
+                  error: (e, st) => _buildErrorState(
+                      context, e.toString(), colorScheme, theme),
+                ))
               : plansAsync.when(
                   data: (plans) {
                     final activePlanId = ref.watch(activeMealPlanIdProvider);
@@ -282,8 +284,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                                 final plan = plans[index];
                                 final isActive =
                                     plan.mealPlanId == resolvedActivePlanId;
-                                return _buildMealPlanCard(
-                                    context, plan, isActive, colorScheme, theme);
+                                return _buildMealPlanCard(context, plan,
+                                    isActive, colorScheme, theme);
                               }),
                     );
                   },
@@ -293,8 +295,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                       child: CircularProgressIndicator(),
                     ),
                   ),
-                  error: (e, st) =>
-                      _buildErrorState(context, e.toString(), colorScheme, theme),
+                  error: (e, st) => _buildErrorState(
+                      context, e.toString(), colorScheme, theme),
                 ),
           // Floating back button positioned on top
           if (widget.showBackButton)
@@ -485,7 +487,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                       const SizedBox(height: 12),
                       Text(
                         isNetworkError
-                            ? AppLocalizations.of(context)!.unableToLoadPlansWithConnection
+                            ? AppLocalizations.of(context)!
+                                .unableToLoadPlansWithConnection
                             : AppLocalizations.of(context)!.unableToLoadPlans,
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -612,7 +615,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 children: [
                   Expanded(
                     child: Text(
-                      plan.planName ?? AppLocalizations.of(context)!.unnamedPlan,
+                      plan.planName ??
+                          AppLocalizations.of(context)!.unnamedPlan,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: isGenerating
@@ -665,13 +669,14 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                   ),
                 ],
               ),
-              // Show error message for failed plans  
+              // Show error message for failed plans
               if (isFailed && plan.errorDetails != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: Colors.red.shade50,
                       borderRadius: BorderRadius.circular(8),
@@ -813,36 +818,37 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     );
   }
 
-  /// Validation status configuration  
-  Map<MealPlanValidationStatus, Map<String, dynamic>>
-      _getValidationConfig(AppLocalizations localizations) => {
-    MealPlanValidationStatus.VALIDATED: {
-      'icon': Icons.verified_rounded,
-      'label': localizations.validated,
-      'color': Colors.green,
-    },
-    MealPlanValidationStatus.PENDING_REVIEW: {
-      'icon': Icons.pending_rounded,
-      'label': localizations.pendingValidation,
-      'color': Colors.orange,
-    },
-    MealPlanValidationStatus.REJECTED: {
-      'icon': Icons.cancel_rounded,
-      'label': localizations.rejected,
-      'color': Colors.red,
-    },
-    MealPlanValidationStatus.NOT_VALIDATED: {
-      'icon': Icons.help_outline_rounded,
-      'label': localizations.notValidated,
-      'color': null, // Use theme colors
-    },
-  };
+  /// Validation status configuration
+  Map<MealPlanValidationStatus, Map<String, dynamic>> _getValidationConfig(
+          AppLocalizations localizations) =>
+      {
+        MealPlanValidationStatus.VALIDATED: {
+          'icon': Icons.verified_rounded,
+          'label': localizations.validated,
+          'color': Colors.green,
+        },
+        MealPlanValidationStatus.PENDING_REVIEW: {
+          'icon': Icons.pending_rounded,
+          'label': localizations.pendingValidation,
+          'color': Colors.orange,
+        },
+        MealPlanValidationStatus.REJECTED: {
+          'icon': Icons.cancel_rounded,
+          'label': localizations.rejected,
+          'color': Colors.red,
+        },
+        MealPlanValidationStatus.NOT_VALIDATED: {
+          'icon': Icons.help_outline_rounded,
+          'label': localizations.notValidated,
+          'color': null, // Use theme colors
+        },
+      };
 
   Widget _buildValidationChip(MealPlanValidationStatus? validationStatus,
       ColorScheme colorScheme, ThemeData theme) {
     final localizations = AppLocalizations.of(context)!;
     final validationConfig = _getValidationConfig(localizations);
-    
+
     if (validationStatus == null ||
         !validationConfig.containsKey(validationStatus)) {
       return const SizedBox.shrink();
@@ -909,35 +915,37 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
   }
 
   /// Status configuration for different plan states
-  Map<PlanStatus, Map<String, dynamic>> _getStatusConfig(AppLocalizations localizations) => {
-    PlanStatus.IN_PROGRESS: {
-      'chipIcon': Icons.autorenew_rounded,
-      'chipLabel': localizations.generating,
-      'chipBg': Colors.amber,
-      'iconContainerBg': Colors.amber,
-      'cardIcon': Icons.autorenew_rounded,
-    },
-    PlanStatus.PENDING: {
-      'chipIcon': Icons.autorenew_rounded,
-      'chipLabel': localizations.generating,
-      'chipBg': Colors.amber,
-      'iconContainerBg': Colors.amber,
-      'cardIcon': Icons.schedule_rounded,
-    },
-    PlanStatus.FAILED: {
-      'chipIcon': Icons.error_rounded,
-      'chipLabel': localizations.failed,
-      'chipBg': Colors.red,
-      'iconContainerBg': Colors.red,
-      'cardIcon': Icons.error_rounded,
-    },
-  };
+  Map<PlanStatus, Map<String, dynamic>> _getStatusConfig(
+          AppLocalizations localizations) =>
+      {
+        PlanStatus.IN_PROGRESS: {
+          'chipIcon': Icons.autorenew_rounded,
+          'chipLabel': localizations.generating,
+          'chipBg': Colors.amber,
+          'iconContainerBg': Colors.amber,
+          'cardIcon': Icons.autorenew_rounded,
+        },
+        PlanStatus.PENDING: {
+          'chipIcon': Icons.autorenew_rounded,
+          'chipLabel': localizations.generating,
+          'chipBg': Colors.amber,
+          'iconContainerBg': Colors.amber,
+          'cardIcon': Icons.schedule_rounded,
+        },
+        PlanStatus.FAILED: {
+          'chipIcon': Icons.error_rounded,
+          'chipLabel': localizations.failed,
+          'chipBg': Colors.red,
+          'iconContainerBg': Colors.red,
+          'cardIcon': Icons.error_rounded,
+        },
+      };
 
   Widget _buildStatusChip(
       PlanStatus? status, ColorScheme colorScheme, ThemeData theme) {
     final localizations = AppLocalizations.of(context)!;
     final statusConfig = _getStatusConfig(localizations);
-    
+
     if (status == null || !statusConfig.containsKey(status)) {
       return const SizedBox.shrink();
     }
@@ -1024,7 +1032,7 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
     try {
       // Parse the outer JSON
       final outerJson = jsonDecode(errorDetails);
-      
+
       // Get the errorMessage field
       final errorMessage = outerJson['errorMessage'];
       if (errorMessage == null) {
@@ -1033,16 +1041,16 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
 
       // Parse the inner JSON (errorMessage is a JSON string)
       final innerJson = jsonDecode(errorMessage);
-      
+
       // Extract the actual error message
       final message = innerJson['error']?['message'];
       if (message != null && message is String && message.isNotEmpty) {
         // Debug: Print the actual message to console (temporary)
         print('DEBUG: Error message = "$message"');
-        
+
         // Check for overloaded model and provide user-friendly message
         final lowerMessage = message.toLowerCase();
-        if (lowerMessage.contains('overloaded') || 
+        if (lowerMessage.contains('overloaded') ||
             lowerMessage.contains('overload') ||
             lowerMessage.contains('too many requests') ||
             lowerMessage.contains('rate limit')) {
@@ -1083,7 +1091,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
         builder: (BuildContext dialogContext) {
           return ActionConfirmationDialog(
             title: AppLocalizations.of(context)!.setActivePlan,
-            content: AppLocalizations.of(context)!.makeActivePlanQuestion(plan.planName ?? AppLocalizations.of(context)!.unnamedPlan),
+            content: AppLocalizations.of(context)!.makeActivePlanQuestion(
+                plan.planName ?? AppLocalizations.of(context)!.unnamedPlan),
             actionLabel: AppLocalizations.of(context)!.setActive,
             actionColor: Theme.of(context).colorScheme.primary,
             actionIcon: Icons.radio_button_checked_rounded,
@@ -1097,7 +1106,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                   SnackBar(
                     content: Text(success
                         ? AppLocalizations.of(context)!.activeMealPlanUpdated
-                        : AppLocalizations.of(context)!.failedToSetActiveMealPlan),
+                        : AppLocalizations.of(context)!
+                            .failedToSetActiveMealPlan),
                     backgroundColor:
                         success ? Colors.green.shade600 : Colors.red.shade600,
                     behavior: SnackBarBehavior.floating,
@@ -1126,7 +1136,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
           final localizations = AppLocalizations.of(context)!;
           return ActionConfirmationDialog(
             title: localizations.deleteMealPlan,
-            content: localizations.deletePlanConfirmation(plan.planName ?? localizations.unnamedPlan),
+            content: localizations.deletePlanConfirmation(
+                plan.planName ?? localizations.unnamedPlan),
             actionLabel: localizations.delete,
             actionColor: Colors.red,
             actionIcon: Icons.delete_rounded,
@@ -1138,7 +1149,8 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
 
               if (mounted) {
                 final currentContext = context;
-                final currentLocalizations = AppLocalizations.of(currentContext)!;
+                final currentLocalizations =
+                    AppLocalizations.of(currentContext)!;
                 ScaffoldMessenger.of(currentContext).showSnackBar(
                   SnackBar(
                     content: Text(success
@@ -1287,7 +1299,9 @@ class _MyPlansPageState extends ConsumerState<MyPlansPage>
                 context,
                 Icons.person_add_rounded,
                 AppLocalizations.of(context)!.requestValidation,
-                isPro ? AppLocalizations.of(context)!.getNutritionistApproval : AppLocalizations.of(context)!.proFeature,
+                isPro
+                    ? AppLocalizations.of(context)!.getNutritionistApproval
+                    : AppLocalizations.of(context)!.proFeature,
                 Colors.orange,
                 () async {
                   if (!isPro) return;

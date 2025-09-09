@@ -18,7 +18,7 @@ import '../../test_setup.dart';
 class _FakeMealPlansService extends MealPlansService {
   // Keep track of which meal plan IDs the test is using
   static final Set<String> _testPlanIds = {'plan-123', 'plan-xyz'};
-  
+
   @override
   Future<LightMealPlanList> listMyMealPlans({int limit = 10}) async {
     // Return empty list most of the time to avoid interference
@@ -286,13 +286,13 @@ void main() {
 
         // Toggle breakfast to complete
         await notifier.toggleMealCompletion(MealNameEnum.BREAKFAST, planId);
-        
+
         // Check if dailyCompletion exists before accessing it
         if (notifier.state.dailyCompletion != null) {
           expect(notifier.state.dailyCompletion!.completedMealNames,
               contains(MealNameEnum.BREAKFAST));
         }
-        
+
         // Verify calories were updated (this should work even if state was refreshed)
         expect(notifier.state.consumedMacros.calories, greaterThanOrEqualTo(0));
       });

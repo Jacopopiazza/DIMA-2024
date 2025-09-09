@@ -104,7 +104,7 @@ class _ModernPasswordChangeFormRiverpodState
     final fair = AppLocalizations.of(context)!.fair;
     final good = AppLocalizations.of(context)!.good;
     final strong = AppLocalizations.of(context)!.strong;
-    
+
     if (strength == weak) return Colors.red;
     if (strength == fair) return Colors.orange;
     if (strength == good) return Colors.blue;
@@ -237,7 +237,8 @@ class _ModernPasswordChangeFormRiverpodState
                           ),
                         ),
                         Text(
-                          AppLocalizations.of(context)!.updateYourAccountPassword,
+                          AppLocalizations.of(context)!
+                              .updateYourAccountPassword,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -275,7 +276,8 @@ class _ModernPasswordChangeFormRiverpodState
                           controller: _oldPasswordController,
                           obscureText: _obscureOldPassword,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.currentPassword,
+                            labelText:
+                                AppLocalizations.of(context)!.currentPassword,
                             prefixIcon: const Icon(Icons.lock_outline_rounded,
                                 size: 20),
                             suffixIcon: IconButton(
@@ -299,7 +301,8 @@ class _ModernPasswordChangeFormRiverpodState
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!.pleaseEnterCurrentPassword;
+                              return AppLocalizations.of(context)!
+                                  .pleaseEnterCurrentPassword;
                             }
                             return null;
                           },
@@ -312,7 +315,8 @@ class _ModernPasswordChangeFormRiverpodState
                           obscureText: _obscureNewPassword,
                           onChanged: (value) => setState(() {}),
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.newPassword,
+                            labelText:
+                                AppLocalizations.of(context)!.newPassword,
                             prefixIcon:
                                 const Icon(Icons.lock_reset_rounded, size: 20),
                             suffixIcon: IconButton(
@@ -336,13 +340,16 @@ class _ModernPasswordChangeFormRiverpodState
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!.pleaseEnterNewPassword;
+                              return AppLocalizations.of(context)!
+                                  .pleaseEnterNewPassword;
                             }
                             if (value.length < 8) {
-                              return AppLocalizations.of(context)!.passwordMustBeAtLeast8Characters;
+                              return AppLocalizations.of(context)!
+                                  .passwordMustBeAtLeast8Characters;
                             }
                             if (!_validatePassword(value)) {
-                              return AppLocalizations.of(context)!.passwordMustContainUppercase;
+                              return AppLocalizations.of(context)!
+                                  .passwordMustContainUppercase;
                             }
                             return null;
                           },
@@ -380,7 +387,8 @@ class _ModernPasswordChangeFormRiverpodState
                           controller: _confirmPasswordController,
                           obscureText: _obscureConfirmPassword,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.confirmNewPassword,
+                            labelText: AppLocalizations.of(context)!
+                                .confirmNewPassword,
                             prefixIcon: const Icon(Icons.lock_outline_rounded,
                                 size: 20),
                             suffixIcon: IconButton(
@@ -405,10 +413,12 @@ class _ModernPasswordChangeFormRiverpodState
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)!.pleaseConfirmNewPassword;
+                              return AppLocalizations.of(context)!
+                                  .pleaseConfirmNewPassword;
                             }
                             if (value != _newPasswordController.text) {
-                              return AppLocalizations.of(context)!.passwordsDoNotMatch;
+                              return AppLocalizations.of(context)!
+                                  .passwordsDoNotMatch;
                             }
                             return null;
                           },
@@ -429,14 +439,17 @@ class _ModernPasswordChangeFormRiverpodState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                AppLocalizations.of(context)!.passwordRequirements,
+                                AppLocalizations.of(context)!
+                                    .passwordRequirements,
                                 style: theme.textTheme.labelMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.primary,
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              _buildRequirement(AppLocalizations.of(context)!.atLeast8Characters,
+                              _buildRequirement(
+                                  AppLocalizations.of(context)!
+                                      .atLeast8Characters,
                                   _newPasswordController.text.length >= 8),
                               _buildRequirement(
                                   AppLocalizations.of(context)!.uppercaseLetter,
@@ -472,7 +485,8 @@ class _ModernPasswordChangeFormRiverpodState
                           label: Text(
                             _isLoading
                                 ? AppLocalizations.of(context)!.changingPassword
-                                : AppLocalizations.of(context)!.changePasswordButton,
+                                : AppLocalizations.of(context)!
+                                    .changePasswordButton,
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSecondary,

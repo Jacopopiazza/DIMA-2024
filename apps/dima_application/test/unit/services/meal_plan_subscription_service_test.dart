@@ -25,7 +25,7 @@ void main() {
     group('stopListening', () {
       test('cleans up resources', () async {
         await service.stopListening();
-        
+
         // Should not throw when called again
         await service.stopListening();
         expect(true, isTrue); // Test passes if no exception is thrown
@@ -35,7 +35,7 @@ void main() {
     group('dispose', () {
       test('calls stopListening and cleans up', () {
         service.dispose();
-        
+
         // Should not throw when called again
         service.dispose();
         expect(true, isTrue); // Test passes if no exception is thrown
@@ -52,7 +52,7 @@ void main() {
       test('multiple calls to notificationStream return consistent result', () {
         final stream1 = service.notificationStream;
         final stream2 = service.notificationStream;
-        
+
         expect(stream1.runtimeType, equals(stream2.runtimeType));
       });
     });
@@ -61,10 +61,10 @@ void main() {
       test('can create and dispose service multiple times', () {
         final service1 = MealPlanSubscriptionService();
         service1.dispose();
-        
+
         final service2 = MealPlanSubscriptionService();
         service2.dispose();
-        
+
         expect(true, isTrue); // Test passes if no exception is thrown
       });
 
@@ -72,7 +72,7 @@ void main() {
         final service = MealPlanSubscriptionService();
         await service.stopListening();
         service.dispose();
-        
+
         expect(true, isTrue); // Test passes if no exception is thrown
       });
     });

@@ -382,7 +382,9 @@ class _NutritionistReadMealPlanPageState
   Future<void> _validateMealPlan() async {
     final confirmed = await _showConfirmationDialog(
       AppLocalizations.of(context)!.validateMealPlan,
-      AppLocalizations.of(context)!.validateMealPlanConfirm(widget.mealPlan.planName ?? AppLocalizations.of(context)!.unnamedPlan),
+      AppLocalizations.of(context)!.validateMealPlanConfirm(
+          widget.mealPlan.planName ??
+              AppLocalizations.of(context)!.unnamedPlan),
       AppLocalizations.of(context)!.validate,
       Colors.green,
     );
@@ -399,7 +401,9 @@ class _NutritionistReadMealPlanPageState
 
       if (mounted) {
         if (success) {
-          _showSnackBar(AppLocalizations.of(context)!.mealPlanValidatedSuccessfully, Colors.green);
+          _showSnackBar(
+              AppLocalizations.of(context)!.mealPlanValidatedSuccessfully,
+              Colors.green);
           if (widget.onOperationComplete != null) {
             widget.onOperationComplete!();
           } else {
@@ -407,7 +411,8 @@ class _NutritionistReadMealPlanPageState
                 .pop(true); // Return true to indicate changes were made
           }
         } else {
-          _showSnackBar(AppLocalizations.of(context)!.failedToValidateMealPlan, Colors.red);
+          _showSnackBar(AppLocalizations.of(context)!.failedToValidateMealPlan,
+              Colors.red);
         }
       }
     } catch (e) {
@@ -420,7 +425,9 @@ class _NutritionistReadMealPlanPageState
   Future<void> _rejectMealPlan() async {
     final confirmed = await _showConfirmationDialog(
       AppLocalizations.of(context)!.rejectMealPlan,
-      AppLocalizations.of(context)!.rejectMealPlanConfirm(widget.mealPlan.planName ?? AppLocalizations.of(context)!.unnamedPlan),
+      AppLocalizations.of(context)!.rejectMealPlanConfirm(
+          widget.mealPlan.planName ??
+              AppLocalizations.of(context)!.unnamedPlan),
       AppLocalizations.of(context)!.reject,
       Colors.red,
     );
@@ -437,7 +444,8 @@ class _NutritionistReadMealPlanPageState
 
       if (mounted) {
         if (success) {
-          _showSnackBar(AppLocalizations.of(context)!.mealPlanRejected, Colors.orange);
+          _showSnackBar(
+              AppLocalizations.of(context)!.mealPlanRejected, Colors.orange);
           if (widget.onOperationComplete != null) {
             widget.onOperationComplete!();
           } else {
@@ -445,7 +453,8 @@ class _NutritionistReadMealPlanPageState
                 .pop(true); // Return true to indicate changes were made
           }
         } else {
-          _showSnackBar(AppLocalizations.of(context)!.failedToRejectMealPlan, Colors.red);
+          _showSnackBar(
+              AppLocalizations.of(context)!.failedToRejectMealPlan, Colors.red);
         }
       }
     } catch (e) {
@@ -522,7 +531,8 @@ class _NutritionistReadMealPlanPageState
 
       if (mounted) {
         if (success) {
-          _showSnackBar(AppLocalizations.of(context)!.mealPlanSavedSuccessfully, Colors.green);
+          _showSnackBar(AppLocalizations.of(context)!.mealPlanSavedSuccessfully,
+              Colors.green);
           setState(() {
             _isEditing = false;
           });
@@ -533,7 +543,8 @@ class _NutritionistReadMealPlanPageState
                 .pop(true); // Return true to indicate changes were made
           }
         } else {
-          _showSnackBar(AppLocalizations.of(context)!.failedToSaveMealPlan, Colors.red);
+          _showSnackBar(
+              AppLocalizations.of(context)!.failedToSaveMealPlan, Colors.red);
         }
       }
     } catch (e) {
@@ -874,13 +885,15 @@ class _NutritionistReadMealPlanPageState
                     )
                   : _clientDetails != null
                       ? Text(
-                          AppLocalizations.of(context)!.healthProfilePreferences,
+                          AppLocalizations.of(context)!
+                              .healthProfilePreferences,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
                         )
                       : Text(
-                          AppLocalizations.of(context)!.noClientDetailsAvailable,
+                          AppLocalizations.of(context)!
+                              .noClientDetailsAvailable,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -977,10 +990,10 @@ class _NutritionistReadMealPlanPageState
           AppLocalizations.of(context)!.physicalInformation,
           Icons.fitness_center_rounded,
           [
-            _buildDetailRow(
-                AppLocalizations.of(context)!.height, '${_clientDetails!.heightCm.toStringAsFixed(0)} cm'),
-            _buildDetailRow(
-                AppLocalizations.of(context)!.weight, '${_clientDetails!.weightKg.toStringAsFixed(1)} kg'),
+            _buildDetailRow(AppLocalizations.of(context)!.height,
+                '${_clientDetails!.heightCm.toStringAsFixed(0)} cm'),
+            _buildDetailRow(AppLocalizations.of(context)!.weight,
+                '${_clientDetails!.weightKg.toStringAsFixed(1)} kg'),
             if (bmi != null)
               _buildDetailRow(AppLocalizations.of(context)!.bmi,
                   '${bmi.toStringAsFixed(1)} (${_getLocalizedBMICategory(bmi)})'),
@@ -1000,17 +1013,19 @@ class _NutritionistReadMealPlanPageState
           AppLocalizations.of(context)!.dietaryInformation,
           Icons.restaurant_rounded,
           [
-            _buildDetailRow(AppLocalizations.of(context)!.dailyMealsPreference,
-                AppLocalizations.of(context)!.mealsPerDay(_clientDetails!.dailyMealsPreference)),
             _buildDetailRow(
-                AppLocalizations.of(context)!.allergies,
-                _getLocalizedAllergies(
-                    _clientDetails!.allergies)),
+                AppLocalizations.of(context)!.dailyMealsPreference,
+                AppLocalizations.of(context)!
+                    .mealsPerDay(_clientDetails!.dailyMealsPreference)),
+            _buildDetailRow(AppLocalizations.of(context)!.allergies,
+                _getLocalizedAllergies(_clientDetails!.allergies)),
             if (_clientDetails!.dietaryRestrictions?.isNotEmpty == true)
               _buildDetailRow(
-                  AppLocalizations.of(context)!.dietaryRestrictionsLabel, _clientDetails!.dietaryRestrictions!),
+                  AppLocalizations.of(context)!.dietaryRestrictionsLabel,
+                  _clientDetails!.dietaryRestrictions!),
             if (_clientDetails!.openTextPreferences?.isNotEmpty == true)
-              _buildDetailRow(AppLocalizations.of(context)!.additionalPreferences,
+              _buildDetailRow(
+                  AppLocalizations.of(context)!.additionalPreferences,
                   _clientDetails!.openTextPreferences!),
           ],
         ),
@@ -1027,13 +1042,18 @@ class _NutritionistReadMealPlanPageState
             if (_clientDetails!.createdAt != null)
               _buildDetailRow(
                   AppLocalizations.of(context)!.accountCreated,
-                  DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(
-                      _clientDetails!.createdAt!.getDateTimeInUtc().toLocal())),
+                  DateFormat.yMMMd(Localizations.localeOf(context).toString())
+                      .format(_clientDetails!.createdAt!
+                          .getDateTimeInUtc()
+                          .toLocal())),
             if (_clientDetails!.updatedAt != null)
               _buildDetailRow(
                   AppLocalizations.of(context)!.lastUpdated,
-                  DateFormat.yMMMd(Localizations.localeOf(context).toString()).add_Hm().format(
-                      _clientDetails!.updatedAt!.getDateTimeInUtc().toLocal())),
+                  DateFormat.yMMMd(Localizations.localeOf(context).toString())
+                      .add_Hm()
+                      .format(_clientDetails!.updatedAt!
+                          .getDateTimeInUtc()
+                          .toLocal())),
             if (_clientDetails!.activeMealPlanId != null)
               _buildDetailRow(AppLocalizations.of(context)!.activePlanId,
                   _clientDetails!.activeMealPlanId!.substring(0, 8) + '...'),
@@ -1173,18 +1193,24 @@ class _NutritionistReadMealPlanPageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _buildInfoRow(AppLocalizations.of(context)!.planName,
-                      widget.mealPlan.planName ?? AppLocalizations.of(context)!.unnamedPlan, colorScheme),
                   _buildInfoRow(
-                      AppLocalizations.of(context)!.planIdLabel, widget.mealPlan.mealPlanId, colorScheme),
+                      AppLocalizations.of(context)!.planName,
+                      widget.mealPlan.planName ??
+                          AppLocalizations.of(context)!.unnamedPlan,
+                      colorScheme),
+                  _buildInfoRow(AppLocalizations.of(context)!.planIdLabel,
+                      widget.mealPlan.mealPlanId, colorScheme),
                   if (widget.mealPlan.generatedAt != null)
                     _buildInfoRow(
                       AppLocalizations.of(context)!.generated,
-                      DateFormat.yMMMd(Localizations.localeOf(context).toString()).add_Hm().format(
-                        widget.mealPlan.generatedAt!
-                            .getDateTimeInUtc()
-                            .toLocal(),
-                      ),
+                      DateFormat.yMMMd(
+                              Localizations.localeOf(context).toString())
+                          .add_Hm()
+                          .format(
+                            widget.mealPlan.generatedAt!
+                                .getDateTimeInUtc()
+                                .toLocal(),
+                          ),
                       colorScheme,
                     ),
                   _buildInfoRow(
@@ -1335,7 +1361,8 @@ class _NutritionistReadMealPlanPageState
                     : widget.mealPlan.validationStatus ==
                             MealPlanValidationStatus.PENDING_REVIEW
                         ? AppLocalizations.of(context)!.sevenDayScheduleViewEdit
-                        : AppLocalizations.of(context)!.sevenDayScheduleViewOnly,
+                        : AppLocalizations.of(context)!
+                            .sevenDayScheduleViewOnly,
             style: TextStyle(
               color: colorScheme.onSurfaceVariant,
               fontSize: 13,
@@ -1371,20 +1398,29 @@ class _NutritionistReadMealPlanPageState
                   children: [
                     const Divider(),
                     const SizedBox(height: 16),
-                    _buildDayMeals(AppLocalizations.of(context)!.monday, 'monday',
-                        _editedMeals['monday'] ?? [], colorScheme),
-                    _buildDayMeals(AppLocalizations.of(context)!.tuesday, 'tuesday',
-                        _editedMeals['tuesday'] ?? [], colorScheme),
-                    _buildDayMeals(AppLocalizations.of(context)!.wednesday, 'wednesday',
-                        _editedMeals['wednesday'] ?? [], colorScheme),
-                    _buildDayMeals(AppLocalizations.of(context)!.thursday, 'thursday',
-                        _editedMeals['thursday'] ?? [], colorScheme),
-                    _buildDayMeals(AppLocalizations.of(context)!.friday, 'friday',
-                        _editedMeals['friday'] ?? [], colorScheme),
-                    _buildDayMeals(AppLocalizations.of(context)!.saturday, 'saturday',
-                        _editedMeals['saturday'] ?? [], colorScheme),
-                    _buildDayMeals(AppLocalizations.of(context)!.sunday, 'sunday',
-                        _editedMeals['sunday'] ?? [], colorScheme),
+                    _buildDayMeals(AppLocalizations.of(context)!.monday,
+                        'monday', _editedMeals['monday'] ?? [], colorScheme),
+                    _buildDayMeals(AppLocalizations.of(context)!.tuesday,
+                        'tuesday', _editedMeals['tuesday'] ?? [], colorScheme),
+                    _buildDayMeals(
+                        AppLocalizations.of(context)!.wednesday,
+                        'wednesday',
+                        _editedMeals['wednesday'] ?? [],
+                        colorScheme),
+                    _buildDayMeals(
+                        AppLocalizations.of(context)!.thursday,
+                        'thursday',
+                        _editedMeals['thursday'] ?? [],
+                        colorScheme),
+                    _buildDayMeals(AppLocalizations.of(context)!.friday,
+                        'friday', _editedMeals['friday'] ?? [], colorScheme),
+                    _buildDayMeals(
+                        AppLocalizations.of(context)!.saturday,
+                        'saturday',
+                        _editedMeals['saturday'] ?? [],
+                        colorScheme),
+                    _buildDayMeals(AppLocalizations.of(context)!.sunday,
+                        'sunday', _editedMeals['sunday'] ?? [], colorScheme),
                   ],
                 ),
               ),
@@ -1396,7 +1432,10 @@ class _NutritionistReadMealPlanPageState
 
   Widget _buildDayMeals(String dayName, String dayKey, List<Meal> meals,
       ColorScheme colorScheme) {
-    final isToday = DateFormat('EEEE', Localizations.localeOf(context).toString()).format(DateTime.now()) == dayName;
+    final isToday =
+        DateFormat('EEEE', Localizations.localeOf(context).toString())
+                .format(DateTime.now()) ==
+            dayName;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -1579,7 +1618,9 @@ class _NutritionistReadMealPlanPageState
                 children: [
                   if (meal.recipe != null && meal.recipe!.isNotEmpty) ...[
                     _buildSectionHeader(
-                        AppLocalizations.of(context)!.instructions, Icons.list_alt_rounded, colorScheme),
+                        AppLocalizations.of(context)!.instructions,
+                        Icons.list_alt_rounded,
+                        colorScheme),
                     const SizedBox(height: 8),
                     (_isEditing &&
                             widget.mealPlan.validationStatus ==
@@ -1600,14 +1641,16 @@ class _NutritionistReadMealPlanPageState
                             meal.recipe!, colorScheme),
                     const SizedBox(height: 16),
                   ],
-                  _buildSectionHeader(AppLocalizations.of(context)!.nutritionInformation,
-                      Icons.local_fire_department_rounded, colorScheme),
+                  _buildSectionHeader(
+                      AppLocalizations.of(context)!.nutritionInformation,
+                      Icons.local_fire_department_rounded,
+                      colorScheme),
                   const SizedBox(height: 12),
                   _buildNutritionInfo(
                       meal.totalMacros, colorScheme, dayKey, mealIndex),
                   const SizedBox(height: 16),
-                  _buildSectionHeader(
-                      AppLocalizations.of(context)!.ingredients, Icons.eco_rounded, colorScheme),
+                  _buildSectionHeader(AppLocalizations.of(context)!.ingredients,
+                      Icons.eco_rounded, colorScheme),
                   const SizedBox(height: 12),
                   _buildIngredientsSection(
                       meal.ingredients, colorScheme, dayKey, mealIndex),
@@ -2427,7 +2470,7 @@ class _NutritionistReadMealPlanPageState
           ),
         ),
       );
-      
+
       // Always trigger refresh callback after chat since messages might have been sent
       if (widget.onOperationComplete != null) {
         widget.onOperationComplete!();
@@ -2488,7 +2531,9 @@ class _ExpandableInstructionsState extends State<ExpandableInstructions> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      _isExpanded ? AppLocalizations.of(context)!.showLess : AppLocalizations.of(context)!.readMore,
+                      _isExpanded
+                          ? AppLocalizations.of(context)!.showLess
+                          : AppLocalizations.of(context)!.readMore,
                       style: TextStyle(
                         color: widget.colorScheme.primary,
                         fontWeight: FontWeight.w500,
