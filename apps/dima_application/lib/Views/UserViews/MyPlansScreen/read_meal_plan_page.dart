@@ -5,6 +5,7 @@ import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/services/meal_plans_service.dart';
 import 'package:dima_application/Views/Common/ChatScreen/chat_page.dart';
+import 'package:dima_application/Views/UserViews/MyPlansScreen/nutritionist_location_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -170,6 +171,17 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
           children: [
             _buildMetadataSection(theme, colorScheme),
             const SizedBox(height: 16),
+            // Add nutritionist location card if meal plan has assigned nutritionist
+            if (_shouldShowLocationCard())
+              Column(
+                children: [
+                  NutritionistLocationCard(
+                    mealPlanId: widget.mealPlanId,
+                    nutritionistId: _mealPlan!.assignedNutritionistId,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
             _buildDailyPlanSection(theme, colorScheme),
             const SizedBox(height: 100), // Bottom padding for FAB
           ],
@@ -1319,6 +1331,16 @@ class _ReadMealPlanPageState extends State<ReadMealPlanPage>
         ),
       );
     }
+  }
+
+  /// Determines whether to show the nutritionist location card
+  /// Shows it if the meal plan has an assigned nutritionist with location data
+  bool _shouldShowLocationCard() {
+    if (_mealPlan?.assignedNutritionistId != null &&
+        _mealPlan!.assignedNutritionistId!.isNotEmpty) {
+      return true;
+    }
+    return false;
   }
 }
 

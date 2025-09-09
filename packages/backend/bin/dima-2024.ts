@@ -34,5 +34,6 @@ const dataStack = new DataStack(app, 'DataStack', {
 new AppSyncApiStack(app, 'AppSyncApiStack', {
   userPool: authStack.userPool,
   mealPlanningTable: dataStack.mealPlanningTable,
+  picturesBucket: dataStack.assetsBucket,
   env: { account: '537124974525', region: 'us-west-2' },
 });

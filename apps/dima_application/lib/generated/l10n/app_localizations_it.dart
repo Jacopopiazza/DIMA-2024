@@ -1,5 +1,5 @@
-// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -437,6 +437,132 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exerciseFrequencyTWICE_A_WEEK => 'Due volte a settimana';
+
+  @override
+  String get nutritionistOffice => 'Studio Nutrizionista';
+
+  @override
+  String get viewOfficeLocationAndDirections => 'Visualizza posizione studio e indicazioni';
+
+  @override
+  String get address => 'Indirizzo';
+
+  @override
+  String get directions => 'Indicazioni';
+
+  @override
+  String get viewMap => 'Vedi Mappa';
+
+  @override
+  String get getDirections => 'Ottieni Indicazioni';
+
+  @override
+  String get locationNotAvailable => 'Posizione Non Disponibile';
+
+  @override
+  String get couldNotLoadNutritionistLocation => 'Impossibile caricare la posizione del nutrizionista';
+
+  @override
+  String couldNotOpenMaps(String error) {
+    return 'Impossibile aprire le mappe: $error';
+  }
+
+  @override
+  String locationCoordinates(String latitude, String longitude) {
+    return 'Coordinate posizione: $latitude, $longitude';
+  }
+
+  @override
+  String get officeLocation => 'Posizione Studio';
+
+  @override
+  String get coordinates => 'Coordinate';
+
+  @override
+  String get latitude => 'Latitudine';
+
+  @override
+  String get longitude => 'Longitudine';
+
+  @override
+  String get useCurrentLocation => 'Usa Posizione Attuale';
+
+  @override
+  String get gettingLocation => 'Rilevamento Posizione...';
+
+  @override
+  String get currentLocationRetrievedSuccessfully => 'Posizione attuale rilevata con successo';
+
+  @override
+  String get locationAndAddressRetrievedSuccessfully => 'Posizione e indirizzo rilevati con successo';
+
+  @override
+  String get locationServicesDisabled => 'Servizi di Localizzazione Disabilitati';
+
+  @override
+  String get enableLocationServicesMessage => 'Per favore abilita i servizi di localizzazione nelle impostazioni del dispositivo per usare questa funzione.';
+
+  @override
+  String get locationPermissionRequired => 'Permesso di Localizzazione Richiesto';
+
+  @override
+  String get locationPermissionsPermanentlyDenied => 'I permessi di localizzazione sono negati permanentemente. Per favore abilitali nelle impostazioni dell\'app.';
+
+  @override
+  String get locationPermissionDenied => 'Permesso di Localizzazione Negato';
+
+  @override
+  String get locationPermissionsRequired => 'I permessi di localizzazione sono necessari per rilevare automaticamente la tua posizione attuale.';
+
+  @override
+  String get openSettings => 'Apri Impostazioni';
+
+  @override
+  String get saveLocation => 'Salva Posizione';
+
+  @override
+  String get locationUpdatedSuccessfully => 'Posizione aggiornata con successo';
+
+  @override
+  String failedToSaveLocation(String error) {
+    return 'Impossibile salvare la posizione: $error';
+  }
+
+  @override
+  String get enterValidLatitudeLongitude => 'Per favore inserisci latitudine e longitudine valide';
+
+  @override
+  String get enterBothCoordinatesOrNeither => 'Per favore inserisci sia latitudine che longitudine oppure cancella entrambi per rimuovere la posizione';
+
+  @override
+  String get removeLocation => 'Rimuovi Posizione';
+
+  @override
+  String get locationRemovedSuccessfully => 'Posizione rimossa con successo';
+
+  @override
+  String get clearLocation => 'Cancella Posizione';
+
+  @override
+  String get removingLocation => 'Rimozione...';
+
+  @override
+  String get officeAddressOptional => 'Indirizzo Studio (Opzionale)';
+
+  @override
+  String get additionalNotesOptional => 'Note Aggiuntive (Opzionali)';
+
+  @override
+  String get notesForPatients => 'Note per i Pazienti';
+
+  @override
+  String get notesPlaceholder => 'es. 2° piano, citofono 15';
+
+  @override
+  String get addressPlaceholder => 'Via Roma 123, 10123 Torino TO, Italia';
+
+  @override
+  String get setOfficeLocationDescription => 'Imposta la posizione del tuo studio così i pazienti possono trovarti facilmente. Questo sarà mostrato agli utenti che hanno piani alimentari assegnati a te.';
 
   @override
   String get energy => 'Energia';
@@ -2482,9 +2608,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get verificationCode => 'Codice di Verifica';
-
-  @override
-  String get address => 'Indirizzo';
 
   @override
   String get middleName => 'Secondo Nome';

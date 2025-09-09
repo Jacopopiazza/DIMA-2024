@@ -1,0 +1,72 @@
+{
+    "@@locale": "it",
+    "nutritionistOffice": "Studio Nutrizionista",
+    "viewOfficeLocationAndDirections": "Visualizza posizione studio e indicazioni",
+    "address": "Indirizzo",
+    "additionalNotes": "Note Aggiuntive",
+    "directions": "Indicazioni",
+    "viewMap": "Vedi Mappa",
+    "getDirections": "Ottieni Indicazioni",
+    "locationNotAvailable": "Posizione Non Disponibile",
+    "couldNotLoadNutritionistLocation": "Impossibile caricare la posizione del nutrizionista",
+    "retry": "Riprova",
+    "couldNotOpenMaps": "Impossibile aprire le mappe: {error}",
+    "@couldNotOpenMaps": {
+        "description": "Messaggio di errore quando l'app delle mappe non si apre",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "locationCoordinates": "Coordinate posizione: {latitude}, {longitude}",
+    "@locationCoordinates": {
+        "description": "Mostra le coordinate quando l'indirizzo non è disponibile",
+        "placeholders": {
+            "latitude": {
+                "type": "String"
+            },
+            "longitude": {
+                "type": "String"
+            }
+        }
+    },
+    "officeLocation": "Posizione Studio",
+    "coordinates": "Coordinate",
+    "latitude": "Latitudine",
+    "longitude": "Longitudine",
+    "useCurrentLocation": "Usa Posizione Attuale",
+    "gettingLocation": "Rilevamento Posizione...",
+    "currentLocationRetrievedSuccessfully": "Posizione attuale rilevata con successo",
+    "locationAndAddressRetrievedSuccessfully": "Posizione e indirizzo rilevati con successo",
+    "locationServicesDisabled": "Servizi di Localizzazione Disabilitati",
+    "enableLocationServicesMessage": "Per favore abilita i servizi di localizzazione nelle impostazioni del dispositivo per usare questa funzione.",
+    "locationPermissionRequired": "Permesso di Localizzazione Richiesto",
+    "locationPermissionsPermanentlyDenied": "I permessi di localizzazione sono negati permanentemente. Per favore abilitali nelle impostazioni dell'app.",
+    "locationPermissionDenied": "Permesso di Localizzazione Negato",
+    "locationPermissionsRequired": "I permessi di localizzazione sono necessari per rilevare automaticamente la tua posizione attuale.",
+    "openSettings": "Apri Impostazioni",
+    "saveLocation": "Salva Posizione",
+    "locationUpdatedSuccessfully": "Posizione aggiornata con successo",
+    "failedToSaveLocation": "Impossibile salvare la posizione: {error}",
+    "@failedToSaveLocation": {
+        "description": "Messaggio di errore quando il salvataggio della posizione fallisce",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "enterValidLatitudeLongitude": "Per favore inserisci latitudine e longitudine valide",
+    "enterBothCoordinatesOrNeither": "Per favore inserisci sia latitudine che longitudine oppure cancella entrambi per rimuovere la posizione",
+    "removeLocation": "Rimuovi Posizione",
+    "locationRemovedSuccessfully": "Posizione rimossa con successo",
+    "clearLocation": "Cancella Posizione",
+    "removingLocation": "Rimozione...",
+    "officeAddressOptional": "Indirizzo Studio (Opzionale)",
+    "additionalNotesOptional": "Note Aggiuntive (Opzionali)",
+    "notesForPatients": "Note per i Pazienti",
+    "notesPlaceholder": "es. 2° piano, citofono 15",
+    "addressPlaceholder": "Via Roma 123, 10123 Torino TO, Italia",
+    "setOfficeLocationDescription": "Imposta la posizione del tuo studio così i pazienti possono trovarti facilmente. Questo sarà mostrato agli utenti che hanno piani alimentari assegnati a te."
+}

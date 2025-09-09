@@ -3,6 +3,7 @@ import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as logs from 'aws-cdk-lib/aws-logs';
@@ -19,6 +20,7 @@ import { ChatStack } from './chat-stack';
 interface AppSyncApiStackProps extends cdk.StackProps {
   userPool: cognito.UserPool;
   mealPlanningTable: dynamodb.ITableV2;
+  picturesBucket: s3.Bucket;
 }
 
 export class AppSyncApiStack extends cdk.Stack {
@@ -524,6 +526,99 @@ export class AppSyncApiStack extends cdk.Stack {
           return ctx.prev.result;
         }
       `),
+    });
+
+    // LAMBDA TO PRESIGN URL FOR PROFILE PICTURE UPLOAD
+    const presignProfilePictureLambda = new NodejsFunction(
+      this,
+      'PresignProfilePictureLambda',
+      {
+        functionName: 'presign-profile-picture-lambda',
+        runtime: lambda.Runtime.NODEJS_22_X,
+        handler: 'handler',
+        entry: 'src/lambda/presign-profile-picture/index.ts',
+        timeout: cdk.Duration.seconds(10),
+        memorySize: 256,
+        bundling: {
+          format: OutputFormat.ESM,
+          bundleAwsSDK: false,
+          minify: false, // Minify the code
+          sourceMap: true, // Generate source maps
+          externalModules: [
+            '@aws-sdk/client-s3',
+            '@aws-sdk/s3-request-presigner',
+          ],
+        },
+        environment: {
+          PROFILE_PICTURES_BUCKET_NAME: props.picturesBucket.bucketName,
+        },
+        tracing: lambda.Tracing.ACTIVE,
+        logRetention: logs.RetentionDays.ONE_WEEK,
+      },
+    );
+
+    // Add S3 permissions
+    props.picturesBucket.grantRead(presignProfilePictureLambda);
+
+    const profilePictureLambdaDataSource = api.addLambdaDataSource(
+      'ProfilePictureLambdaDataSource',
+      presignProfilePictureLambda,
+      {
+        name: 'ProfilePictureLambdaDataSource',
+        description:
+          'Lambda data source for generating profile picture presigned URLs',
+      },
+    );
+
+    // 2. Create the resolver for getUrlForProfilePicture field
+    profilePictureLambdaDataSource.createResolver(
+      'GetUrlForProfilePictureResolver',
+      {
+        typeName: 'Query',
+        fieldName: 'getUrlForProfilePicture',
+        code: appsync.Code.fromAsset(
+          'resolvers/query.getUrlForProfilePicture.js',
+        ), // Path to your resolver file
+        runtime: appsync.FunctionRuntime.JS_1_0_0,
+      },
+    );
+
+    // ---- LOCATION RESOLVERS ----
+    tableDS.createResolver('UpdateNutritionistLocationResolver', {
+      typeName: 'Mutation',
+      fieldName: 'updateNutritionistLocation',
+      code: appsync.Code.fromAsset(
+        'resolvers/mutation.updateNutritionistLocation.js',
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+
+    // removeNutritionistLocation resolver
+    tableDS.createResolver('RemoveNutritionistLocationResolver', {
+      typeName: 'Mutation',
+      fieldName: 'removeNutritionistLocation',
+      code: appsync.Code.fromAsset(
+        'resolvers/mutation.removeNutritionistLocation.js',
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+
+    // getNutritionistLocation resolver
+    tableDS.createResolver('GetNutritionistLocationResolver', {
+      typeName: 'Query',
+      fieldName: 'getNutritionistLocation',
+      code: appsync.Code.fromAsset(
+        'resolvers/query.getNutritionistLocation.js',
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+
+    // getMyLocation resolver
+    tableDS.createResolver('GetMyLocationResolver', {
+      typeName: 'Query',
+      fieldName: 'getMyLocation',
+      code: appsync.Code.fromAsset('resolvers/query.getMyLocation.js'),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
     });
 
     // ====================================================================

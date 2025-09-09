@@ -44,6 +44,7 @@ export function response(ctx) {
     familyName: item.FamilyName,
     specialization: item.Specialization,
     bio: item.Bio,
+    address: item.address,
     profilePictureUrl:
       item.ProfilePictureURL && item.ProfilePictureURL.trim() !== ''
         ? item.ProfilePictureURL

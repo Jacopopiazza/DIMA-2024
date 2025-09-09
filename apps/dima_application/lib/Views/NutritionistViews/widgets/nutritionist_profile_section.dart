@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../generated/flutter-models/NutritionistProfile.dart';
+import '../../../services/nutritionist_profile_service.dart';
 import '../../Common/network_image_with_retry.dart';
 
-class NutritionistProfileSection extends StatelessWidget {
+class NutritionistProfileSection extends StatefulWidget {
   final NutritionistProfile? profile;
   final VoidCallback? onEditProfile;
 
@@ -12,6 +13,68 @@ class NutritionistProfileSection extends StatelessWidget {
     required this.profile,
     this.onEditProfile,
   }) : super(key: key);
+
+  @override
+  State<NutritionistProfileSection> createState() =>
+      _NutritionistProfileSectionState();
+}
+
+class _NutritionistProfileSectionState
+    extends State<NutritionistProfileSection> {
+  String? _resolvedImageUrl;
+  bool _isLoadingImage = false;
+  final NutritionistProfileService _profileService =
+      NutritionistProfileService();
+
+  @override
+  void initState() {
+    super.initState();
+    _resolveProfileImage();
+  }
+
+  @override
+  void didUpdateWidget(NutritionistProfileSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.profile?.profilePictureUrl !=
+        oldWidget.profile?.profilePictureUrl) {
+      _resolveProfileImage();
+    }
+  }
+
+  Future<void> _resolveProfileImage() async {
+    if (widget.profile?.profilePictureUrl == null ||
+        widget.profile!.profilePictureUrl!.isEmpty) {
+      setState(() {
+        _resolvedImageUrl = null;
+        _isLoadingImage = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoadingImage = true;
+    });
+
+    try {
+      if (widget.profile!.profilePictureUrl!.startsWith('http')) {
+        // Already a URL
+        _resolvedImageUrl = widget.profile!.profilePictureUrl!;
+      } else {
+        // S3 key, resolve to URL
+        _resolvedImageUrl = await _profileService
+            .getUrlForProfilePicture(widget.profile!.profilePictureUrl!);
+      }
+    } catch (e) {
+      debugPrint('Error resolving profile image: $e');
+      _resolvedImageUrl = null;
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingImage = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,63 +97,22 @@ class NutritionistProfileSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Profile Picture with auto-retry for expired URLs
+            // Profile Picture with S3 key resolution
             CircleAvatar(
               radius: 50,
               backgroundColor: theme.colorScheme.primaryContainer,
-              child: profile?.profilePictureUrl != null
-                  ? ClipOval(
-                      child: NetworkImageWithRetry(
-                        imageUrl: profile!.profilePictureUrl!,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                        placeholder: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primaryContainer,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                theme.colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ),
-                        errorWidget: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primaryContainer,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.person,
-                            size: 50,
-                            color: theme.colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Icon(
-                      Icons.person,
-                      size: 50,
-                      color: theme.colorScheme.onPrimaryContainer,
-                    ),
+              child: _buildProfileImage(theme),
             ),
             const SizedBox(height: 16),
 
             // Full Name
-            if (profile != null &&
-                (profile!.givenName != null || profile!.familyName != null))
+            if (widget.profile != null &&
+                (widget.profile!.givenName != null ||
+                    widget.profile!.familyName != null))
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  '${profile!.givenName ?? ''} ${profile!.familyName ?? ''}'
+                  '${widget.profile!.givenName ?? ''} ${widget.profile!.familyName ?? ''}'
                       .trim(),
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
@@ -100,8 +122,8 @@ class NutritionistProfileSection extends StatelessWidget {
               ),
 
             // Specialization
-            if (profile?.specialization != null &&
-                profile!.specialization!.isNotEmpty)
+            if (widget.profile?.specialization != null &&
+                widget.profile!.specialization!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Container(
@@ -115,7 +137,7 @@ class NutritionistProfileSection extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    profile!.specialization!,
+                    widget.profile!.specialization!,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w500,
@@ -126,11 +148,11 @@ class NutritionistProfileSection extends StatelessWidget {
               ),
 
             // Bio
-            if (profile?.bio != null && profile!.bio!.isNotEmpty)
+            if (widget.profile?.bio != null && widget.profile!.bio!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 12.0),
                 child: Text(
-                  profile!.bio!,
+                  widget.profile!.bio!,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -143,11 +165,11 @@ class NutritionistProfileSection extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Edit Profile Button (optional)
-            if (onEditProfile != null)
+            if (widget.onEditProfile != null)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: onEditProfile,
+                  onPressed: widget.onEditProfile,
                   icon: const Icon(Icons.edit),
                   label: const Text('Edit Profile'),
                   style: ElevatedButton.styleFrom(
@@ -163,6 +185,76 @@ class NutritionistProfileSection extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildProfileImage(ThemeData theme) {
+    // Show loading state
+    if (_isLoadingImage) {
+      return Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primaryContainer,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              theme.colorScheme.primary,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Show resolved image
+    if (_resolvedImageUrl != null) {
+      return ClipOval(
+        child: NetworkImageWithRetry(
+          imageUrl: _resolvedImageUrl!,
+          width: 100,
+          height: 100,
+          fit: BoxFit.cover,
+          placeholder: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  theme.colorScheme.primary,
+                ),
+              ),
+            ),
+          ),
+          errorWidget: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.person,
+              size: 50,
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Show fallback icon
+    return Icon(
+      Icons.person,
+      size: 50,
+      color: theme.colorScheme.onPrimaryContainer,
     );
   }
 }

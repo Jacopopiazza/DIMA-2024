@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 
 class ErrorDialogUtils {
   /// Shows a database error dialog when meal completion operations fail
-  static Future<void> showMealCompletionError(BuildContext context, {VoidCallback? onRetry}) async {
+  static Future<void> showMealCompletionError(BuildContext context,
+      {VoidCallback? onRetry}) async {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -61,9 +62,10 @@ class ErrorDialogUtils {
   }
 
   /// Shows a network error dialog when operations fail due to connectivity issues
-  static Future<void> showNetworkError(BuildContext context, {VoidCallback? onRetry}) async {
+  static Future<void> showNetworkError(BuildContext context,
+      {VoidCallback? onRetry}) async {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -120,12 +122,12 @@ class ErrorDialogUtils {
 
   /// Shows a generic error dialog with custom message
   static Future<void> showGenericError(
-    BuildContext context, 
+    BuildContext context,
     String message, {
     VoidCallback? onRetry,
   }) async {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return showDialog<void>(
       context: context,
       barrierDismissible: true,

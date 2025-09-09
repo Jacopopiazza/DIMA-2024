@@ -74,6 +74,22 @@ type ChatMessageConnection {
   nextToken: String
 }
 
+type NutritionistLocation {
+  nutritionistId: ID!
+  latitude: Float!
+  longitude: Float!
+  address: String
+  notes: String
+  updatedAt: AWSDateTime
+}
+
+input NutritionistLocationInput {
+  latitude: Float!
+  longitude: Float!
+  address: String
+  notes: String
+}
+
 type ChatMetadata @model {
   chatId: ID!
   userId: ID!
@@ -296,6 +312,7 @@ type NutritionistProfile @model {
   # email: AWSEmail # Consider privacy if showing email directly to users
   specialization: String
   bio: String
+  address: String
   profilePictureUrl: String
   # Nullable, TODO: revert to AWSURL
   isAvailable: Boolean
@@ -495,12 +512,22 @@ type Mutation {
   setUserSubscriptionStatus(
     subscriptionStatus: SubscriptionStatusEnum!
   ): UserSubscriptionStatus @aws_auth(cognito_groups: ["USERS"])
+
+  updateNutritionistLocation(
+    input: NutritionistLocationInput!
+  ): NutritionistLocation @aws_auth(cognito_groups: ["NUTRITIONISTS"])
+
+  removeNutritionistLocation: NutritionistLocation
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
 }
 
 # ===================
 #       QUERIES
 # ===================
 type Query {
+  getUrlForProfilePicture(s3Key: String!): AWSURL
+    @aws_auth(cognito_groups: ["USERS", "NUTRITIONISTS"])
+
   getMealPlanById(mealPlanId: ID!): MealPlan
     @aws_auth(cognito_groups: ["USERS"])
   getPlanDayCompletion(planId: ID!, date: AWSDate!): PlanDayCompletion
@@ -526,6 +553,12 @@ type Query {
   listMyAssignedMealPlans(limit: Int, nextToken: String): MealPlanList
     @aws_auth(cognito_groups: ["NUTRITIONISTS"])
   getUserSubscriptionStatus: UserSubscriptionStatus
+    @aws_auth(cognito_groups: ["USERS"])
+
+  getMyLocation: NutritionistLocation
+    @aws_auth(cognito_groups: ["NUTRITIONISTS"])
+
+  getNutritionistLocation(nutritionistId: ID!): NutritionistLocation
     @aws_auth(cognito_groups: ["USERS"])
 
   getChatMessages(

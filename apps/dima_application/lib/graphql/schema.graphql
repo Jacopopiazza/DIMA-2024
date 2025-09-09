@@ -164,6 +164,7 @@ type Mutation {
   modifyAssignedMealPlan(input: ModifyAssignedMealPlanInput!, mealPlanId: ID!, userId: ID!): MealPlanResponse @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   modifyMealPlan(mealPlanId: ID!, mealPlanName: String): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   notifyMealPlanStatusChanged(input: MealPlanResponseInput!): MealPlanResponseSubscription @aws_iam
+  removeNutritionistLocation: NutritionistLocation @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   requestNewMealPlan(prefsOverride: PlanRequestPreferencesInput): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   requestValidation(input: RequestValidationInput!): MealPlanResponse @aws_auth(cognito_groups : ["USERS"])
   sendChatMessage(input: SendMessageInput!): ChatResponse @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
@@ -172,11 +173,22 @@ type Mutation {
   setUserSubscriptionStatus(subscriptionStatus: SubscriptionStatusEnum!): UserSubscriptionStatus @aws_auth(cognito_groups : ["USERS"])
   unmarkMealAsCompleted(input: UnmarkMealCompletedInput!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   updateMyNutritionistProfile(input: UpdateNutritionistProfileInput!): NutritionistProfile @aws_auth(cognito_groups : ["NUTRITIONISTS"])
+  updateNutritionistLocation(input: NutritionistLocationInput!): NutritionistLocation @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   updateUserDetails(input: UpdateUserDetailsInput!): UserDetails @aws_auth(cognito_groups : ["USERS"])
   validateMealPlan(input: ValidateMealPlanInput!): MealPlanResponse @aws_auth(cognito_groups : ["NUTRITIONISTS"])
 }
 
+type NutritionistLocation {
+  address: String
+  latitude: Float!
+  longitude: Float!
+  notes: String
+  nutritionistId: ID!
+  updatedAt: AWSDateTime
+}
+
 type NutritionistProfile @model {
+  address: String
   bio: String
   familyName: String
   givenName: String
@@ -229,9 +241,12 @@ type Query {
   getChatMessages(beforeTimestamp: String, chatId: ID!, limit: Int): ChatMessagesResponse @aws_auth(cognito_groups : ["NUTRITIONISTS", "USERS"])
   getClientDetails(userId: ID!): UserDetails @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   getMealPlanById(mealPlanId: ID!): MealPlan @aws_auth(cognito_groups : ["USERS"])
+  getMyLocation: NutritionistLocation @aws_auth(cognito_groups : ["NUTRITIONISTS"])
   getMyNutritionistProfile: NutritionistProfile @aws_auth(cognito_groups : ["NUTRITIONISTS"])
+  getNutritionistLocation(nutritionistId: ID!): NutritionistLocation @aws_auth(cognito_groups : ["USERS"])
   getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["USERS"])
+  getUrlForProfilePicture(s3Key: String!): AWSURL @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   getUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS"])
   getUserSubscriptionStatus: UserSubscriptionStatus @aws_auth(cognito_groups : ["USERS"])
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["NUTRITIONISTS"])
@@ -435,6 +450,13 @@ input ModifyAssignedMealPlanInput {
   ingredients: [IngredientInput!]
   planName: String
   totalMacros: MacrosInput
+}
+
+input NutritionistLocationInput {
+  address: String
+  latitude: Float!
+  longitude: Float!
+  notes: String
 }
 
 input PlanRequestPreferencesInput {

@@ -52,12 +52,15 @@ void main() {
     group('Method signature validation', () {
       test('pickImage method has correct signature for ImageSource.camera', () {
         // Test that the method exists and accepts the correct parameters
-        expect(() => imageUploadService.pickImage(source: ImageSource.camera), isA<Function>());
+        expect(() => imageUploadService.pickImage(source: ImageSource.camera),
+            isA<Function>());
       });
 
-      test('pickImage method has correct signature for ImageSource.gallery', () {
-        // Test that the method exists and accepts the correct parameters  
-        expect(() => imageUploadService.pickImage(source: ImageSource.gallery), isA<Function>());
+      test('pickImage method has correct signature for ImageSource.gallery',
+          () {
+        // Test that the method exists and accepts the correct parameters
+        expect(() => imageUploadService.pickImage(source: ImageSource.gallery),
+            isA<Function>());
       });
 
       test('deleteProfilePicture method has correct signature', () {
@@ -79,7 +82,7 @@ void main() {
         // Verify the service instance remains usable after failed calls
         final service = ImageUploadService();
         expect(service, isNotNull);
-        
+
         // Service should still exist and be testable even if methods would fail
         expect(service.uploadProfilePicture, isA<Function>());
         expect(service.deleteProfilePicture, isA<Function>());

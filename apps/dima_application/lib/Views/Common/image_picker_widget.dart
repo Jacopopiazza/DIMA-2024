@@ -2,15 +2,17 @@ import 'dart:io';
 
 import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/services/image_upload_service.dart';
+import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'network_image_with_retry.dart';
 
 /// A reusable widget for picking and displaying profile images
+/// Works with S3 keys stored in the database and resolves them to URLs for display
 class ImagePickerWidget extends StatefulWidget {
-  final String? initialImageUrl;
-  final Function(String?) onImageChanged;
+  final String? initialImageUrl; // Can be either S3 key or URL
+  final Function(String?) onImageChanged; // Returns S3 key to store
   final double size;
   final bool enabled;
 
@@ -27,15 +29,19 @@ class ImagePickerWidget extends StatefulWidget {
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
-  String? _currentImageUrl;
+  String? _currentImageUrl; // The resolved URL for display
+  String? _currentS3Key; // The S3 key stored in database
   XFile? _pendingImageFile;
   bool _isUploading = false;
+  bool _isLoadingUrl = false;
   final ImageUploadService _imageUploadService = ImageUploadService();
+  final NutritionistProfileService _profileService =
+      NutritionistProfileService();
 
   @override
   void initState() {
     super.initState();
-    _currentImageUrl = widget.initialImageUrl;
+    _resolveInitialImage();
   }
 
   @override
@@ -43,9 +49,56 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     super.didUpdateWidget(oldWidget);
     if (widget.initialImageUrl != oldWidget.initialImageUrl) {
       setState(() {
-        _currentImageUrl = widget.initialImageUrl;
+        _currentImageUrl = null;
+        _currentS3Key = null;
         _pendingImageFile = null;
       });
+      _resolveInitialImage();
+    }
+  }
+
+  Future<void> _resolveInitialImage() async {
+    if (widget.initialImageUrl == null || widget.initialImageUrl!.isEmpty) {
+      setState(() {
+        _currentImageUrl = null;
+        _currentS3Key = null;
+        _isLoadingUrl = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoadingUrl = true;
+    });
+
+    try {
+      if (widget.initialImageUrl!.startsWith('http')) {
+        // It's already a URL, extract S3 key for storage
+        _currentImageUrl = widget.initialImageUrl;
+        _currentS3Key =
+            _imageUploadService.extractS3KeyFromUrl(widget.initialImageUrl!);
+      } else {
+        // It's an S3 key, resolve to URL
+        _currentS3Key = widget.initialImageUrl;
+        _currentImageUrl = await _profileService
+            .getUrlForProfilePicture(widget.initialImageUrl!);
+
+        // If resolution fails (returns null), treat as no image
+        if (_currentImageUrl == null) {
+          _currentS3Key = null;
+        }
+      }
+    } catch (e) {
+      debugPrint('Error resolving image: $e');
+      // Reset to no image state on any error
+      _currentImageUrl = null;
+      _currentS3Key = null;
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingUrl = false;
+        });
+      }
     }
   }
 
@@ -62,16 +115,22 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         _isUploading = true;
       });
 
-      // Upload the image
-      final imageUrl =
-          await _imageUploadService.uploadProfilePicture(imageFile);
+      // Upload the image and get S3 key
+      final s3Key = await _imageUploadService.uploadProfilePicture(imageFile);
 
-      if (imageUrl != null) {
+      if (s3Key != null) {
+        // Resolve S3 key to URL for display
+        final resolvedUrl =
+            await _profileService.getUrlForProfilePicture(s3Key);
+
         setState(() {
-          _currentImageUrl = imageUrl;
+          _currentS3Key = s3Key;
+          _currentImageUrl = resolvedUrl;
           _pendingImageFile = null;
         });
-        widget.onImageChanged(imageUrl);
+
+        // Pass S3 key to parent (to store in database)
+        widget.onImageChanged(s3Key);
       }
     } catch (e) {
       if (mounted) {
@@ -97,16 +156,17 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     if (!widget.enabled || _isUploading) return;
 
     try {
-      if (_currentImageUrl != null) {
+      if (_currentS3Key != null) {
         setState(() {
           _isUploading = true;
         });
 
-        await _imageUploadService.deleteProfilePicture(_currentImageUrl!);
+        await _imageUploadService.deleteProfilePicture(_currentS3Key!);
       }
 
       setState(() {
         _currentImageUrl = null;
+        _currentS3Key = null;
         _pendingImageFile = null;
       });
       widget.onImageChanged(null);
@@ -352,8 +412,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   // Image display
                   _buildImageDisplay(theme),
 
-                  // Upload overlay
-                  if (_isUploading)
+                  // Upload/Loading overlay
+                  if (_isUploading || _isLoadingUrl)
                     Container(
                       color: Colors.black54,
                       child: const Center(
@@ -368,7 +428,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   // Plus icon overlay when no image
                   if (_currentImageUrl == null &&
                       _pendingImageFile == null &&
-                      !_isUploading)
+                      !_isUploading &&
+                      !_isLoadingUrl)
                     Positioned.fill(
                       child: Center(
                         child: Icon(
@@ -425,15 +486,30 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             ),
           ),
         ),
-        errorWidget: Container(
-          color: theme.colorScheme.surfaceContainerHighest,
-          child: Center(
-            child: Icon(
-              Icons.error_outline,
-              size: widget.size * 0.3,
-              color: theme.colorScheme.error,
-            ),
-          ),
+        errorWidget: Builder(
+          builder: (context) {
+            // On image error, reset to no image state
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                setState(() {
+                  _currentImageUrl = null;
+                  _currentS3Key = null;
+                });
+              }
+            });
+
+            // Return temporary placeholder while state resets
+            return Container(
+              color: theme.colorScheme.surfaceContainerHighest,
+              child: Center(
+                child: Icon(
+                  Icons.person,
+                  size: widget.size * 0.4,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            );
+          },
         ),
       );
     }

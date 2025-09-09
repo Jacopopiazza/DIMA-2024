@@ -405,17 +405,33 @@ class _ValidationPlanTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final screenSize = MediaQuery.of(context).size;
+    
+    // Detect small tablets (close to phone threshold)
+    final isSmallTablet = screenSize.shortestSide < 700 || 
+                         (isLandscape && screenSize.height < 450);
 
     final borderColor =
         isSelected ? colorScheme.primary : colorScheme.outlineVariant;
 
-    const cardPadding = 12.0;
-    const titleMaxLines = 3;
-    final titleFontSize = isLandscape ? 12.0 : 13.0;
-    final clientFontSize = isLandscape ? 10.0 : 10.5;
-    final statusFontSize = isLandscape ? 9.0 : 9.5;
-    final iconSize = isLandscape ? 22.0 : 24.0;
-    final verticalSpacing = isLandscape ? 6.0 : 8.0;
+    // Adaptive sizing based on tablet size
+    final cardPadding = isSmallTablet ? 8.0 : 12.0;
+    final titleMaxLines = isSmallTablet ? 1 : 3;
+    final titleFontSize = isSmallTablet 
+        ? (isLandscape ? 10.0 : 11.0)
+        : (isLandscape ? 12.0 : 13.0);
+    final clientFontSize = isSmallTablet 
+        ? (isLandscape ? 9.0 : 9.5)
+        : (isLandscape ? 10.0 : 10.5);
+    final statusFontSize = isSmallTablet 
+        ? (isLandscape ? 8.0 : 8.5)
+        : (isLandscape ? 9.0 : 9.5);
+    final iconSize = isSmallTablet 
+        ? (isLandscape ? 18.0 : 20.0)
+        : (isLandscape ? 22.0 : 24.0);
+    final verticalSpacing = isSmallTablet 
+        ? (isLandscape ? 4.0 : 5.0)
+        : (isLandscape ? 6.0 : 8.0);
 
     return Card(
       elevation: isSelected ? 3 : 1,
@@ -445,6 +461,7 @@ class _ValidationPlanTile extends StatelessWidget {
                         _ValidationStatusPill(
                           validationStatus: plan.validationStatus,
                           fontSize: statusFontSize,
+                          isSmallTablet: isSmallTablet,
                         ),
                         SizedBox(height: verticalSpacing * 0.5),
                         if (plan.userFullName != null)
@@ -452,6 +469,7 @@ class _ValidationPlanTile extends StatelessWidget {
                             clientName: plan.userFullName!,
                             fontSize: clientFontSize,
                             isLandscape: isLandscape,
+                            isSmallTablet: isSmallTablet,
                           ),
                       ],
                     ),
@@ -466,9 +484,10 @@ class _ValidationPlanTile extends StatelessWidget {
               ),
               SizedBox(height: verticalSpacing),
               // Plan name below status pills - takes available space but leaves room for date
-              Expanded(
+              Flexible(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       plan.planName ??
@@ -477,26 +496,27 @@ class _ValidationPlanTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
-                        height: 1.1,
+                        height: 1.0,
                         fontSize: titleFontSize,
                       ),
                     ),
-                    const Spacer(), // Push date to bottom
-                    if (plan.generatedAt != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          DateFormat.yMMMd(
-                                  Localizations.localeOf(context).toString())
-                              .format(plan.generatedAt!
-                                  .getDateTimeInUtc()
-                                  .toLocal()),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                            fontSize: isLandscape ? 9.0 : 10.0,
-                          ),
+                    if (plan.generatedAt != null) ...[
+                      SizedBox(height: isSmallTablet ? 1.0 : 2.0),
+                      Text(
+                        DateFormat.yMMMd(
+                                Localizations.localeOf(context).toString())
+                            .format(plan.generatedAt!
+                                .getDateTimeInUtc()
+                                .toLocal()),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontSize: isSmallTablet 
+                              ? (isLandscape ? 7.0 : 8.0)
+                              : (isLandscape ? 8.0 : 9.0),
+                          height: 1.0,
                         ),
                       ),
+                    ],
                   ],
                 ),
               ),
@@ -567,10 +587,12 @@ class _ValidationStatusIcon extends StatelessWidget {
 class _ValidationStatusPill extends StatelessWidget {
   final MealPlanValidationStatus? validationStatus;
   final double fontSize;
+  final bool isSmallTablet;
 
   const _ValidationStatusPill({
     required this.validationStatus,
     required this.fontSize,
+    required this.isSmallTablet,
   });
 
   @override
@@ -606,7 +628,10 @@ class _ValidationStatusPill extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallTablet ? 6 : 8, 
+        vertical: isSmallTablet ? 2 : 3
+      ),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(12),
@@ -628,11 +653,13 @@ class _ClientPill extends StatelessWidget {
   final String clientName;
   final double fontSize;
   final bool isLandscape;
+  final bool isSmallTablet;
 
   const _ClientPill({
     required this.clientName,
     required this.fontSize,
     required this.isLandscape,
+    required this.isSmallTablet,
   });
 
   @override
@@ -641,7 +668,10 @@ class _ClientPill extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallTablet ? 6 : 8, 
+        vertical: isSmallTablet ? 2 : 3
+      ),
       decoration: BoxDecoration(
         color:
             colorScheme.primaryContainer.withValues(alpha: isDark ? 0.3 : 0.2),

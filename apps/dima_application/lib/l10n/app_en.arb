@@ -199,6 +199,73 @@
   "@_ exerciseFrequencies": {
     "description": "Localization keys for ExerciseFrequency enum values. Note: 'Or' is excluded."
   },
+  "nutritionistOffice": "Nutritionist Office",
+  "viewOfficeLocationAndDirections": "View office location and directions",
+  "address": "Address",
+  "directions": "Directions",
+  "viewMap": "View Map",
+  "getDirections": "Get Directions",
+  "locationNotAvailable": "Location Not Available",
+  "couldNotLoadNutritionistLocation": "Could not load nutritionist location",
+  "couldNotOpenMaps": "Could not open maps: {error}",
+  "@couldNotOpenMaps": {
+    "description": "Error message when maps app fails to open",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "locationCoordinates": "Location coordinates: {latitude}, {longitude}",
+  "@locationCoordinates": {
+    "description": "Shows location coordinates when address is not available",
+    "placeholders": {
+      "latitude": {
+        "type": "String"
+      },
+      "longitude": {
+        "type": "String"
+      }
+    }
+  },
+  "officeLocation": "Office Location",
+  "coordinates": "Coordinates",
+  "latitude": "Latitude",
+  "longitude": "Longitude",
+  "useCurrentLocation": "Use Current Location",
+  "gettingLocation": "Getting Location...",
+  "currentLocationRetrievedSuccessfully": "Current location retrieved successfully",
+  "locationAndAddressRetrievedSuccessfully": "Location and address retrieved successfully",
+  "locationServicesDisabled": "Location Services Disabled",
+  "enableLocationServicesMessage": "Please enable location services in your device settings to use this feature.",
+  "locationPermissionRequired": "Location Permission Required",
+  "locationPermissionsPermanentlyDenied": "Location permissions are permanently denied. Please enable them in app settings.",
+  "locationPermissionDenied": "Location Permission Denied",
+  "locationPermissionsRequired": "Location permissions are required to automatically detect your current position.",
+  "openSettings": "Open Settings",
+  "saveLocation": "Save Location",
+  "locationUpdatedSuccessfully": "Location updated successfully",
+  "failedToSaveLocation": "Failed to save location: {error}",
+  "@failedToSaveLocation": {
+    "description": "Error message when location save fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterValidLatitudeLongitude": "Please enter valid latitude and longitude",
+  "enterBothCoordinatesOrNeither": "Please enter both latitude and longitude or clear both to remove location",
+  "removeLocation": "Remove Location",
+  "locationRemovedSuccessfully": "Location removed successfully",
+  "clearLocation": "Clear Location",
+  "removingLocation": "Removing...",
+  "officeAddressOptional": "Office Address (Optional)",
+  "additionalNotesOptional": "Additional Notes (Optional)",
+  "notesForPatients": "Notes for Patients",
+  "notesPlaceholder": "e.g. 2nd floor, ring doorbell 15",
+  "addressPlaceholder": "Via Roma 123, 10123 Torino TO, Italy",
+  "setOfficeLocationDescription": "Set your office location so patients can easily find you. This will be shown to users who have meal plans assigned to you.",
   "energy": "Energy",
   "@energy": {
     "description": "Energy label"
@@ -1923,7 +1990,6 @@
     "description": "The code sent to the user's phone number or email address for verification.",
     "example": "123456"
   },
-  "address": "Address",
   "@address": {
     "description": "User's preferred postal address."
   },

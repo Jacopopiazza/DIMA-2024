@@ -2,6 +2,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:dima_application/AmplifyWrapper/AmplifyAuth.dart';
 import 'package:dima_application/AmplifyWrapper/AmplifyStorage.dart';
+import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
@@ -10,16 +11,21 @@ import 'package:path/path.dart' as path;
 class ImageUploadService {
   final AmplifyAuth _amplifyAuth;
   final AmplifyStorage _amplifyStorage;
+  final NutritionistProfileService _profileService;
 
-  ImageUploadService({AmplifyAuth? amplifyAuth, AmplifyStorage? amplifyStorage})
-      : _amplifyAuth = amplifyAuth ?? AmplifyAuth(),
-        _amplifyStorage = amplifyStorage ?? AmplifyStorage();
+  ImageUploadService({
+    AmplifyAuth? amplifyAuth,
+    AmplifyStorage? amplifyStorage,
+    NutritionistProfileService? profileService,
+  })  : _amplifyAuth = amplifyAuth ?? AmplifyAuth(),
+        _amplifyStorage = amplifyStorage ?? AmplifyStorage(),
+        _profileService = profileService ?? NutritionistProfileService();
   static const String _profilePicturesPrefix = 'profile-pictures/';
   static const int _maxFileSizeBytes = 5 * 1024 * 1024; // 5MB
   static const List<String> _allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
 
   /// Upload a profile picture for the current user
-  /// Returns the URL of the uploaded image
+  /// Returns the S3 key of the uploaded image
   Future<String?> uploadProfilePicture(XFile imageFile) async {
     try {
       // Validate file size
@@ -65,18 +71,8 @@ class ImageUploadService {
       safePrint(
           'Image uploaded successfully: ${uploadResult.uploadedItem.path}');
 
-      // Get the URL for the uploaded file (maximum expiration allowed by AWS)
-      final urlResult = await _amplifyStorage.getUrl(
-        path: StoragePath.fromString(s3Key),
-        options: const StorageGetUrlOptions(
-          pluginOptions: S3GetUrlPluginOptions(
-            validateObjectExistence: true,
-            expiresIn: Duration(days: 7), // Maximum allowed by AWS S3
-          ),
-        ),
-      );
-
-      return urlResult.url.toString();
+      // Return the S3 key instead of the URL
+      return s3Key;
     } on StorageException catch (e) {
       safePrint('Storage error: ${e.message}');
       rethrow;
@@ -90,12 +86,22 @@ class ImageUploadService {
   }
 
   /// Delete a profile picture from S3
-  Future<void> deleteProfilePicture(String imageUrl) async {
+  /// Accepts either an S3 key or URL
+  Future<void> deleteProfilePicture(String imageUrlOrKey) async {
     try {
-      // Extract S3 key from URL
-      final s3Key = _extractS3KeyFromUrl(imageUrl);
-      if (s3Key == null) {
-        throw Exception('Invalid image URL');
+      String s3Key;
+
+      // Check if input is an S3 key or URL
+      if (imageUrlOrKey.startsWith('http')) {
+        // It's a URL, extract S3 key
+        final extractedKey = _extractS3KeyFromUrl(imageUrlOrKey);
+        if (extractedKey == null) {
+          throw Exception('Invalid image URL');
+        }
+        s3Key = extractedKey;
+      } else {
+        // It's already an S3 key
+        s3Key = imageUrlOrKey;
       }
 
       // Only allow deletion of profile pictures
@@ -111,8 +117,12 @@ class ImageUploadService {
         throw Exception('Cannot delete image that doesn\'t belong to you');
       }
 
+      // Delete from S3
       await _amplifyStorage.remove(path: StoragePath.fromString(s3Key));
       safePrint('Image deleted successfully: $s3Key');
+
+      // Update database to set profilePictureUrl to null
+      await _updateProfilePictureToNull();
     } on StorageException catch (e) {
       safePrint('Storage error deleting image: ${e.message}');
       rethrow;
@@ -224,6 +234,44 @@ class ImageUploadService {
       default:
         return 'image/jpeg';
     }
+  }
+
+  /// Update nutritionist profile to set profilePictureUrl to null
+  Future<void> _updateProfilePictureToNull() async {
+    try {
+      // Get current profile to preserve other fields
+      final currentProfile = await _profileService.getMyProfile();
+
+      if (currentProfile == null) {
+        safePrint(
+            '[ImageUploadService] Warning: Could not load current profile to update');
+        return;
+      }
+
+      // Update profile with null profilePictureUrl
+      final updatedProfile = await _profileService.updateMyProfile(
+        specialization: currentProfile.specialization ?? '',
+        bio: currentProfile.bio ?? '',
+        profilePictureUrl: null, // Set to null
+        isAvailable: currentProfile.isAvailable ?? true,
+      );
+
+      if (updatedProfile != null) {
+        safePrint(
+            '[ImageUploadService] Successfully updated profile to remove profilePictureUrl');
+      } else {
+        safePrint('[ImageUploadService] Warning: Profile update returned null');
+      }
+    } catch (e) {
+      safePrint(
+          '[ImageUploadService] Error updating profile after image deletion: $e');
+      // Don't rethrow - we don't want S3 deletion to fail if profile update fails
+    }
+  }
+
+  /// Extract S3 key from a presigned URL (public method for other services)
+  String? extractS3KeyFromUrl(String url) {
+    return _extractS3KeyFromUrl(url);
   }
 
   /// Extract S3 key from a presigned URL

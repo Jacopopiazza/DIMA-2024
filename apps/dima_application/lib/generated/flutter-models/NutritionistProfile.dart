@@ -26,6 +26,7 @@ import 'package:amplify_core/amplify_core.dart' as amplify_core;
 class NutritionistProfile extends amplify_core.Model {
   static const classType = const _NutritionistProfileModelType();
   final String id;
+  final String? _address;
   final String? _bio;
   final String? _familyName;
   final String? _givenName;
@@ -46,6 +47,10 @@ class NutritionistProfile extends amplify_core.Model {
 
   NutritionistProfileModelIdentifier get modelIdentifier {
     return NutritionistProfileModelIdentifier(id: id);
+  }
+
+  String? get address {
+    return _address;
   }
 
   String? get bio {
@@ -95,6 +100,7 @@ class NutritionistProfile extends amplify_core.Model {
 
   const NutritionistProfile._internal(
       {required this.id,
+      address,
       bio,
       familyName,
       givenName,
@@ -104,7 +110,8 @@ class NutritionistProfile extends amplify_core.Model {
       specialization,
       createdAt,
       updatedAt})
-      : _bio = bio,
+      : _address = address,
+        _bio = bio,
         _familyName = familyName,
         _givenName = givenName,
         _isAvailable = isAvailable,
@@ -116,6 +123,7 @@ class NutritionistProfile extends amplify_core.Model {
 
   factory NutritionistProfile(
       {String? id,
+      String? address,
       String? bio,
       String? familyName,
       String? givenName,
@@ -125,6 +133,7 @@ class NutritionistProfile extends amplify_core.Model {
       String? specialization}) {
     return NutritionistProfile._internal(
         id: id == null ? amplify_core.UUID.getUUID() : id,
+        address: address,
         bio: bio,
         familyName: familyName,
         givenName: givenName,
@@ -143,6 +152,7 @@ class NutritionistProfile extends amplify_core.Model {
     if (identical(other, this)) return true;
     return other is NutritionistProfile &&
         id == other.id &&
+        _address == other._address &&
         _bio == other._bio &&
         _familyName == other._familyName &&
         _givenName == other._givenName &&
@@ -161,6 +171,7 @@ class NutritionistProfile extends amplify_core.Model {
 
     buffer.write("NutritionistProfile {");
     buffer.write("id=" + "$id" + ", ");
+    buffer.write("address=" + "$_address" + ", ");
     buffer.write("bio=" + "$_bio" + ", ");
     buffer.write("familyName=" + "$_familyName" + ", ");
     buffer.write("givenName=" + "$_givenName" + ", ");
@@ -181,7 +192,8 @@ class NutritionistProfile extends amplify_core.Model {
   }
 
   NutritionistProfile copyWith(
-      {String? bio,
+      {String? address,
+      String? bio,
       String? familyName,
       String? givenName,
       bool? isAvailable,
@@ -190,6 +202,7 @@ class NutritionistProfile extends amplify_core.Model {
       String? specialization}) {
     return NutritionistProfile._internal(
         id: id,
+        address: address ?? this.address,
         bio: bio ?? this.bio,
         familyName: familyName ?? this.familyName,
         givenName: givenName ?? this.givenName,
@@ -200,7 +213,8 @@ class NutritionistProfile extends amplify_core.Model {
   }
 
   NutritionistProfile copyWithModelFieldValues(
-      {ModelFieldValue<String?>? bio,
+      {ModelFieldValue<String?>? address,
+      ModelFieldValue<String?>? bio,
       ModelFieldValue<String?>? familyName,
       ModelFieldValue<String?>? givenName,
       ModelFieldValue<bool?>? isAvailable,
@@ -209,6 +223,7 @@ class NutritionistProfile extends amplify_core.Model {
       ModelFieldValue<String?>? specialization}) {
     return NutritionistProfile._internal(
         id: id,
+        address: address == null ? this.address : address.value,
         bio: bio == null ? this.bio : bio.value,
         familyName: familyName == null ? this.familyName : familyName.value,
         givenName: givenName == null ? this.givenName : givenName.value,
@@ -225,6 +240,7 @@ class NutritionistProfile extends amplify_core.Model {
 
   NutritionistProfile.fromJson(Map<String, dynamic> json)
       : id = json['id'],
+        _address = json['address'],
         _bio = json['bio'],
         _familyName = json['familyName'],
         _givenName = json['givenName'],
@@ -241,6 +257,7 @@ class NutritionistProfile extends amplify_core.Model {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'address': _address,
         'bio': _bio,
         'familyName': _familyName,
         'givenName': _givenName,
@@ -254,6 +271,7 @@ class NutritionistProfile extends amplify_core.Model {
 
   Map<String, Object?> toMap() => {
         'id': id,
+        'address': _address,
         'bio': _bio,
         'familyName': _familyName,
         'givenName': _givenName,
@@ -270,6 +288,7 @@ class NutritionistProfile extends amplify_core.Model {
       MODEL_IDENTIFIER =
       amplify_core.QueryModelIdentifier<NutritionistProfileModelIdentifier>();
   static final ID = amplify_core.QueryField(fieldName: "id");
+  static final ADDRESS = amplify_core.QueryField(fieldName: "address");
   static final BIO = amplify_core.QueryField(fieldName: "bio");
   static final FAMILYNAME = amplify_core.QueryField(fieldName: "familyName");
   static final GIVENNAME = amplify_core.QueryField(fieldName: "givenName");
@@ -286,6 +305,12 @@ class NutritionistProfile extends amplify_core.Model {
     modelSchemaDefinition.pluralName = "NutritionistProfiles";
 
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.id());
+
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+        key: NutritionistProfile.ADDRESS,
+        isRequired: false,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
         key: NutritionistProfile.BIO,

@@ -1,5 +1,5 @@
-// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -437,6 +437,132 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exerciseFrequencyTWICE_A_WEEK => 'Twice a week';
+
+  @override
+  String get nutritionistOffice => 'Nutritionist Office';
+
+  @override
+  String get viewOfficeLocationAndDirections => 'View office location and directions';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get directions => 'Directions';
+
+  @override
+  String get viewMap => 'View Map';
+
+  @override
+  String get getDirections => 'Get Directions';
+
+  @override
+  String get locationNotAvailable => 'Location Not Available';
+
+  @override
+  String get couldNotLoadNutritionistLocation => 'Could not load nutritionist location';
+
+  @override
+  String couldNotOpenMaps(String error) {
+    return 'Could not open maps: $error';
+  }
+
+  @override
+  String locationCoordinates(String latitude, String longitude) {
+    return 'Location coordinates: $latitude, $longitude';
+  }
+
+  @override
+  String get officeLocation => 'Office Location';
+
+  @override
+  String get coordinates => 'Coordinates';
+
+  @override
+  String get latitude => 'Latitude';
+
+  @override
+  String get longitude => 'Longitude';
+
+  @override
+  String get useCurrentLocation => 'Use Current Location';
+
+  @override
+  String get gettingLocation => 'Getting Location...';
+
+  @override
+  String get currentLocationRetrievedSuccessfully => 'Current location retrieved successfully';
+
+  @override
+  String get locationAndAddressRetrievedSuccessfully => 'Location and address retrieved successfully';
+
+  @override
+  String get locationServicesDisabled => 'Location Services Disabled';
+
+  @override
+  String get enableLocationServicesMessage => 'Please enable location services in your device settings to use this feature.';
+
+  @override
+  String get locationPermissionRequired => 'Location Permission Required';
+
+  @override
+  String get locationPermissionsPermanentlyDenied => 'Location permissions are permanently denied. Please enable them in app settings.';
+
+  @override
+  String get locationPermissionDenied => 'Location Permission Denied';
+
+  @override
+  String get locationPermissionsRequired => 'Location permissions are required to automatically detect your current position.';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get saveLocation => 'Save Location';
+
+  @override
+  String get locationUpdatedSuccessfully => 'Location updated successfully';
+
+  @override
+  String failedToSaveLocation(String error) {
+    return 'Failed to save location: $error';
+  }
+
+  @override
+  String get enterValidLatitudeLongitude => 'Please enter valid latitude and longitude';
+
+  @override
+  String get enterBothCoordinatesOrNeither => 'Please enter both latitude and longitude or clear both to remove location';
+
+  @override
+  String get removeLocation => 'Remove Location';
+
+  @override
+  String get locationRemovedSuccessfully => 'Location removed successfully';
+
+  @override
+  String get clearLocation => 'Clear Location';
+
+  @override
+  String get removingLocation => 'Removing...';
+
+  @override
+  String get officeAddressOptional => 'Office Address (Optional)';
+
+  @override
+  String get additionalNotesOptional => 'Additional Notes (Optional)';
+
+  @override
+  String get notesForPatients => 'Notes for Patients';
+
+  @override
+  String get notesPlaceholder => 'e.g. 2nd floor, ring doorbell 15';
+
+  @override
+  String get addressPlaceholder => 'Via Roma 123, 10123 Torino TO, Italy';
+
+  @override
+  String get setOfficeLocationDescription => 'Set your office location so patients can easily find you. This will be shown to users who have meal plans assigned to you.';
 
   @override
   String get energy => 'Energy';
@@ -2482,9 +2608,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verificationCode => 'Verification Code';
-
-  @override
-  String get address => 'Address';
 
   @override
   String get middleName => 'Middle Name';

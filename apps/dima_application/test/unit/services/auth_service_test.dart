@@ -43,8 +43,10 @@ void main() {
       test('returns user ID when user is signed in', () async {
         when(mockAuthSession.isSignedIn).thenReturn(true);
         when(mockAuthUser.userId).thenReturn('test-user-123');
-        when(mockAmplifyAuth.fetchAuthSession()).thenAnswer((_) async => mockAuthSession);
-        when(mockAmplifyAuth.getCurrentUser()).thenAnswer((_) async => mockAuthUser);
+        when(mockAmplifyAuth.fetchAuthSession())
+            .thenAnswer((_) async => mockAuthSession);
+        when(mockAmplifyAuth.getCurrentUser())
+            .thenAnswer((_) async => mockAuthUser);
 
         final result = await authService.getCurrentUserIdInstance();
 
@@ -55,7 +57,8 @@ void main() {
 
       test('returns null when user is not signed in', () async {
         when(mockAuthSession.isSignedIn).thenReturn(false);
-        when(mockAmplifyAuth.fetchAuthSession()).thenAnswer((_) async => mockAuthSession);
+        when(mockAmplifyAuth.fetchAuthSession())
+            .thenAnswer((_) async => mockAuthSession);
 
         final result = await authService.getCurrentUserIdInstance();
 
@@ -77,7 +80,8 @@ void main() {
 
       test('returns null when getCurrentUser throws exception', () async {
         when(mockAuthSession.isSignedIn).thenReturn(true);
-        when(mockAmplifyAuth.fetchAuthSession()).thenAnswer((_) async => mockAuthSession);
+        when(mockAmplifyAuth.fetchAuthSession())
+            .thenAnswer((_) async => mockAuthSession);
         when(mockAmplifyAuth.getCurrentUser())
             .thenThrow(Exception('Get user error'));
 
@@ -104,7 +108,7 @@ void main() {
       test('static method exists and calls instance method', () async {
         // Test that static method exists and handles exceptions gracefully
         final result = await AuthService.getCurrentUserId();
-        
+
         // Since this uses a new instance with real Amplify (not our mocks),
         // it will return null due to Amplify not being configured in tests
         expect(result, isNull);

@@ -213,8 +213,6 @@ class MealPlansService {
         throw Exception('GraphQL query returned null data');
       }
 
-      
-
       // Parse the JSON response manually like the working queries
       Map<String, dynamic> jsonData;
       if (response.data is String) {
@@ -886,6 +884,7 @@ class MealPlansService {
             listNutritionists(limit: \$limit, nextToken: \$nextToken) {
               items {
                 id
+                address
                 nutritionistId
                 givenName
                 familyName

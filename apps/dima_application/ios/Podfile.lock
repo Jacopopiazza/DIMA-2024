@@ -9,6 +9,11 @@ PODS:
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - geocoding_ios (1.0.5):
+    - Flutter
+  - geolocator_apple (1.2.0):
+    - Flutter
+    - FlutterMacOS
   - image_picker_ios (0.0.1):
     - Flutter
   - isar_flutter_libs (1.0.0):
@@ -30,6 +35,8 @@ DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
+  - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/darwin`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -48,6 +55,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
+  geocoding_ios:
+    :path: ".symlinks/plugins/geocoding_ios/ios"
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/darwin"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   isar_flutter_libs:
@@ -67,6 +78,8 @@ SPEC CHECKSUMS:
   connectivity_plus: 2a701ffec2c0ae28a48cf7540e279787e77c447d
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  geocoding_ios: eafacae6ad11a1eb56681f7d11df602a5fd49416
+  geolocator_apple: 66b711889fd333205763b83c9dcf0a57a28c7afd
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
   isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
   package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
