@@ -114,6 +114,7 @@ export class DataStack extends cdk.Stack {
         'ProfilePictureURL',
         'IsAvailable',
         'Bio',
+        'address',
       ],
     });
 

@@ -526,6 +526,44 @@ export class AppSyncApiStack extends cdk.Stack {
       `),
     });
 
+    // ---- LOCATION RESOLVERS ----
+    tableDS.createResolver('UpdateNutritionistLocationResolver', {
+      typeName: 'Mutation',
+      fieldName: 'updateNutritionistLocation',
+      code: appsync.Code.fromAsset(
+        'resolvers/mutation.updateNutritionistLocation.js',
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+
+    // removeNutritionistLocation resolver
+    tableDS.createResolver('RemoveNutritionistLocationResolver', {
+      typeName: 'Mutation',
+      fieldName: 'removeNutritionistLocation',
+      code: appsync.Code.fromAsset(
+        'resolvers/mutation.removeNutritionistLocation.js',
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+
+    // getNutritionistLocation resolver
+    tableDS.createResolver('GetNutritionistLocationResolver', {
+      typeName: 'Query',
+      fieldName: 'getNutritionistLocation',
+      code: appsync.Code.fromAsset(
+        'resolvers/query.getNutritionistLocation.js',
+      ),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+
+    // getMyLocation resolver
+    tableDS.createResolver('GetMyLocationResolver', {
+      typeName: 'Query',
+      fieldName: 'getMyLocation',
+      code: appsync.Code.fromAsset('resolvers/query.getMyLocation.js'),
+      runtime: appsync.FunctionRuntime.JS_1_0_0,
+    });
+
     // ====================================================================
     // ====================================================================
     //                  MEAL PLAN GENERATION (NEW SECTION)
