@@ -54,8 +54,7 @@ class NutritionistLocationService {
       if (result.hasErrors) {
         safePrint(
             '[NutritionistLocationService] Error updating location: ${result.errors}');
-        throw Exception(
-            result.errors?.join(', ') ?? 'Failed to update location');
+        throw Exception(result.errors.join(', '));
       }
 
       if (result.data == null) {
@@ -123,8 +122,7 @@ class NutritionistLocationService {
       if (result.hasErrors) {
         safePrint(
             '[NutritionistLocationService] Error removing location: ${result.errors}');
-        throw Exception(
-            result.errors?.join(', ') ?? 'Failed to remove location');
+        throw Exception(result.errors.join(', '));
       }
 
       if (result.data == null) {
@@ -245,8 +243,7 @@ class NutritionistLocationService {
       if (result.hasErrors) {
         safePrint(
             '[NutritionistLocationService] Error updating location: ${result.errors}');
-        throw Exception(
-            result.errors?.join(', ') ?? 'Failed to update location');
+        throw Exception(result.errors.join(', '));
       }
 
       if (result.data == null) {
@@ -365,9 +362,9 @@ class NutritionistLocationService {
         }
 
         safePrint(
-            '[NutritionistLocationService] Received ${placemarks?.length ?? 0} placemarks');
+            '[NutritionistLocationService] Received ${placemarks.length} placemarks');
 
-        if (placemarks != null && placemarks.isNotEmpty) {
+        if (placemarks.isNotEmpty) {
           final place = placemarks.first;
 
           // Build a readable address safely
