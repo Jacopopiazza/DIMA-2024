@@ -32,6 +32,7 @@ export class AuthStack extends cdk.Stack {
         minify: false, // Minify the code
         sourceMap: true, // Generate source maps
       },
+      timeout: cdk.Duration.seconds(30),
     });
 
     // Define the Pre-Signup Lambda Function
@@ -51,6 +52,7 @@ export class AuthStack extends cdk.Stack {
         environment: {
           TABLE_NAME: 'MealPlanningTable',
         },
+        timeout: cdk.Duration.seconds(30),
       },
     );
 
