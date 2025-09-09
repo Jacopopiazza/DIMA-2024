@@ -237,7 +237,7 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                   // Show error dialog on server failure
                   if (context.mounted) {
                     // Determine if it's a network error or database error
-                    if (e.toString().toLowerCase().contains('network') || 
+                    if (e.toString().toLowerCase().contains('network') ||
                         e.toString().toLowerCase().contains('connection')) {
                       await ErrorDialogUtils.showNetworkError(
                         context,
@@ -249,7 +249,8 @@ class MealDetailsDraggablePage extends ConsumerWidget {
                           } catch (retryError) {
                             // If retry fails, show the database error
                             if (context.mounted) {
-                              await ErrorDialogUtils.showMealCompletionError(context);
+                              await ErrorDialogUtils.showMealCompletionError(
+                                  context);
                             }
                           }
                         },

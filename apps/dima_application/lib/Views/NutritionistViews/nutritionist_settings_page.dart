@@ -4,6 +4,7 @@ import 'package:dima_application/Views/Common/offline_screen.dart';
 import 'package:dima_application/Views/NutritionistViews/enter_nutritionist_profile.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/availability_section.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/nutritionist_actions_section.dart';
+import 'package:dima_application/Views/NutritionistViews/widgets/nutritionist_location_section.dart';
 import 'package:dima_application/Views/NutritionistViews/widgets/nutritionist_profile_section.dart';
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
@@ -273,6 +274,10 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
 
                       // Availability Section (wrapped in card style)
                       _buildAvailabilitySection(colorScheme, theme),
+                      const SizedBox(height: 24),
+
+                      // Location Section (styled as card)
+                      const NutritionistLocationSection(),
                       const SizedBox(height: 24),
 
                       // Actions Section (wrapped in card style)

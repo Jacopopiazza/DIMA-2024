@@ -21,8 +21,9 @@ class MealCompletionService {
     try {
       final targetDate = date ?? DateTime.now();
       final dateString = _formatDate(targetDate);
-      
-      safePrint('[MealCompletionService] Marking meal as completed: $mealName for plan $mealPlanId on $dateString');
+
+      safePrint(
+          '[MealCompletionService] Marking meal as completed: $mealName for plan $mealPlanId on $dateString');
 
       final request = GraphQLRequest<String>(
         document: '''
@@ -47,10 +48,11 @@ class MealCompletionService {
       );
 
       final response = await _amplifyGraphQL.mutate(request: request).response;
-      
+
       if (response.hasErrors) {
         safePrint('[MealCompletionService] GraphQL errors: ${response.errors}');
-        throw Exception('Failed to mark meal as completed: ${response.errors.first.message}');
+        throw Exception(
+            'Failed to mark meal as completed: ${response.errors.first.message}');
       }
 
       if (response.data == null) {
@@ -59,7 +61,7 @@ class MealCompletionService {
 
       final Map<String, dynamic> jsonData = json.decode(response.data!);
       final data = jsonData['markMealAsCompleted'];
-      
+
       if (data == null) {
         throw Exception('Invalid response structure');
       }
@@ -74,7 +76,8 @@ class MealCompletionService {
         'userId': data['userId'],
       });
 
-      safePrint('[MealCompletionService] Successfully marked meal as completed');
+      safePrint(
+          '[MealCompletionService] Successfully marked meal as completed');
       return completion;
     } catch (e) {
       safePrint('[MealCompletionService] Error marking meal as completed: $e');
@@ -91,8 +94,9 @@ class MealCompletionService {
     try {
       final targetDate = date ?? DateTime.now();
       final dateString = _formatDate(targetDate);
-      
-      safePrint('[MealCompletionService] Unmarking meal as completed: $mealName for plan $mealPlanId on $dateString');
+
+      safePrint(
+          '[MealCompletionService] Unmarking meal as completed: $mealName for plan $mealPlanId on $dateString');
 
       final request = GraphQLRequest<String>(
         document: '''
@@ -117,10 +121,11 @@ class MealCompletionService {
       );
 
       final response = await _amplifyGraphQL.mutate(request: request).response;
-      
+
       if (response.hasErrors) {
         safePrint('[MealCompletionService] GraphQL errors: ${response.errors}');
-        throw Exception('Failed to unmark meal as completed: ${response.errors.first.message}');
+        throw Exception(
+            'Failed to unmark meal as completed: ${response.errors.first.message}');
       }
 
       if (response.data == null) {
@@ -129,7 +134,7 @@ class MealCompletionService {
 
       final Map<String, dynamic> jsonData = json.decode(response.data!);
       final data = jsonData['unmarkMealAsCompleted'];
-      
+
       if (data == null) {
         throw Exception('Invalid response structure');
       }
@@ -144,10 +149,12 @@ class MealCompletionService {
         'userId': data['userId'],
       });
 
-      safePrint('[MealCompletionService] Successfully unmarked meal as completed');
+      safePrint(
+          '[MealCompletionService] Successfully unmarked meal as completed');
       return completion;
     } catch (e) {
-      safePrint('[MealCompletionService] Error unmarking meal as completed: $e');
+      safePrint(
+          '[MealCompletionService] Error unmarking meal as completed: $e');
       rethrow;
     }
   }
@@ -155,10 +162,12 @@ class MealCompletionService {
   /// Gets today's plan and completion status from the server
   /// DEPRECATED: Currently failing due to server-side GraphQL mapping template issues
   /// Use individual mutations (markMealAsCompleted/unmarkMealAsCompleted) instead
-  @Deprecated('Use individual mutations instead due to server-side resolver issues')
+  @Deprecated(
+      'Use individual mutations instead due to server-side resolver issues')
   Future<TodaysPlan?> getTodaysPlanAndStatus() async {
     try {
-      safePrint('[MealCompletionService] Fetching today\'s plan and status from server');
+      safePrint(
+          '[MealCompletionService] Fetching today\'s plan and status from server');
 
       final request = GraphQLRequest<String>(
         document: '''
@@ -370,12 +379,13 @@ class MealCompletionService {
       );
 
       final response = await _amplifyGraphQL.query(request: request).response;
-      
+
       if (response.hasErrors) {
         safePrint('[MealCompletionService] GraphQL errors: ${response.errors}');
         // Extract just the first line of the error for cleaner logging
         final firstError = response.errors.first.message.split('\n').first;
-        throw Exception('Failed to get today\'s plan: $firstError (server-side resolver issue)');
+        throw Exception(
+            'Failed to get today\'s plan: $firstError (server-side resolver issue)');
       }
 
       if (response.data == null) {
@@ -384,7 +394,7 @@ class MealCompletionService {
 
       final Map<String, dynamic> jsonData = json.decode(response.data!);
       final data = jsonData['getTodaysPlanAndStatus'];
-      
+
       if (data == null) {
         throw Exception('Invalid response structure');
       }
@@ -392,7 +402,8 @@ class MealCompletionService {
       // Create TodaysPlan from response
       final todaysPlan = TodaysPlan.fromJson(data);
 
-      safePrint('[MealCompletionService] Successfully fetched today\'s plan and status');
+      safePrint(
+          '[MealCompletionService] Successfully fetched today\'s plan and status');
       return todaysPlan;
     } catch (e) {
       safePrint('[MealCompletionService] Error fetching today\'s plan: $e');
@@ -409,7 +420,8 @@ class MealCompletionService {
   }) async {
     try {
       final dateString = _formatDate(date);
-      safePrint('[MealCompletionService] Fetching plan day completion for plan $planId on $dateString');
+      safePrint(
+          '[MealCompletionService] Fetching plan day completion for plan $planId on $dateString');
 
       final request = GraphQLRequest<String>(
         document: '''
@@ -431,10 +443,11 @@ class MealCompletionService {
       );
 
       final response = await _amplifyGraphQL.query(request: request).response;
-      
+
       if (response.hasErrors) {
         safePrint('[MealCompletionService] GraphQL errors: ${response.errors}');
-        throw Exception('Failed to get plan day completion: ${response.errors.first.message}');
+        throw Exception(
+            'Failed to get plan day completion: ${response.errors.first.message}');
       }
 
       if (response.data == null) {
@@ -443,7 +456,7 @@ class MealCompletionService {
 
       final Map<String, dynamic> jsonData = json.decode(response.data!);
       final data = jsonData['getPlanDayCompletion'];
-      
+
       if (data == null) {
         return null; // No completion record found
       }
@@ -458,10 +471,12 @@ class MealCompletionService {
         'userId': data['userId'],
       });
 
-      safePrint('[MealCompletionService] Successfully fetched plan day completion');
+      safePrint(
+          '[MealCompletionService] Successfully fetched plan day completion');
       return completion;
     } catch (e) {
-      safePrint('[MealCompletionService] Error fetching plan day completion: $e');
+      safePrint(
+          '[MealCompletionService] Error fetching plan day completion: $e');
       rethrow;
     }
   }

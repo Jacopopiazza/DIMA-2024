@@ -179,7 +179,8 @@ final todayPageProvider =
 class TodayPageNotifier extends StateNotifier<TodayPageState> {
   final Isar _isar;
   final MealPlansService _mealPlansService; // Use the injected MealPlansService
-  final MealCompletionService _mealCompletionService; // Use the injected MealCompletionService
+  final MealCompletionService
+      _mealCompletionService; // Use the injected MealCompletionService
   late final StateNotifierProviderRef<TodayPageNotifier, TodayPageState> _ref;
 
   TodayPageNotifier(this._isar, this._mealPlansService, this._ref)
@@ -439,7 +440,8 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
 
       // 2. Fetch meal plan using individual plan query (reliable method)
       try {
-        safePrint("[TodayPageNotifier] Fetching meal plan by ID: $chosenPlanId");
+        safePrint(
+            "[TodayPageNotifier] Fetching meal plan by ID: $chosenPlanId");
         mealPlan = await _mealPlansService.getMealPlanById(chosenPlanId);
 
         if (mealPlan == null) {
@@ -450,8 +452,10 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
         finalStatus = (wasFromCache && hasNetworkError)
             ? DataStatus.errorNetworkWithCache
             : DataStatus.loadedOnline;
-        planFetchTime = mealPlan.updatedAt?.getDateTimeInUtc() ?? DateTime.now().toUtc();
-        safePrint("[TodayPageNotifier] MealPlansService success. Status: $finalStatus");
+        planFetchTime =
+            mealPlan.updatedAt?.getDateTimeInUtc() ?? DateTime.now().toUtc();
+        safePrint(
+            "[TodayPageNotifier] MealPlansService success. Status: $finalStatus");
       } catch (e) {
         // Handle meal plan fetch errors
         safePrint("[TodayPageNotifier] Meal plan fetch failed: $e");
@@ -527,25 +531,28 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
         // 4. Load Today's DailyCompletion record (try server first on refresh, fallback to local cache)
 
         final todayDateOnly = DailyCompletion.dateOnly(DateTime.now());
-        
+
         // On refresh, try to get fresh completion data from server
         if (forceRefresh) {
           try {
-            safePrint('[TodayPageNotifier] Refresh: Attempting to fetch completion from server for plan $chosenPlanId on $todayDateOnly');
-            final serverCompletion = await _mealCompletionService.getPlanDayCompletion(
+            safePrint(
+                '[TodayPageNotifier] Refresh: Attempting to fetch completion from server for plan $chosenPlanId on $todayDateOnly');
+            final serverCompletion =
+                await _mealCompletionService.getPlanDayCompletion(
               planId: chosenPlanId,
               date: DateTime.now(),
             );
-            
+
             if (serverCompletion != null) {
               // Convert server completion to Isar format
               todaysCompletionRecord = DailyCompletion(
                 planId: serverCompletion.planId!,
                 date: todayDateOnly,
                 latestUpdate: DateTime.now(),
-                completedMealNames: serverCompletion.completedMealNames!.cast<MealNameEnum>(),
+                completedMealNames:
+                    serverCompletion.completedMealNames!.cast<MealNameEnum>(),
               );
-              
+
               // Cache the server data locally
               try {
                 await _isar.writeTxn(() async {
@@ -553,20 +560,24 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
                   safePrint("[Isar] Cached refreshed server completion data");
                 });
               } catch (e) {
-                safePrint("[TodayPageNotifier] Error caching refreshed completion: $e");
+                safePrint(
+                    "[TodayPageNotifier] Error caching refreshed completion: $e");
                 // Don't throw - this is just caching
               }
-              
-              safePrint('[TodayPageNotifier] Refresh: Got completion from server with ${todaysCompletionRecord!.completedMealNames.length} completed meals');
+
+              safePrint(
+                  '[TodayPageNotifier] Refresh: Got completion from server with ${todaysCompletionRecord!.completedMealNames.length} completed meals');
             } else {
-              safePrint('[TodayPageNotifier] Refresh: No completion data on server');
+              safePrint(
+                  '[TodayPageNotifier] Refresh: No completion data on server');
             }
           } catch (e) {
-            safePrint('[TodayPageNotifier] Refresh: Failed to fetch completion from server (will use local cache): ${e.toString().split('\n').first}');
+            safePrint(
+                '[TodayPageNotifier] Refresh: Failed to fetch completion from server (will use local cache): ${e.toString().split('\n').first}');
             // Continue to load from local cache
           }
         }
-        
+
         // If we don't have completion from server, load from local cache
         if (todaysCompletionRecord == null) {
           safePrint(
@@ -577,7 +588,7 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
               .planIdDateEqualTo(chosenPlanId, todayDateOnly)
               .findFirst();
         }
-        
+
         safePrint(
             "[TodayPageNotifier] Final completion record: ${todaysCompletionRecord?.completedMealNames ?? 'None'}");
 
@@ -668,14 +679,15 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
     final todayDateOnly = DailyCompletion.dateOnly(DateTime.now());
     final currentCompletion = state.dailyCompletion ??
         DailyCompletion.forDate(planId: mealPlanId, date: todayDateOnly);
-    
+
     final wasCompleted = currentCompletion.completedMealNames.contains(meal);
-    
-    safePrint("[TodayPageNotifier] ${wasCompleted ? 'Unmarking' : 'Marking'} '$meal' as ${wasCompleted ? 'incomplete' : 'complete'} on server");
+
+    safePrint(
+        "[TodayPageNotifier] ${wasCompleted ? 'Unmarking' : 'Marking'} '$meal' as ${wasCompleted ? 'incomplete' : 'complete'} on server");
 
     try {
       PlanDayCompletion? serverCompletion;
-      
+
       // Call appropriate GraphQL mutation based on current state
       if (wasCompleted) {
         serverCompletion = await _mealCompletionService.unmarkMealAsCompleted(
@@ -701,12 +713,13 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
         id: currentCompletion.id, // Preserve Isar ID
         date: todayDateOnly,
         latestUpdate: DateTime.now(),
-        completedMealNames: serverCompletion.completedMealNames!.cast<MealNameEnum>(),
+        completedMealNames:
+            serverCompletion.completedMealNames!.cast<MealNameEnum>(),
       );
 
       // Recalculate consumed macros using the server-confirmed completion status
-      final newConsumed = _calculateConsumedMacros(
-          updatedCompletion, state.todaysMeals);
+      final newConsumed =
+          _calculateConsumedMacros(updatedCompletion, state.todaysMeals);
 
       // Update state with server-confirmed data
       state = state.copyWith(
@@ -731,11 +744,12 @@ class TodayPageNotifier extends StateNotifier<TodayPageState> {
         // Don't throw here - the server operation succeeded
       }
 
-      safePrint("[TodayPageNotifier] Successfully ${wasCompleted ? 'unmarked' : 'marked'} meal completion on server");
-
+      safePrint(
+          "[TodayPageNotifier] Successfully ${wasCompleted ? 'unmarked' : 'marked'} meal completion on server");
     } catch (e, stackTrace) {
-      safePrint("[TodayPageNotifier] Error toggling meal completion on server: $e\n$stackTrace");
-      
+      safePrint(
+          "[TodayPageNotifier] Error toggling meal completion on server: $e\n$stackTrace");
+
       // Server operation failed - don't update the state
       // The user will see the error dialog and the UI will remain in the previous state
       rethrow; // Let the UI layer handle the error dialog

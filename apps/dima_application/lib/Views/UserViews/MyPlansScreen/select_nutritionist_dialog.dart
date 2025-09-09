@@ -308,8 +308,40 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                                 ? colorScheme.onSurfaceVariant.withOpacity(0.5)
                                 : colorScheme.onSurfaceVariant,
                           ),
-                          maxLines: 2,
+                          maxLines: 5,
                           overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                    // Address
+                    if (nutritionist.address != null &&
+                        nutritionist.address!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              size: 14,
+                              color: isUnavailable
+                                  ? colorScheme.onSurfaceVariant.withOpacity(0.5)
+                                  : colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                nutritionist.address!,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: isUnavailable
+                                      ? colorScheme.onSurfaceVariant.withOpacity(0.5)
+                                      : colorScheme.onSurfaceVariant,
+                                  fontSize: 12,
+                                ),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
 
