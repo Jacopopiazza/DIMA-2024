@@ -246,6 +246,7 @@ type Query {
   getNutritionistLocation(nutritionistId: ID!): NutritionistLocation @aws_auth(cognito_groups : ["USERS"])
   getPlanDayCompletion(date: AWSDate!, planId: ID!): PlanDayCompletion @aws_auth(cognito_groups : ["USERS"])
   getTodaysPlanAndStatus: TodaysPlan @aws_auth(cognito_groups : ["USERS"])
+  getUrlForProfilePicture(s3Key: String!): AWSURL @aws_auth(cognito_groups : ["USERS", "NUTRITIONISTS"])
   getUserDetails: UserDetails @aws_auth(cognito_groups : ["USERS"])
   getUserSubscriptionStatus: UserSubscriptionStatus @aws_auth(cognito_groups : ["USERS"])
   listMyAssignedChats(limit: Int, nextToken: String): ChatMetadataConnection @aws_auth(cognito_groups : ["NUTRITIONISTS"])

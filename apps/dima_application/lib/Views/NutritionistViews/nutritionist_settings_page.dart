@@ -174,6 +174,34 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
     setState(() {
       _profilePictureUrl = newImageUrl;
     });
+
+    // If image was removed (set to null), reload profile from database to update info card
+    if (newImageUrl == null) {
+      _reloadProfileAfterImageRemoval();
+    }
+  }
+
+  Future<void> _reloadProfileAfterImageRemoval() async {
+    try {
+      final updatedProfile = await _profileService.getMyProfile();
+      if (updatedProfile != null && mounted) {
+        setState(() {
+          _currentProfile = updatedProfile;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text(AppLocalizations.of(context)!.profileUpdatedSuccessfully),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      safePrint(
+          '[NutritionistSettings] Error reloading profile after image removal: $e');
+    }
   }
 
   Future<void> _updateAvailability(bool value) async {
@@ -411,6 +439,7 @@ class _NutritionistSettingsPageState extends State<NutritionistSettingsPage>
             const SizedBox(height: 16),
             Center(
               child: NutritionistProfileSection(
+                key: ValueKey(_currentProfile?.profilePictureUrl ?? 'no-image'),
                 profile: _currentProfile,
                 onEditProfile: null,
               ),

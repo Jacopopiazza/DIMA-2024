@@ -125,6 +125,64 @@ class NutritionistProfileService {
     }
   }
 
+  /// Get the authenticated nutritionist's profile with resolved profile picture URL
+  Future<NutritionistProfile?> getMyProfileWithResolvedImage() async {
+    final profile = await getMyProfile();
+    if (profile?.profilePictureUrl != null &&
+        profile!.profilePictureUrl!.isNotEmpty) {
+      // If profilePictureUrl looks like an S3 key, resolve it to a URL
+      // If it's already a URL, we could leave it as is or extract the key and re-resolve
+      if (!profile.profilePictureUrl!.startsWith('http')) {
+        // It's an S3 key, get the presigned URL
+        final resolvedUrl =
+            await getUrlForProfilePicture(profile.profilePictureUrl!);
+        if (resolvedUrl != null) {
+          // Create a new profile with the resolved URL
+          return profile.copyWith(profilePictureUrl: resolvedUrl);
+        }
+      }
+    }
+    return profile;
+  }
+
+  /// Get a presigned URL for a profile picture given an S3 key
+  Future<String?> getUrlForProfilePicture(String s3Key) async {
+    try {
+      final request = GraphQLRequest<String>(
+        document: '''
+          query GetUrlForProfilePicture(\$s3Key: String!) {
+            getUrlForProfilePicture(s3Key: \$s3Key)
+          }
+        ''',
+        variables: {
+          's3Key': s3Key,
+        },
+        decodePath: 'getUrlForProfilePicture',
+      );
+
+      final response = await _amplifyGraphQL.query(request: request).response;
+
+      if (response.hasErrors) {
+        safePrint(
+            '[NutritionistProfileService] Error getting profile picture URL: ${response.errors}');
+        return null;
+      }
+
+      if (response.data == null) {
+        return null;
+      }
+
+      final decoded = json.decode(response.data!);
+      final url = decoded['getUrlForProfilePicture'];
+
+      return url as String?;
+    } catch (e) {
+      safePrint(
+          '[NutritionistProfileService] Error getting profile picture URL: $e');
+      return null;
+    }
+  }
+
   /// Check if the nutritionist has a valid profile
   Future<bool> hasValidProfile() async {
     safePrint(

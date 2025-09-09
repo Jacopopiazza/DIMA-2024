@@ -1,5 +1,6 @@
 import 'package:dima_application/generated/flutter-models/NutritionistProfile.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
+import 'package:dima_application/services/nutritionist_profile_service.dart';
 import 'package:flutter/material.dart';
 
 class SelectNutritionistDialog extends StatefulWidget {
@@ -35,7 +36,21 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
 
   Future<void> _loadNutritionists() async {
     try {
+      print('[SelectNutritionistDialog] Loading nutritionists...');
       final nutritionists = await widget.onLoadNutritionists();
+      print(
+          '[SelectNutritionistDialog] Loaded ${nutritionists.length} nutritionists');
+
+      // Debug log each nutritionist's profile picture URL
+      for (int i = 0; i < nutritionists.length; i++) {
+        final nutritionist = nutritionists[i];
+        print('[SelectNutritionistDialog] Nutritionist $i:');
+        print('  - Name: ${nutritionist.givenName} ${nutritionist.familyName}');
+        print('  - Profile Picture URL: "${nutritionist.profilePictureUrl}"');
+        print('  - Is Available: ${nutritionist.isAvailable}');
+        print('  - Address: "${nutritionist.address}"');
+      }
+
       if (mounted) {
         setState(() {
           _nutritionists = nutritionists;
@@ -163,67 +178,10 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
     return selectedNutritionist.isAvailable != true;
   }
 
-  Widget _buildProfileImage(String? imageUrl, {double size = 60}) {
-    if (imageUrl == null || imageUrl.isEmpty) {
-      // Fallback to a default avatar icon
-      return Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          Icons.person,
-          size: size * 0.5,
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-        ),
-      );
-    }
-
-    return ClipOval(
-      child: Image.network(
-        imageUrl,
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          // Fallback to default avatar on error
-          return Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.errorContainer,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.person,
-              size: size * 0.5,
-              color: Theme.of(context).colorScheme.onErrorContainer,
-            ),
-          );
-        },
-      ),
+  Widget _buildProfileImage(String? imageUrlOrKey, {double size = 60}) {
+    return NutritionistProfileImage(
+      imageUrlOrKey: imageUrlOrKey,
+      size: size,
     );
   }
 
@@ -324,7 +282,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                               Icons.location_on_outlined,
                               size: 14,
                               color: isUnavailable
-                                  ? colorScheme.onSurfaceVariant.withOpacity(0.5)
+                                  ? colorScheme.onSurfaceVariant
+                                      .withOpacity(0.5)
                                   : colorScheme.onSurfaceVariant,
                             ),
                             const SizedBox(width: 4),
@@ -333,7 +292,8 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
                                 nutritionist.address!,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isUnavailable
-                                      ? colorScheme.onSurfaceVariant.withOpacity(0.5)
+                                      ? colorScheme.onSurfaceVariant
+                                          .withOpacity(0.5)
                                       : colorScheme.onSurfaceVariant,
                                   fontSize: 12,
                                 ),
@@ -472,6 +432,165 @@ class _SelectNutritionistDialogState extends State<SelectNutritionistDialog> {
               : Text(AppLocalizations.of(context)!.requestValidationButton),
         ),
       ],
+    );
+  }
+}
+
+/// Widget to handle S3 key resolution for nutritionist profile images
+class NutritionistProfileImage extends StatefulWidget {
+  final String? imageUrlOrKey;
+  final double size;
+
+  const NutritionistProfileImage({
+    super.key,
+    required this.imageUrlOrKey,
+    this.size = 60,
+  });
+
+  @override
+  State<NutritionistProfileImage> createState() =>
+      _NutritionistProfileImageState();
+}
+
+class _NutritionistProfileImageState extends State<NutritionistProfileImage> {
+  String? _resolvedImageUrl;
+  bool _isLoadingImage = false;
+  final NutritionistProfileService _profileService =
+      NutritionistProfileService();
+
+  @override
+  void initState() {
+    super.initState();
+    _resolveProfileImage();
+  }
+
+  @override
+  void didUpdateWidget(NutritionistProfileImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.imageUrlOrKey != oldWidget.imageUrlOrKey) {
+      _resolveProfileImage();
+    }
+  }
+
+  Future<void> _resolveProfileImage() async {
+    if (widget.imageUrlOrKey == null || widget.imageUrlOrKey!.isEmpty) {
+      setState(() {
+        _resolvedImageUrl = null;
+        _isLoadingImage = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoadingImage = true;
+    });
+
+    try {
+      if (widget.imageUrlOrKey!.startsWith('http')) {
+        // Already a URL
+        _resolvedImageUrl = widget.imageUrlOrKey!;
+      } else {
+        // S3 key, resolve to URL
+        _resolvedImageUrl = await _profileService
+            .getUrlForProfilePicture(widget.imageUrlOrKey!);
+      }
+    } catch (e) {
+      debugPrint('Error resolving profile image: $e');
+      _resolvedImageUrl = null;
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingImage = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    // Show loading state
+    if (_isLoadingImage) {
+      return Container(
+        width: widget.size,
+        height: widget.size,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primaryContainer,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              theme.colorScheme.primary,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Show resolved image
+    if (_resolvedImageUrl != null) {
+      return ClipOval(
+        child: Image.network(
+          _resolvedImageUrl!,
+          width: widget.size,
+          height: widget.size,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              width: widget.size,
+              height: widget.size,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            // Fallback to default avatar on error
+            return Container(
+              width: widget.size,
+              height: widget.size,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.errorContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.person,
+                size: widget.size * 0.5,
+                color: theme.colorScheme.onErrorContainer,
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    // Show fallback icon
+    return Container(
+      width: widget.size,
+      height: widget.size,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primaryContainer,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        Icons.person,
+        size: widget.size * 0.5,
+        color: theme.colorScheme.onPrimaryContainer,
+      ),
     );
   }
 }

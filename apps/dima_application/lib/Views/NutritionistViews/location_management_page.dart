@@ -91,8 +91,10 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
             SnackBar(
               content: Text(response.location!.address != null &&
                       response.location!.address != 'Current Location'
-                  ? AppLocalizations.of(context)!.locationAndAddressRetrievedSuccessfully
-                  : AppLocalizations.of(context)!.currentLocationRetrievedSuccessfully),
+                  ? AppLocalizations.of(context)!
+                      .locationAndAddressRetrievedSuccessfully
+                  : AppLocalizations.of(context)!
+                      .currentLocationRetrievedSuccessfully),
               backgroundColor: Colors.green.shade600,
               behavior: SnackBarBehavior.floating,
             ),
@@ -167,7 +169,8 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
     if (lat == null || lng == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.enterValidLatitudeLongitude),
+          content:
+              Text(AppLocalizations.of(context)!.enterValidLatitudeLongitude),
           backgroundColor: Colors.red.shade600,
         ),
       );
@@ -188,7 +191,8 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
       if (location != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.locationUpdatedSuccessfully),
+            content:
+                Text(AppLocalizations.of(context)!.locationUpdatedSuccessfully),
             backgroundColor: Colors.green.shade600,
           ),
         );
@@ -200,7 +204,8 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.failedToSaveLocation(e.toString())),
+            content: Text(AppLocalizations.of(context)!
+                .failedToSaveLocation(e.toString())),
             backgroundColor: Colors.red.shade600,
           ),
         );
@@ -314,7 +319,8 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
                   ),
                   prefixIcon: const Icon(Icons.my_location),
                 ),
-                onChanged: (value) => setState(() {}), // Trigger rebuild to update save button
+                onChanged: (value) =>
+                    setState(() {}), // Trigger rebuild to update save button
               ),
             ),
             const SizedBox(width: 12),
@@ -334,7 +340,8 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
                   ),
                   prefixIcon: const Icon(Icons.place),
                 ),
-                onChanged: (value) => setState(() {}), // Trigger rebuild to update save button
+                onChanged: (value) =>
+                    setState(() {}), // Trigger rebuild to update save button
               ),
             ),
           ],

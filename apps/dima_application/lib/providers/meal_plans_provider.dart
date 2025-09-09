@@ -243,7 +243,8 @@ class MealPlansNotifier extends AsyncNotifier<List<LightMealPlan>> {
         return false;
       }
     } catch (e) {
-      print('[MealPlansProvider] Exception during assigned meal plan modification: $e');
+      print(
+          '[MealPlansProvider] Exception during assigned meal plan modification: $e');
       return false;
     }
   }

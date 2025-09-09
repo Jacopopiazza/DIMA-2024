@@ -28,20 +28,29 @@ void main() {
 
     group('isValidBirthdateFormat', () {
       test('returns true for valid date formats', () {
-        expect(ProfileValidationUtils.isValidBirthdateFormat('1990-01-01'), isTrue);
-        expect(ProfileValidationUtils.isValidBirthdateFormat('2000-12-31'), isTrue);
-        expect(ProfileValidationUtils.isValidBirthdateFormat('1985-06-15'), isTrue);
-        expect(ProfileValidationUtils.isValidBirthdateFormat('2010-02-29'), isTrue); // Leap year
+        expect(ProfileValidationUtils.isValidBirthdateFormat('1990-01-01'),
+            isTrue);
+        expect(ProfileValidationUtils.isValidBirthdateFormat('2000-12-31'),
+            isTrue);
+        expect(ProfileValidationUtils.isValidBirthdateFormat('1985-06-15'),
+            isTrue);
+        expect(ProfileValidationUtils.isValidBirthdateFormat('2010-02-29'),
+            isTrue); // Leap year
       });
 
       test('returns false for clearly invalid date formats', () {
-        expect(ProfileValidationUtils.isValidBirthdateFormat('90-01-01'), isFalse);
-        expect(ProfileValidationUtils.isValidBirthdateFormat('1990-1-1'), isFalse);
-        expect(ProfileValidationUtils.isValidBirthdateFormat('1990/01/01'), isFalse);
-        expect(ProfileValidationUtils.isValidBirthdateFormat('01-01-1990'), isFalse);
+        expect(
+            ProfileValidationUtils.isValidBirthdateFormat('90-01-01'), isFalse);
+        expect(
+            ProfileValidationUtils.isValidBirthdateFormat('1990-1-1'), isFalse);
+        expect(ProfileValidationUtils.isValidBirthdateFormat('1990/01/01'),
+            isFalse);
+        expect(ProfileValidationUtils.isValidBirthdateFormat('01-01-1990'),
+            isFalse);
         expect(ProfileValidationUtils.isValidBirthdateFormat(''), isFalse);
         expect(ProfileValidationUtils.isValidBirthdateFormat(null), isFalse);
-        expect(ProfileValidationUtils.isValidBirthdateFormat('invalid-date'), isFalse);
+        expect(ProfileValidationUtils.isValidBirthdateFormat('invalid-date'),
+            isFalse);
       });
     });
 
@@ -60,19 +69,31 @@ void main() {
       });
 
       test('returns true for valid ages (13 or older)', () {
-        expect(ProfileValidationUtils.isValidAge('$validBirthYear-01-01'), isTrue);
-        expect(ProfileValidationUtils.isValidAge('${DateTime.now().year - 13}-01-01'), isTrue);
+        expect(
+            ProfileValidationUtils.isValidAge('$validBirthYear-01-01'), isTrue);
+        expect(
+            ProfileValidationUtils.isValidAge(
+                '${DateTime.now().year - 13}-01-01'),
+            isTrue);
         expect(ProfileValidationUtils.isValidAge('1980-06-15'), isTrue);
       });
 
       test('returns false for ages under 13', () {
-        expect(ProfileValidationUtils.isValidAge('$invalidBirthYear-01-01'), isFalse);
-        expect(ProfileValidationUtils.isValidAge('${DateTime.now().year - 12}-01-01'), isFalse);
+        expect(ProfileValidationUtils.isValidAge('$invalidBirthYear-01-01'),
+            isFalse);
+        expect(
+            ProfileValidationUtils.isValidAge(
+                '${DateTime.now().year - 12}-01-01'),
+            isFalse);
       });
 
       test('returns false for future dates', () {
-        expect(ProfileValidationUtils.isValidAge('$futureBirthYear-01-01'), isFalse);
-        expect(ProfileValidationUtils.isValidAge('${DateTime.now().year + 5}-01-01'), isFalse);
+        expect(ProfileValidationUtils.isValidAge('$futureBirthYear-01-01'),
+            isFalse);
+        expect(
+            ProfileValidationUtils.isValidAge(
+                '${DateTime.now().year + 5}-01-01'),
+            isFalse);
       });
 
       test('returns false for invalid date formats', () {
@@ -87,10 +108,17 @@ void main() {
         final exactAge13 = DateTime(now.year - 13, now.month, now.day);
         final almostAge13 = DateTime(now.year - 13, now.month, now.day + 1);
 
-        expect(ProfileValidationUtils.isValidAge('${exactAge13.year}-${exactAge13.month.toString().padLeft(2, '0')}-${exactAge13.day.toString().padLeft(2, '0')}'), isTrue);
-        
-        if (almostAge13.day <= 31) { // Avoid invalid dates
-          expect(ProfileValidationUtils.isValidAge('${almostAge13.year}-${almostAge13.month.toString().padLeft(2, '0')}-${almostAge13.day.toString().padLeft(2, '0')}'), isFalse);
+        expect(
+            ProfileValidationUtils.isValidAge(
+                '${exactAge13.year}-${exactAge13.month.toString().padLeft(2, '0')}-${exactAge13.day.toString().padLeft(2, '0')}'),
+            isTrue);
+
+        if (almostAge13.day <= 31) {
+          // Avoid invalid dates
+          expect(
+              ProfileValidationUtils.isValidAge(
+                  '${almostAge13.year}-${almostAge13.month.toString().padLeft(2, '0')}-${almostAge13.day.toString().padLeft(2, '0')}'),
+              isFalse);
         }
       });
     });
@@ -114,8 +142,10 @@ void main() {
         );
 
         expect(result.isValid, isFalse);
-        expect(result.issues, contains('Gender must be Male, Female, or Other'));
-        expect(result.message, contains('Gender must be Male, Female, or Other'));
+        expect(
+            result.issues, contains('Gender must be Male, Female, or Other'));
+        expect(
+            result.message, contains('Gender must be Male, Female, or Other'));
       });
 
       test('returns invalid result with birthdate format issue', () {
@@ -125,8 +155,10 @@ void main() {
         );
 
         expect(result.isValid, isFalse);
-        expect(result.issues, contains('Birthdate must be in YYYY-MM-DD format'));
-        expect(result.message, contains('Birthdate must be in YYYY-MM-DD format'));
+        expect(
+            result.issues, contains('Birthdate must be in YYYY-MM-DD format'));
+        expect(
+            result.message, contains('Birthdate must be in YYYY-MM-DD format'));
       });
 
       test('returns invalid result with age issue', () {
@@ -139,8 +171,10 @@ void main() {
         );
 
         expect(result.isValid, isFalse);
-        expect(result.issues, contains('You must be at least 13 years old to use this service'));
-        expect(result.message, contains('You must be at least 13 years old to use this service'));
+        expect(result.issues,
+            contains('You must be at least 13 years old to use this service'));
+        expect(result.message,
+            contains('You must be at least 13 years old to use this service'));
       });
 
       test('returns invalid result with multiple issues', () {
@@ -151,8 +185,10 @@ void main() {
 
         expect(result.isValid, isFalse);
         expect(result.issues.length, 2);
-        expect(result.issues, contains('Gender must be Male, Female, or Other'));
-        expect(result.issues, contains('Birthdate must be in YYYY-MM-DD format'));
+        expect(
+            result.issues, contains('Gender must be Male, Female, or Other'));
+        expect(
+            result.issues, contains('Birthdate must be in YYYY-MM-DD format'));
         expect(result.message, contains('Please complete your profile:'));
         expect(result.message, contains('•'));
       });
@@ -165,8 +201,10 @@ void main() {
 
         expect(result.isValid, isFalse);
         expect(result.issues.length, 2);
-        expect(result.issues, contains('Gender must be Male, Female, or Other'));
-        expect(result.issues, contains('Birthdate must be in YYYY-MM-DD format'));
+        expect(
+            result.issues, contains('Gender must be Male, Female, or Other'));
+        expect(
+            result.issues, contains('Birthdate must be in YYYY-MM-DD format'));
       });
 
       test('handles empty strings', () {
@@ -177,8 +215,10 @@ void main() {
 
         expect(result.isValid, isFalse);
         expect(result.issues.length, 2);
-        expect(result.issues, contains('Gender must be Male, Female, or Other'));
-        expect(result.issues, contains('Birthdate must be in YYYY-MM-DD format'));
+        expect(
+            result.issues, contains('Gender must be Male, Female, or Other'));
+        expect(
+            result.issues, contains('Birthdate must be in YYYY-MM-DD format'));
       });
     });
 
@@ -189,7 +229,8 @@ void main() {
       });
 
       test('returns single issue message', () {
-        final message = ProfileValidationUtils.getProfileCompletionMessage(['Gender is required']);
+        final message = ProfileValidationUtils.getProfileCompletionMessage(
+            ['Gender is required']);
         expect(message, 'Please complete your profile: Gender is required');
       });
 
@@ -198,7 +239,8 @@ void main() {
           'Gender is required',
           'Birthdate is invalid',
         ]);
-        expect(message, 'Please complete your profile:\n• Gender is required\n• Birthdate is invalid');
+        expect(message,
+            'Please complete your profile:\n• Gender is required\n• Birthdate is invalid');
       });
     });
 
@@ -231,14 +273,17 @@ void main() {
           issues: ['Issue 1', 'Issue 2'],
         );
 
-        final expectedMessage = ProfileValidationUtils.getProfileCompletionMessage(['Issue 1', 'Issue 2']);
+        final expectedMessage =
+            ProfileValidationUtils.getProfileCompletionMessage(
+                ['Issue 1', 'Issue 2']);
         expect(result.message, expectedMessage);
       });
     });
 
     group('Constants', () {
       test('valid genders list is correct', () {
-        expect(ProfileValidationUtils.validGenders, ['male', 'female', 'other']);
+        expect(
+            ProfileValidationUtils.validGenders, ['male', 'female', 'other']);
       });
 
       test('minimum age is correct', () {
