@@ -4,6 +4,26 @@ import 'package:dima_application/services/nutritionist_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Custom input formatter that replaces commas with dots for coordinate input
+class CoordinateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Replace comma with dot for decimal separator
+    String newText = newValue.text.replaceAll(',', '.');
+    
+    // Ensure we only allow valid coordinate characters
+    newText = newText.replaceAll(RegExp(r'[^0-9.\-]'), '');
+    
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
+
 class NutritionistLocationSection extends StatefulWidget {
   final VoidCallback? onLocationUpdated;
 
@@ -182,8 +202,8 @@ class _NutritionistLocationSectionState
     }
 
     // Parse coordinates
-    final lat = double.tryParse(latText);
-    final lng = double.tryParse(lngText);
+    final lat = double.tryParse(latText.replaceAll(',', '.'));
+    final lng = double.tryParse(lngText.replaceAll(',', '.'));
 
     if (lat == null || lng == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -447,7 +467,7 @@ class _NutritionistLocationSectionState
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
+                      CoordinateInputFormatter(),
                     ],
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.latitude,
@@ -474,7 +494,7 @@ class _NutritionistLocationSectionState
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
+                      CoordinateInputFormatter(),
                     ],
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.longitude,

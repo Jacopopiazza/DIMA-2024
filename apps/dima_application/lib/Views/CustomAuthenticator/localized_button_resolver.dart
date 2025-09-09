@@ -94,4 +94,5 @@ class LocalizedButtonResolver extends ButtonResolver {
   String copyKey(BuildContext context) {
     return AppLocalizations.of(context)!.copyKey;
   }
+
 }

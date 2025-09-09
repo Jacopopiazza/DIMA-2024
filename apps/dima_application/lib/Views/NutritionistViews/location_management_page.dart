@@ -4,6 +4,26 @@ import 'package:dima_application/services/nutritionist_location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Custom input formatter that replaces commas with dots for coordinate input
+class CoordinateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Replace comma with dot for decimal separator
+    String newText = newValue.text.replaceAll(',', '.');
+    
+    // Ensure we only allow valid coordinate characters
+    newText = newText.replaceAll(RegExp(r'[^0-9.\-]'), '');
+    
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
+
 class LocationManagementPage extends StatefulWidget {
   const LocationManagementPage({super.key});
 
@@ -155,8 +175,8 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
 
     // Both coordinates must be provided and valid
     if (latText.isNotEmpty && lngText.isNotEmpty) {
-      final lat = double.tryParse(latText);
-      final lng = double.tryParse(lngText);
+      final lat = double.tryParse(latText.replaceAll(',', '.'));
+      final lng = double.tryParse(lngText.replaceAll(',', '.'));
       return lat != null && lng != null;
     }
 
@@ -164,8 +184,8 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
   }
 
   Future<void> _saveLocation() async {
-    final lat = double.tryParse(_latController.text);
-    final lng = double.tryParse(_lngController.text);
+    final lat = double.tryParse(_latController.text.replaceAll(',', '.'));
+    final lng = double.tryParse(_lngController.text.replaceAll(',', '.'));
 
     if (lat == null || lng == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -310,7 +330,7 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
+                  CoordinateInputFormatter(),
                 ],
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.latitude,
@@ -331,7 +351,7 @@ class _LocationManagementPageState extends State<LocationManagementPage> {
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
+                  CoordinateInputFormatter(),
                 ],
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.longitude,

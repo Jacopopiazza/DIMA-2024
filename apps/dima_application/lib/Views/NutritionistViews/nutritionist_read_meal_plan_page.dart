@@ -5,8 +5,29 @@ import 'package:dima_application/generated/l10n/app_localizations.dart';
 import 'package:dima_application/providers/meal_plans_provider.dart';
 import 'package:dima_application/services/client_details_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+
+/// Custom input formatter that replaces commas with dots for decimal input
+class DecimalInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Replace comma with dot for decimal separator
+    String newText = newValue.text.replaceAll(',', '.');
+    
+    // Ensure we only allow valid decimal characters
+    newText = newText.replaceAll(RegExp(r'[^0-9.]'), '');
+    
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
 
 /// A modern nutritionist view for meal plans with editing capabilities
 class NutritionistReadMealPlanPage extends ConsumerStatefulWidget {
@@ -1867,6 +1888,9 @@ class _NutritionistReadMealPlanPageState
         TextFormField(
           initialValue: value.toStringAsFixed(1),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [
+            DecimalInputFormatter(),
+          ],
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -1896,7 +1920,7 @@ class _NutritionistReadMealPlanPageState
             isDense: true,
           ),
           onChanged: (text) {
-            final parsed = double.tryParse(text);
+            final parsed = double.tryParse(text.replaceAll(',', '.'));
             if (parsed != null && parsed >= 0) {
               onChanged(parsed);
             }
@@ -2085,7 +2109,7 @@ class _NutritionistReadMealPlanPageState
                     isDense: true,
                   ),
                   onChanged: (value) {
-                    final parsed = double.tryParse(value);
+                    final parsed = double.tryParse(value.replaceAll(',', '.'));
                     if (parsed != null && parsed >= 0) {
                       _updateIngredientProperty(
                           dayKey, mealIndex, ingredientIndex, 'amount', parsed);
@@ -2174,13 +2198,16 @@ class _NutritionistReadMealPlanPageState
     return TextFormField(
       initialValue: value.toStringAsFixed(1),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        DecimalInputFormatter(),
+      ],
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
         isDense: true,
       ),
       onChanged: (text) {
-        final parsed = double.tryParse(text);
+        final parsed = double.tryParse(text.replaceAll(',', '.'));
         if (parsed != null && parsed >= 0) {
           onChanged(parsed);
         }

@@ -2732,6 +2732,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pleaseSelectGender => 'Seleziona un genere';
 
   @override
+  String get confirmPasswordSignUp => 'Conferma Password';
+
+  @override
   String codeSent(String destination) {
     return 'Un codice di conferma è stato inviato a $destination.';
   }

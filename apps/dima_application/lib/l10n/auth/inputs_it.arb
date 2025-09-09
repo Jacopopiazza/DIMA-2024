@@ -228,5 +228,6 @@
         "description": "Il ruolo dell'utente, ad esempio, utente, amministratore, ecc."
     },
     "pleaseSelectRole": "Seleziona un ruolo",
-    "pleaseSelectGender": "Seleziona un genere"
+    "pleaseSelectGender": "Seleziona un genere",
+    "confirmPasswordSignUp": "Conferma Password"
 }

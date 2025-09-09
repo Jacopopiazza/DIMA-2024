@@ -5279,6 +5279,12 @@ abstract class AppLocalizations {
   /// **'Please select a gender'**
   String get pleaseSelectGender;
 
+  /// No description provided for @confirmPasswordSignUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPasswordSignUp;
+
   /// The message that is displayed after a new confirmation code is sent via Email/SMS.
   ///
   /// In en, this message translates to:

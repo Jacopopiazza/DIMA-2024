@@ -1,6 +1,27 @@
 import 'package:dima_application/generated/flutter-models/ModelProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
+/// Custom input formatter that replaces commas with dots for decimal input
+class DecimalInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Replace comma with dot for decimal separator
+    String newText = newValue.text.replaceAll(',', '.');
+    
+    // Ensure we only allow valid decimal characters
+    newText = newText.replaceAll(RegExp(r'[^0-9.]'), '');
+    
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
 
 class ModifyMealPlanDialog extends StatefulWidget {
   final MealPlan mealPlan;
@@ -600,13 +621,16 @@ class _ModifyMealPlanDialogState extends State<ModifyMealPlanDialog> {
     return TextFormField(
       initialValue: value.toStringAsFixed(1),
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        DecimalInputFormatter(),
+      ],
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
         isDense: true,
       ),
       onChanged: (text) {
-        final parsed = double.tryParse(text);
+        final parsed = double.tryParse(text.replaceAll(',', '.'));
         if (parsed != null && parsed >= 0) {
           onChanged(parsed);
         }
@@ -707,13 +731,16 @@ class _ModifyMealPlanDialogState extends State<ModifyMealPlanDialog> {
                     initialValue: ingredient.amount.toStringAsFixed(1),
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      DecimalInputFormatter(),
+                    ],
                     decoration: const InputDecoration(
                       labelText: 'Amount',
                       border: OutlineInputBorder(),
                       isDense: true,
                     ),
                     onChanged: (value) {
-                      final parsed = double.tryParse(value);
+                      final parsed = double.tryParse(value.replaceAll(',', '.'));
                       if (parsed != null && parsed >= 0) {
                         _updateIngredientProperty(dayKey, mealIndex,
                             ingredientIndex, 'amount', parsed);

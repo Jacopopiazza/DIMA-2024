@@ -2036,6 +2036,7 @@
   },
   "pleaseSelectRole": "Seleziona un ruolo",
   "pleaseSelectGender": "Seleziona un genere",
+  "confirmPasswordSignUp": "Conferma Password",
   "@signIn": {
     "description": "Label of the button to sign in the user."
   },

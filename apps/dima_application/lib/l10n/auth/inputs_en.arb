@@ -228,5 +228,6 @@
         "description": "The user's role, e.g., user, admin, etc."
     },
     "pleaseSelectRole": "Please select a role",
-    "pleaseSelectGender": "Please select a gender"
+    "pleaseSelectGender": "Please select a gender",
+    "confirmPasswordSignUp": "Confirm Password"
 }

@@ -2,6 +2,9 @@ import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:dima_application/Views/CustomAuthenticator/custom_sign_in.dart';
 import 'package:dima_application/Views/CustomAuthenticator/custom_sign_up.dart';
 import 'package:dima_application/Views/CustomAuthenticator/localized_button_resolver.dart';
+import 'package:dima_application/Views/CustomAuthenticator/localized_input_resolver.dart';
+import 'package:dima_application/Views/CustomAuthenticator/localized_message_resolver.dart';
+import 'package:dima_application/Views/CustomAuthenticator/localized_titles_resolver.dart';
 import 'package:dima_application/Views/UserTypeRouter/user_type_router.dart';
 import 'package:dima_application/Views/Common/global_chat_notification_handler.dart';
 import 'package:dima_application/generated/l10n/app_localizations.dart';
@@ -28,6 +31,9 @@ class CustomizedAuthenticator extends StatelessWidget {
   Widget build(BuildContext context) {
     const stringResolver = AuthStringResolver(
       buttons: LocalizedButtonResolver(),
+      inputs: LocalizedInputResolver(),
+      messages: LocalizedMessageResolver(),
+      titles: LocalizedTitlesResolver(),
     );
 
     return Authenticator(
