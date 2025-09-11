@@ -634,6 +634,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.personalizedMealPlan,
+            textAlign: TextAlign.center,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: colorScheme.primary,
@@ -687,7 +688,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             ),
             const SizedBox(height: 12),
             Text(
-              validation.message,
+              AppLocalizations.of(context)!.completeDemographics,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: Colors.red.shade700,
@@ -705,7 +706,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   ),
                 );
               },
-              icon: const Icon(Icons.person_rounded),
+              icon: const Icon(Icons.person_rounded, color: Colors.white),
               label: Text(AppLocalizations.of(context)!.completeProfile),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.red.shade600,
@@ -761,6 +762,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
             const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context)!.noProfileDetailsFound,
+              textAlign: TextAlign.center,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.orange.shade800,
@@ -786,7 +788,7 @@ class _GenerateMealPlanPageState extends ConsumerState<GenerateMealPlanPage>
                   ),
                 );
               },
-              icon: const Icon(Icons.settings_rounded),
+              icon: const Icon(Icons.settings_rounded, color: Colors.white),
               label: Text(AppLocalizations.of(context)!.completeProfile),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.orange.shade600,

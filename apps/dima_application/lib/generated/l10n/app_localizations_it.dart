@@ -907,6 +907,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectAllergies => 'Seleziona eventuali allergie che hai:';
 
   @override
+  String get completeDemographics => 'Per favore completa il tuo profilo:\n• Il genere deve essere Maschile, Femminile o Altro\n• La data di nascita deve essere nel formato AAAA-MM-GG';
+
+  @override
   String get helloWorld => 'Ciao Mondo!';
 
   @override

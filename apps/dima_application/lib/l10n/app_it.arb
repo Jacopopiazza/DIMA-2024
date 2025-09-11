@@ -439,6 +439,7 @@
     }
   },
   "generatePersonalizedPlan": "Genera Piano Personalizzato",
+  "completeDemographics": "Per favore completa il tuo profilo:\n• Il genere deve essere Maschile, Femminile o Altro\n• La data di nascita deve essere nel formato AAAA-MM-GG",
   "helloWorld": "Ciao Mondo!",
   "signedIn": "Loggato!",
   "userRole": "Utente",

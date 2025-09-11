@@ -907,6 +907,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectAllergies => 'Select any allergies you have:';
 
   @override
+  String get completeDemographics => 'Please complete your profile:\n• Gender must be Male, Female, or Other\n• Birthdate must be in YYYY-MM-DD format';
+
+  @override
   String get helloWorld => 'Hello World!';
 
   @override

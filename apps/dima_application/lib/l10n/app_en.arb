@@ -429,6 +429,7 @@
   },
   "generatePersonalizedPlan": "Generate Personalized Plan",
   "selectAllergies": "Select any allergies you have:",
+  "completeDemographics": "Please complete your profile:\n• Gender must be Male, Female, or Other\n• Birthdate must be in YYYY-MM-DD format",
   "helloWorld": "Hello World!",
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"

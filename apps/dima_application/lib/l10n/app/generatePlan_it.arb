@@ -66,5 +66,6 @@
         }
     },
     "generatePersonalizedPlan": "Genera Piano Personalizzato",
-    "selectAllergies": "Seleziona eventuali allergie che hai:"
+    "selectAllergies": "Seleziona eventuali allergie che hai:",
+    "completeDemographics": "Per favore completa il tuo profilo:\n• Il genere deve essere Maschile, Femminile o Altro\n• La data di nascita deve essere nel formato AAAA-MM-GG"
 }

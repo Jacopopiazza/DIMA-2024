@@ -1835,6 +1835,12 @@ abstract class AppLocalizations {
   /// **'Select any allergies you have:'**
   String get selectAllergies;
 
+  /// No description provided for @completeDemographics.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete your profile:\n• Gender must be Male, Female, or Other\n• Birthdate must be in YYYY-MM-DD format'**
+  String get completeDemographics;
+
   /// The conventional newborn programmer greeting
   ///
   /// In en, this message translates to:
