@@ -317,7 +317,7 @@ class TodayPage extends ConsumerWidget {
         // Progress card showing macro tracking
         ProgressCard(
           calories:
-              "${state.consumedMacros.calories.round()} / ${totalMacros.calories.round()} kCal",
+              "${state.consumedMacros.calories.round()} / ${totalMacros.calories.round()}",
           fatPercent:
               _calculatePercent(state.consumedMacros.fats, totalMacros.fats),
           proteinPercent: _calculatePercent(

@@ -469,7 +469,7 @@ class _ProgressCardState extends State<ProgressCard>
                               style: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.width < 375
-                                        ? 12
+                                        ? 10
                                         : 14,
                                 fontWeight: FontWeight.bold,
                                 color: textColor,
