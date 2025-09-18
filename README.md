@@ -266,27 +266,6 @@ flutter build web --release
 # Deploy to AWS S3/CloudFront
 ```
 
-## 🧪 Testing
-
-### Running Tests
-
-```bash
-# Backend tests
-cd backend
-npm test
-
-# Frontend tests
-cd frontend
-flutter test
-```
-
-### Test Coverage
-
-- Unit tests for business logic
-- Integration tests for API endpoints
-- Widget tests for UI components
-- End-to-end tests for critical user flows
-
 ## 📈 Performance
 
 ### Optimization Features
@@ -321,24 +300,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Jacopo Piazzalunga[https://github.com/Jacopopiazza]
 - Gabriele Puglisi[https://github.com/GabP404]
 - Davide Salonico[https://github.com/DavideSalonico]
-
-## 📞 Support
-
-For support and questions:
-
-- Contact the development team
-- Create an issue in the repository
-- Check the documentation in the `deliverables/` folder
-
-## 🔮 Future Enhancements
-
-- [ ] Advanced analytics and reporting
-- [ ] Integration with fitness trackers
-- [ ] Social features and community
-- [ ] Advanced AI recommendations
-- [ ] Voice commands and accessibility
-- [ ] Integration with grocery delivery services
-
+  
 ---
 
 <div align="center">
